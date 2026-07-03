@@ -2,7 +2,7 @@
 site_name = "OO-LD Schema"
 repo_url = "https://github.com/OO-LD/oold-schema"
 site_url = "https://OO-LD.github.io/oold-schema/"
-site_description = "Object-Oriented Linked Data Schema — JSON Schema + JSON-LD in one document"
+site_description = "Object-Oriented Linked Data Schema - JSON Schema + JSON-LD in one document"
 site_author = "OO-LD Contributors"
 edit_uri = "edit/main/docs/"
 repo_name = "OO-LD/oold-schema"

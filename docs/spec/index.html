@@ -8,7 +8,7 @@
   <script class="remove">
     // ReSpec configuration. See https://respec.org/docs/ for all options.
     var respecConfig = {
-      specStatus: "base",
+      specStatus: "base", // https://respec.org/docs/#specStatus
       shortName: "oold",
       subtitle: "OO-LD Recommendation 1.0",
       editors: [
@@ -51,8 +51,8 @@
   <p>
     <dfn data-lt="OO-LD">Object-Oriented Linked Data (OO-LD)</dfn> connects the
     structural modelling of objects and subobjects with the modelling of their
-    semantic relations, by combining two existing standards — [[JSONSCHEMA]] and
-    a [[JSON-LD11]] context — in a single document. A single OO-LD document is at
+    semantic relations, by combining two existing standards - [[JSONSCHEMA]] and
+    a [[JSON-LD11]] context - in a single document. A single OO-LD document is at
     once a valid JSON Schema and a reference-able JSON-LD remote context, so that
     one source can drive validation, RDF generation, code generation, user
     interfaces and API definitions using the existing JSON Schema and JSON-LD
@@ -241,7 +241,7 @@
       remote contexts as an array, in the same order as the <code>allOf</code>
       members, so the schema stays usable as a context without further
       processing. A JSON-LD processor then resolves that array in order, later
-      entries overriding earlier ones — duplicate context terms are overridden
+      entries overriding earlier ones - duplicate context terms are overridden
       using a most-recently-defined-wins mechanism ([[JSON-LD11]] §4.1.5). The
       schema <em class="rfc2119">MAY</em> append its own context object as the
       last array entry to override an inherited term.
@@ -250,7 +250,7 @@
       <strong><code>oneOf</code> / <code>anyOf</code>.</strong> The remote
       contexts of <code>oneOf</code> / <code>anyOf</code> branches
       <em class="rfc2119">MAY</em> also be reflected into the <code>@context</code>,
-      but they <em class="rfc2119">MUST NOT</em> conflict at the root — they
+      but they <em class="rfc2119">MUST NOT</em> conflict at the root - they
       <em class="rfc2119">MUST NOT</em> map the same keyword to different IRIs
       there. Where branches genuinely need different mappings for the same
       keyword, they are scoped using JSON-LD <strong>type-scoped</strong> or
@@ -322,8 +322,8 @@
     versioned) schema URL:
   </p>
   <ul>
-    <li><code>@context</code> — the schema URL, loaded as a JSON-LD remote context. This is what makes the instance a JSON-LD document.</li>
-    <li><code>$schema</code> — the schema URL, identifying the schema the instance is intended to validate against.</li>
+    <li><code>@context</code> - the schema URL, loaded as a JSON-LD remote context. This is what makes the instance a JSON-LD document.</li>
+    <li><code>$schema</code> - the schema URL, identifying the schema the instance is intended to validate against.</li>
   </ul>
   <p>
     Instances <em class="rfc2119">SHOULD</em> use a versioned schema URL so that
@@ -343,13 +343,13 @@
     <ol>
       <li>the <code>$schema</code> value, if present;</li>
       <li>otherwise, the URL given under <code>@context</code>, if the referenced document declares itself to be an OO-LD schema;</li>
-      <li>otherwise, an inline <code>@type</code> — but only when at least one of the type IRIs resolves to an OO-LD schema.</li>
+      <li>otherwise, an inline <code>@type</code> - but only when at least one of the type IRIs resolves to an OO-LD schema.</li>
     </ol>
     <p>
       An implementation <em class="rfc2119">MAY</em> additionally maintain a
       registry mapping <code>rdf:type</code> IRIs to OO-LD schemas to resolve case
       3, but such a registry <em class="rfc2119">MUST NOT</em> be assumed to exist
-      on the consuming side — so exports must be self-sufficient.
+      on the consuming side - so exports must be self-sufficient.
     </p>
     <p>
       Because an instance carries <code>$schema</code> and <code>@context</code> as
@@ -364,7 +364,7 @@
     <h3>Identity (<code>@id</code>)</h3>
     <p>
       An instance that represents an identifiable entity is identified by an
-      <code>@id</code> — the IRI of that entity. Without an <code>@id</code> the
+      <code>@id</code> - the IRI of that entity. Without an <code>@id</code> the
       entity is an anonymous blank node and cannot be referenced (for example as
       the target of an <code>x-oold-range</code> or <code>@reverse</code>
       relation). To keep instance keys variable-name-friendly, schemas
@@ -422,7 +422,7 @@
     <h3>Ontology class IRI (<code>x-oold-iri</code>)</h3>
     <p>
       <code>x-oold-iri</code> declares the IRI of the ontology class that this
-      schema realizes — the RDF/OWL class from an external vocabulary that gives
+      schema realizes - the RDF/OWL class from an external vocabulary that gives
       the schema its semantic grounding. It is distinct from <code>$id</code> (the
       URL of the schema document) and from <code>x-oold-instance-rdf-type</code>
       (the <code>rdf:type</code>s that instances carry on export). OO-LD-aware
@@ -501,8 +501,8 @@
     <section id="range-of-properties">
       <h4>Range of properties (<code>x-oold-range</code>)</h4>
       <p>
-        To express constraints on the type of a referenced object — as in OWL and
-        SHACL — the keyword <code>x-oold-range</code> is introduced. It takes one
+        To express constraints on the type of a referenced object - as in OWL and
+        SHACL - the keyword <code>x-oold-range</code> is introduced. It takes one
         of three forms: an IRI (string) referencing a single allowed target
         schema; an array of IRIs (a union of allowed target schemas); or an OO-LD
         subschema (the most expressive form, combining <code>anyOf</code> /
@@ -588,13 +588,13 @@
   <table class="def">
     <thead><tr><th>Slot</th><th>File extension</th><th>Media type</th><th>RFC 6906 profile</th><th>Description</th></tr></thead>
     <tbody>
-      <tr><td>schema</td><td>*.schema.json</td><td><code>application/oold-schema+json</code></td><td>—</td><td>Full OO-LD schema</td></tr>
+      <tr><td>schema</td><td>*.schema.json</td><td><code>application/oold-schema+json</code></td><td>-</td><td>Full OO-LD schema</td></tr>
       <tr><td>schema</td><td>*.schema.json</td><td><code>application/oold-schema+json</code></td><td>oold-schema#bundled</td><td>Full OO-LD schema with all <code>$ref</code> and remote context bundled</td></tr>
-      <tr><td>schema</td><td>*.schema.json</td><td><code>application/ld+json</code></td><td>—</td><td>Only the JSON-LD context</td></tr>
-      <tr><td>schema</td><td>*.schema.json</td><td><code>application/schema+json</code></td><td>—</td><td>Only the JSON Schema schema</td></tr>
-      <tr><td>data</td><td>*.data.json</td><td><code>application/oold-schema-instance+json</code></td><td>—</td><td>Full OO-LD instance</td></tr>
-      <tr><td>data</td><td>*.data.json</td><td><code>application/ld+json</code></td><td>—</td><td>Full OO-LD instance (JSON-LD profiles apply)</td></tr>
-      <tr><td>data</td><td>*.data.json</td><td><code>application/json</code></td><td>—</td><td>Only the JSON data</td></tr>
+      <tr><td>schema</td><td>*.schema.json</td><td><code>application/ld+json</code></td><td>-</td><td>Only the JSON-LD context</td></tr>
+      <tr><td>schema</td><td>*.schema.json</td><td><code>application/schema+json</code></td><td>-</td><td>Only the JSON Schema schema</td></tr>
+      <tr><td>data</td><td>*.data.json</td><td><code>application/oold-schema-instance+json</code></td><td>-</td><td>Full OO-LD instance</td></tr>
+      <tr><td>data</td><td>*.data.json</td><td><code>application/ld+json</code></td><td>-</td><td>Full OO-LD instance (JSON-LD profiles apply)</td></tr>
+      <tr><td>data</td><td>*.data.json</td><td><code>application/json</code></td><td>-</td><td>Only the JSON data</td></tr>
     </tbody>
   </table>
   <section id="security">
