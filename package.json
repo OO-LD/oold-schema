@@ -4,7 +4,8 @@
   "type": "module",
   "description": "OO-LD schema specification and validation tooling",
   "scripts": {
-    "validate": "node scripts/validate.mjs"
+    "validate": "node scripts/validate.mjs",
+    "extract-legacy": "node scripts/extract-legacy-keywords.mjs"
   },
   "devDependencies": {
     "@apidevtools/json-schema-ref-parser": "^11.0.0",
