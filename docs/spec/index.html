@@ -540,7 +540,7 @@ intersections (<code>allOf</code>) and inline constraints can be combined to des
 }
 </code></pre></aside>
 <p>A range subschema <em class="rfc2119">MAY</em> also carry additional annotations (e.g. <code>title</code>, <code>description</code> or further <code>x-oold-*</code> keywords) to support tooling - for example a human-readable label for an autocomplete dropdown, or hints used when generating a SHACL shape.</p><section id="why-x-oold-ref"><h5>Why <code>x-oold-ref</code> and not <code>$ref</code></h5><p><code>x-oold-range</code> is a custom keyword, so a <code>$ref</code> placed inside it is undefined behavior for generic JSON Schema tooling ([[JSONSCHEMA]] §9.4.2). In practice the behavior is not merely undefined but inconsistent: generic reference resolvers eagerly inline such a <code>$ref</code>, and because <code>x-oold-range</code> targets can form a cyclic graph of schemas this can pull in an unbounded graph, while schema-aware bundlers instead drop it.</p>
-<p><code>x-oold-ref</code> avoids this. Generic tools only follow the standard <code>$ref</code> keyword, so they leave <code>x-oold-ref</code> untouched; OO-LD-aware tools resolve it deliberately and lazily, with cycle detection. The standard <code>$ref</code> continues to be used for ordinary schema composition (<code>allOf</code>, <code>properties</code>, <code>$defs</code>), which bundlers are expected to resolve. Because the only difference is the keyword name, the mapping is reversible: an OO-LD-aware tool can mechanically replace <code>x-oold-ref</code> with <code>$ref</code> to obtain a plain, fully-resolvable JSON Schema - the explicit opt-in to resolving the (possibly cyclic) graph.</p></section></section><section id="reverse-properties"><h4>Reverse properties</h4><p>Many relations are symmetric (e.g. Organization employs Person ⇔ Person works for Organization) and users want to edit them from both sides, without storing the information twice. The keywords <code>x-oold-reverse-properties</code>, <code>x-oold-reverse-default-properties</code> and <code>x-oold-reverse-required</code> declare such a [=reverse property=], mapped with JSON-LD <code>@reverse</code> in the <code>@context</code>. To make <code>employees</code> the reverse of <code>organization</code>:</p>
+<p><code>x-oold-ref</code> avoids this. Generic tools only follow the standard <code>$ref</code> keyword, so they leave <code>x-oold-ref</code> untouched; OO-LD-aware tools resolve it deliberately and lazily, with cycle detection. The standard <code>$ref</code> continues to be used for ordinary schema composition (<code>allOf</code>, <code>properties</code>, <code>$defs</code>), which bundlers are expected to resolve. Because the only difference is the keyword name, the mapping is reversible: an OO-LD-aware tool can mechanically replace <code>x-oold-ref</code> with <code>$ref</code> to obtain a plain, fully-resolvable JSON Schema - the explicit opt-in to resolving the (possibly cyclic) graph.</p></section></section><section id="reverse-properties"><h4>Reverse properties</h4><p>Many relations are symmetric (e.g. Organization employs Person ⇔ Person works for Organization) and users want to edit them from both sides, without storing the information twice. The keywords <code>x-oold-reverse-properties</code> and <code>x-oold-reverse-required</code> declare such a [=reverse property=], mapped with JSON-LD <code>@reverse</code> in the <code>@context</code>. (The earlier <code>x-oold-reverse-default-properties</code> array is deprecated: mark a reverse property shown by default with <code>x-oold-ui-default-property</code> on the property itself - see <a href="#ui-generation"></a> - which, unlike the merged array, is overridable under composition.) To make <code>employees</code> the reverse of <code>organization</code>:</p>
 <ul>
 <li>define <code>employees</code> in <code>x-oold-reverse-properties</code> of <code>Organization</code>;</li>
 <li>define <code>organization</code> in the <code>properties</code> of <code>Person</code>;</li>
@@ -556,11 +556,11 @@ intersections (<code>allOf</code>) and inline constraints can be combined to des
   &quot;type&quot;: &quot;object&quot;,
   &quot;required&quot;: [&quot;type&quot;],
   &quot;x-oold-reverse-required&quot;: [],
-  &quot;x-oold-reverse-default-properties&quot;: [&quot;employees&quot;],
   &quot;x-oold-reverse-properties&quot;: {
     &quot;employees&quot;: {
       &quot;type&quot;: &quot;array&quot;,
       &quot;title&quot;: &quot;Employees&quot;,
+      &quot;x-oold-ui-default-property&quot;: true,
       &quot;items&quot;: {
         &quot;type&quot;: &quot;string&quot;,
         &quot;format&quot;: &quot;autocomplete&quot;,
@@ -592,7 +592,161 @@ intersections (<code>allOf</code>) and inline constraints can be combined to des
   }
 }
 </code></pre></aside>
-<p>An OO-LD-aware implementation uses this to read and modify properties that are actually stored in another object: loading an <code>Organization</code> editor prepopulates <code>employees</code> by querying which persons work for it; storing the <code>Organization</code> writes it into each referenced person's <code>organization</code> field; and removing a person from <code>employees</code> removes the organization from theirs.</p></section><section id="ui-generation" class="informative"><h4>UI Generation</h4><p>Additional keywords defined by <a href="https://github.com/json-editor/json-editor">JSON Editor</a> (see its <a href="https://github.com/json-editor/json-editor#readme">basic features</a> and <a href="https://github.com/json-editor/json-editor/blob/master/README_ADDON.md">add-on details</a>) MAY be used to drive automatic user-interface (form) generation.</p></section></section></section>
+<p>An OO-LD-aware implementation uses this to read and modify properties that are actually stored in another object: loading an <code>Organization</code> editor prepopulates <code>employees</code> by querying which persons work for it; storing the <code>Organization</code> writes it into each referenced person's <code>organization</code> field; and removing a person from <code>employees</code> removes the organization from theirs.</p></section><section id="ui-generation" class="informative"><h4>UI Generation</h4><p>OO-LD schemas double as the source for auto-generated forms and views. UI intent is carried in two layers:</p>
+<ul>
+<li>Portable, renderer-agnostic keywords in the <code>x-oold-ui-*</code> vocabulary, defined here. Any form generator can honour them.</li>
+<li>Renderer-specific keywords passed through under a vendor prefix - <code>x-jedison-*</code> for <a href="https://github.com/germanbisurgi/jedison">jedison</a>, the successor of <a href="https://github.com/json-editor/json-editor">json-editor</a> - for options that do not generalize.</li>
+</ul>
+<p>Every keyword keeps the <code>x-</code> prefix, so it is a valid JSON Schema extension keyword and a valid OpenAPI 3.0 specification extension, and generic 2020-12 validators ignore it. The <code>x-oold-ui-*</code> keywords form their own optional dialect, described by the <a href="../meta/oold-ui-meta-schema.json">OO-LD UI meta-schema</a>; the core meta-schema includes those definitions so an OO-LD schema carrying UI annotations validates in one pass.</p><section id="ui-vocabulary"><h5>The <code>x-oold-ui-*</code> vocabulary</h5><p>All keywords apply to the (sub)schema of a single property.</p>
+<table class="def">
+<thead>
+<tr>
+  <th>Keyword</th>
+  <th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><code>x-oold-ui-widget</code></td>
+  <td>Widget hint for a value whose intended widget is not a registered JSON Schema format (for example table, tabs, grid, autocomplete, textarea, checkbox, markdown, color). Registered formats (date, uri, uuid, ...) stay in <code>format</code>. Maps to jedison <code>x-format</code>.</td>
+</tr>
+<tr>
+  <td><code>x-oold-ui-property-order</code></td>
+  <td>Display order of this property within its object or group; lower sorts first. Maps to jedison <code>x-categoryOrder</code>.</td>
+</tr>
+<tr>
+  <td><code>x-oold-ui-property-group</code></td>
+  <td>Name of the group, tab or category this property belongs to. Maps to jedison <code>x-category</code> / <code>x-propGroup</code>.</td>
+</tr>
+<tr>
+  <td><code>x-oold-ui-form-hidden</code></td>
+  <td>Hide this property in the editing form. Maps to jedison <code>x-hidden</code>.</td>
+</tr>
+<tr>
+  <td><code>x-oold-ui-render-hidden</code></td>
+  <td>Hide this property in the rendered (read) view.</td>
+</tr>
+<tr>
+  <td><code>x-oold-ui-enum-titles</code></td>
+  <td>Human display labels for the default language, aligned positionally with <code>enum</code>: the Nth label is the title of the Nth enum value. For <code>enum: [&quot;pi&quot;, &quot;postdoc&quot;, &quot;phd&quot;]</code> the value <code>[&quot;Principal investigator&quot;, &quot;Postdoc&quot;, &quot;PhD student&quot;]</code> labels each option. Localize with <code>x-oold-multilang-ui-enum-titles</code>. Distinct from the identifier-safe code names in <code>x-enum-varnames</code>. Maps to jedison <code>x-enumTitles</code>.</td>
+</tr>
+<tr>
+  <td><code>x-oold-multilang-ui-enum-titles</code></td>
+  <td>BCP-47 language map of <code>x-oold-ui-enum-titles</code> arrays (mirrors <code>x-oold-multilang-title</code>); each array aligns positionally with <code>enum</code>. For <code>enum: [&quot;pi&quot;, &quot;postdoc&quot;, &quot;phd&quot;]</code>: {&quot;en&quot;: [&quot;Principal investigator&quot;, &quot;Postdoc&quot;, &quot;PhD student&quot;], &quot;de&quot;: [&quot;Projektleitung&quot;, &quot;Postdoc&quot;, &quot;Doktorand&quot;]}.</td>
+</tr>
+<tr>
+  <td><code>x-oold-ui-hint</code></td>
+  <td>Short help text shown with the field, in the default language. Localize with <code>x-oold-multilang-ui-hint</code>. Maps to jedison <code>x-info</code>.</td>
+</tr>
+<tr>
+  <td><code>x-oold-multilang-ui-hint</code></td>
+  <td>BCP-47 language map of the <code>x-oold-ui-hint</code> text (mirrors <code>x-oold-multilang-title</code>).</td>
+</tr>
+<tr>
+  <td><code>x-oold-ui-default-property</code></td>
+  <td>Whether this optional property is shown by default in generated user interfaces. Replaces the object-level <code>defaultProperties</code> array: a per-property boolean is overridable under composition (most-derived-wins), so a derived schema can set it false, whereas the merged array form was extend-only.</td>
+</tr>
+<tr>
+  <td><code>x-enum-varnames</code></td>
+  <td>Identifier-safe code names aligned positionally with <code>enum</code>, for code generation. For <code>enum: [&quot;m&quot;, &quot;s&quot;]</code> the value <code>[&quot;metre&quot;, &quot;second&quot;]</code> names each option (so a generator can emit <code>Unit.metre</code> instead of <code>Unit.m</code>). An established vendor extension (OpenAPI Generator; NSwag uses the camelCase <code>x-enumNames</code>). Kept as-is; distinct from the human labels in <code>x-oold-ui-enum-titles</code>.</td>
+</tr>
+<tr>
+  <td><code>x-enum-descriptions</code></td>
+  <td>Per-value descriptions aligned positionally with <code>enum</code>, the established companion of <code>x-enum-varnames</code>. For <code>enum: [&quot;m&quot;, &quot;s&quot;]</code>: <code>[&quot;SI base unit of length&quot;, &quot;SI base unit of time&quot;]</code>.</td>
+</tr>
+</tbody>
+</table>
+<p>The text-valued keywords have a <code>x-oold-multilang-*</code> variant carrying a BCP-47 language map, mirroring <code>x-oold-multilang-title</code> (see <a href="#localizing-schema-annotations"></a>): <code>x-oold-multilang-ui-hint</code> and <code>x-oold-multilang-ui-enum-titles</code>.</p>
+<p>For enum code generation OO-LD keeps the established <code>x-enum-varnames</code> (identifier-safe names aligned with <code>enum</code>) and its companion <code>x-enum-descriptions</code>; these are widely supported vendor extensions (OpenAPI Generator; NSwag's <code>x-enumNames</code>) and are distinct from the human display labels in <code>x-oold-ui-enum-titles</code>.</p>
+<p><code>x-oold-ui-default-property</code> replaces the json-editor <code>defaultProperties</code> array (which listed the optional properties shown initially). That array is <em>extend-only</em> under composition: because composed schemas merge the arrays, a derived schema can add a default property but cannot switch one off. A per-property boolean is <em>overridable</em> - it resolves most-derived-wins (see <a href="#merge-and-override-model"></a>), so a derived schema sets it to <code>false</code> to hide a property a base schema showed. For the same reason <code>x-oold-reverse-default-properties</code> is deprecated in favour of <code>x-oold-ui-default-property</code> on the reverse property.</p></section><section id="widget-hints"><h5>Widget hints: <code>format</code> vs <code>x-oold-ui-widget</code></h5><p><code>format</code> carries the widget hint when its value is a registered JSON Schema 2020-12 format (<code>date</code>, <code>date-time</code>, <code>time</code>, <code>duration</code>, <code>email</code>, <code>uri</code>, <code>iri</code>, <code>uuid</code>, ...); a validator may check it and a form generator picks the matching input. Values that are not registered formats (<code>table</code>, <code>tabs</code>, <code>grid</code>, <code>autocomplete</code>, <code>textarea</code>, <code>checkbox</code>, <code>markdown</code>, <code>color</code>, ...) are widget-only and go in <code>x-oold-ui-widget</code>, leaving <code>format</code> for validation semantics.</p></section><section id="ui-delivery"><h5>Delivery: inline or overlay</h5><p>UI keywords may be embedded in the schema (inline):</p>
+<pre><code class="language-json">{
+  &quot;$schema&quot;: &quot;https://oo-ld.github.io/oold-schema/latest/meta/oold-meta-schema.json&quot;,
+  &quot;$id&quot;: &quot;UiAnnotations.schema.json&quot;,
+  &quot;@context&quot;: [
+    {
+      &quot;@version&quot;: 1.1,
+      &quot;schema&quot;: &quot;https://schema.org/&quot;,
+      &quot;name&quot;: &quot;schema:name&quot;,
+      &quot;role&quot;: &quot;schema:jobTitle&quot;,
+      &quot;homepage&quot;: { &quot;@id&quot;: &quot;schema:url&quot;, &quot;@type&quot;: &quot;@id&quot; }
+    }
+  ],
+  &quot;x-oold-uuid&quot;: &quot;b1e7a0c2-2d4f-4a1e-9c3a-7f0e5d2b6a11&quot;,
+  &quot;title&quot;: &quot;Researcher&quot;,
+  &quot;x-oold-multilang-title&quot;: { &quot;en&quot;: &quot;Researcher&quot;, &quot;de&quot;: &quot;Forschende Person&quot; },
+  &quot;x-oold-iri&quot;: &quot;schema:Person&quot;,
+  &quot;type&quot;: &quot;object&quot;,
+  &quot;properties&quot;: {
+    &quot;name&quot;: {
+      &quot;type&quot;: &quot;string&quot;,
+      &quot;title&quot;: &quot;Name&quot;,
+      &quot;x-oold-ui-default-property&quot;: true,
+      &quot;x-oold-ui-property-order&quot;: 1,
+      &quot;x-oold-ui-property-group&quot;: &quot;General&quot;,
+      &quot;x-oold-ui-hint&quot;: &quot;Full name&quot;,
+      &quot;x-oold-multilang-ui-hint&quot;: { &quot;en&quot;: &quot;Full name&quot;, &quot;de&quot;: &quot;Vollständiger Name&quot; }
+    },
+    &quot;role&quot;: {
+      &quot;type&quot;: &quot;string&quot;,
+      &quot;title&quot;: &quot;Role&quot;,
+      &quot;enum&quot;: [&quot;pi&quot;, &quot;postdoc&quot;, &quot;phd&quot;],
+      &quot;x-enum-varnames&quot;: [&quot;PrincipalInvestigator&quot;, &quot;PostDoc&quot;, &quot;PhDStudent&quot;],
+      &quot;x-enum-descriptions&quot;: [&quot;Leads the project&quot;, &quot;Holds a doctorate&quot;, &quot;Doctoral candidate&quot;],
+      &quot;x-oold-ui-enum-titles&quot;: [&quot;Principal investigator&quot;, &quot;Postdoc&quot;, &quot;PhD student&quot;],
+      &quot;x-oold-multilang-ui-enum-titles&quot;: { &quot;en&quot;: [&quot;Principal investigator&quot;, &quot;Postdoc&quot;, &quot;PhD student&quot;], &quot;de&quot;: [&quot;Projektleitung&quot;, &quot;Postdoc&quot;, &quot;Doktorand&quot;] },
+      &quot;x-oold-ui-property-order&quot;: 2,
+      &quot;x-oold-ui-property-group&quot;: &quot;General&quot;
+    },
+    &quot;homepage&quot;: {
+      &quot;type&quot;: &quot;string&quot;,
+      &quot;title&quot;: &quot;Homepage&quot;,
+      &quot;format&quot;: &quot;uri&quot;,
+      &quot;x-oold-ui-property-group&quot;: &quot;Contact&quot;
+    },
+    &quot;notes&quot;: {
+      &quot;type&quot;: &quot;string&quot;,
+      &quot;title&quot;: &quot;Notes&quot;,
+      &quot;x-oold-ui-widget&quot;: &quot;markdown&quot;,
+      &quot;x-oold-ui-property-group&quot;: &quot;Contact&quot;
+    },
+    &quot;internal_id&quot;: {
+      &quot;type&quot;: &quot;string&quot;,
+      &quot;title&quot;: &quot;Internal id&quot;,
+      &quot;x-oold-ui-form-hidden&quot;: true
+    }
+  }
+}
+</code></pre>
+<p>or applied by an <em>overlay</em> - a separate document that patches a schema without editing it, following the <a href="https://spec.openapis.org/overlay/latest.html">OpenAPI Overlay 1.1.0</a> model. Overlays are a general schema-patching mechanism: the <code>update</code> actions can inject any keywords (semantics, constraints or presentation), and applying <code>x-oold-ui-*</code> annotations is one use case - useful when the schema is generated or owned elsewhere, or when one schema needs different presentation in different contexts. An overlay lists <code>actions</code>, each selecting nodes with an <a href="https://www.rfc-editor.org/rfc/rfc9535">RFC 9535 JSONPath</a> <code>target</code> and merging keys via <code>update</code> (or removing them via <code>remove</code>):</p>
+<pre><code class="language-json">{
+  &quot;overlay&quot;: &quot;1.0.0&quot;,
+  &quot;info&quot;: {
+    &quot;title&quot;: &quot;Researcher admin overlay&quot;,
+    &quot;version&quot;: &quot;1.0.0&quot;,
+    &quot;description&quot;: &quot;Applies presentation-only x-oold-ui-* keywords to Researcher without editing the schema. An overlay is a general schema-patching mechanism (OpenAPI Overlay 1.1.0); UI annotation is one use case.&quot;
+  },
+  &quot;extends&quot;: &quot;./UiAnnotations.schema.json&quot;,
+  &quot;actions&quot;: [
+    {
+      &quot;target&quot;: &quot;$.properties.internal_id&quot;,
+      &quot;description&quot;: &quot;Show the internal id for admins.&quot;,
+      &quot;update&quot;: { &quot;x-oold-ui-form-hidden&quot;: false }
+    },
+    {
+      &quot;target&quot;: &quot;$.properties.notes&quot;,
+      &quot;description&quot;: &quot;Render notes as a plain textarea instead of markdown.&quot;,
+      &quot;update&quot;: { &quot;x-oold-ui-widget&quot;: &quot;textarea&quot; }
+    },
+    {
+      &quot;target&quot;: &quot;$.properties.role&quot;,
+      &quot;description&quot;: &quot;Drop the render-time grouping for a flat admin form.&quot;,
+      &quot;remove&quot;: false,
+      &quot;update&quot;: { &quot;x-oold-ui-property-group&quot;: &quot;Identity&quot; }
+    }
+  ]
+}
+</code></pre>
+<p>The vendor keywords are documented by their respective projects: jedison's <code>x-jedison-*</code> (see <a href="https://github.com/germanbisurgi/jedison/issues/58">germanbisurgi/jedison#58</a> and the overlay proposal <a href="https://github.com/germanbisurgi/jedison/issues/59">#59</a>) and, for schemas coming from OpenSemanticLab, the server-side <code>x-osl-*</code> keywords. Migrating a legacy OpenSemanticWorld schema to these keywords is covered in the <a href="../migration/from-legacy-osw/">migration guide</a>.</p></section></section></section></section>
 
 <section id="meta-schema"><h2>Meta-schema and Vocabulary</h2><p>OO-LD adds keywords on top of JSON Schema 2020-12. All OO-LD-proprietary keywords are prefixed with <code>x-oold-</code> so they are valid <a href="https://json-schema.org/draft/2020-12/json-schema-core#section-6.5">JSON Schema extension keywords</a> and, at the same time, valid <a href="https://spec.openapis.org/oas/v3.0.3.html#specification-extensions">OpenAPI 3.0 Specification Extensions</a> (OpenAPI 3.0 rejects unprefixed custom keywords in a Schema object). The only non-prefixed OO-LD-specific entry is <code>@context</code>, which is a JSON-LD keyword and cannot be renamed.</p>
 <p>The OO-LD dialect is described by a meta-schema ([[OOLD-META]]). It extends the standard 2020-12 meta-schema and adds the syntax of the <code>x-oold-*</code> keywords, so an OO-LD schema can be validated <em>as</em> an OO-LD schema. The meta-schema declares its vocabularies via <code>$vocabulary</code>: the seven standard 2020-12 vocabularies are re-listed as required (they are not inherited through <code>$ref</code>, [[JSONSCHEMA]] §8.1.2.2), and the OO-LD vocabulary is declared <strong>optional</strong> (<code>false</code>) so that generic 2020-12 validators still process OO-LD schemas instead of refusing them.</p>
@@ -659,7 +813,7 @@ intersections (<code>allOf</code>) and inline constraints can be combined to des
 </tr>
 <tr>
   <td><code>x-oold-reverse-default-properties</code></td>
-  <td>Names of reverse properties shown by default in generated user interfaces.</td>
+  <td>Deprecated. Names of reverse properties shown by default in generated user interfaces. Like the object-level defaultProperties array this is extend-only under composition; prefer a per-reverse-property x-oold-ui-default-property boolean, which is overridable.</td>
 </tr>
 </tbody>
 </table></section>

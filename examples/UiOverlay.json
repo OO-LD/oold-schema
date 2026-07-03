@@ -1,0 +1,27 @@
+{
+  "overlay": "1.0.0",
+  "info": {
+    "title": "Researcher admin overlay",
+    "version": "1.0.0",
+    "description": "Applies presentation-only x-oold-ui-* keywords to Researcher without editing the schema. An overlay is a general schema-patching mechanism (OpenAPI Overlay 1.1.0); UI annotation is one use case."
+  },
+  "extends": "./UiAnnotations.schema.json",
+  "actions": [
+    {
+      "target": "$.properties.internal_id",
+      "description": "Show the internal id for admins.",
+      "update": { "x-oold-ui-form-hidden": false }
+    },
+    {
+      "target": "$.properties.notes",
+      "description": "Render notes as a plain textarea instead of markdown.",
+      "update": { "x-oold-ui-widget": "textarea" }
+    },
+    {
+      "target": "$.properties.role",
+      "description": "Drop the render-time grouping for a flat admin form.",
+      "remove": false,
+      "update": { "x-oold-ui-property-group": "Identity" }
+    }
+  ]
+}
