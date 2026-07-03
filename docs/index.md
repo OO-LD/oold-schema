@@ -24,6 +24,7 @@ already have.
 <p class="oold-hero__actions" markdown>
 [Get started](get-started.md){ .md-button .md-button--primary }
 [Introduction](introduction.md){ .md-button }
+[Specification](spec/index.html){ .md-button }
 </p>
 
 </div>

@@ -27,6 +27,7 @@ nav = [
     { "Mappings" = "mappings.md" },
     { "Tooling" = "tooling.md" },
     { "Reference" = "reference.md" },
+    { "Specification" = "spec/index.html" },
 ]
 
 [project.theme]
