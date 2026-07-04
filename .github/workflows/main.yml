@@ -27,12 +27,13 @@ jobs:
       - run: npm run validate
       # Re-render the spec from spec/sections + meta/*.json, fail if the committed
       # docs/spec/index.html is stale (drift guard), then lint its structure.
+      # (Renderer dependencies are pinned inline in the script via PEP 723.)
       - name: Render the spec
-        run: uv run --with mistune==3.3.2 --with jinja2==3.* python scripts/render_spec.py
+        run: uv run scripts/render_spec.py
       - name: Check the generated spec is up to date
         run: git diff --exit-code docs/spec/index.html
       - name: Lint the spec
-        run: uv run --with mistune==3.3.2 --with jinja2==3.* python scripts/check_spec.py
+        run: uv run scripts/check_spec.py
 
   # Build the documentation on every push/PR, but only after schema validation
   # succeeds - so the site is only ever published from valid schema definitions.

@@ -43,21 +43,27 @@ The normative, W3C-style **[Specification](https://OO-LD.github.io/oold-schema/s
 ## Repository contents
 
 - [`examples/`](examples/) - example OO-LD schemas (`Person`, `Organization`, `Address`, `Researcher`, `Thing`).
-- [`meta/oold-meta-schema.json`](meta/oold-meta-schema.json) - the OO-LD dialect meta-schema.
-- [`scripts/validate.mjs`](scripts/validate.mjs) - validates the example schemas against the meta-schema.
+- [`meta/oold-meta-schema.json`](meta/oold-meta-schema.json) - the OO-LD dialect meta-schema, defining the `x-oold-*` keywords.
 - [`docs/`](docs/) - the documentation site source (built with [zensical](https://github.com/zensical/zensical)).
+- [`spec/`](spec/) - the specification source, written in plain Markdown.
+- [`macros.py`](macros.py) - shared macros that pull reused content (examples, the keyword table) into both the guide and the spec.
+- [`scripts/`](scripts/) - the schema validator and the spec renderer.
+
+### How the docs and spec are published
+
+Everything is written once and reused. The guide pages and the specification pull their example schemas from [`examples/`](examples/) and the keyword vocabulary from [`meta/`](meta/) via small macros, so those never drift apart. The specification itself is plain Markdown in [`spec/sections/`](spec/sections/); `make spec` renders it into a W3C-style page ([ReSpec](https://respec.org/)) at [`docs/spec/index.html`](docs/spec/index.html), which is committed and served as part of the site. On every push, CI validates the example schemas, re-renders the spec, and fails if the committed copy is stale; on `main` the site is then deployed to GitHub Pages (see [`.github/workflows/main.yml`](.github/workflows/main.yml)).
 
 Common tasks are wrapped in a [`Makefile`](Makefile) (run `make` or `make help` to list them):
 
 ```bash
-make install      # npm install
-make validate     # validate the example schemas against the meta-schema
-make docs         # build + serve the documentation with live reload
-make docs-build   # build the site into ./site
-make check        # validate schemas + strict docs build
+make validate   # validate the example schemas against the meta-schema
+make spec       # re-render the specification from spec/ and meta/
+make docs       # serve the documentation site locally with live reload
+make preview    # re-render the spec, then serve the site
+make check      # validate + spec lint + site build (what CI runs)
 ```
 
-The docs are built with [zensical](https://github.com/zensical/zensical) (a Python tool) run via [uv](https://docs.astral.sh/uv/) - no local Python setup required. The site is deployed to GitHub Pages automatically on every push to `main`, but only after schema validation succeeds (see [`.github/workflows/main.yml`](.github/workflows/main.yml)).
+The docs and the spec renderer run on Python via [uv](https://docs.astral.sh/uv/) - no local Python setup required; the schema validator runs on Node (`make install` once).
 
 ## License
 

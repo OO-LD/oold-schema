@@ -3,9 +3,9 @@
 ZENSICAL_VERSION ?= 0.0.46
 ZENSICAL := uvx zensical@$(ZENSICAL_VERSION)
 
-# The spec renderer runs on Python via uv (like zensical); deps are pinned so the
-# generated HTML is reproducible (the CI drift guard compares byte-for-byte).
-SPEC_PY := uv run --with mistune==3.3.2 --with jinja2==3.* python
+# The spec renderer runs on Python via uv (like zensical); its dependencies are
+# pinned inline in the script (PEP 723), so `uv run` needs no extra flags and the
+# generated HTML stays reproducible (the CI drift guard compares byte-for-byte).
 
 # Node runs only the schema validator. Override when `node` is not on PATH
 # (e.g. WSL with only a Windows install): make validate NODE="/c/.../node.exe"
@@ -22,7 +22,7 @@ validate: ## Validate the example schemas against the OO-LD meta-schema
 .PHONY: spec
 spec: ## Regenerate docs/spec/index.html from spec/sections + meta/*.json (via uv)
 	@echo "🚀 Rendering the ReSpec spec from spec/"
-	@$(SPEC_PY) scripts/render_spec.py
+	@uv run scripts/render_spec.py
 
 .PHONY: docs
 docs: ## Serve the docs with live reload (serves the committed spec artifact)
@@ -34,7 +34,7 @@ preview: spec ## Regenerate the spec, then serve the docs with live reload
 
 .PHONY: check
 check: validate spec ## Validate schemas, lint the regenerated spec, and build the site
-	@$(SPEC_PY) scripts/check_spec.py
+	@uv run scripts/check_spec.py
 	@$(ZENSICAL) build --clean
 
 .PHONY: clean

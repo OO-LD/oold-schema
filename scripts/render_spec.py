@@ -1,4 +1,8 @@
 #!/usr/bin/env python3
+# /// script
+# requires-python = ">=3.10"
+# dependencies = ["mistune==3.3.2", "jinja2>=3,<4"]
+# ///
 """Render the ReSpec spec docs/spec/index.html from spec/sections/*.md.
 
 Pipeline: source (Markdown + Jinja2 macros) -> macro expansion -> section tree
