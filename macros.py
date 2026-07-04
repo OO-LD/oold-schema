@@ -10,6 +10,10 @@ import os
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
 
+# Render target, set by each renderer ("docs" for zensical, "spec" for the
+# ReSpec renderer). Target-aware macros (e.g. a future ref()/term()) branch on it.
+TARGET = "docs"
+
 
 def example(name, lang="json"):
     """Inline an example schema from examples/<name>.schema.json as a code block."""

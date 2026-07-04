@@ -22,14 +22,17 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: "20"
+      - uses: astral-sh/setup-uv@v6
       - run: npm install
       - run: npm run validate
-      # Regenerate the spec + vocabulary table (from spec/ and meta/*.json), then
-      # fail if any committed artifact is stale (drift guard), and lint the spec.
-      - run: npm run build:spec
-      - name: Check generated docs are up to date
-        run: git diff --exit-code docs/spec/index.html spec/generated/
-      - run: npm run check:spec
+      # Re-render the spec from spec/sections + meta/*.json, fail if the committed
+      # docs/spec/index.html is stale (drift guard), then lint its structure.
+      - name: Render the spec
+        run: uv run --with mistune==3.3.2 --with jinja2==3.* python scripts/render_spec.py
+      - name: Check the generated spec is up to date
+        run: git diff --exit-code docs/spec/index.html
+      - name: Lint the spec
+        run: uv run --with mistune==3.3.2 --with jinja2==3.* python scripts/check_spec.py
 
   # Build the documentation on every push/PR, but only after schema validation
   # succeeds - so the site is only ever published from valid schema definitions.

@@ -1,39 +1,40 @@
 # Pin zensical to match .github/workflows/main.yml for reproducible
-# documentation builds. Override on the command line, e.g. `make docs ZENSICAL_VERSION=0.0.27`.
+# documentation builds. Override on the command line, e.g. `make docs ZENSICAL_VERSION=0.0.47`.
 ZENSICAL_VERSION ?= 0.0.46
 ZENSICAL := uvx zensical@$(ZENSICAL_VERSION)
 
-# Node interpreter for the generator / validation scripts. Override when `node`
-# is not on PATH (e.g. on WSL with only a Windows install):
-#   make spec NODE="/mnt/c/Program Files/nodejs/node.exe"
+# The spec renderer runs on Python via uv (like zensical); deps are pinned so the
+# generated HTML is reproducible (the CI drift guard compares byte-for-byte).
+SPEC_PY := uv run --with mistune==3.3.2 --with jinja2==3.* python
+
+# Node runs only the schema validator. Override when `node` is not on PATH
+# (e.g. WSL with only a Windows install): make validate NODE="/c/.../node.exe"
 NODE ?= node
 
 .PHONY: install
-install: ## Install the Node dependencies
+install: ## Install the Node dependencies (schema validation)
 	@npm install
 
 .PHONY: validate
 validate: ## Validate the example schemas against the OO-LD meta-schema
 	@"$(NODE)" scripts/validate.mjs
 
-# Regenerate the committed artifacts (spec/generated/vocabulary.md and
-# docs/spec/index.html) from spec/ and meta/*.json. Run after editing either.
 .PHONY: spec
-spec: ## Regenerate the spec + vocabulary table from spec/ and meta/*.json (needs Node)
-	@echo "🚀 Regenerating the ReSpec spec and vocabulary table"
-	@"$(NODE)" scripts/build-spec.mjs
+spec: ## Regenerate docs/spec/index.html from spec/sections + meta/*.json (via uv)
+	@echo "🚀 Rendering the ReSpec spec from spec/"
+	@$(SPEC_PY) scripts/render_spec.py
 
 .PHONY: docs
-docs: ## Serve the docs with live reload (serves committed artifacts; no Node)
+docs: ## Serve the docs with live reload (serves the committed spec artifact)
 	@$(ZENSICAL) serve
 
 .PHONY: preview
-preview: spec ## Regenerate, then serve the docs with live reload (needs Node)
+preview: spec ## Regenerate the spec, then serve the docs with live reload
 	@$(ZENSICAL) serve
 
 .PHONY: check
 check: validate spec ## Validate schemas, lint the regenerated spec, and build the site
-	@"$(NODE)" scripts/check-spec.mjs
+	@$(SPEC_PY) scripts/check_spec.py
 	@$(ZENSICAL) build --clean
 
 .PHONY: clean

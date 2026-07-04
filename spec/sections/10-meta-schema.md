@@ -13,4 +13,4 @@ generic 2020-12 validators still process OO-LD schemas instead of refusing
 them. Declaring a vocabulary does not make a validator execute keyword
 behavior; that is supplied by OO-LD-aware tooling.
 
---8<-- "spec/generated/vocabulary.md"
+{{ vocabulary() }}

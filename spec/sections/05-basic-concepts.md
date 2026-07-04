@@ -9,9 +9,7 @@ autocomplete dropdowns for string-IRI fields based on a SPARQL backend, or
 SHACL shape / JSON-LD frame generation).
 
 :::example{title="A minimal OO-LD schema"}
-```json
---8<-- "examples/Thing.schema.json"
-```
+{{ example('Thing') }}
 :::
 
 There is an asymmetry between how schemas and instances are consumed:
