@@ -54,11 +54,12 @@ x-oold-version: 1.1.0
 x-oold-prior-version: 1.0.0
 ```
 
-- For single schema versioning, version SHOULD be part of the `$id`  the version SHOULD be appended, [see example.org](https://example.org/b5203131-7321-46bb-8a11-acb3d1015840.schema.json/1.1.0
-)
-- For schema package versioning (recommended) the version of the package SHOULD be prepended before the schemas ID, [see example.org](https://example.org/my-package/2.0.0/b5203131-7321-46bb-8a11-acb3d1015840.schema.json
-)
-- or using [release tags on GitHub](https://docs.github.com/en/authentication/managing-commit-signature-verification/signing-tags)
+- For single schema versioning, the version SHOULD be part of the `$id` - appended after the schema name, e.g.
+  `https://example.org/b5203131-7321-46bb-8a11-acb3d1015840.schema.json/1.1.0`
+- For schema package versioning (recommended), the version of the package SHOULD be prepended before the schema's ID, e.g.
+  `https://example.org/my-package/2.0.0/b5203131-7321-46bb-8a11-acb3d1015840.schema.json`
+- or using release tags on GitHub, e.g.
+  `https://raw.githubusercontent.com/MyOrg/my-package/refs/heads/2.0.0/b5203131-7321-46bb-8a11-acb3d1015840.schema.json`
 
 > Note: Since a package combines multiple schemas the packages version does in general not match the schema version.
 

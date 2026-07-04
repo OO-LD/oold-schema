@@ -14,7 +14,11 @@ Instances SHOULD use a versioned schema URL so that it is unambiguous which sche
 
 ## Referencing the schema with `$schema`
 
-In standard JSON Schema, `$schema` identifies the dialect (meta-schema), not the schema an instance validates against (see [Core section 8.1.1](https://json-schema.org/draft/2020-12/json-schema-core#section-8.1.1)); JSON Schema does not define an in-band way for an instance to point at its own schema. OO-LD therefore uses `$schema` on instances as a convention: standard JSON Schema validators treat it as ordinary data, while editors (VS Code, JetBrains, JSON Schema Store) and CI checks (e.g. [check-json-schema-meta](https://github.com/thiagowfx/check-json-schema-meta)) honor it. Where the instance is served over HTTP, the standards-conformant alternative is the `describedby` link relation (see [Core section 9.5.1.1](https://json-schema.org/draft/2020-12/json-schema-core#section-9.5.1.1)), optionally with the `profile` media-type parameter ([RFC 6906](https://www.rfc-editor.org/rfc/rfc6906)): [https://example.org/my-package/1.0.0/Person.schema.json](https://example.org/my-package/1.0.0/Person.schema.json)
+In standard JSON Schema, `$schema` identifies the dialect (meta-schema), not the schema an instance validates against (see [Core section 8.1.1](https://json-schema.org/draft/2020-12/json-schema-core#section-8.1.1)); JSON Schema does not define an in-band way for an instance to point at its own schema. OO-LD therefore uses `$schema` on instances as a convention: standard JSON Schema validators treat it as ordinary data, while editors (VS Code, JetBrains, JSON Schema Store) and CI checks (e.g. [check-json-schema-meta](https://github.com/thiagowfx/check-json-schema-meta)) honor it. Where the instance is served over HTTP, the standards-conformant alternative is the `describedby` link relation (see [Core section 9.5.1.1](https://json-schema.org/draft/2020-12/json-schema-core#section-9.5.1.1)), optionally with the `profile` media-type parameter ([RFC 6906](https://www.rfc-editor.org/rfc/rfc6906)):
+
+```http
+Link: <https://example.org/my-package/1.0.0/Person.schema.json>; rel="describedby"
+```
 
 An OO-LD-aware tool determines an instance's schema in the following order:
 

@@ -452,7 +452,7 @@ behavior; that is supplied by OO-LD-aware tooling.</p>
   <td>Names of reverse properties that are required.</td>
 </tr>
 <tr>
-  <td><code>x-oold-reverse-defaultProperties</code></td>
+  <td><code>x-oold-reverse-default-properties</code></td>
   <td>Names of reverse properties shown by default in generated user interfaces.</td>
 </tr>
 </tbody>
@@ -486,6 +486,13 @@ behavior; that is supplied by OO-LD-aware tooling.</p>
 <tr>
   <td>schema</td>
   <td>*.schema.json</td>
+  <td><code>application/oold-schema+json</code></td>
+  <td><code>http://www.w3.org/ns/json-ld#context</code></td>
+  <td>Only the JSON-LD context</td>
+</tr>
+<tr>
+  <td>schema</td>
+  <td>*.schema.json</td>
   <td><code>application/ld+json</code></td>
   <td>-</td>
   <td>Only the JSON-LD context</td>
@@ -508,8 +515,8 @@ behavior; that is supplied by OO-LD-aware tooling.</p>
   <td>data</td>
   <td>*.data.json</td>
   <td><code>application/ld+json</code></td>
-  <td>-</td>
-  <td>Full OO-LD instance (JSON-LD profiles apply)</td>
+  <td><code>http://www.w3.org/ns/json-ld#*</code></td>
+  <td>Full OO-LD instance; the profiles defined in [[JSON-LD11]] IANA considerations apply</td>
 </tr>
 <tr>
   <td>data</td>
