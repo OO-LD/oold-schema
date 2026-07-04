@@ -4,10 +4,23 @@
   "type": "module",
   "description": "OO-LD schema specification and validation tooling",
   "scripts": {
-    "validate": "node scripts/validate.mjs"
+    "validate": "node scripts/validate.mjs",
+    "build:spec": "node scripts/build-spec.mjs",
+    "check:spec": "node scripts/check-spec.mjs"
   },
   "devDependencies": {
     "@apidevtools/json-schema-ref-parser": "^11.0.0",
-    "ajv": "^8.12.0"
+    "ajv": "^8.12.0",
+    "hast-util-to-html": "^9.0.0",
+    "mdast-util-directive": "^3.0.0",
+    "mdast-util-to-string": "^4.0.0",
+    "rehype-raw": "^7.0.0",
+    "rehype-stringify": "^10.0.0",
+    "remark-directive": "^3.0.0",
+    "remark-gfm": "^4.0.0",
+    "remark-parse": "^11.0.0",
+    "remark-rehype": "^11.0.0",
+    "unified": "^11.0.0",
+    "unist-util-visit": "^5.0.0"
   }
 }

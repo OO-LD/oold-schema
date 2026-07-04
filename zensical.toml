@@ -91,6 +91,12 @@ link = "https://github.com/OO-LD/oold-schema"
 emoji_generator = "zensical.extensions.emoji.to_svg"
 emoji_index = "zensical.extensions.emoji.twemoji"
 
+# Enables `--8<-- "path"` includes so example files (e.g. examples/*.schema.json)
+# are a single source shared between the guide and the generated spec.
+[project.markdown_extensions.pymdownx.snippets]
+base_path = ["."]
+check_paths = true
+
 [project.markdown_extensions.pymdownx.superfences]
 
 [[project.markdown_extensions.pymdownx.superfences.custom_fences]]

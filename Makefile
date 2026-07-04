@@ -1,44 +1,48 @@
-# Pin zensical to match .github/workflows/validate-schemas.yml for reproducible
+# Pin zensical to match .github/workflows/main.yml for reproducible
 # documentation builds. Override on the command line, e.g. `make docs ZENSICAL_VERSION=0.0.27`.
 ZENSICAL_VERSION ?= 0.0.26
 ZENSICAL := uvx zensical@$(ZENSICAL_VERSION)
 
+# Node interpreter for the generator / validation scripts. Override when `node`
+# is not on PATH (e.g. on WSL with only a Windows install):
+#   make spec NODE="/mnt/c/Program Files/nodejs/node.exe"
+NODE ?= node
+
 .PHONY: install
-install: ## Install the Node dependencies (ajv, json-schema-ref-parser)
-	@echo "🚀 Installing dependencies with npm"
+install: ## Install the Node dependencies
 	@npm install
 
 .PHONY: validate
 validate: ## Validate the example schemas against the OO-LD meta-schema
-	@echo "🚀 Validating OO-LD schemas"
-	@npm run validate
+	@"$(NODE)" scripts/validate.mjs
+
+# Regenerate the committed artifacts (spec/generated/vocabulary.md and
+# docs/spec/index.html) from spec/ and meta/*.json. Run after editing either.
+.PHONY: spec
+spec: ## Regenerate the spec + vocabulary table from spec/ and meta/*.json (needs Node)
+	@echo "🚀 Regenerating the ReSpec spec and vocabulary table"
+	@"$(NODE)" scripts/build-spec.mjs
 
 .PHONY: docs
-docs: ## Build and serve the documentation with live reload
-	@echo "🚀 Serving documentation (zensical)"
+docs: ## Serve the docs with live reload (serves committed artifacts; no Node)
 	@$(ZENSICAL) serve
 
-.PHONY: docs-build
-docs-build: ## Build the documentation site into ./site
-	@echo "🚀 Building documentation into ./site"
-	@$(ZENSICAL) build --clean
-
-.PHONY: docs-test
-docs-test: ## Test that the documentation builds in strict mode (warnings fail)
-	@echo "🚀 Test-building documentation in strict mode"
-	@$(ZENSICAL) build -s
+.PHONY: preview
+preview: spec ## Regenerate, then serve the docs with live reload (needs Node)
+	@$(ZENSICAL) serve
 
 .PHONY: check
-check: validate docs-test ## Run schema validation and the strict docs build
+check: validate spec ## Validate schemas, lint the regenerated spec, and build the site
+	@"$(NODE)" scripts/check-spec.mjs
+	@$(ZENSICAL) build --clean
 
 .PHONY: clean
 clean: ## Remove build artifacts (./site)
-	@echo "🚀 Removing build artifacts"
 	@rm -rf site
 
 .PHONY: help
 help:
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) \
-		| awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-14s\033[0m %s\n", $$1, $$2}'
+		| awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-12s\033[0m %s\n", $$1, $$2}'
 
 .DEFAULT_GOAL := help

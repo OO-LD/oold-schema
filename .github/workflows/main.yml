@@ -24,6 +24,12 @@ jobs:
           node-version: "20"
       - run: npm install
       - run: npm run validate
+      # Regenerate the spec + vocabulary table (from spec/ and meta/*.json), then
+      # fail if any committed artifact is stale (drift guard), and lint the spec.
+      - run: npm run build:spec
+      - name: Check generated docs are up to date
+        run: git diff --exit-code docs/spec/index.html spec/generated/
+      - run: npm run check:spec
 
   # Build the documentation on every push/PR, but only after schema validation
   # succeeds - so the site is only ever published from valid schema definitions.

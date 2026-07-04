@@ -8,14 +8,4 @@ Declaring a vocabulary does not make a validator execute keyword behavior; that 
 
 The `x-oold-*` keywords are:
 
-| Keyword                                                                                       | Purpose                                                                                                                                            |
-| --------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `x-oold-uuid`                                                                                 | Stable UUID identifying the schema across versions and locations                                                                                   |
-| `x-oold-version` / `x-oold-prior-version`                                                     | Semantic version of the schema, and its predecessor                                                                                                |
-| `x-oold-backward-compatible-with` / `x-oold-incompatible-with`                                | URIs of prior versions this schema is / is not compatible with                                                                                     |
-| `x-oold-iri`                                                                                  | [Ontology IRI denoting the class described by the schema](identification-versioning.md#ontology-class-iri-x-oold-iri)                              |
-| `x-oold-instance-rdf-type`                                                                    | [rdf:type(s) instances carry, as a list of IRIs; materialized as `@type` on export](schema-instances.md#carrying-the-semantic-type)                |
-| `x-oold-range`                                                                                | [Type constraint on an IRI-valued property (IRI, array of IRIs, or an OO-LD subschema)](extensions.md#range-of-properties)                         |
-| `x-oold-ref`                                                                                  | [Reference to another OO-LD schema, resolved only by OO-LD-aware tools (use instead of `$ref` inside `x-oold-range`)](extensions.md#why-x-oold-ref-and-not-ref) |
-| `x-oold-multilang-title` / `x-oold-multilang-description`                                     | [Translations of `title` / `description` keyed by BCP-47 language tag](extensions.md#localizing-schema-annotations)                                |
-| `x-oold-reverse-properties` / `x-oold-reverse-required` / `x-oold-reverse-default-properties` | Reverse-property definitions (see [Reverse properties](extensions.md#reverse-properties))                                                          |
+--8<-- "spec/generated/vocabulary.md"

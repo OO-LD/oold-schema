@@ -5,20 +5,7 @@ The core idea is that an OO-LD document is always both a valid JSON Schema and a
 A minimal example:
 
 ```json
-{
-  "@context": {
-    "schema": "http://schema.org/",
-    "name": "schema:name"
-  },
-  "title": "Person",
-  "type": "object",
-  "properties": {
-    "name": {
-      "type": "string",
-      "description": "First and Last name"
-    }
-  }
-}
+--8<-- "examples/Thing.schema.json"
 ```
 
 You can explore this in the [interactive playground](https://oo-ld.github.io/playground/).
