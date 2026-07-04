@@ -8,4 +8,4 @@ Declaring a vocabulary does not make a validator execute keyword behavior; that 
 
 The `x-oold-*` keywords are:
 
---8<-- "spec/generated/vocabulary.md"
+{{ vocabulary() }}

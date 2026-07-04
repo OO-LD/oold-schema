@@ -1,6 +1,6 @@
 # Pin zensical to match .github/workflows/main.yml for reproducible
 # documentation builds. Override on the command line, e.g. `make docs ZENSICAL_VERSION=0.0.27`.
-ZENSICAL_VERSION ?= 0.0.26
+ZENSICAL_VERSION ?= 0.0.46
 ZENSICAL := uvx zensical@$(ZENSICAL_VERSION)
 
 # Node interpreter for the generator / validation scripts. Override when `node`

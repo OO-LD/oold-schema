@@ -7,7 +7,7 @@ on:
 
 # Pin the zensical version here so documentation builds are reproducible.
 env:
-  ZENSICAL_VERSION: "0.0.26"
+  ZENSICAL_VERSION: "0.0.46"
 
 # Allow only one concurrent Pages deployment.
 concurrency:

@@ -91,11 +91,10 @@ link = "https://github.com/OO-LD/oold-schema"
 emoji_generator = "zensical.extensions.emoji.to_svg"
 emoji_index = "zensical.extensions.emoji.twemoji"
 
-# Enables `--8<-- "path"` includes so example files (e.g. examples/*.schema.json)
-# are a single source shared between the guide and the generated spec.
-[project.markdown_extensions.pymdownx.snippets]
-base_path = ["."]
-check_paths = true
+# Jinja2 macros (see macros.py) let the guide reuse the same resources as the
+# spec - example schemas, the keyword vocabulary, etc. - so they have one source.
+[project.markdown_extensions.zensical.extensions.macros]
+module_name = "macros"
 
 [project.markdown_extensions.pymdownx.superfences]
 
