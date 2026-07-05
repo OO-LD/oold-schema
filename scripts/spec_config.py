@@ -6,9 +6,9 @@ Ported from the former spec.config.mjs when the spec generator moved to Python.
 # Serialized verbatim into `var respecConfig = {...}` in the generated <head>.
 # See https://respec.org/docs/ for all options.
 RESPEC = {
-    "specStatus": "base",  # https://respec.org/docs/#specStatus
+    "specStatus": "base",  # minimal output: no W3C boilerplate, no status banner (respec.org/docs). Copyright comes from the custom p.copyright in render_spec.py; no `license` key (which would trigger a W3C license check).
     "shortName": "oold",
-    "subtitle": "OO-LD Recommendation 1.0",
+    # `subtitle` is injected at render time from the current git tag (see render_spec.py); do not hardcode a version here.
     "editors": [
         {"name": "Simon Stier", "company": "OO-LD", "companyURL": "https://github.com/OO-LD"},
         {"name": "Lukas Gold", "company": "OO-LD", "companyURL": "https://github.com/OO-LD"},

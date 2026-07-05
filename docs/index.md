@@ -1,5 +1,6 @@
 ---
-title: OO-LD Schema hide:
+title: OO-LD Schema
+hide:
   - navigation
   - toc
 ---

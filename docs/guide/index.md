@@ -1,8 +1,6 @@
 # Guide
 
-This guide is the normative walk-through of the OO-LD Schema. It follows the same orientation as the [JSON-LD specification](https://www.w3.org/TR/json-ld/): each concept is introduced with a short explanation and worked examples.
-
-The keywords "MUST", "MUST NOT", "SHOULD", "MAY", etc. are used as defined in [RFC 2119](https://www.rfc-editor.org/info/rfc2119) (see [Conventions and Terminology](../introduction.md#conventions-and-terminology)).
+This guide is a non-normative walk-through of OO-LD Schema. It follows the same orientation as the [JSON-LD specification](https://www.w3.org/TR/json-ld/): each concept is introduced with a short explanation and worked examples. For the exact, normative rules - and the RFC 2119 keywords - always refer to the [Specification](../spec/index.html).
 
 ## Contents
 

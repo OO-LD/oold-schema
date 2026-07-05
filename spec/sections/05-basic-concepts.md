@@ -3,7 +3,7 @@
 The core idea is that an [=OO-LD schema=] is always both a valid JSON Schema and a reference-able JSON-LD [=remote context=] as defined in [[JSON-LD11]] §3.1 (*not* a JSON-LD document). In this way a complete OO-LD class / schema hierarchy is consume-able by JSON Schema-only and JSON-LD-only tools while OO-LD-aware tools can provide extended features on top (e.g. UI autocomplete dropdowns for string-IRI fields based on a SPARQL backend, or SHACL shape / JSON-LD frame generation).
 
 :::example{title="A minimal OO-LD schema"}
-{{ example('Thing') }}
+{{ example('Minimal') }}
 :::
 
 There is an asymmetry between how schemas and instances are consumed:
@@ -17,7 +17,7 @@ This asymmetry is what lets a single document serve both as a JSON Schema `$ref`
 A class *B* extends a class *A* by referencing it in both `allOf` (so JSON Schema validators apply *A*'s rules when validating *B* instances) and `@context` (so JSON-LD processors resolve *A*'s term mappings). *B* instances are therefore valid *A* instances and carry all of *A*'s properties alongside *B*'s own additions. Building types from *multiple* independent schemas is covered in [](#composition).
 :::
 
-:::example{title="Inheritance and instantiation (Class A <- Class B <- Instance)"}
+:::example{title="Inheritance and instantiation"}
 ```mermaid
 %%{init: {'theme': 'neutral' } }%%
 classDiagram
