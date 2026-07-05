@@ -16,3 +16,33 @@ This asymmetry is what lets a single document serve both as a JSON Schema `$ref`
 :::note{title="Inheritance"}
 A class *B* extends a class *A* by referencing it in both `allOf` (so JSON Schema validators apply *A*'s rules when validating *B* instances) and `@context` (so JSON-LD processors resolve *A*'s term mappings). *B* instances are therefore valid *A* instances and carry all of *A*'s properties alongside *B*'s own additions. Building types from *multiple* independent schemas is covered in [](#composition).
 :::
+
+:::example{title="Inheritance and instantiation (Class A <- Class B <- Instance)"}
+```mermaid
+%%{init: {'theme': 'neutral' } }%%
+classDiagram
+    class OOLD_Class_A {
+        JSON Schema + JSON-LD
+        @context: ...
+        properties: a...
+    }
+
+    class OOLD_Class_B {
+        JSON Schema + JSON-LD
+        @context: ./A
+        allOf: ./A
+        properties: b...
+    }
+
+    class OOLD_Instance_B {
+        JSON
+        @context: ./B
+        $schema: ./B
+        a: ...
+        b: ...
+    }
+
+    OOLD_Class_A <-- OOLD_Class_B: extends
+    OOLD_Class_B <-- OOLD_Instance_B: type
+```
+:::

@@ -18,13 +18,14 @@ html = open(os.path.join(ROOT, "docs", "spec", "index.html"), encoding="utf-8").
 
 # ReSpec resolves these bibliography keys from its built-in database; anything
 # else must be declared in localBiblio.
-KNOWN_BIBLIO = {"RFC2119", "RFC7386", "JSON-LD11"}
+KNOWN_BIBLIO = {"RFC2119", "RFC7386", "RFC3986", "RFC6906", "JSON-LD11"}
 
 EXPECTED_IDS = sorted([
     "abstract", "basic-concepts", "compatibility", "composition", "conformance",
     "design-goals", "expressiveness", "extensions", "iana", "identification",
     "identification-versioning", "identity", "index", "interoperability",
     "introduction", "jsonld-extensions", "jsonschema-extensions",
+    "localizing-instance-values", "localizing-schema-annotations",
     "merge-and-override-model", "merging-remote-contexts", "meta-schema",
     "multi-mapping", "multilanguage", "ontology-class-iri", "processing-mode",
     "range-of-properties", "referencing-schema", "reverse-properties",
