@@ -1,2 +1,7 @@
 node_modules/
 package-lock.json
+
+# Documentation build (zensical)
+site/
+.venv/
+__pycache__/
