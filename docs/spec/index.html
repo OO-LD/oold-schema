@@ -101,11 +101,11 @@
   <dt><dfn data-lt="remote context">remote context</dfn></dt>
   <dd>A JSON-LD context referenced by URL, as defined in [[JSON-LD11]] §3.1.</dd>
   <dt><dfn data-lt="resolved schema|resolved view">resolved schema</dfn></dt>
-  <dd>A single, merged view of a composed schema (see <a href="#merge-and-override-model">#merge-and-override-model</a>).</dd>
+  <dd>A single, merged view of a composed schema (see <a href="#merge-and-override-model"></a>).</dd>
   <dt><dfn data-lt="range">range</dfn></dt>
-  <dd>A type constraint on an IRI-valued property (see <a href="#range-of-properties">#range-of-properties</a>).</dd>
+  <dd>A type constraint on an IRI-valued property (see <a href="#range-of-properties"></a>).</dd>
   <dt><dfn data-lt="reverse property">reverse property</dfn></dt>
-  <dd>A property that is stored on and edited from both ends of a relation (see <a href="#reverse-properties">#reverse-properties</a>).</dd>
+  <dd>A property that is stored on and edited from both ends of a relation (see <a href="#reverse-properties"></a>).</dd>
   </dl>
 </section>
 
@@ -137,38 +137,463 @@
 <li>An [=OO-LD instance=] <em>is</em> a valid JSON-LD document and is processed as such.</li>
 </ul>
 <p>This asymmetry is what lets a single document serve both as a JSON Schema <code>$ref</code> target and as a JSON-LD remote <code>@context</code> for the same resource. Concretely: an instance is processed directly as a JSON-LD document (e.g. <code>jsonld.toRDF(instance)</code>), which loads the schema as a remote context via the instance's <code>@context</code>; a schema is only ever referenced as that context and <em class="rfc2119">MUST NOT</em> itself be expanded as a document.</p>
-<div class="note" title="Inheritance"><p>A class <em>B</em> extends a class <em>A</em> by referencing it in both <code>allOf</code> (so JSON Schema validators apply <em>A</em>'s rules when validating <em>B</em> instances) and <code>@context</code> (so JSON-LD processors resolve <em>A</em>'s term mappings). <em>B</em> instances are therefore valid <em>A</em> instances and carry all of <em>A</em>'s properties alongside <em>B</em>'s own additions. Building types from <em>multiple</em> independent schemas is covered in <a href="#composition">#composition</a>.</p></div></section>
+<div class="note" title="Inheritance"><p>A class <em>B</em> extends a class <em>A</em> by referencing it in both <code>allOf</code> (so JSON Schema validators apply <em>A</em>'s rules when validating <em>B</em> instances) and <code>@context</code> (so JSON-LD processors resolve <em>A</em>'s term mappings). <em>B</em> instances are therefore valid <em>A</em> instances and carry all of <em>A</em>'s properties alongside <em>B</em>'s own additions. Building types from <em>multiple</em> independent schemas is covered in <a href="#composition"></a>.</p></div>
+<aside class="example" title="Inheritance and instantiation (Class A <- Class B <- Instance)"><pre><code class="language-mermaid">%%{init: {'theme': 'neutral' } }%%
+classDiagram
+    class OOLD_Class_A {
+        JSON Schema + JSON-LD
+        @context: ...
+        properties: a...
+    }
 
-<section id="composition"><h2>Composition</h2><p>Composition is how an [=OO-LD schema=] incorporates multiple independent schemas, each contributing its own properties and JSON-LD term mappings, without requiring a shared parent class. The rules below govern how the resulting <code>@context</code> is assembled automatically, so that no post-processing step is needed.</p>
-<p>It <em class="rfc2119">MUST NOT</em> be required to further process an OO-LD schema document in order to interpret it as a JSON-LD context. This implies that all occurrences of <code>$ref</code> in the schema are reflected in the JSON-LD context. <code>$ref</code> within properties of <code>type: object</code> <em class="rfc2119">MUST</em> be listed as a scoped JSON-LD context. <code>$ref</code> within all other property types and at the root level of the OO-LD schema <em class="rfc2119">MUST</em> be listed at the root level of the JSON-LD context. In case of multiple <code>$ref</code> within <code>allOf</code> the corresponding remote contexts are merged into an array-valued <code>@context</code> (see <a href="#merging-remote-contexts">#merging-remote-contexts</a>). For <code>oneOf</code> / <code>anyOf</code> this requires care to avoid conflicts. At any time the importing OO-LD schema <em class="rfc2119">MAY</em> define its own or override the imported JSON-LD context.</p><section id="merging-remote-contexts"><h3>Merging remote contexts</h3><p><strong>Multiple <code>$ref</code> (e.g. in <code>allOf</code>)</strong> each correspond to a remote context. By the reflection rule above, the schema's own <code>@context</code> <em class="rfc2119">MUST</em> list those remote contexts as an array, in the same order as the <code>allOf</code> members, so the schema stays usable as a context without further processing. A JSON-LD processor then resolves that array in order, later entries overriding earlier ones - duplicate context terms are overridden using a most-recently-defined-wins mechanism ([[JSON-LD11]] §4.1.5). The schema <em class="rfc2119">MAY</em> append its own context object as the last array entry to override an inherited term.</p>
-<p><strong><code>oneOf</code> / <code>anyOf</code>.</strong> The remote contexts of <code>oneOf</code> / <code>anyOf</code> branches <em class="rfc2119">MAY</em> also be reflected into the <code>@context</code>, but they <em class="rfc2119">MUST NOT</em> conflict at the root - they <em class="rfc2119">MUST NOT</em> map the same keyword to different IRIs there. Where branches genuinely need different mappings for the same keyword, they are scoped using JSON-LD <strong>type-scoped</strong> or <strong>property-scoped</strong> contexts so each mapping applies only where its branch applies.</p>
-<p><strong>Propagation (<code>@propagate</code>).</strong> A <code>$ref</code> inside a <code>type: object</code> property is reflected as a property-scoped context, which by default propagates into the whole subtree rooted at that property. Where a referenced context should apply only to the immediate node, the schema <em class="rfc2119">MUST</em> set <code>&quot;@propagate&quot;: false</code> on that scoped context. Contexts combined in a single array <em class="rfc2119">MUST</em> share the same <code>@propagate</code> value.</p>
-<p><strong>Protected terms (<code>@protected</code>).</strong> A schema <em class="rfc2119">MAY</em> mark terms <code>@protected</code> to prevent later contexts from silently redefining them. When contexts are combined via <code>allOf</code>, redefining a protected term to a different IRI is an error unless the new definition is identical; property-scoped contexts are exempt and may override protected terms within their subtree.</p>
-<p><strong>Independent references and base URIs.</strong> A JSON Schema <code>$ref</code> and a JSON-LD <code>@context</code> entry are independent references: they <em class="rfc2119">MAY</em> point to the same document (the typical OO-LD case) or to different documents. Relative references resolve against the schema's <code>$id</code> and, on the JSON-LD side, against <code>@base</code> / the retrieval URL; these base URIs <em class="rfc2119">SHOULD</em> be aligned so a relative reference resolves to the same absolute URL under both. <code>$id</code> <em class="rfc2119">MUST NOT</em> contain a non-empty fragment ([[JSONSCHEMA]] §8.2.1).</p></section><section id="merge-and-override-model"><h3>Merge and override model</h3><p>JSON Schema's validation algebra is purely conjunctive: <code>allOf</code> requires an instance to satisfy every subschema, and the specification defines no merge of the subschemas' keyword values ([[JSONSCHEMA]] §10.2.1.1). Several consumers nonetheless require a single <em>[=resolved schema=]</em> view rather than a conjunction: a UI generator needs exactly one <code>title</code> per field, a code generator flattens an inheritance chain into one class, and an OO-LD preprocessor must produce one <code>@context</code>.</p>
-<p>When such a merge is required, OO-LD resolves the <code>allOf</code> chain by applying <strong>JSON Merge Patch ([[RFC7386]]) semantics</strong>: keyed by object member, most-recently-defined (most-derived) wins, and a <code>null</code> value removes a key. For the <code>@context</code> this coincides with JSON-LD's own override rule. For assertion-bearing keywords the resolved view additionally honors <strong>narrow-only</strong> composition: a derived schema <em class="rfc2119">MAY</em> restrict a constraint but <em class="rfc2119">MUST NOT</em> relax it.</p></section></section>
+    class OOLD_Class_B {
+        JSON Schema + JSON-LD
+        @context: ./A
+        allOf: ./A
+        properties: b...
+    }
+
+    class OOLD_Instance_B {
+        JSON
+        @context: ./B
+        $schema: ./B
+        a: ...
+        b: ...
+    }
+
+    OOLD_Class_A &lt;-- OOLD_Class_B: extends
+    OOLD_Class_B &lt;-- OOLD_Instance_B: type
+</code></pre></aside></section>
+
+<section id="composition"><h2>Composition</h2><p>Composition is how an [=OO-LD schema=] incorporates multiple independent schemas, each contributing its own properties and JSON-LD term mappings, without requiring a shared parent class. This lets you build complex types by assembling reusable building blocks - for example, attaching a geolocation schema and a contact schema to a single resource type. The rules below govern how the resulting <code>@context</code> is assembled automatically, so that no post-processing step is needed.</p>
+<p>It <em class="rfc2119">MUST NOT</em> be required to further process an OO-LD schema document in order to interpret it as a JSON-LD context. This implies that all occurrences of <code>$ref</code> in the schema are reflected in the JSON-LD context. <code>$ref</code> within properties of <code>type: object</code> <em class="rfc2119">MUST</em> be listed as a scoped JSON-LD context. <code>$ref</code> within all other property types and at the root level of the OO-LD schema <em class="rfc2119">MUST</em> be listed at the root level of the JSON-LD context. In case of multiple <code>$ref</code> within <code>allOf</code> the corresponding remote contexts are merged into an array-valued <code>@context</code> (see <a href="#merging-remote-contexts"></a>). For <code>oneOf</code> / <code>anyOf</code> this requires care to avoid conflicts. At any time the importing OO-LD schema <em class="rfc2119">MAY</em> define its own or override the imported JSON-LD context.</p>
+<aside class="example" title="Reflecting each `$ref` into the `@context`"><pre><code class="language-yaml">&quot;@context&quot;:
+  - B.schema.json
+  - P1.schema.json
+  - p1:
+    &quot;@context&quot;: P1.schema.json
+  - p2:
+    &quot;@context&quot;: 
+      - P2a.schema.json
+      - P2b.schema.json
+  - p3:
+    &quot;@context&quot;:
+      keyword_in_P3a: ex:Property1
+      keyword_in_P3b: ex:Property2
+$id: A.schema.json
+allOf:
+  - $ref: B.schema.json
+properties:
+  p0:
+    type: string
+    $ref: P0.schema.json
+  p1:
+    type: object
+    $ref: P1.schema.json
+  p2:
+    type: object
+    allOf:
+      $ref: P2a.schema.json
+      $ref: P2b.schema.json
+  p3:
+    oneOf:
+      $ref: P3a.schema.json
+      $ref: P3b.schema.json
+</code></pre></aside>
+<aside class="example" title="A nested context and the RDF it produces"><p>A <code>Pet</code> schema:</p>
+<pre><code class="language-yaml">&quot;@context&quot;: 
+  name: ex:petName
+$id: Pet.schema.json
+properties:
+  name:
+    type: string
+</code></pre>
+<p>A <code>Person</code> schema that embeds <code>Pet</code> under a property-scoped context:</p>
+<pre><code class="language-yaml">&quot;@context&quot;: 
+  name: schema:name
+  pets:
+    &quot;@id&quot;: ex:hasPet
+    &quot;@context&quot;: Pet.schema.json
+$id: Person.schema.json
+properties:
+  name:
+    type: string
+  pets:
+    type: array
+    items: 
+      $ref: Pet.schema.json
+</code></pre>
+<p>An instance:</p>
+<pre><code class="language-yaml">&quot;@context&quot;: Person.schema.json
+$schema: Person.schema.json
+name: Max
+pets:
+  - name: Bruno
+</code></pre>
+<p>Referencing <code>Person.schema.json</code> as the context is equivalent to inlining the reflected contexts:</p>
+<pre><code class="language-yaml">&quot;@context&quot;: 
+  name: schema:name
+  pets:
+    &quot;@id&quot;: ex:hasPet
+    &quot;@context&quot;:
+      name: ex:petName
+$schema: Person.schema.json
+name: Max
+pets:
+  - name: Bruno
+</code></pre>
+<p>which expands (via the reflected contexts) to the RDF:</p>
+<pre><code class="language-ttl">_:b0 &lt;ex:hasPet&gt; _:b1 .
+_:b0 &lt;schema:name&gt; &quot;Max&quot; .
+_:b1 &lt;ex:petName&gt; &quot;Bruno&quot; .
+</code></pre></aside><section id="merging-remote-contexts"><h3>Merging remote contexts</h3><p><strong>Multiple <code>$ref</code> (e.g. in <code>allOf</code>)</strong> each correspond to a remote context. By the reflection rule above, the schema's own <code>@context</code> <em class="rfc2119">MUST</em> list those remote contexts as an array, in the same order as the <code>allOf</code> members, so the schema stays usable as a context without further processing. A JSON-LD processor then resolves that array in order, later entries overriding earlier ones - duplicate context terms are overridden using a most-recently-defined-wins mechanism ([[JSON-LD11]] §4.1.5). The schema <em class="rfc2119">MAY</em> append its own context object as the last array entry to override an inherited term. The single-context <code>@import</code> keyword is an alternative only when exactly one remote context is wrapped and locally modified (it cannot contain a nested <code>@import</code>), so the array form is used for the multi-<code>$ref</code> case.</p>
+<p><strong><code>oneOf</code> / <code>anyOf</code>.</strong> The remote contexts of <code>oneOf</code> / <code>anyOf</code> branches <em class="rfc2119">MAY</em> also be reflected into the <code>@context</code>, but they <em class="rfc2119">MUST NOT</em> conflict at the root - they <em class="rfc2119">MUST NOT</em> map the same keyword to different IRIs there. A JSON-LD processor merges all listed contexts (most-recently-wins) and has no notion of which branch a given instance matched, so a root-level conflict would be decided by context order rather than by the branch the data conforms to.</p>
+<p>Where branches genuinely need different mappings for the same keyword, do not place them at the root; scope them so each mapping applies only where its branch applies, using JSON-LD scoped contexts:</p>
+<ul>
+<li><p><strong>Type-scoped contexts</strong> when the branches are distinguished by <code>@type</code>. The
+scoped <code>@context</code> is attached to the term used as the type value and is activated only for nodes carrying that <code>@type</code>:</p>
+<pre><code class="language-json">{
+  &quot;@context&quot;: {
+    &quot;Sensor&quot;: { &quot;@id&quot;: &quot;ex:Sensor&quot;, &quot;@context&quot;: { &quot;reading&quot;: &quot;ex:temperature&quot; } },
+    &quot;Gauge&quot;:  { &quot;@id&quot;: &quot;ex:Gauge&quot;,  &quot;@context&quot;: { &quot;reading&quot;: &quot;ex:pressure&quot; } }
+  }
+}
+</code></pre>
+</li>
+</ul>
+<p>Here <code>{ &quot;@type&quot;: &quot;Sensor&quot;, &quot;reading&quot;: 21 }</code> maps <code>reading</code> to <code>ex:temperature</code>, while <code>{ &quot;@type&quot;: &quot;Gauge&quot;, &quot;reading&quot;: 3 }</code> maps the same keyword to <code>ex:pressure</code>.</p>
+<ul>
+<li><strong>Property-scoped contexts</strong> when the conflicting keyword appears under
+different parent properties. The mapping is attached to the parent property's term (its <code>@context</code>) and applies only within that property's value, so the same keyword can resolve differently under different parents.</li>
+</ul>
+<p><strong>Propagation (<code>@propagate</code>).</strong> A <code>$ref</code> inside a <code>type: object</code> property is reflected as a property-scoped context, which by default propagates into the whole subtree rooted at that property (&quot;By default ... contexts propagate across node objects, other than for type-scoped contexts, which default to false&quot;). Where a referenced context should apply only to the immediate node, the schema <em class="rfc2119">MUST</em> set <code>&quot;@propagate&quot;: false</code> on that scoped context. Contexts combined in a single array <em class="rfc2119">MUST</em> share the same <code>@propagate</code> value.</p>
+<p><strong>Protected terms (<code>@protected</code>).</strong> A schema <em class="rfc2119">MAY</em> mark terms <code>@protected</code> to prevent later contexts from silently redefining them. When contexts are combined via <code>allOf</code>, redefining a protected term to a different IRI is an error unless the new definition is identical; property-scoped contexts are exempt and may override protected terms within their subtree. Relying on <code>@protected</code> therefore constrains which schemas a schema can be combined with.</p>
+<p><strong>Independent references and base URIs.</strong> A JSON Schema <code>$ref</code> and a JSON-LD <code>@context</code> entry are independent references: they <em class="rfc2119">MAY</em> point to the same document (the typical OO-LD case, where one document is both a schema and a context) or to different documents - for example a plain JSON Schema referenced via <code>$ref</code> together with a separate remote <code>@context</code> that supplies the semantics. Relative references resolve against the schema's <code>$id</code> (the JSON Schema base URI) and, on the JSON-LD side, against <code>@base</code> / the retrieval URL; these base URIs <em class="rfc2119">SHOULD</em> be aligned so a relative reference resolves to the same absolute URL under both. <code>$id</code> <em class="rfc2119">MUST NOT</em> contain a non-empty fragment ([[JSONSCHEMA]] §8.2.1).</p></section><section id="merge-and-override-model"><h3>Merge and override model</h3><p>JSON Schema's validation algebra is purely conjunctive: <code>allOf</code> requires an instance to satisfy every subschema, and the specification defines no merge of the subschemas' keyword <em>values</em> ([[JSONSCHEMA]] §10.2.1.1). Several consumers nonetheless require a single <em>[=resolved schema=]</em> view rather than a conjunction: a UI generator needs exactly one <code>title</code> per field, a code generator flattens an inheritance chain into one class, and an OO-LD preprocessor must produce one <code>@context</code>.</p>
+<p>When such a merge is required, OO-LD resolves the <code>allOf</code> chain by applying <strong>JSON Merge Patch ([[RFC7386]]) semantics</strong>: keyed by object member, most-recently-defined (most-derived) wins, and a <code>null</code> value removes a key. For the <code>@context</code> this coincides with JSON-LD's own override rule. For assertion-bearing keywords the resolved view additionally honors <strong>narrow-only</strong> composition: a derived schema <em class="rfc2119">MAY</em> restrict a constraint but <em class="rfc2119">MUST NOT</em> relax it, matching how code generators let a subclass tighten - never loosen - a superclass property's validation.</p>
+<p>This single model governs every place OO-LD collapses composition into a resolved value: single-valued annotations such as <code>title</code> and <code>x-oold-multilang-title</code> resolve most-derived-wins, constraints resolve narrow-only, and additive maps merge by key. A preprocessor applying it produces exactly the view that UI and code generators already compute, so no separate &quot;resolved schema&quot; format is needed.</p></section></section>
 
 <section id="schema-instances"><h2>Schema Instances</h2><p>An [=OO-LD instance=] is a JSON document that conforms to an [=OO-LD schema=]. It references that schema in two ways, both pointing at the same (preferably versioned) schema URL:</p>
 <ul>
 <li><code>@context</code> - the schema URL, loaded as a JSON-LD remote context. This is what makes the instance a JSON-LD document.</li>
 <li><code>$schema</code> - the schema URL, identifying the schema the instance is intended to validate against.</li>
 </ul>
-<p>Instances <em class="rfc2119">SHOULD</em> use a versioned schema URL so that it is unambiguous which schema version they conform to.</p><section id="referencing-schema"><h3>Referencing the schema with <code>$schema</code></h3><p>In standard JSON Schema, <code>$schema</code> identifies the dialect (meta-schema), not the schema an instance validates against ([[JSONSCHEMA]] §8.1.1); JSON Schema does not define an in-band way for an instance to point at its own schema. OO-LD therefore uses <code>$schema</code> on instances as a convention. An OO-LD-aware tool determines an instance's schema in the following order:</p>
+<aside class="example" title="An instance referencing its schema"><pre><code class="language-yaml">&quot;@context&quot;: https://example.org/my-package/1.0.0/Person.schema.json
+$schema: https://example.org/my-package/1.0.0/Person.schema.json
+</code></pre></aside>
+<p>Instances <em class="rfc2119">SHOULD</em> use a versioned schema URL so that it is unambiguous which schema version they conform to.</p><section id="referencing-schema"><h3>Referencing the schema with <code>$schema</code></h3><p>In standard JSON Schema, <code>$schema</code> identifies the dialect (meta-schema), not the schema an instance validates against ([[JSONSCHEMA]] §8.1.1); JSON Schema does not define an in-band way for an instance to point at its own schema. OO-LD therefore uses <code>$schema</code> on instances as a convention: standard JSON Schema validators treat it as ordinary data, while editors (VS Code, JetBrains, JSON Schema Store) and CI checks (e.g. <a href="https://github.com/thiagowfx/check-json-schema-meta">check-json-schema-meta</a>) honor it. Where the instance is served over HTTP, the standards-conformant alternative is the <code>describedby</code> link relation ([[JSONSCHEMA]] §9.5.1.1), optionally with the <code>profile</code> media-type parameter ([[RFC6906]]):</p>
+<aside class="example" title="Linking an instance to its schema over HTTP"><pre><code class="language-http">Link: &lt;https://example.org/my-package/1.0.0/Person.schema.json&gt;; rel=&quot;describedby&quot;
+</code></pre></aside>
+<p>An OO-LD-aware tool determines an instance's schema in the following order:</p>
 <ol>
 <li>the <code>$schema</code> value, if present;</li>
 <li>otherwise, the URL given under <code>@context</code>, if the referenced document declares itself to be an OO-LD schema;</li>
-<li>otherwise, an inline <code>@type</code> - but only when at least one of the type IRIs resolves to an OO-LD schema.</li>
+<li>otherwise, an inline <code>@type</code> (see below) - but only when at least one of the type IRIs resolves to an OO-LD schema.</li>
 </ol>
-<p>An implementation <em class="rfc2119">MAY</em> additionally maintain a registry mapping <code>rdf:type</code> IRIs to OO-LD schemas to resolve case 3, but such a registry <em class="rfc2119">MUST NOT</em> be assumed to exist on the consuming side - so exports must be self-sufficient.</p>
-<p>Because an instance carries <code>$schema</code> and <code>@context</code> as ordinary members, an OO-LD schema that closes its objects with <code>additionalProperties: false</code> or <code>unevaluatedProperties: false</code> <em class="rfc2119">MUST</em> permit these two members, or conforming instances would fail validation.</p></section><section id="identity"><h3>Identity (<code>@id</code>)</h3><p>An instance that represents an identifiable entity is identified by an <code>@id</code> - the IRI of that entity. Without an <code>@id</code> the entity is an anonymous blank node and cannot be referenced (for example as the target of an <code>x-oold-range</code> or <code>@reverse</code> relation). To keep instance keys variable-name-friendly, schemas <em class="rfc2119">SHOULD</em> expose <code>@id</code> through an aliased <code>id</code> property.</p>
-<p>An implementation <em class="rfc2119">MAY</em> use a non-IRI identifier internally, but when it exports an identifiable entity (to JSON-LD / RDF) it <em class="rfc2119">MUST</em> assign an <code>@id</code> (or the aliased <code>id</code>). The <code>@id</code> <em class="rfc2119">SHOULD</em> be resolvable, and it is <em class="rfc2119">RECOMMENDED</em> to mint it from an autogenerated UUID. Embedded value objects that have no independent identity <em class="rfc2119">MAY</em> omit <code>@id</code> and remain blank nodes.</p></section><section id="semantic-type"><h3>Carrying the semantic type</h3><p>The type and semantics of an instance are owned by the OO-LD schema it references. A schema declares the <code>rdf:type</code>(s) of its instances with the <code>x-oold-instance-rdf-type</code> keyword (always a list of IRIs). These types live in the schema, not in the instance data, so when OO-LD tooling exports an instance (to JSON-LD / RDF), it <em class="rfc2119">MUST</em> materialize the declared <code>rdf:type</code>(s) as an <code>@type</code> on the instance, so that the type reaches RDF without access to the schema or to a type registry.</p>
-<p>Alternatively, an instance <em class="rfc2119">MAY</em> carry the type inline as a <code>type</code> property whose term is mapped to the JSON-LD keyword <code>@type</code> with a simple alias and a <code>default</code>. If an inline <code>type</code> is present it <em class="rfc2119">MUST</em> be consistent with the schema's <code>x-oold-instance-rdf-type</code>.</p></section></section>
+<p>An implementation <em class="rfc2119">MAY</em> additionally maintain a registry mapping <code>rdf:type</code> IRIs to OO-LD schemas to resolve case 3, but such a registry <em class="rfc2119">MUST NOT</em> be assumed to exist on the consuming side - so exports must be self-sufficient (see below).</p>
+<p>Because an instance carries <code>$schema</code> and <code>@context</code> as ordinary members, an OO-LD schema that closes its objects with <code>additionalProperties: false</code> or <code>unevaluatedProperties: false</code> <em class="rfc2119">MUST</em> permit these two members, or conforming instances would fail validation.</p>
+<p><code>@context</code> already provides a JSON-LD-native link to the schema (resolution case 2 above), so <code>$schema</code> is kept primarily for compatibility with the widespread editor and CI convention, not as a second authoritative mechanism. JSON Schema deliberately does not standardize <code>$schema</code> on instances, partly over a self-validation concern: a consumer <em class="rfc2119">SHOULD NOT</em> blindly trust the schema an instance declares for itself (a crafted instance could point at a permissive schema) and remains responsible for validating against a schema it trusts.</p></section><section id="identity"><h3>Identity (<code>@id</code>)</h3><p>An instance that represents an identifiable entity is identified by an <code>@id</code> - the IRI of that entity. This is the JSON-LD node identifier, distinct from <code>$schema</code> / <code>@context</code> (which identify the schema) and from the schema's own <code>$id</code> / <code>x-oold-uuid</code>. Without an <code>@id</code> the entity is an anonymous blank node and cannot be referenced (for example as the target of an <code>x-oold-range</code> or <code>@reverse</code> relation).</p>
+<p>To keep instance keys variable-name-friendly, schemas <em class="rfc2119">SHOULD</em> expose <code>@id</code> through an aliased <code>id</code> property (as with <code>type</code> -&gt; <code>@type</code>):</p>
+<aside class="example" title="Aliasing `@id` to `id`"><pre><code class="language-json">{
+  &quot;@context&quot;: {
+    &quot;id&quot;: &quot;@id&quot;
+  },
+  &quot;properties&quot;: {
+    &quot;id&quot;: {
+      &quot;type&quot;: &quot;string&quot;,
+      &quot;format&quot;: &quot;iri&quot;
+    }
+  }
+}
+</code></pre></aside>
+<p>An implementation <em class="rfc2119">MAY</em> use a non-IRI identifier internally, but when it <strong>exports</strong> an identifiable entity (to JSON-LD / RDF) it <em class="rfc2119">MUST</em> assign an <code>@id</code> (or the aliased <code>id</code>). The <code>@id</code> <em class="rfc2119">SHOULD</em> be resolvable, and it is <em class="rfc2119">RECOMMENDED</em> to mint it from an autogenerated UUID - mirroring the schema's <code>x-oold-uuid</code> - e.g. <code>https://example.org/a1b2c3d4-1234-...</code>.</p>
+<p>Embedded value objects that have no independent identity (for example an <code>Address</code> embedded in an <code>Organization</code>) <em class="rfc2119">MAY</em> omit <code>@id</code> and remain blank nodes.</p></section><section id="semantic-type"><h3>Carrying the semantic type</h3><p>The type and semantics of an instance are owned by the OO-LD schema it references; an instance is therefore not required to carry an inline type, and a schema version may remap to different ontology terms without rewriting existing data.</p>
+<p>A schema declares the <code>rdf:type</code>(s) of its instances with the <code>x-oold-instance-rdf-type</code> keyword (always a list of IRIs, e.g. <code>[&quot;schema:Person&quot;]</code>):</p>
+<aside class="example" title="Declaring the instance rdf:type on the schema"><pre><code class="language-json">{ &quot;x-oold-instance-rdf-type&quot;: [&quot;schema:Person&quot;] }
+</code></pre></aside>
+<p>These types live in the schema, not in the instance data, so a JSON-LD-only processor - which sees only the instance and its <code>@context</code> - cannot derive them. Therefore, when OO-LD tooling <strong>exports</strong> an instance (to JSON-LD / RDF), it <em class="rfc2119">MUST</em> materialize the declared <code>rdf:type</code>(s) as an <code>@type</code> on the instance, so that the type reaches RDF without access to the schema or to a type registry.</p>
+<p>Alternatively, an instance <em class="rfc2119">MAY</em> carry the type inline as a <code>type</code> property (self-describing data). The schema maps the <code>type</code> term to the JSON-LD keyword <code>@type</code> with a simple alias and gives it a <code>default</code>; the value <em class="rfc2119">MAY</em> be a single IRI or a list of IRIs, and this property named <code>type</code> is distinct from the JSON Schema <code>type</code> keyword. No <code>@type: @id</code> coercion is needed because JSON-LD already interprets <code>@type</code> values as IRIs:</p>
+<aside class="example" title="Carrying the type inline"><pre><code class="language-json">{
+  &quot;@context&quot;: {
+    &quot;schema&quot;: &quot;http://schema.org/&quot;,
+    &quot;type&quot;: &quot;@type&quot;
+  },
+  &quot;type&quot;: &quot;object&quot;,
+  &quot;properties&quot;: {
+    &quot;type&quot;: {
+      &quot;type&quot;: &quot;array&quot;,
+      &quot;items&quot;: { &quot;type&quot;: &quot;string&quot; },
+      &quot;default&quot;: [&quot;schema:Person&quot;]
+    }
+  }
+}
+</code></pre></aside>
+<div class="note" title="Why `default` and not `const`"><p><code>const</code> would also fix the type, but it would prevent a subclass from overriding or extending it (for example a subclass adding <code>schema:Researcher</code>). With <code>default</code> a subclass can redefine the property.</p></div>
+<p>If an inline <code>type</code> is present it <em class="rfc2119">MUST</em> be consistent with the schema's <code>x-oold-instance-rdf-type</code>. Note that <code>@type</code> alone lets a consumer locate the schema (case 3 above) only when one of the type IRIs resolves to an OO-LD schema.</p></section></section>
 
-<section id="identification-versioning"><h2>Identification and Versioning</h2><section id="identification"><h3>Identification</h3><p>OO-LD schemas <em class="rfc2119">MUST</em> have a <code>$id</code> ([[JSONSCHEMA]] §8.2.1) which works as a global and unique identifier of the schema. The value of <code>$id</code> <em class="rfc2119">MAY</em> be an absolute URI. The schema <em class="rfc2119">SHOULD</em> be resolvable via this URI. The schema <em class="rfc2119">SHOULD</em> have an annotation <code>x-oold-uuid</code> with a UUID value, and it is recommended to use the UUID also in the <code>$id</code>.</p></section><section id="ontology-class-iri"><h3>Ontology class IRI (<code>x-oold-iri</code>)</h3><p><code>x-oold-iri</code> declares the IRI of the ontology class that this schema realizes - the RDF/OWL class from an external vocabulary that gives the schema its semantic grounding. It is distinct from <code>$id</code> (the URL of the schema document) and from <code>x-oold-instance-rdf-type</code> (the <code>rdf:type</code>s that instances carry on export). OO-LD-aware tooling uses <code>x-oold-iri</code> to anchor the schema in an ontology graph, independently of where the schema document is hosted.</p></section><section id="versioning"><h3>Versioning</h3><p>The schema version <em class="rfc2119">SHOULD</em> be indicated by <code>x-oold-version</code>; a prior version <em class="rfc2119">MAY</em> be indicated with <code>x-oold-prior-version</code>. For single-schema versioning, the version <em class="rfc2119">SHOULD</em> be part of the <code>$id</code>. For schema-package versioning (recommended), the version of the package <em class="rfc2119">SHOULD</em> be prepended before the schema's ID. Schemas <em class="rfc2119">MAY</em> indicate explicit backward-compatibility with <code>x-oold-backward-compatible-with</code> and <code>x-oold-incompatible-with</code>. Instance documents <em class="rfc2119">SHOULD</em> always use a versioned schema URL.</p></section></section>
+<section id="identification-versioning"><h2>Identification and Versioning</h2><section id="identification"><h3>Identification</h3><p>OO-LD schemas <em class="rfc2119">MUST</em> have a <code>$id</code> ([[JSONSCHEMA]] §8.2.1) which works as a global and unique identifier of the schema. The value of <code>$id</code> <em class="rfc2119">MAY</em> be an absolute URI (details below). The schema <em class="rfc2119">SHOULD</em> be resolvable via this URI. The schema <em class="rfc2119">SHOULD</em> have an annotation <code>x-oold-uuid</code> with a UUID value.</p>
+<aside class="example" title="A schema `$id` and its `x-oold-uuid`"><pre><code class="language-yaml">$id: https://example.org/Foo.schema.json
+x-oold-uuid: b5203131-7321-46bb-8a11-acb3d1015840
+title: Foo
+</code></pre>
+<p>It is recommended to use the UUID also in the <code>$id</code>:</p>
+<pre><code class="language-yaml">$id: https://example.org/b5203131-7321-46bb-8a11-acb3d1015840.schema.json
+x-oold-uuid: b5203131-7321-46bb-8a11-acb3d1015840
+title: Foo
+</code></pre></aside></section><section id="ontology-class-iri"><h3>Ontology class IRI (<code>x-oold-iri</code>)</h3><p><code>x-oold-iri</code> declares the IRI of the ontology class that this schema realizes - the RDF/OWL class from an external vocabulary that gives the schema its semantic grounding. It is distinct from two related IRIs:</p>
+<ul>
+<li><code>$id</code> - the URL of the schema document (where to fetch it). A schema document is a retrievable artifact, not an OWL class.</li>
+<li><code>x-oold-instance-rdf-type</code> - the <code>rdf:type</code>s that instances carry on export (see <a href="#semantic-type"></a>). These are stamped onto instance data; <code>x-oold-iri</code> describes the schema itself.</li>
+</ul>
+<aside class="example" title="Distinguishing document URL, ontology class, and instance type"><pre><code class="language-yaml">$id: https://example.org/my-package/1.0.0/Person.schema.json
+x-oold-iri: https://schema.org/Person
+x-oold-instance-rdf-type: [&quot;schema:Person&quot;]
+title: Person
+</code></pre></aside>
+<p>In this example, the schema document is fetched from the <code>$id</code> URL, it realizes the ontology class <code>schema:Person</code>, and instances exported to RDF carry <code>@type: schema:Person</code>. The most common case is that <code>x-oold-iri</code> and the entries in <code>x-oold-instance-rdf-type</code> resolve to the same IRI, but they may differ - for example when a schema models a more specific subclass inline while still emitting a broader <code>rdf:type</code> on instances.</p>
+<p>OO-LD-aware tooling uses <code>x-oold-iri</code> to anchor the schema in an ontology graph, independently of where the schema document is hosted - for example to resolve super-classes, look up ontology annotations, or generate SHACL shapes.</p></section><section id="versioning"><h3>Versioning</h3><p>The schema version <em class="rfc2119">SHOULD</em> be indicated by <code>x-oold-version</code>; a prior version <em class="rfc2119">MAY</em> be indicated with <code>x-oold-prior-version</code>:</p>
+<aside class="example" title="Version annotations"><pre><code class="language-yaml">$id: https://example.org/b5203131-7321-46bb-8a11-acb3d1015840.schema.json
+x-oold-uuid: b5203131-7321-46bb-8a11-acb3d1015840
+title: Foo
+x-oold-version: 1.1.0
+x-oold-prior-version: 1.0.0
+</code></pre></aside>
+<p>The version <em class="rfc2119">SHOULD</em> be part of the schema's location:</p>
+<ul>
+<li>For <strong>single-schema</strong> versioning, the version <em class="rfc2119">SHOULD</em> be appended after the schema name, e.g. <code>https://example.org/b5203131-7321-46bb-8a11-acb3d1015840.schema.json/1.1.0</code>.</li>
+<li>For <strong>schema-package</strong> versioning (recommended), the version of the package <em class="rfc2119">SHOULD</em> be prepended before the schema's ID, e.g. <code>https://example.org/my-package/2.0.0/b5203131-7321-46bb-8a11-acb3d1015840.schema.json</code>.</li>
+<li>or using release tags on GitHub, e.g. <code>https://raw.githubusercontent.com/MyOrg/my-package/refs/heads/2.0.0/b5203131-7321-46bb-8a11-acb3d1015840.schema.json</code>.</li>
+</ul>
+<p>Since a package combines multiple schemas, the package version does in general not match the individual schema version.</p>
+<p>Schemas <em class="rfc2119">MAY</em> indicate explicit backward-compatibility with <code>x-oold-backward-compatible-with</code> and <code>x-oold-incompatible-with</code>:</p>
+<aside class="example" title="Declaring backward-compatibility"><pre><code class="language-yaml">$id: https://example.org/my-package/2.1.0/b5203131-7321-46bb-8a11-acb3d1015840.schema.json
+x-oold-uuid: b5203131-7321-46bb-8a11-acb3d1015840
+title: Foo
+x-oold-version: 1.1.0
+x-oold-prior-version: 1.0.0
+x-oold-backward-compatible-with: https://example.org/my-package/2.0.0/b5203131-7321-46bb-8a11-acb3d1015840.schema.json
+x-oold-incompatible-with: https://example.org/my-package/1.0.0/b5203131-7321-46bb-8a11-acb3d1015840.schema.json
+</code></pre></aside>
+<p>Schemas within a package or package repository <em class="rfc2119">MAY</em> use relative URIs ([[RFC3986]] §5.1). For example, <code>A.schema.json</code> referenced from <code>https://raw.githubusercontent.com/MyOrg/my-package/refs/heads/2.0.0/</code>:</p>
+<aside class="example" title="Relative `$ref` inside a package"><pre><code class="language-yaml">$id: B.schema.json
+title: Foo
+allOf:
+  - $ref: A.schema.json
+</code></pre>
+<p>expands to:</p>
+<pre><code class="language-yaml">$id: https://raw.githubusercontent.com/MyOrg/my-package/refs/heads/2.0.0/B.schema.json
+title: Foo
+allOf:
+  - $ref: https://raw.githubusercontent.com/MyOrg/my-package/refs/heads/2.0.0/A.schema.json
+</code></pre></aside>
+<p>Instance documents <em class="rfc2119">SHOULD</em> always use a versioned schema URL to make clear which schema version they comply with:</p>
+<aside class="example" title="An instance pinned to a schema version"><pre><code class="language-yaml">&quot;@context&quot;: https://example.org/my-package/1.0.0/b5203131-7321-46bb-8a11-acb3d1015840.schema.json
+$schema: https://example.org/my-package/1.0.0/b5203131-7321-46bb-8a11-acb3d1015840.schema.json
+</code></pre></aside>
+<p>Upgrade APIs <em class="rfc2119">MAY</em> provide automated data migration between schema (package) versions, e.g. <code>https://example.org/upgrade/my-package/1.0.0...2.0.0</code>.</p></section></section>
 
-<section id="extensions"><h2>Standard Extensions</h2><section id="jsonld-extensions"><h3>JSON-LD</h3><p>OO-LD targets [[!JSON-LD11]].</p><section id="processing-mode"><h4>Processing mode (<code>@version</code>)</h4><p>OO-LD composition relies on JSON-LD 1.1 features, in particular scoped contexts. Generated OO-LD contexts <em class="rfc2119">SHOULD</em> therefore declare <code>&quot;@version&quot;: 1.1</code> (the JSON number <code>1.1</code>, not the string). Because the first encountered <code>@version</code> entry determines the processing mode, it is sufficient to declare it once in the base context of a composition.</p></section><section id="multi-mapping"><h4>Multi-Mapping</h4><p>JSON-LD allows only a single keyword-IRI mapping. As a workaround, an additional context notation is provided: <code>&lt;property&gt;*(*)</code> pointing to additional <code>@id</code> mappings, to document alternative options or drive custom RDF generation. An OO-LD-aware converter <em class="rfc2119">MAY</em> produce redundant triples for interoperability.</p></section></section><section id="jsonschema-extensions"><h3>JSON Schema</h3><p>OO-LD targets [[!JSONSCHEMA]] (2020-12) as its normative dialect. An OO-LD schema <em class="rfc2119">SHOULD</em> declare <code>&quot;$schema&quot;: &quot;https://json-schema.org/draft/2020-12/schema&quot;</code> (or an OO-LD dialect meta-schema derived from it). 2020-12 is <em class="rfc2119">REQUIRED</em>, not merely preferred: OO-LD's composition places <code>$ref</code> alongside sibling keywords, which are only evaluated from JSON Schema 2019-09 onward.</p><section id="multilanguage"><h4>Multilanguage support</h4><p>There are two distinct localization concerns. To localize a schema's own annotations, OO-LD adds <code>x-oold-multilang-title</code> and <code>x-oold-multilang-description</code>, whose value <em class="rfc2119">MUST</em> be an object keyed by <a href="https://www.rfc-editor.org/info/bcp47">BCP 47</a> language tags. To localize a <em>value of an instance</em>, the standard JSON-LD mechanism is used instead (an explicit <code>@value</code>/<code>@language</code> object, or a <code>@container: @language</code> language map).</p></section><section id="range-of-properties"><h4>Range of properties (<code>x-oold-range</code>)</h4><p>To express constraints on the type of a referenced object - as in OWL and SHACL - the keyword <code>x-oold-range</code> is introduced. It takes one of three forms: an IRI (string) referencing a single allowed target schema; an array of IRIs (a union of allowed target schemas); or an OO-LD subschema (the most expressive form, combining <code>anyOf</code> / <code>oneOf</code> / <code>allOf</code> and inline constraints). References to other schemas inside <code>x-oold-range</code> <em class="rfc2119">MUST</em> use <code>x-oold-ref</code>, never <code>$ref</code>.</p><section id="why-x-oold-ref"><h5>Why <code>x-oold-ref</code> and not <code>$ref</code></h5><p><code>x-oold-range</code> is a custom keyword, so a <code>$ref</code> placed inside it is undefined behavior for generic JSON Schema tooling ([[JSONSCHEMA]] §9.4.2). Generic tools only follow the standard <code>$ref</code> keyword, so they leave <code>x-oold-ref</code> untouched; OO-LD-aware tools resolve it deliberately and lazily, with cycle detection. Because the only difference is the keyword name, the mapping is reversible: an OO-LD-aware tool can mechanically replace <code>x-oold-ref</code> with <code>$ref</code> to obtain a plain, fully-resolvable JSON Schema.</p></section></section><section id="reverse-properties"><h4>Reverse properties</h4><p>Many relations are symmetric (e.g. Organization employs Person ⇔ Person works for Organization) and users want to edit them from both sides. The keywords <code>x-oold-reverse-properties</code>, <code>x-oold-reverse-default-properties</code> and <code>x-oold-reverse-required</code> declare such a [=reverse property=], mapped with JSON-LD <code>@reverse</code> in the <code>@context</code>. An OO-LD-aware implementation uses this to read and modify properties that are actually stored in another object.</p></section><section id="ui-generation" class="informative"><h4>UI Generation</h4><p>Additional keywords defined by <a href="https://github.com/json-editor/json-editor">JSON Editor</a> may be used to drive automatic user-interface (form) generation.</p></section></section></section>
+<section id="extensions"><h2>Standard Extensions</h2><p>On top of plain JSON Schema and JSON-LD, OO-LD defines a small set of extensions. This section covers the JSON-LD extensions and the JSON Schema extensions in turn.</p><section id="jsonld-extensions"><h3>JSON-LD</h3><p>OO-LD targets [[JSON-LD11]].</p><section id="processing-mode"><h4>Processing mode (<code>@version</code>)</h4><p>OO-LD composition relies on JSON-LD 1.1 features, in particular scoped contexts: a <code>$ref</code> within a <code>type: object</code> property is reflected as a property-scoped <code>@context</code> (see <a href="#composition"></a>). Such features are unavailable to a processor running in the <code>json-ld-1.0</code> processing mode.</p>
+<p>Generated OO-LD contexts <em class="rfc2119">SHOULD</em> therefore declare <code>&quot;@version&quot;: 1.1</code> (the JSON number <code>1.1</code>, not the string <code>&quot;1.1&quot;</code>). Modern processors default to the 1.1 processing mode, so this is a guard rather than a strict requirement: it prevents a JSON-LD 1.0 processor from silently mis-processing a 1.1 document ([[JSON-LD11]] §4.1.1). Because the first encountered <code>@version</code> entry determines the processing mode, it is sufficient to declare <code>&quot;@version&quot;: 1.1</code> once in the base context of a composition (for example a root <code>Thing</code> schema).</p></section><section id="multi-mapping"><h4>Multi-Mapping</h4><p>JSON-LD allows only a single keyword-IRI mapping (or more precisely, ignores all but the last mapping). There is currently no way to express that a property has two IRIs (e.g. <code>&quot;label&quot;: {&quot;@id&quot;: [&quot;schema:name&quot;, &quot;skos:prefLabel&quot;]}</code>, see <a href="https://github.com/json-ld/json-ld.org/issues/160">json-ld/json-ld.org#160</a>). As a workaround, an additional context notation is provided: <code>&lt;property&gt;*(*)</code> pointing to additional <code>@id</code> mappings, to document alternative options or drive custom RDF generation. (The redesign of this notation is tracked in <a href="https://github.com/OO-LD/schema/issues/12">OO-LD/schema#12</a>.)</p>
+<aside class="example" title="Documenting alternative mappings"><pre><code class="language-json">{
+    &quot;@context&quot;: [
+        {
+            &quot;@version&quot;: 1.1,
+            &quot;skos&quot;: &quot;https://www.w3.org/TR/skos-reference/&quot;,
+            &quot;schema&quot;: &quot;https://schema.org/&quot;,
+            &quot;label&quot;: &quot;skos:prefLabel&quot;,
+            &quot;label*&quot;: &quot;schema:name&quot;,
+            &quot;label**&quot;: &quot;...&quot;
+        }
+    ],
+    &quot;label&quot;: &quot;test&quot;
+}
+</code></pre>
+<p>Default JSON-LD processing interprets only the preferred mapping:</p>
+<pre><code class="language-ttl">_:b0 &lt;skos:prefLabel&gt; &quot;test&quot; .
+</code></pre>
+<p>An OO-LD-aware converter MAY also produce redundant triples for interoperability:</p>
+<pre><code class="language-ttl">_:b0 &lt;skos:prefLabel&gt; &quot;test&quot; .
+_:b0 &lt;schema:name&gt; &quot;test&quot; .
+</code></pre></aside>
+<p>The notation can also drive data transformation and normalization. For example, a dataset in which persons and organizations report their relations in a syntactically non-interoperable way can be normalized into a consistent unified dataset (see <a href="https://github.com/OO-LD/schema/issues/11">OO-LD/schema#11</a>).</p>
+<aside class="example" title="Normalizing a syntactically non-interoperable dataset"><p>Input - the same relation is reported in three different ways (<code>works_for</code>, a distinct <code>works_for*</code>, and a backward <code>employees</code>):</p>
+<pre><code class="language-yaml">&quot;@graph&quot;:
+- id: demo:person1
+  type: schema:Person
+  name: Person1
+  works_for: demo:organizationA # forward relation
+  works_for*: demo:organizationB # forward relation but different property
+- id: demo:organizationA
+  type: schema:Organization
+- id: demo:organizationB
+  type: schema:Organization
+- id: demo:organizationC
+  type: schema:Organization
+  employees: demo:person1 # backwards relation
+</code></pre>
+<p>Normalized - a single, consistent representation:</p>
+<pre><code class="language-yaml">&quot;@graph&quot;:
+- employees:
+  - demo:person1
+  - demo:person2
+  - demo:person3
+  id: demo:organizationA
+  label:
+  - lang: en
+    text: organizationA
+  type: schema:Organization
+- id: demo:person1
+  name: Person1
+  type: schema:Person
+- id: demo:person2
+  name: Person2
+  type: schema:Person
+- id: demo:person3
+  name: Person3
+  type: schema:Person
+</code></pre></aside></section></section><section id="jsonschema-extensions"><h3>JSON Schema</h3><p>OO-LD targets [[JSONSCHEMA]] (2020-12) as its normative dialect. An OO-LD schema <em class="rfc2119">SHOULD</em> declare <code>&quot;$schema&quot;: &quot;https://json-schema.org/draft/2020-12/schema&quot;</code> (or an OO-LD dialect meta-schema derived from it).</p>
+<p>2020-12 is <em class="rfc2119">REQUIRED</em>, not merely preferred: OO-LD's composition places <code>$ref</code> alongside sibling keywords (e.g. a property carrying <code>type</code>, <code>x-oold-range</code> and <code>@context</code>, or <code>allOf: [{$ref: ...}]</code> next to <code>properties</code>). Keywords adjacent to <code>$ref</code> are only evaluated from JSON Schema 2019-09 onward; in Draft 4 and Draft 7 they are ignored ([[JSONSCHEMA]] §8.2.3.1). Keywords such as <code>const</code> (used throughout this document) are likewise only available from draft-06 onward. Migration from the earlier Draft-4-style notation: rename <code>definitions</code> to <code>$defs</code>, <code>id</code> to <code>$id</code>, and use the numeric form of <code>exclusiveMinimum</code>/<code>exclusiveMaximum</code> instead of the boolean form.</p><section id="multilanguage"><h4>Multilanguage support</h4><p>There are two distinct localization concerns: translating a schema's own annotations, and translating a value carried by an instance.</p><section id="localizing-schema-annotations"><h5>Localizing schema annotations</h5><p>The JSON Schema annotation keywords <code>title</code> and <code>description</code> carry a single, default human-readable string used by tooling (for example for UI generation). To provide localized variants, OO-LD adds the keywords <code>x-oold-multilang-title</code> and <code>x-oold-multilang-description</code>. Their value <em class="rfc2119">MUST</em> be an object whose keys are <a href="https://www.rfc-editor.org/info/bcp47">BCP 47</a> language tags (e.g. <code>en</code>, <code>de</code>, <code>en-GB</code>) and whose values are the translated strings. A schema <em class="rfc2119">SHOULD</em> still provide a default <code>title</code> / <code>description</code>; a consumer that has no entry for the requested language falls back to that default. These keywords localize the schema's <em>own</em> labels and are not interpreted as JSON-LD.</p>
+<aside class="example" title="Localized schema annotations"><pre><code class="language-json">{
+    &quot;title&quot;: &quot;Default Title&quot;,
+    &quot;description&quot;: &quot;Default description&quot;,
+    &quot;x-oold-multilang-title&quot;: { &quot;en&quot;: &quot;Title (en)&quot;, &quot;de&quot;: &quot;Titel (de)&quot; },
+    &quot;x-oold-multilang-description&quot;: { &quot;en&quot;: &quot;Description (en)&quot;, &quot;de&quot;: &quot;Beschreibung (de)&quot; }
+}
+</code></pre></aside></section><section id="localizing-instance-values"><h5>Localizing instance values</h5><p>To localize a <em>value of an instance</em> - a translatable string in the data that should round-trip to language-tagged RDF literals - do not use the keywords above; use the standard JSON-LD mechanism. There are two equivalent JSON-LD-native ways to carry such a value, both producing the same language-tagged literals.</p>
+<p><strong>Explicit</strong> - model the value as an object that pairs its text with its language by aliasing <code>text</code> to <code>@value</code> and <code>lang</code> to <code>@language</code>. This form is convenient for form-based editors, where each translation is an editable row:</p>
+<aside class="example" title="Explicit language-tagged value object"><pre><code class="language-json">{
+  &quot;@context&quot;: {
+    &quot;text&quot;: { &quot;@id&quot;: &quot;@value&quot; },
+    &quot;lang&quot;: { &quot;@id&quot;: &quot;@language&quot; }
+  },
+  &quot;$id&quot;: &quot;Label.schema.json&quot;,
+  &quot;title&quot;: &quot;Label&quot;,
+  &quot;type&quot;: &quot;object&quot;,
+  &quot;required&quot;: [&quot;text&quot;, &quot;lang&quot;],
+  &quot;properties&quot;: {
+    &quot;text&quot;: {
+      &quot;title&quot;: &quot;Text&quot;,
+      &quot;x-oold-multilang-title&quot;: { &quot;de&quot;: &quot;Text&quot; },
+      &quot;type&quot;: &quot;string&quot;,
+      &quot;minLength&quot;: 1
+    },
+    &quot;lang&quot;: {
+      &quot;title&quot;: &quot;Lang code&quot;,
+      &quot;x-oold-multilang-title&quot;: { &quot;de&quot;: &quot;Sprache&quot; },
+      &quot;type&quot;: &quot;string&quot;,
+      &quot;enum&quot;: [&quot;en&quot;, &quot;de&quot;]
+    }
+  }
+}
+</code></pre>
+<p>A property typed as an array of <code>Label</code> then holds one entry per language:</p>
+<pre><code class="language-json">[{ &quot;text&quot;: &quot;Water&quot;, &quot;lang&quot;: &quot;en&quot; }, { &quot;text&quot;: &quot;Wasser&quot;, &quot;lang&quot;: &quot;de&quot; }]
+</code></pre></aside>
+<p><strong>Compact</strong> - a language map keyed directly by language tag, via <code>@container: @language</code> ([[JSON-LD11]] Language Maps):</p>
+<aside class="example" title="Compact language map"><pre><code class="language-json">{
+  &quot;@context&quot;: {
+    &quot;label&quot;: { &quot;@id&quot;: &quot;http://schema.org/name&quot;, &quot;@container&quot;: &quot;@language&quot; }
+  },
+  &quot;type&quot;: &quot;object&quot;,
+  &quot;properties&quot;: {
+    &quot;label&quot;: {
+      &quot;type&quot;: &quot;object&quot;,
+      &quot;additionalProperties&quot;: { &quot;type&quot;: &quot;string&quot; }
+    }
+  }
+}
+</code></pre>
+<p>An instance such as <code>{ &quot;label&quot;: { &quot;en&quot;: &quot;Water&quot;, &quot;de&quot;: &quot;Wasser&quot; } }</code> expands to the same two language-tagged literals as the explicit form.</p></aside></section></section><section id="range-of-properties"><h4>Range of properties (<code>x-oold-range</code>)</h4><p>JSON Schema itself supports linked data only in the form of a subobject; references to independent external objects are just URL-strings without further restrictions. To express constraints on the type of the referenced object - as in OWL and SHACL - the keyword <code>x-oold-range</code> is introduced (see also <a href="https://github.com/json-schema-org/json-schema-vocabularies/issues/55">json-schema-org/json-schema-vocabularies#55</a>). It takes one of three forms:</p>
+<ol>
+<li>An <strong>IRI</strong> (string) referencing a single allowed target schema. This is the common case:</li>
+</ol>
+<aside class="example" title="Range as a single IRI"><pre><code class="language-json">{
+  &quot;@context&quot;: {
+    &quot;schema&quot;: &quot;http://schema.org/&quot;,
+    &quot;works_for&quot;: &quot;schema:worksFor&quot;
+  },
+  &quot;title&quot;: &quot;Person&quot;,
+  &quot;type&quot;: &quot;object&quot;,
+  &quot;properties&quot;: {
+    &quot;works_for&quot;: {
+      &quot;type&quot;: &quot;string&quot;,
+      &quot;x-oold-range&quot;: &quot;Organization.schema.json&quot;,
+      &quot;description&quot;: &quot;IRI pointing to an instance of Organization&quot;
+    }
+  }
+}
+</code></pre></aside>
+<ol start="2">
+<li><p>An <strong>array of IRIs</strong>, expressing a union of allowed target schemas, e.g. <code>[&quot;Organization.schema.json&quot;, &quot;Person.schema.json&quot;]</code>.</p>
+</li>
+<li><p>An <strong>OO-LD subschema</strong>, the most expressive form. Unions (<code>anyOf</code> / <code>oneOf</code>),
+intersections (<code>allOf</code>) and inline constraints can be combined to describe an anonymous subclass. References to other schemas inside <code>x-oold-range</code> <em class="rfc2119">MUST</em> use <code>x-oold-ref</code>, never <code>$ref</code> (see below). The single-IRI form (1) is a shorthand for <code>{ &quot;allOf&quot;: [ { &quot;x-oold-ref&quot;: &quot;Organization.schema.json&quot; } ] }</code>:</p>
+</li>
+</ol>
+<aside class="example" title="Range as a subschema (Organization located in Germany)"><pre><code class="language-json">&quot;x-oold-range&quot;: {
+  &quot;allOf&quot;: [
+    { &quot;x-oold-ref&quot;: &quot;Organization.schema.json&quot; },
+    { &quot;properties&quot;: { &quot;address&quot;: { &quot;properties&quot;: { &quot;country&quot;: { &quot;const&quot;: &quot;DE&quot; } } } } }
+  ]
+}
+</code></pre></aside>
+<p>A range subschema <em class="rfc2119">MAY</em> also carry additional annotations (e.g. <code>title</code>, <code>description</code> or further <code>x-oold-*</code> keywords) to support tooling - for example a human-readable label for an autocomplete dropdown, or hints used when generating a SHACL shape.</p><section id="why-x-oold-ref"><h5>Why <code>x-oold-ref</code> and not <code>$ref</code></h5><p><code>x-oold-range</code> is a custom keyword, so a <code>$ref</code> placed inside it is undefined behavior for generic JSON Schema tooling ([[JSONSCHEMA]] §9.4.2). In practice the behavior is not merely undefined but inconsistent: generic reference resolvers eagerly inline such a <code>$ref</code>, and because <code>x-oold-range</code> targets can form a cyclic graph of schemas this can pull in an unbounded graph, while schema-aware bundlers instead drop it.</p>
+<p><code>x-oold-ref</code> avoids this. Generic tools only follow the standard <code>$ref</code> keyword, so they leave <code>x-oold-ref</code> untouched; OO-LD-aware tools resolve it deliberately and lazily, with cycle detection. The standard <code>$ref</code> continues to be used for ordinary schema composition (<code>allOf</code>, <code>properties</code>, <code>$defs</code>), which bundlers are expected to resolve. Because the only difference is the keyword name, the mapping is reversible: an OO-LD-aware tool can mechanically replace <code>x-oold-ref</code> with <code>$ref</code> to obtain a plain, fully-resolvable JSON Schema - the explicit opt-in to resolving the (possibly cyclic) graph.</p></section></section><section id="reverse-properties"><h4>Reverse properties</h4><p>Many relations are symmetric (e.g. Organization employs Person ⇔ Person works for Organization) and users want to edit them from both sides, without storing the information twice. The keywords <code>x-oold-reverse-properties</code>, <code>x-oold-reverse-default-properties</code> and <code>x-oold-reverse-required</code> declare such a [=reverse property=], mapped with JSON-LD <code>@reverse</code> in the <code>@context</code>. To make <code>employees</code> the reverse of <code>organization</code>:</p>
+<ul>
+<li>define <code>employees</code> in <code>x-oold-reverse-properties</code> of <code>Organization</code>;</li>
+<li>define <code>organization</code> in the <code>properties</code> of <code>Person</code>;</li>
+<li>map <code>organization</code> to a semantic property, e.g. <code>schema:worksFor</code>, in the <code>@context</code> of <code>Person</code>;</li>
+<li>map <code>employees</code> with <code>@reverse</code> to the same property in the <code>@context</code> of <code>Organization</code> ([[JSON-LD11]] reverse properties).</li>
+</ul>
+<aside class="example" title="Reverse property across two schemas"><p><code>Organization.schema.json</code>:</p>
+<pre><code class="language-json">{
+  &quot;@context&quot;: [
+    { &quot;employees&quot;: { &quot;@reverse&quot;: &quot;schema:worksFor&quot;, &quot;@type&quot;: &quot;@id&quot; } }
+  ],
+  &quot;title&quot;: &quot;Organization&quot;,
+  &quot;type&quot;: &quot;object&quot;,
+  &quot;required&quot;: [&quot;type&quot;],
+  &quot;x-oold-reverse-required&quot;: [],
+  &quot;x-oold-reverse-default-properties&quot;: [&quot;employees&quot;],
+  &quot;x-oold-reverse-properties&quot;: {
+    &quot;employees&quot;: {
+      &quot;type&quot;: &quot;array&quot;,
+      &quot;title&quot;: &quot;Employees&quot;,
+      &quot;items&quot;: {
+        &quot;type&quot;: &quot;string&quot;,
+        &quot;format&quot;: &quot;autocomplete&quot;,
+        &quot;title&quot;: &quot;Person&quot;,
+        &quot;x-oold-range&quot;: &quot;Person.schema.json&quot;
+      }
+    }
+  }
+}
+</code></pre>
+<p><code>Person.schema.json</code>:</p>
+<pre><code class="language-json">{
+  &quot;@context&quot;: [
+    { &quot;organization&quot;: { &quot;@id&quot;: &quot;schema:worksFor&quot;, &quot;@type&quot;: &quot;@id&quot; } }
+  ],
+  &quot;title&quot;: &quot;Person&quot;,
+  &quot;defaultProperties&quot;: [&quot;organization&quot;],
+  &quot;properties&quot;: {
+    &quot;organization&quot;: {
+      &quot;title&quot;: &quot;Organization&quot;,
+      &quot;description&quot;: &quot;Organization(s) the person is affiliated with. E.g., university, research institute, company, etc.&quot;,
+      &quot;type&quot;: &quot;array&quot;,
+      &quot;items&quot;: {
+        &quot;type&quot;: &quot;string&quot;,
+        &quot;format&quot;: &quot;autocomplete&quot;,
+        &quot;x-oold-range&quot;: &quot;Organization.schema.json&quot;
+      }
+    }
+  }
+}
+</code></pre></aside>
+<p>An OO-LD-aware implementation uses this to read and modify properties that are actually stored in another object: loading an <code>Organization</code> editor prepopulates <code>employees</code> by querying which persons work for it; storing the <code>Organization</code> writes it into each referenced person's <code>organization</code> field; and removing a person from <code>employees</code> removes the organization from theirs.</p></section><section id="ui-generation" class="informative"><h4>UI Generation</h4><p>Additional keywords defined by <a href="https://github.com/json-editor/json-editor">JSON Editor</a> (see its <a href="https://github.com/json-editor/json-editor#readme">basic features</a> and <a href="https://github.com/json-editor/json-editor/blob/master/README_ADDON.md">add-on details</a>) MAY be used to drive automatic user-interface (form) generation.</p></section></section></section>
 
-<section id="meta-schema"><h2>Meta-schema and Vocabulary</h2><p>OO-LD adds keywords on top of JSON Schema 2020-12. All OO-LD-proprietary keywords are prefixed with <code>x-oold-</code> so they are valid JSON Schema extension keywords and, at the same time, valid OpenAPI 3.0 Specification Extensions. The only non-prefixed OO-LD-specific entry is <code>@context</code>, which is a JSON-LD keyword and cannot be renamed.</p>
-<p>The OO-LD dialect is described by a meta-schema ([[OOLD-META]]). It extends the standard 2020-12 meta-schema and adds the syntax of the <code>x-oold-*</code> keywords. The OO-LD vocabulary is declared <strong>optional</strong> so that generic 2020-12 validators still process OO-LD schemas instead of refusing them. Declaring a vocabulary does not make a validator execute keyword behavior; that is supplied by OO-LD-aware tooling.</p>
+<section id="meta-schema"><h2>Meta-schema and Vocabulary</h2><p>OO-LD adds keywords on top of JSON Schema 2020-12. All OO-LD-proprietary keywords are prefixed with <code>x-oold-</code> so they are valid <a href="https://json-schema.org/draft/2020-12/json-schema-core#section-6.5">JSON Schema extension keywords</a> and, at the same time, valid <a href="https://spec.openapis.org/oas/v3.0.3.html#specification-extensions">OpenAPI 3.0 Specification Extensions</a> (OpenAPI 3.0 rejects unprefixed custom keywords in a Schema object). The only non-prefixed OO-LD-specific entry is <code>@context</code>, which is a JSON-LD keyword and cannot be renamed.</p>
+<p>The OO-LD dialect is described by a meta-schema ([[OOLD-META]]). It extends the standard 2020-12 meta-schema and adds the syntax of the <code>x-oold-*</code> keywords, so an OO-LD schema can be validated <em>as</em> an OO-LD schema. The meta-schema declares its vocabularies via <code>$vocabulary</code>: the seven standard 2020-12 vocabularies are re-listed as required (they are not inherited through <code>$ref</code>, [[JSONSCHEMA]] §8.1.2.2), and the OO-LD vocabulary is declared <strong>optional</strong> (<code>false</code>) so that generic 2020-12 validators still process OO-LD schemas instead of refusing them.</p>
+<p>Declaring a vocabulary does not make a validator execute keyword behavior; that is supplied by OO-LD-aware tooling (e.g. the <code>oold</code> library). The meta-schema only validates that <code>x-oold-*</code> keywords are well-formed and provides a machine-readable <code>description</code> for each. The <code>x-oold-*</code> keywords are:</p>
 <table class="def">
 <thead>
 <tr>
