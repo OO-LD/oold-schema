@@ -11,7 +11,6 @@
     var respecConfig = {
   "specStatus": "base",
   "shortName": "oold",
-  "subtitle": "OO-LD Recommendation 1.0",
   "editors": [
     {
       "name": "Simon Stier",
@@ -58,11 +57,22 @@
       "href": "https://github.com/OO-LD/oold-schema/blob/main/meta/oold-meta-schema.json",
       "publisher": "OO-LD"
     }
-  }
+  },
+  "subtitle": "Version v0.4.0"
 };
+  </script>
+  <script type="module">
+    // ReSpec has no native Mermaid support, so we render `pre.mermaid` blocks
+    // ourselves - after ReSpec has finished rearranging the DOM.
+    import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs";
+    mermaid.initialize({ startOnLoad: false, theme: "neutral" });
+    const runMermaid = () => mermaid.run({ querySelector: ".mermaid" }).catch(e => console.error("mermaid", e));
+    const schedule = () => setTimeout(runMermaid, 500);  // let ReSpec finish rearranging first
+    if (document.readyState === "complete") schedule(); else window.addEventListener("load", schedule);
   </script>
 </head>
 <body>
+<p class="copyright">Copyright &copy; the OO-LD contributors. This document is made available under the <a rel="license" href="https://creativecommons.org/publicdomain/zero/1.0/">CC0 1.0 Universal</a> Public Domain Dedication; W3C liability, trademark and document-license rules do <strong>not</strong> apply.</p>
 
 <section id="abstract">
 <p><dfn data-lt="OO-LD">Object-Oriented Linked Data (OO-LD)</dfn> connects the structural modelling of objects and subobjects with the modelling of their semantic relations, by combining two existing standards - [[JSONSCHEMA]] and a [[JSON-LD11]] context - in a single document. A single OO-LD document is at once a valid JSON Schema and a reference-able JSON-LD remote context, so that one source can drive validation, RDF generation, code generation, user interfaces and API definitions using the existing JSON Schema and JSON-LD tooling.</p>
@@ -112,21 +122,14 @@
 <section id="basic-concepts"><h2>Basic Concepts</h2><p>The core idea is that an [=OO-LD schema=] is always both a valid JSON Schema and a reference-able JSON-LD [=remote context=] as defined in [[JSON-LD11]] §3.1 (<em>not</em> a JSON-LD document). In this way a complete OO-LD class / schema hierarchy is consume-able by JSON Schema-only and JSON-LD-only tools while OO-LD-aware tools can provide extended features on top (e.g. UI autocomplete dropdowns for string-IRI fields based on a SPARQL backend, or SHACL shape / JSON-LD frame generation).</p>
 <aside class="example" title="A minimal OO-LD schema"><pre><code class="language-json">{
   &quot;$schema&quot;: &quot;https://json-schema.org/draft/2020-12/schema&quot;,
-  &quot;$id&quot;: &quot;Thing.schema.json&quot;,
-  &quot;x-oold-uuid&quot;: &quot;1b4de2a0-9d3f-4c2e-9a1b-0e7c5f8a2d10&quot;,
-  &quot;x-oold-version&quot;: &quot;1.0.0&quot;,
-  &quot;x-oold-instance-rdf-type&quot;: [&quot;schema:Thing&quot;],
+  &quot;$id&quot;: &quot;Minimal.schema.json&quot;,
   &quot;@context&quot;: {
-    &quot;@version&quot;: 1.1,
-    &quot;id&quot;: &quot;@id&quot;,
     &quot;schema&quot;: &quot;http://schema.org/&quot;,
     &quot;name&quot;: &quot;schema:name&quot;
   },
-  &quot;title&quot;: &quot;Thing&quot;,
-  &quot;x-oold-multilang-title&quot;: { &quot;en&quot;: &quot;Thing&quot;, &quot;de&quot;: &quot;Ding&quot; },
+  &quot;title&quot;: &quot;Minimal&quot;,
   &quot;type&quot;: &quot;object&quot;,
   &quot;properties&quot;: {
-    &quot;id&quot;: { &quot;type&quot;: &quot;string&quot;, &quot;format&quot;: &quot;iri&quot;, &quot;description&quot;: &quot;IRI of the entity&quot; },
     &quot;name&quot;: { &quot;type&quot;: &quot;string&quot;, &quot;description&quot;: &quot;Name of the thing&quot; }
   }
 }
@@ -138,7 +141,7 @@
 </ul>
 <p>This asymmetry is what lets a single document serve both as a JSON Schema <code>$ref</code> target and as a JSON-LD remote <code>@context</code> for the same resource. Concretely: an instance is processed directly as a JSON-LD document (e.g. <code>jsonld.toRDF(instance)</code>), which loads the schema as a remote context via the instance's <code>@context</code>; a schema is only ever referenced as that context and <em class="rfc2119">MUST NOT</em> itself be expanded as a document.</p>
 <div class="note" title="Inheritance"><p>A class <em>B</em> extends a class <em>A</em> by referencing it in both <code>allOf</code> (so JSON Schema validators apply <em>A</em>'s rules when validating <em>B</em> instances) and <code>@context</code> (so JSON-LD processors resolve <em>A</em>'s term mappings). <em>B</em> instances are therefore valid <em>A</em> instances and carry all of <em>A</em>'s properties alongside <em>B</em>'s own additions. Building types from <em>multiple</em> independent schemas is covered in <a href="#composition"></a>.</p></div>
-<aside class="example" title="Inheritance and instantiation (Class A <- Class B <- Instance)"><pre><code class="language-mermaid">%%{init: {'theme': 'neutral' } }%%
+<aside class="example" title="Inheritance and instantiation"><div class="mermaid">%%{init: {'theme': 'neutral' } }%%
 classDiagram
     class OOLD_Class_A {
         JSON Schema + JSON-LD
@@ -163,7 +166,7 @@ classDiagram
 
     OOLD_Class_A &lt;-- OOLD_Class_B: extends
     OOLD_Class_B &lt;-- OOLD_Instance_B: type
-</code></pre></aside></section>
+</div></aside></section>
 
 <section id="composition"><h2>Composition</h2><p>Composition is how an [=OO-LD schema=] incorporates multiple independent schemas, each contributing its own properties and JSON-LD term mappings, without requiring a shared parent class. This lets you build complex types by assembling reusable building blocks - for example, attaching a geolocation schema and a contact schema to a single resource type. The rules below govern how the resulting <code>@context</code> is assembled automatically, so that no post-processing step is needed.</p>
 <p>It <em class="rfc2119">MUST NOT</em> be required to further process an OO-LD schema document in order to interpret it as a JSON-LD context. This implies that all occurrences of <code>$ref</code> in the schema are reflected in the JSON-LD context. <code>$ref</code> within properties of <code>type: object</code> <em class="rfc2119">MUST</em> be listed as a scoped JSON-LD context. <code>$ref</code> within all other property types and at the root level of the OO-LD schema <em class="rfc2119">MUST</em> be listed at the root level of the JSON-LD context. In case of multiple <code>$ref</code> within <code>allOf</code> the corresponding remote contexts are merged into an array-valued <code>@context</code> (see <a href="#merging-remote-contexts"></a>). For <code>oneOf</code> / <code>anyOf</code> this requires care to avoid conflicts. At any time the importing OO-LD schema <em class="rfc2119">MAY</em> define its own or override the imported JSON-LD context.</p>

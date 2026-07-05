@@ -4,7 +4,7 @@ The core idea is that an OO-LD document is always both a valid JSON Schema and a
 
 A minimal example:
 
-{{ example('Thing') }}
+{{ example('Minimal') }}
 
 You can explore this in the [interactive playground](https://oo-ld.github.io/playground/).
 
