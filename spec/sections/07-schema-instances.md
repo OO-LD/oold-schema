@@ -1,93 +1,32 @@
-## Schema Instances
+## Schema Instances {#schema-instances}
 
-An OO-LD instance is a JSON document that conforms to an OO-LD schema. It references that schema in two ways, both pointing at the same (preferably versioned) schema URL:
+An [=OO-LD instance=] is a JSON document that conforms to an [=OO-LD schema=]. It references that schema in two ways, both pointing at the same (preferably versioned) schema URL:
 
 - `@context` - the schema URL, loaded as a JSON-LD remote context. This is what makes the instance a JSON-LD document.
 - `$schema` - the schema URL, identifying the schema the instance is intended to validate against.
 
-```yaml
-"@context": https://example.org/my-package/1.0.0/Person.schema.json
-$schema: https://example.org/my-package/1.0.0/Person.schema.json
-```
-
 Instances SHOULD use a versioned schema URL so that it is unambiguous which schema version they conform to.
 
-### Referencing the schema with `$schema`
+### Referencing the schema with `$schema` {#referencing-schema}
 
-In standard JSON Schema, `$schema` identifies the dialect (meta-schema), not the schema an instance validates against (see [Core section 8.1.1](https://json-schema.org/draft/2020-12/json-schema-core#section-8.1.1)); JSON Schema does not define an in-band way for an instance to point at its own schema. OO-LD therefore uses `$schema` on instances as a convention: standard JSON Schema validators treat it as ordinary data, while editors (VS Code, JetBrains, JSON Schema Store) and CI checks (e.g. [check-json-schema-meta](https://github.com/thiagowfx/check-json-schema-meta)) honor it. Where the instance is served over HTTP, the standards-conformant alternative is the `describedby` link relation (see [Core section 9.5.1.1](https://json-schema.org/draft/2020-12/json-schema-core#section-9.5.1.1)), optionally with the `profile` media-type parameter ([RFC 6906](https://www.rfc-editor.org/rfc/rfc6906)):
-
-```
-Link: <https://example.org/my-package/1.0.0/Person.schema.json>; rel="describedby"
-```
-
-An OO-LD-aware tool determines an instance's schema in the following order:
+In standard JSON Schema, `$schema` identifies the dialect (meta-schema), not the schema an instance validates against ([[JSONSCHEMA]] §8.1.1); JSON Schema does not define an in-band way for an instance to point at its own schema. OO-LD therefore uses `$schema` on instances as a convention. An OO-LD-aware tool determines an instance's schema in the following order:
 
 1. the `$schema` value, if present;
 2. otherwise, the URL given under `@context`, if the referenced document declares itself to be an OO-LD schema;
-3. otherwise, an inline `@type` (see below) - but only when at least one of the type IRIs resolves to an OO-LD schema.
+3. otherwise, an inline `@type` - but only when at least one of the type IRIs resolves to an OO-LD schema.
 
-An implementation MAY additionally maintain a registry mapping rdf:type IRIs to OO-LD schemas to resolve case 3, but such a registry MUST NOT be assumed to exist on the consuming side - so exports must be self-sufficient (see below).
+An implementation MAY additionally maintain a registry mapping `rdf:type` IRIs to OO-LD schemas to resolve case 3, but such a registry MUST NOT be assumed to exist on the consuming side - so exports must be self-sufficient.
 
 Because an instance carries `$schema` and `@context` as ordinary members, an OO-LD schema that closes its objects with `additionalProperties: false` or `unevaluatedProperties: false` MUST permit these two members, or conforming instances would fail validation.
 
-`@context` already provides a JSON-LD-native link to the schema (resolution case 2 above), so `$schema` is kept primarily for compatibility with the widespread editor and CI convention, not as a second authoritative mechanism. JSON Schema deliberately does not standardize `$schema` on instances, partly over a self-validation concern: a consumer SHOULD NOT blindly trust the schema an instance declares for itself (a crafted instance could point at a permissive schema) and remains responsible for validating against a schema it trusts.
+### Identity (`@id`) {#identity}
 
-### Identity (`@id`)
+An instance that represents an identifiable entity is identified by an `@id` - the IRI of that entity. Without an `@id` the entity is an anonymous blank node and cannot be referenced (for example as the target of an `x-oold-range` or `@reverse` relation). To keep instance keys variable-name-friendly, schemas SHOULD expose `@id` through an aliased `id` property.
 
-An instance that represents an identifiable entity is identified by an `@id` - the IRI of that entity. This is the JSON-LD node identifier, distinct from `$schema` / `@context` (which identify the schema) and from the schema's own `$id` / `x-oold-uuid`. Without an `@id` the entity is an anonymous blank node and cannot be referenced (for example as the target of an `x-oold-range` or `@reverse` relation).
+An implementation MAY use a non-IRI identifier internally, but when it exports an identifiable entity (to JSON-LD / RDF) it MUST assign an `@id` (or the aliased `id`). The `@id` SHOULD be resolvable, and it is RECOMMENDED to mint it from an autogenerated UUID. Embedded value objects that have no independent identity MAY omit `@id` and remain blank nodes.
 
-To keep instance keys variable-name-friendly, schemas SHOULD expose `@id` through an aliased `id` property (as with `type` -> `@type`):
+### Carrying the semantic type {#semantic-type}
 
-```json
-{
-  "@context": {
-    "id": "@id"
-  },
-  "properties": {
-    "id": {
-      "type": "string",
-      "format": "iri"
-    }
-  }
-}
-```
+The type and semantics of an instance are owned by the OO-LD schema it references. A schema declares the `rdf:type`(s) of its instances with the `x-oold-instance-rdf-type` keyword (always a list of IRIs). These types live in the schema, not in the instance data, so when OO-LD tooling exports an instance (to JSON-LD / RDF), it MUST materialize the declared `rdf:type`(s) as an `@type` on the instance, so that the type reaches RDF without access to the schema or to a type registry.
 
-An implementation MAY use a non-IRI identifier internally, but when it **exports** an identifiable entity (to JSON-LD / RDF) it MUST assign an `@id` (or the aliased `id`). The `@id` SHOULD be resolvable, and it is RECOMMENDED to mint it from an autogenerated UUID - mirroring the schema's `x-oold-uuid` - e.g. `https://example.org/a1b2c3d4-1234-...`.
-
-Embedded value objects that have no independent identity (for example an `Address` embedded in an `Organization`) MAY omit `@id` and remain blank nodes.
-
-### Carrying the semantic type
-
-The type and semantics of an instance are owned by the OO-LD schema it references; an instance is therefore not required to carry an inline type, and a schema version may remap to different ontology terms without rewriting existing data.
-
-A schema declares the rdf:type(s) of its instances with the `x-oold-instance-rdf-type` keyword (always a list of IRIs, e.g. `["schema:Person"]`):
-
-```json
-{ "x-oold-instance-rdf-type": ["schema:Person"] }
-```
-
-These types live in the schema, not in the instance data, so a JSON-LD-only processor - which sees only the instance and its `@context` - cannot derive them. Therefore, when OO-LD tooling **exports** an instance (to JSON-LD / RDF), it MUST materialize the declared rdf:type(s) as an `@type` on the instance, so that the type reaches RDF without access to the schema or to a type registry.
-
-Alternatively, an instance MAY carry the type inline as a `type` property (self-describing data). The schema maps the `type` term to the JSON-LD keyword `@type` with a simple alias and gives it a `default`; the value MAY be a single IRI or a list of IRIs, and this property named `type` is distinct from the JSON Schema `type` keyword. No `@type: @id` coercion is needed because JSON-LD already interprets `@type` values as IRIs:
-
-```json
-{
-  "@context": {
-    "schema": "http://schema.org/",
-    "type": "@type"
-  },
-  "type": "object",
-  "properties": {
-    "type": {
-      "type": "array",
-      "items": { "type": "string" },
-      "default": ["schema:Person"]
-    }
-  }
-}
-```
-
-A `default` is used here rather than `const`: `const` would also fix the type, but it would prevent a subclass from overriding or extending it (for example a subclass adding `schema:Researcher`). With `default` a subclass can redefine the property.
-
-If an inline `type` is present it MUST be consistent with the schema's `x-oold-instance-rdf-type`. Note that `@type` alone lets a consumer locate the schema (case 3 above) only when one of the type IRIs resolves to an OO-LD schema.
-
+Alternatively, an instance MAY carry the type inline as a `type` property whose term is mapped to the JSON-LD keyword `@type` with a simple alias and a `default`. If an inline `type` is present it MUST be consistent with the schema's `x-oold-instance-rdf-type`.

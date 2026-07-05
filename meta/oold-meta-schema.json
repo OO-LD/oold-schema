@@ -88,7 +88,7 @@
       "type": "array",
       "items": { "type": "string" }
     },
-    "x-oold-reverse-defaultProperties": {
+    "x-oold-reverse-default-properties": {
       "description": "Names of reverse properties shown by default in generated user interfaces.",
       "type": "array",
       "items": { "type": "string" }

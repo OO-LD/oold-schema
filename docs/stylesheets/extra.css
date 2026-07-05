@@ -1,0 +1,123 @@
+/* ----------------------------------------------------------------------------
+   OO-LD landing hero (docs/index.md)
+   Full-bleed, centered hero in the style of zensical.org: logo + headline +
+   short text passage + call-to-action buttons over a soft brand gradient.
+---------------------------------------------------------------------------- */
+
+/* The hero holds the content only; the gradient lives on .md-main (the
+   full-height content region) so it is one continuous layer with no seam. */
+.oold-hero {
+  padding: 4.5rem 1rem 5rem;
+  text-align: center;
+}
+
+.oold-hero__logo {
+  width: 200px;
+  max-width: 55%;
+  height: auto;
+  filter: drop-shadow(0 10px 28px rgba(0, 0, 0, 0.18));
+}
+
+.oold-hero__title {
+  margin: 1.4rem 0 0.3rem;
+  font-size: 2.6rem;
+  font-weight: 700;
+  line-height: 1.15;
+}
+
+.oold-hero__tagline {
+  margin: 0 auto 1.2rem;
+  font-size: 1.25rem;
+  font-weight: 500;
+  color: var(--md-default-fg-color--light);
+}
+
+.oold-hero__text {
+  max-width: 42rem;
+  margin: 0 auto 2rem;
+  font-size: 1.02rem;
+  line-height: 1.7;
+  color: var(--md-default-fg-color--light);
+}
+
+.oold-hero__actions .md-button {
+  margin: 0.35rem 0.4rem;
+}
+
+/* The landing page is a short hero with no scrolling, so don't reserve the
+   scrollbar gutter (the theme sets `scrollbar-gutter: stable` globally).
+   Otherwise an empty strip shows on the right where scrolling pages put the
+   scrollbar. */
+html:has(.oold-hero) {
+  scrollbar-gutter: auto;
+}
+
+/* OO-LD brand yellow + the gradient's end color. */
+body:has(.oold-hero) {
+  --oold-hero-yellow: #ffd43b;
+  --oold-hero-end: color-mix(in srgb, var(--oold-hero-yellow) 60%, var(--md-default-bg-color));
+}
+
+/* One continuous gradient on the full-height content region: page background at
+   the top (white/black), fading to brand yellow at the very bottom. Scoped to
+   .md-main so the header, tabs and footer keep their own colors, and because
+   .md-main flex-grows to the page bottom there is no seam and no gap. */
+body:has(.oold-hero) .md-main {
+  background:
+    radial-gradient(
+      70% 55% at 50% 100%,
+      color-mix(in srgb, var(--oold-hero-yellow) 40%, transparent),
+      transparent 72%
+    ),
+    linear-gradient(
+      180deg,
+      var(--md-default-bg-color) 30%,
+      var(--oold-hero-end) 100%
+    );
+}
+
+/* Landing page: hero starts flush under the tabs bar and spans the full width. */
+body:has(.oold-hero) .md-main__inner {
+  margin-top: 0;
+  max-width: none;
+}
+
+body:has(.oold-hero) .md-content__inner {
+  margin: 0;
+  padding: 0;
+}
+
+/* Hide the footer on the landing page only (the page that carries the hero) */
+body:has(.oold-hero) .md-footer {
+  display: none;
+}
+
+/* ----------------------------------------------------------------------------
+   Mermaid diagrams: render large and let oversized ones scroll/pan
+---------------------------------------------------------------------------- */
+
+.mermaid {
+  /* Scroll to pan when a diagram is wider/taller than the content column.
+     Combine with the browser's native zoom (Ctrl/Cmd +) for fine detail -
+     SVG stays crisp at any zoom level. */
+  overflow: auto;
+  text-align: center;
+}
+
+.mermaid svg {
+  /* Render at full content width instead of mermaid's smaller default */
+  max-width: 100%;
+  height: auto;
+}
+
+@media screen and (max-width: 44.9375em) {
+  .oold-hero {
+    padding: 3rem 1rem 3.5rem;
+  }
+  .oold-hero__title {
+    font-size: 2rem;
+  }
+  .oold-hero__tagline {
+    font-size: 1.1rem;
+  }
+}

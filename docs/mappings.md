@@ -1,10 +1,13 @@
-## Mappings
+# Mappings
 
-### Asset Administration Shell
+OO-LD can act as a bridge between several existing schema languages and data models. This page shows how selected formats map to OO-LD schemas and instances.
+
+## Asset Administration Shell
 
 Asset Administration Shell combines schema and data in a single documents. Semantics are introduced by annotations keywords.
 
-**AAS**
+### AAS
+
 ```yml
 - assetInformation:
     assetKind: Instance
@@ -31,7 +34,8 @@ Asset Administration Shell combines schema and data in a single documents. Seman
     valueType: xs:string
 ```
 
-**OO-LD Schemas**
+### OO-LD Schemas
+
 ```yml
 - id: https://example.org/Simple_AAS
   x-aas-modelType: AssetAdministrationShell
@@ -48,20 +52,22 @@ Asset Administration Shell combines schema and data in a single documents. Seman
       default: exampleValue # works like a template
 ```
 
+### OO-LD Data
 
-**Data**
 ```yml
 "@context": https://example.org/Simple_Submodel
 $schema: https://example.org/Simple_Submodel
 ExampleProperty: exampleValue
 ```
 
-### Semantic Aspect Meta Model
+## Semantic Aspect Meta Model
+
 [Semantic Aspect Meta Model (SAMM)](https://docs.bosch-semantic-stack.com/oss/samm-specification.html) is a lightweight language to model (partial) objects (aspects) and their properties. While building on RDF and using turtle as serialization SAMM forms tree like structures like JSON Schema. Instead of IRIs, Ressources are identified with URNs which are not meant to be resolveable in the sense of linked data / semantic web.
 
 Example (see [AddressAspect.ttl](https://github.com/eclipse-tractusx/sldt-semantic-models/blob/main/io.catenax.shared.address_characteristic/4.0.0/AddressAspect.ttl) for an address, stripping everything but the post code attribute):
 
-**SAMM**
+### SAMM
+
 ```turtle
 
 @prefix samm: <urn:samm:org.eclipse.esmf.samm:meta-model:2.1.0#> .
@@ -132,8 +138,10 @@ Example (see [AddressAspect.ttl](https://github.com/eclipse-tractusx/sldt-semant
    samm-c:values ( "CEDEX" "LARGE_MAIL_USER" "OTHER" "POST_BOX" "REGULAR" ) .
 ```
 
+### OO-LD Schema Example
 
-**OO-LD schema** (see also [generated JSON Schema](https://github.com/eclipse-tractusx/sldt-semantic-models/blob/main/io.catenax.shared.address_characteristic/4.0.0/gen/AddressAspect.json))
+see also [generated JSON Schema](https://github.com/eclipse-tractusx/sldt-semantic-models/blob/main/io.catenax.shared.address_characteristic/4.0.0/gen/AddressAspect.json)
+
 ```json
 {
   "@context": {
@@ -180,7 +188,8 @@ Example (see [AddressAspect.ttl](https://github.com/eclipse-tractusx/sldt-semant
 }
 ```
 
-**Data instance**
+### Data instance
+
 ```json
 {
   "address" : {
@@ -192,14 +201,11 @@ Example (see [AddressAspect.ttl](https://github.com/eclipse-tractusx/sldt-semant
 }
 ```
 
-### LinkML
+## LinkML
 
-In general LinkML schemas can be exported to JSON Schema and JSON-LD contexts in order to build a OO-LD schema.
-With https://github.com/linkml/linkml/pull/2369 lifecycle methods being added to the LinkML jsonschemagen which allow to use annotations to extend the generated schema.
+In general LinkML schemas can be exported to JSON Schema and JSON-LD contexts in order to build a OO-LD schema. With <https://github.com/linkml/linkml/pull/2369> lifecycle methods being added to the LinkML jsonschemagen which allow to use annotations to extend the generated schema.
 
-As an example applying 
-<details>
-<summary>OOLDSchemaGenerator.py</summary>
+As an example applying <details> <summary>OOLDSchemaGenerator.py</summary>
 
 ```python
 from pprint import pprint
@@ -240,12 +246,12 @@ class OOLDSchemaGenerator(JsonSchemaGenerator):
 if __name__ == "__main__":
     print(yaml.dump(json.loads(OOLDSchemaGenerator('Person.min.linkml.yaml', include_null=False).serialize()), sort_keys=False, indent=2))
 ```
+
 </details>
 
 on an annotated LinkML schema, e.g.
 
-<details>
-<summary>Person.linkml.yaml</summary>
+<details> <summary>Person.linkml.yaml</summary>
 
 ```yaml
 id: https://example.org/Person/
@@ -319,8 +325,7 @@ classes:
 
 produces an OO-LD schema (JSON-LD context + JSON Schema with additional annotation for userinterface generation like, e.g. `options` and `template`)
 
-<details>
-<summary>Person.oold.yaml</summary>
+<details> <summary>Person.oold.yaml</summary>
 
 ```yaml
 '@context':
@@ -443,28 +448,25 @@ required:
 
 which can be copy-pasted into [OO-LD playground](https://oo-ld.github.io/playground-yaml/?data=N4Ig9gDgLglmB2BnEAuUMDGCA2MBGqIAZglAIYDuApomALZUCsIANOHgFZUZQD62ZAJ5gArlELwwAJzplsrEIgwALKrNSgAAlnhQqAD3FoQ%2BxABNCyqFAgoA9HYpOAdBQDMz6QHM7AJgAM%2FgCMdgAaALIAMgDKKmpkAMQKAApUUrTwGiCaMBYoinGyKKnpCCAAvmy48ADWdPL5VjaI9o5uuZ5SPtV12HYKSqrqjda2DoPxnT4KmgBuYBhkBCPNrQZkdBDYVFN2JRn9bBgwUIJZOXkFQ2Qox6cVbBBgiOTYvFhmVOe5hBNFTy85ABhMCfB6KKBSKhUIxaH75P43F5QmHg%2BAbL7GC6%2FQo3dEMcFkMxmKGIZBY04QTHZH5sbEI3EoIkkmjISogPAwKRQZS8MxkPTnSnU0xmFD8wV0%2BFXeIoTnc5QAEQFX3Zai2YEEaSFgiphGxUsu6uwmu17KIXJevHxmLhlwt6T4NvBAitzqx0tdTox4IAgsTSeS7TjrsVnq9%2FSyyeCAPJdMjwGAALwFcEyHsuiJQca8CeTqbK5XZABJEZZRi0HBwMgBaRG7ElkIhQPzBACcNf8bbsZbYxelTQglbs602212%2BwQhxADHIdFBVDeszSiDThCCzgA7M5%2FApl%2Bk1yh4CJsNg2LAoNtCJPMufddSwJxuOI2MyTmm5MkpJA0rAaKhIREKg%2B0%2BIggxAHM8xTWAymMYVCEfLgeAUN8YPRbAvx%2FbkYH%2FFAiDkRBgJAT4lCkGBoEPEAFAgb8qWw3DQHdUB4IRSEYHgLwKnZC8r3ySDE2gtd2UjQMshY9gkJfEBUI%2FDDaN%2FHDyXw7BCLYEiMDIijYKox55Po8DkWhWEQHE5F2M49k7jOOD71%2BNiOPBAFXneBcxNs1iyIcotzxOXiQBE1lwRvNy9XyRDnxQ4l3wQT89L%2FJSCKI9TNLQwhqLixSsiYkz3IhTzOLUmgNPI1L8h5KgAAIbQqsAiAqsgKrojIFEgNDwOUXJPnTZTCO440VUIYBgAdN0MSLCqhq9a0xvKBQKAFFQshG70CXyZbpoJKoyFG1aQCm51vOIS0VttHLQry8yXW2k6QupMyvLYeUeT5AabPO%2B6CuIaRZCMYiBp8y9qQAIS5HkKolVVXwDQLjGLKEiEIBI7GLUDEDsALozVMdTSkLI4aoBH8iRlGCbR%2Fj81Sw6oQARxELkqDyABtEBnQAXQBvzgsO5KSso9KsPirKfTeu77M%2BnmtPTEzVCqjEarqhqmrKNhWrTdrOqobrEr6sdXpAIb1ptcbJuujaqCLOaFuUJbjrNwhDZ9LadupfafUOh3VuY3KPqu53brs%2FLwSe3kIf9jzLrYEgZAFQhQ454HQeUcGBvZZlRNh%2BHEeR1H0ehzG2GNHG8czons9JuxycEwt2RpumoSZlmfVZ9lEGUMAKF4NJv3SQh2L0KQyB4NdzyGak8DAMAoGRMgIAAFhQjgyH0ACpCAtgamhCBeAQKhat4WY5CAhKVPNthq1gxjhZAAAVGgoAq4LI9t90b7vhRXd2x%2BOUTl7BXySKowGUhEZNKRwTjWR0iAJycgXJgn%2FljDUWpcbGBflxcoQA%3D%3D%3D)
 
-to get an auto-generated userinterface (based on https://github.com/json-editor/json-editor):
+to get an auto-generated userinterface (based on <https://github.com/json-editor/json-editor>):
 
 ![grafik](https://github.com/user-attachments/assets/a83d885c-b345-4676-b3af-8a9a29ebfed3)
 
-
-Populating `x-oold-range` in combination with a proper backend allows user to created non-inlined objects on the fly or link (= store the IRI) to existing ones (see https://opensemantic.world / https://demo.open-semantic-lab.org):
+Populating `x-oold-range` in combination with a proper backend allows user to created non-inlined objects on the fly or link (= store the IRI) to existing ones (see <https://opensemantic.world> / <https://demo.open-semantic-lab.org>):
 
 ![grafik](https://github.com/user-attachments/assets/2e61fb48-b779-4b2d-88f3-c71098a605b5)
-
 
 ![grafik](https://github.com/user-attachments/assets/db298df5-d4f8-4d6c-9ab9-fb7de8314643)
 
 Minor unsolved issues:
+
 - `annotations` with object-values cannot be written in compact form, only with additional `value`-key in between
 - some information already encoded in LinkML is not yet part of the generated JSON Schema (e.g. default values)
 
+## NOMAD
 
+[NOMAD schemas](https://sol-oasis.physik.hu-berlin.de/nomad-oasis/docs/schemas/basics.html) have comparable concepts about reusable objects (sections) with typed properties (quantities). Example:
 
-### NOMAD
-
-[NOMAD schemas](https://sol-oasis.physik.hu-berlin.de/nomad-oasis/docs/schemas/basics.html) have comparable concepts about reusable objects (sections) with typed properties (quantities).
-Example:
 ```yaml
 definitions:
   sections:
@@ -487,6 +489,7 @@ definitions:
           section: Element
           repeats: true
 ```
+
 can be expressed as the following JSON Schema (formated as yaml)
 
 ```yaml
@@ -527,26 +530,27 @@ elements:
     density: 1.141
     isotopes: [16, 17, 18]
 ```
+
 by using the following mapping (work in progress):
 
-| NOMAD Schema      | JSON Schema |  Note |
-| ----------- |-----------| ----------- |
-| quantities | properties | |
-| type (int, str, ...) | type (integer, string, ...) | specific python types like `np.int32` can be annotated in the JSON-LD context |
-| unit, m_annotations, .. | format / options| additional custom annotation keywords can be kept or mapped to format and options |
-| shape[*] | type: array, items: type: number | specific values can be mapped to minItems and maxItems |
-| shape[*, *] | type: array, items: type: array, items: type: number | nested array |
-| sub_sections: ... : repeats: true | type: array, items: type: object | array of objects
-|... | | |
+| NOMAD Schema                      | JSON Schema                                          | Note                                                                              |
+| --------------------------------- | ---------------------------------------------------- | --------------------------------------------------------------------------------- |
+| quantities                        | properties                                           |                                                                                   |
+| type (int, str, ...)              | type (integer, string, ...)                          | specific python types like `np.int32` can be annotated in the JSON-LD context     |
+| unit, m_annotations, ..           | format / options                                     | additional custom annotation keywords can be kept or mapped to format and options |
+| shape[*]                          | type: array, items: type: number                     | specific values can be mapped to minItems and maxItems                            |
+| shape[*,*]                        | type: array, items: type: array, items: type: number | nested array                                                                      |
+| sub_sections: ... : repeats: true | type: array, items: type: object                     | array of objects                                                                  |
+| ...                               |                                                      |                                                                                   |
 
+## Dlite
 
-### Dlite
+### Dlite Schema
 
-#### Schema
+[Dlite](https://github.com/SINTEF/dlite) already uses JSON Schema keywords like `properties`, `type` and `description`. Similar to NOMAD, annotations `unit` declare the unit of measure of quantity values and `shape` is used to describe array dimensions. However, different from NOMAD, `shape` refers to parameters declared under `dimensions`.
 
-[Dlite](https://github.com/SINTEF/dlite) already uses JSON Schema keywords like `properties`, `type` and `description`. Similar to NOMAD, annotations `unit` declare the unit of measure of quantity values and `shape` is used to describe array dimensions. However, different from NOMAD, `shape` refers to parameters declared under `dimensions`.  
+#### Person.dlite.yml
 
-**Person.dlite.yml**
 ```yaml
 uri: http://onto-ns.com/meta/0.1/Person # identifier of the schema document
 meta: http://onto-ns.com/meta/0.3/EntitySchema # links to a meta schema as type
@@ -572,7 +576,8 @@ properties:
 
 To overcome the missing expressiveness in JSON Schema alone, specific JSON-LD `@type` annotations can be used (here `xsd:float`). `dimension`, `unit`, and `shape` can be expressed with custom keywords, prefixed by `x-dlite-`.
 
-**Person.oold.yml**
+#### Person.oold.yml
+
 ```yaml
 "@context":
   xsd: http://www.w3.org/2001/XMLSchema
@@ -604,11 +609,12 @@ properties:
       type: string
 ```
 
-#### Instance
+### Instance
 
 On the instance level the main difference is the nesting of properties within a `properties` subobject. This can be interpreted as JSON-LD [nested-properties](https://www.w3.org/TR/json-ld/#nested-properties). Links to other instance documents are UUIDs which should be interpreted as `urn:uuid`.
 
-**SherlockHolmes.dlite.yml**
+#### SherlockHolmes.dlite.yml
+
 ```yaml
 "@context":
   - /remote/context/of/Person
@@ -623,3 +629,22 @@ properties:
   skills:
     - observing
     - chemistry
+    - violin
+    - boxind
+```
+
+#### SherlockHolmes.oold.yml
+
+```yaml
+"@context": http://onto-ns.com/meta/0.1/Person
+$schema: http://onto-ns.com/meta/0.1/Person
+uuid: 8cbd4c09-734d-4532-b35a-1e0dd5c3e8b5
+general: urn:uuid:<UUID of a Thing instance document>
+name: Sherlock Holmes
+age: 34.0
+skills:
+  - observing
+  - chemistry
+  - violin
+  - boxind
+```
