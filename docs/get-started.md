@@ -6,25 +6,11 @@ This page walks you through the smallest possible OO-LD schema, step by step. If
 
 The core idea of OO-LD is that a single document is at once a valid **JSON Schema** and a reference-able **JSON-LD remote context**. Start from a plain JSON Schema and add an `@context`:
 
-```json
-{
-  "@context": {
-    "schema": "http://schema.org/",
-    "name": "schema:name"
-  },
-  "title": "Person",
-  "type": "object",
-  "properties": {
-    "name": {
-      "type": "string",
-      "description": "First and Last name"
-    }
-  }
-}
-```
+{{ example('Minimal') }}
 
-- The JSON Schema part (`type`, `properties`, …) describes the **structure** of a `Person` object.
+- The JSON Schema part (`type`, `properties`, …) describes the **structure** of the object.
 - The `@context` part maps the `name` property to the semantic term `schema:name`, describing its **meaning**.
+- `$id` gives the schema a stable identity and `$schema` declares the OO-LD dialect (the meta-schema).
 
 ## Step 2 - Try it in the playground
 
