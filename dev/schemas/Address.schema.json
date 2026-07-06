@@ -1,0 +1,20 @@
+{
+  "$schema": "https://oo-ld.github.io/oold-schema/dev/meta/oold-meta-schema.json",
+  "$id": "Address.schema.json",
+  "x-oold-uuid": "e8536464-a654-49ee-bd44-df60424b73b1",
+  "x-oold-version": "1.0.0",
+  "x-oold-instance-rdf-type": ["schema:PostalAddress"],
+  "@context": {
+    "@version": 1.1,
+    "schema": "http://schema.org/",
+    "country": "schema:addressCountry",
+    "streetAddress": "schema:streetAddress"
+  },
+  "title": "Address",
+  "x-oold-multilang-title": { "en": "Address", "de": "Adresse" },
+  "type": "object",
+  "properties": {
+    "country": { "type": "string", "description": "ISO 3166-1 alpha-2 country code" },
+    "streetAddress": { "type": "string", "description": "Street address" }
+  }
+}

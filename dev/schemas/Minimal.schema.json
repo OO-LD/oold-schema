@@ -1,0 +1,13 @@
+{
+  "$schema": "https://oo-ld.github.io/oold-schema/dev/meta/oold-meta-schema.json",
+  "$id": "Minimal.schema.json",
+  "@context": {
+    "schema": "http://schema.org/",
+    "name": "schema:name"
+  },
+  "title": "Minimal",
+  "type": "object",
+  "properties": {
+    "name": { "type": "string", "description": "Name of the thing" }
+  }
+}

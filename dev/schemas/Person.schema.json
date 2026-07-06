@@ -1,0 +1,26 @@
+{
+  "$schema": "https://oo-ld.github.io/oold-schema/dev/meta/oold-meta-schema.json",
+  "$id": "Person.schema.json",
+  "x-oold-uuid": "b5203131-7321-46bb-8a11-acb3d1015840",
+  "x-oold-version": "1.0.0",
+  "x-oold-instance-rdf-type": ["schema:Person"],
+  "@context": [
+    "Thing.schema.json",
+    {
+      "schema": "http://schema.org/",
+      "works_for": "schema:worksFor"
+    }
+  ],
+  "title": "Person",
+  "x-oold-multilang-title": { "en": "Person", "de": "Person" },
+  "allOf": [ { "$ref": "Thing.schema.json" } ],
+  "type": "object",
+  "properties": {
+    "works_for": {
+      "type": "string",
+      "format": "autocomplete",
+      "description": "Organization the person works for",
+      "x-oold-range": "Organization.schema.json"
+    }
+  }
+}
