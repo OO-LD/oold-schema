@@ -24,16 +24,22 @@ spec: ## Regenerate docs/spec/index.html from spec/sections + meta/*.json (via u
 	@echo "🚀 Rendering the ReSpec spec from spec/"
 	@uv run scripts/render_spec.py
 
+.PHONY: stage-schemas
+stage-schemas: ## Copy meta/ + examples/ into docs/ so the build serves them (versioned per release)
+	@mkdir -p docs/meta docs/schemas
+	@cp meta/*.json docs/meta/
+	@cp examples/*.schema.json docs/schemas/
+
 .PHONY: docs
-docs: ## Serve the docs with live reload (serves the committed spec artifact)
+docs: stage-schemas ## Serve the docs with live reload (serves the committed spec artifact)
 	@$(ZENSICAL) serve
 
 .PHONY: preview
-preview: spec ## Regenerate the spec, then serve the docs with live reload
+preview: spec stage-schemas ## Regenerate the spec, then serve the docs with live reload
 	@$(ZENSICAL) serve
 
 .PHONY: check
-check: validate spec ## Validate schemas, lint the regenerated spec, and build the site
+check: validate spec stage-schemas ## Validate schemas, lint the regenerated spec, and build the site
 	@uv run scripts/check_spec.py
 	@$(ZENSICAL) build --clean
 

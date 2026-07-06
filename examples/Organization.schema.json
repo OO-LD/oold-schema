@@ -1,5 +1,5 @@
 {
-  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$schema": "https://oo-ld.github.io/oold-schema/latest/meta/oold-meta-schema.json",
   "$id": "Organization.schema.json",
   "x-oold-uuid": "c6314242-8432-57cc-9b22-bd4e2026951f",
   "x-oold-version": "1.0.0",

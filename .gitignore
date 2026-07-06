@@ -5,3 +5,7 @@ package-lock.json
 site/
 .venv/
 __pycache__/
+
+# staged into the versioned site by the build (canonical sources are meta/ and examples/)
+docs/meta/
+docs/schemas/
