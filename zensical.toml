@@ -111,3 +111,6 @@ generic = true
 
 [project.markdown_extensions.toc]
 permalink = true
+
+[project.extra.version]
+provider = "mike"

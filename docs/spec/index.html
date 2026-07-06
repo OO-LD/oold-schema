@@ -121,7 +121,7 @@
 
 <section id="basic-concepts"><h2>Basic Concepts</h2><p>The core idea is that an [=OO-LD schema=] is always both a valid JSON Schema and a reference-able JSON-LD [=remote context=] as defined in [[JSON-LD11]] §3.1 (<em>not</em> a JSON-LD document). In this way a complete OO-LD class / schema hierarchy is consume-able by JSON Schema-only and JSON-LD-only tools while OO-LD-aware tools can provide extended features on top (e.g. UI autocomplete dropdowns for string-IRI fields based on a SPARQL backend, or SHACL shape / JSON-LD frame generation).</p>
 <aside class="example" title="A minimal OO-LD schema"><pre><code class="language-json">{
-  &quot;$schema&quot;: &quot;https://json-schema.org/draft/2020-12/schema&quot;,
+  &quot;$schema&quot;: &quot;https://oo-ld.github.io/oold-schema/latest/meta/oold-meta-schema.json&quot;,
   &quot;$id&quot;: &quot;Minimal.schema.json&quot;,
   &quot;@context&quot;: {
     &quot;schema&quot;: &quot;http://schema.org/&quot;,

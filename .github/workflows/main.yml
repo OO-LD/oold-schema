@@ -2,14 +2,17 @@ name: main
 
 on:
   push:
+    branches: [main]
+    tags: ["v*"]
   pull_request:
   workflow_dispatch:
 
-# Pin the zensical version here so documentation builds are reproducible.
+# Pin zensical (docs build) and the zensical fork of mike (versioning bridge)
+# for reproducible builds/deploys.
 env:
   ZENSICAL_VERSION: "0.0.46"
+  MIKE_SPEC: "git+https://github.com/squidfunk/mike.git@2.2.0+zensical-0.1.0"
 
-# Allow only one concurrent Pages deployment.
 concurrency:
   group: pages-${{ github.ref }}
   cancel-in-progress: false
@@ -27,9 +30,9 @@ jobs:
       - uses: astral-sh/setup-uv@v6
       - run: npm install
       - run: npm run validate
-      # Re-render the spec from spec/sections + meta/*.json, fail if the committed
-      # docs/spec/index.html is stale (drift guard), then lint its structure.
-      # (Renderer dependencies are pinned inline in the script via PEP 723.)
+      # Re-render the spec and fail if the committed docs/spec/index.html is stale
+      # (drift guard), then lint its structure. Renderer deps are pinned inline
+      # via PEP 723, so `uv run` stays reproducible.
       - name: Render the spec
         run: uv run scripts/render_spec.py
       - name: Check the generated spec is up to date
@@ -37,36 +40,49 @@ jobs:
       - name: Lint the spec
         run: uv run scripts/check_spec.py
 
-  # Build the documentation on every push/PR, but only after schema validation
-  # succeeds - so the site is only ever published from valid schema definitions.
-  # On a push to `main` the built site is uploaded as a Pages artifact for the
-  # deploy job; on PRs this job is a build-only check (no upload, no deploy).
-  docs-build:
+  # Publish the versioned docs + schemas to the `gh-pages` branch with mike (the
+  # zensical fork). GitHub Pages must serve from `gh-pages`
+  # (Settings > Pages > Source: Deploy from a branch > gh-pages).
+  # meta/ + examples/ are staged into docs/ so every version also serves them at
+  # /<ver>/meta and /<ver>/schemas. main -> the `dev` version; a `vX.Y.Z` tag ->
+  # version `X.Y` with the `latest` alias (and root redirect via set-default).
+  deploy:
     needs: validate
     runs-on: ubuntu-latest
+    permissions:
+      contents: write  # mike pushes to gh-pages
     steps:
       - uses: actions/checkout@v4
-      - uses: astral-sh/setup-uv@v6
-      - name: Build documentation
-        run: uvx zensical@${{ env.ZENSICAL_VERSION }} build --clean
-      - name: Upload Pages artifact
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-        uses: actions/upload-pages-artifact@v4
         with:
-          path: site
-
-  deploy-docs:
-    needs: docs-build
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      pages: write
-      id-token: write
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    steps:
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+          fetch-depth: 0
+      - uses: astral-sh/setup-uv@v6
+      - name: Stage schemas into the site
+        run: make stage-schemas
+      # mike commits the built site to gh-pages; GitHub runners have no default
+      # git identity, so `git commit` would fail without this.
+      - name: Configure git identity
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+      - name: Build only (pull request)
+        if: github.event_name != 'push'
+        run: uvx zensical@${{ env.ZENSICAL_VERSION }} build --clean
+      - name: Publish dev (push to main)
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: |
+          # Stamp the served schema copies with this version id so they self-identify
+          # (the source keeps the /latest/ placeholder; staged copies are gitignored).
+          sed -i 's#/oold-schema/latest/#/oold-schema/dev/#g' docs/meta/*.json docs/schemas/*.json
+          uvx --from "$MIKE_SPEC" mike deploy --push dev
+      - name: Publish release (tag vX.Y.Z)
+        if: startsWith(github.ref, 'refs/tags/v')
+        run: |
+          ver="${GITHUB_REF_NAME#v}"   # full semver (e.g. 0.4.0) -> served at /0.4.0/, matching OO-LD package-versioning
+          # Stamp the concrete version into the served schemas so /X.Y.Z/ self-identifies
+          # (spec-compliant + reproducible); the source keeps the /latest/ placeholder.
+          sed -i "s#/oold-schema/latest/#/oold-schema/$ver/#g" docs/meta/*.json docs/schemas/*.json
+          # --alias-type=copy so /latest/ is a real directory (its schema JSON is
+          # fetchable; a redirect alias would 404 for machine schema references).
+          MIKE="uvx --from $MIKE_SPEC mike"
+          $MIKE deploy --push --alias-type=copy --update-aliases "$ver" latest
+          $MIKE set-default --push latest

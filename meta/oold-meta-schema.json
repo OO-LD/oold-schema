@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://oo-ld.github.io/schema/meta/oold-meta-schema.json",
+  "$id": "https://oo-ld.github.io/oold-schema/latest/meta/oold-meta-schema.json",
   "$dynamicAnchor": "meta",
   "title": "OO-LD dialect meta-schema",
   "$comment": "Provisional $id and OO-LD vocabulary URI - to be finalized when the canonical hosting location is decided. The OO-LD vocabulary is declared optional (false) so that generic JSON-Schema 2020-12 validators still process OO-LD schemas.",
@@ -12,7 +12,7 @@
     "https://json-schema.org/draft/2020-12/vocab/meta-data": true,
     "https://json-schema.org/draft/2020-12/vocab/format-annotation": true,
     "https://json-schema.org/draft/2020-12/vocab/content": true,
-    "https://oo-ld.github.io/schema/vocab/oold": false
+    "https://oo-ld.github.io/oold-schema/latest/vocab/oold": false
   },
   "allOf": [
     { "$ref": "https://json-schema.org/draft/2020-12/schema" }
