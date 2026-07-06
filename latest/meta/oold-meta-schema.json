@@ -1,0 +1,97 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://oo-ld.github.io/oold-schema/0.4.0/meta/oold-meta-schema.json",
+  "$dynamicAnchor": "meta",
+  "title": "OO-LD dialect meta-schema",
+  "$comment": "Provisional $id and OO-LD vocabulary URI - to be finalized when the canonical hosting location is decided. The OO-LD vocabulary is declared optional (false) so that generic JSON-Schema 2020-12 validators still process OO-LD schemas.",
+  "$vocabulary": {
+    "https://json-schema.org/draft/2020-12/vocab/core": true,
+    "https://json-schema.org/draft/2020-12/vocab/applicator": true,
+    "https://json-schema.org/draft/2020-12/vocab/unevaluated": true,
+    "https://json-schema.org/draft/2020-12/vocab/validation": true,
+    "https://json-schema.org/draft/2020-12/vocab/meta-data": true,
+    "https://json-schema.org/draft/2020-12/vocab/format-annotation": true,
+    "https://json-schema.org/draft/2020-12/vocab/content": true,
+    "https://oo-ld.github.io/oold-schema/0.4.0/vocab/oold": false
+  },
+  "allOf": [
+    { "$ref": "https://json-schema.org/draft/2020-12/schema" }
+  ],
+  "properties": {
+    "@context": {
+      "description": "JSON-LD context for instances of this schema. The schema is consumed as a remote JSON-LD context; this entry is ignored by JSON-Schema validators."
+    },
+    "x-oold-uuid": {
+      "description": "Stable UUID identifying this schema across versions and locations.",
+      "type": "string",
+      "format": "uuid"
+    },
+    "x-oold-version": {
+      "description": "Semantic version of this schema.",
+      "type": "string"
+    },
+    "x-oold-prior-version": {
+      "description": "Identifier or version of the immediately preceding schema version.",
+      "type": "string"
+    },
+    "x-oold-backward-compatible-with": {
+      "description": "URI of a prior schema version this schema is backward-compatible with.",
+      "type": "string",
+      "format": "uri-reference"
+    },
+    "x-oold-incompatible-with": {
+      "description": "URI of a prior schema version this schema is NOT compatible with.",
+      "type": "string",
+      "format": "uri-reference"
+    },
+    "x-oold-iri": {
+      "description": "Ontology IRI (or compact IRI) denoting the class described by this schema.",
+      "type": "string"
+    },
+    "x-oold-instance-rdf-type": {
+      "description": "The rdf:type(s) carried by instances of this schema, as a list of IRIs (e.g. [\"schema:Person\"]). OO-LD tooling materializes these as @type when exporting an instance to JSON-LD / RDF.",
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "x-oold-ref": {
+      "description": "Reference to another OO-LD schema. Use x-oold-ref (not the standard $ref) for references that appear inside OO-LD custom keywords such as x-oold-range: there a plain $ref would be eagerly - and, for cyclic schema graphs, dangerously - dereferenced by generic JSON-Schema bundlers (the behaviour is undefined per Core section 9.4.2). Keep using the standard $ref for ordinary schema composition (allOf, properties, $defs), which bundlers are expected to resolve. x-oold-ref is resolved only by OO-LD-aware tools, lazily and with cycle handling.",
+      "type": "string",
+      "format": "uri-reference"
+    },
+    "x-oold-range": {
+      "description": "Type constraint on the target of an IRI-valued property: an IRI string, an array of IRIs, or an OO-LD subschema (using x-oold-ref for references). See the 'Range of properties' section.",
+      "anyOf": [
+        { "type": "string" },
+        { "type": "array", "items": { "type": "string" } },
+        {
+          "type": "object",
+          "$comment": "OO-LD subschema form; references inside it use x-oold-ref. The reverse-property keywords (x-oold-reverse-*) are intentionally not validated within a range subschema for now."
+        }
+      ]
+    },
+    "x-oold-multilang-title": {
+      "description": "Language map of translated `title` values keyed by BCP-47 language code.",
+      "type": "object",
+      "additionalProperties": { "type": "string" }
+    },
+    "x-oold-multilang-description": {
+      "description": "Language map of translated `description` values keyed by BCP-47 language code.",
+      "type": "object",
+      "additionalProperties": { "type": "string" }
+    },
+    "x-oold-reverse-properties": {
+      "description": "Properties stored on the related object but editable from this side, mapped via JSON-LD @reverse.",
+      "type": "object"
+    },
+    "x-oold-reverse-required": {
+      "description": "Names of reverse properties that are required.",
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "x-oold-reverse-default-properties": {
+      "description": "Names of reverse properties shown by default in generated user interfaces.",
+      "type": "array",
+      "items": { "type": "string" }
+    }
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "$schema": "https://oo-ld.github.io/oold-schema/0.4.0/meta/oold-meta-schema.json",
+  "$id": "Organization.schema.json",
+  "x-oold-uuid": "c6314242-8432-57cc-9b22-bd4e2026951f",
+  "x-oold-version": "1.0.0",
+  "x-oold-instance-rdf-type": ["schema:Organization"],
+  "@context": [
+    "Thing.schema.json",
+    {
+      "schema": "http://schema.org/",
+      "address": { "@id": "schema:address", "@context": "Address.schema.json" }
+    }
+  ],
+  "title": "Organization",
+  "x-oold-multilang-title": { "en": "Organization", "de": "Organisation" },
+  "allOf": [ { "$ref": "Thing.schema.json" } ],
+  "type": "object",
+  "properties": {
+    "address": {
+      "type": "object",
+      "$ref": "Address.schema.json",
+      "description": "Postal address of the organization"
+    }
+  }
+}

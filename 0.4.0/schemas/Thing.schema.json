@@ -1,0 +1,20 @@
+{
+  "$schema": "https://oo-ld.github.io/oold-schema/0.4.0/meta/oold-meta-schema.json",
+  "$id": "Thing.schema.json",
+  "x-oold-uuid": "1b4de2a0-9d3f-4c2e-9a1b-0e7c5f8a2d10",
+  "x-oold-version": "1.0.0",
+  "x-oold-instance-rdf-type": ["schema:Thing"],
+  "@context": {
+    "@version": 1.1,
+    "id": "@id",
+    "schema": "http://schema.org/",
+    "name": "schema:name"
+  },
+  "title": "Thing",
+  "x-oold-multilang-title": { "en": "Thing", "de": "Ding" },
+  "type": "object",
+  "properties": {
+    "id": { "type": "string", "format": "iri", "description": "IRI of the entity" },
+    "name": { "type": "string", "description": "Name of the thing" }
+  }
+}
