@@ -1,0 +1,2522 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Object-Oriented Linked Data Schema - JSON Schema + JSON-LD in one document">
+      
+      
+        <meta name="author" content="OO-LD Contributors">
+      
+      
+        <link rel="canonical" href="https://OO-LD.github.io/oold-schema/dev/migration/legacy-keyword-inventory/">
+      
+      
+        <link rel="prev" href="../from-legacy-osw/">
+      
+      
+        <link rel="next" href="../../spec/index.html">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/OO-LD_logo.jpg">
+      <meta name="generator" content="zensical-0.0.50">
+    
+    
+      
+        <title>Legacy OSW/OSL keyword inventory - OO-LD Schema</title>
+      
+    
+    
+      
+        
+      
+      <link rel="stylesheet" href="../../assets/stylesheets/modern/main.62c9b9cc.min.css">
+      
+        
+          
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/modern/palette.dfe2e883.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,300i,400,400i,500,500i,700,700i%7CJetBrains+Mono:400,400i,700,700i&amp;display=fallback">
+        <style>:root{--md-text-font:"Inter";--md-code-font:"JetBrains Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_scope.pathname.endsWith("/")||(__md_scope=new URL(__md_scope.pathname+"/",location)),__md_hash=e=>[...e].reduce(((e,t)=>(e<<5)-e+t.charCodeAt(0)),0),__md_get=(e,t=localStorage,_=__md_scope)=>JSON.parse(t.getItem(_.pathname+"."+e)),__md_set=(e,t,_=localStorage,a=__md_scope)=>{try{_.setItem(a.pathname+"."+e,JSON.stringify(t))}catch(e){}},document.documentElement.setAttribute("data-platform",navigator.platform)</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="white" data-md-color-accent="deep-orange">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer" aria-label="Navigation"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#legacy-oswosl-keyword-inventory" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      <div data-md-color-scheme="default" data-md-component="outdated" hidden>
+        
+      </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="OO-LD Schema" class="md-header__button md-logo" aria-label="OO-LD Schema" data-md-component="logo">
+      
+  <img src="../../assets/OO-LD_logo.jpg" alt="OO-LD Schema">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer" aria-label="Navigation">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-menu" viewBox="0 0 24 24"><path d="M4 5h16M4 12h16M4 19h16"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            OO-LD Schema
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Legacy OSW/OSL keyword inventory
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="white" data-md-color-accent="deep-orange"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="black" data-md-color-accent="deep-orange"  aria-label="Switch to system preference"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to system preference" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search" aria-label="Search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-search" viewBox="0 0 24 24"><path d="m21 21-4.34-4.34"/><circle cx="11" cy="11" r="8"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog" aria-label="Search">
+  <button type="button" class="md-search__button">
+    Search
+  </button>
+</div>
+      
+    
+    <div class="md-header__source">
+      
+        <a href="https://github.com/OO-LD/oold-schema" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2026 Fonticons, Inc.--><path fill="currentColor" d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    OO-LD/oold-schema
+  </div>
+</a>
+      
+    </div>
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../introduction/" class="md-tabs__link">
+        
+  
+  Introduction
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../get-started/" class="md-tabs__link">
+        
+  
+  Get Started
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+      
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../guide/" class="md-tabs__link">
+          
+  
+  Guide
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../use-cases/" class="md-tabs__link">
+        
+  
+  Use Cases
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../mappings/" class="md-tabs__link">
+        
+  
+  Mappings
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../tooling/" class="md-tabs__link">
+        
+  
+  Tooling
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../reference/" class="md-tabs__link">
+        
+  
+  Reference
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+      
+      
+        
+      
+        
+      
+    
+    
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../from-legacy-osw/" class="md-tabs__link">
+          
+  
+  Migration
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../spec/index.html" class="md-tabs__link">
+        
+  
+  Specification
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="OO-LD Schema" class="md-nav__button md-logo" aria-label="OO-LD Schema" data-md-component="logo">
+      
+  <img src="../../assets/OO-LD_logo.jpg" alt="OO-LD Schema">
+
+    </a>
+    OO-LD Schema
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/OO-LD/oold-schema" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2026 Fonticons, Inc.--><path fill="currentColor" d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    OO-LD/oold-schema
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Home
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../introduction/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Introduction
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../get-started/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Get Started
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../guide/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Overview
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../use-cases/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Use Cases
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../mappings/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Mappings
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tooling/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Tooling
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Reference
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Migration
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+  Migration
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../from-legacy-osw/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  From legacy OSW
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Legacy keyword inventory
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="././" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Legacy keyword inventory
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+
+<nav class="md-nav md-nav--secondary" aria-label="On this page">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      On this page
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#semantic-keywords-x-oold-" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Semantic keywords -&gt; x-oold-*
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#multilang-annotations-x-oold-multilang-" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Multilang annotations -&gt; x-oold-multilang-*
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ui-keywords-x-oold-ui-" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        UI keywords -&gt; x-oold-ui-*
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#canonical-reuse-standard-anchor-data-x-enum-" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Canonical reuse (standard / $anchor / $data / x-enum-*)
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#vendor-jedison-ui-rendering-x-jedison-" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Vendor: jedison UI rendering -&gt; x-jedison-*
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#vendor-osl-server-side-mustache-smw-x-osl-" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Vendor: OSL server-side (mustache / SMW) -&gt; x-osl-*
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#vendor-semantic-mediawiki-x-smw-" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Vendor: Semantic MediaWiki -&gt; x-smw-*
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#deferred-query-form-no-current-practical-use" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Deferred (query-form, no current practical use)
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dropped-on-import-security" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Dropped on import (security)
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#typos-noise-commented-out-normalize-or-drop" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Typos / noise / commented-out (normalize or drop)
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#standard-json-ld-keywords-unchanged-passthrough" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Standard / JSON-LD keywords (unchanged passthrough)
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#format-widget-values" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        <code>format</code> widget values
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#per-repo-schema-file-counts" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Per-repo schema file counts
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../spec/index.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Specification
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  
+                    
+                    
+                    
+                      
+                    
+                    
+                      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+                      <div class="md-sidebar-button__wrapper">
+                        <label class="md-sidebar-button" for="__toc"></label>
+                      </div>
+                    
+                  
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--secondary" aria-label="On this page">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      On this page
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#semantic-keywords-x-oold-" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Semantic keywords -&gt; x-oold-*
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#multilang-annotations-x-oold-multilang-" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Multilang annotations -&gt; x-oold-multilang-*
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ui-keywords-x-oold-ui-" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        UI keywords -&gt; x-oold-ui-*
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#canonical-reuse-standard-anchor-data-x-enum-" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Canonical reuse (standard / $anchor / $data / x-enum-*)
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#vendor-jedison-ui-rendering-x-jedison-" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Vendor: jedison UI rendering -&gt; x-jedison-*
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#vendor-osl-server-side-mustache-smw-x-osl-" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Vendor: OSL server-side (mustache / SMW) -&gt; x-osl-*
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#vendor-semantic-mediawiki-x-smw-" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Vendor: Semantic MediaWiki -&gt; x-smw-*
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#deferred-query-form-no-current-practical-use" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Deferred (query-form, no current practical use)
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dropped-on-import-security" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Dropped on import (security)
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#typos-noise-commented-out-normalize-or-drop" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Typos / noise / commented-out (normalize or drop)
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#standard-json-ld-keywords-unchanged-passthrough" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Standard / JSON-LD keywords (unchanged passthrough)
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#format-widget-values" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        <code>format</code> widget values
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#per-repo-schema-file-counts" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Per-repo schema file counts
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+                
+
+
+
+  
+
+
+  <nav class="md-path" aria-label="Navigation" >
+    <ol class="md-path__list">
+      
+        
+  
+  
+    <li class="md-path__item">
+      <a href="../.." class="md-path__link">
+        
+  
+  <span class="md-ellipsis">
+    Home
+  </span>
+
+      </a>
+    </li>
+  
+
+      
+      
+        
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+    
+      <li class="md-path__item">
+        <a href="../from-legacy-osw/" class="md-path__link">
+          
+  
+  <span class="md-ellipsis">
+    Migration
+  </span>
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ol>
+  </nav>
+
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+  
+    <a href="https://github.com/OO-LD/oold-schema/edit/main/docs/migration/legacy-keyword-inventory.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-file-pen" viewBox="0 0 24 24"><path d="M12.659 22H18a2 2 0 0 0 2-2V8a2.4 2.4 0 0 0-.706-1.706l-3.588-3.588A2.4 2.4 0 0 0 14 2H6a2 2 0 0 0-2 2v9.34"/><path d="M14 2v5a1 1 0 0 0 1 1h5M10.378 12.622a1 1 0 0 1 3 3.003L8.36 20.637a2 2 0 0 1-.854.506l-2.867.837a.5.5 0 0 1-.62-.62l.836-2.869a2 2 0 0 1 .506-.853z"/></svg>
+    </a>
+  
+  
+    
+      
+    
+    <a href="https://github.com/OO-LD/oold-schema/raw/main/docs/migration/legacy-keyword-inventory.md" title="View source of this page" class="md-content__button md-icon">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-file-code-2" viewBox="0 0 24 24"><path d="M4 12.15V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.706.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2h-3.35"/><path d="M14 2v5a1 1 0 0 0 1 1h5M5 16l-3 3 3 3M9 22l3-3-3-3"/></svg>
+    </a>
+  
+
+
+<h1 id="legacy-oswosl-keyword-inventory">Legacy OSW/OSL keyword inventory<a class="headerlink" href="#legacy-oswosl-keyword-inventory" title="Permanent link">&para;</a></h1>
+<p>Generated by <code>scripts/extract-legacy-keywords.mjs</code> from every <code>world.opensemantic.*</code>
+page-package repo in the <code>OpenSemanticWorld-Packages</code> org.</p>
+<ul>
+<li>Repos scanned: <strong>16</strong></li>
+<li>Schema files (Category <code>*.slot_jsonschema.json</code> + JsonSchema-namespace <code>*.slot_main.json</code>): <strong>1271</strong> (parsed 1271, fetch errors 0, parse errors 0)</li>
+<li>Distinct keywords: <strong>83</strong> (+ 25 distinct <code>format</code> values)</li>
+<li><code>@context</code> multi-mapping notation on terms: <code>*</code> 172, <code>**</code> 24</li>
+</ul>
+<p>Standard JSON Schema 2020-12 keywords (<code>type</code>, <code>properties</code>, <code>allOf</code>, <code>required</code>, ...)
+pass through unchanged and are intentionally not listed; this inventory covers only the
+custom / legacy keywords that need a migration decision.</p>
+<p>Two distinct uses of the <code>*</code> suffix: a <code>&lt;base&gt;*</code> sibling of a schema annotation (for
+example <code>title*</code>, <code>description*</code>) is a <strong>multilang language map</strong> -&gt; <code>x-oold-multilang-*</code>;
+a <code>term*</code> / <code>term**</code> inside <code>@context</code> is the <strong>JSON-LD multi-mapping</strong> notation for
+alternate <code>@id</code> mappings (counted above, resolved by the existing @context rules).</p>
+<p>Classification buckets: <code>oold-semantic</code> (-&gt; <code>x-oold-*</code>), <code>oold-multilang</code>
+(-&gt; <code>x-oold-multilang-*</code>), <code>oold-ui</code> (-&gt; <code>x-oold-ui-*</code>), <code>canonical-reuse</code>
+(standard / <code>$anchor</code> / <code>$data</code> / <code>x-enum-*</code>), <code>jedison-vendor</code> (-&gt; <code>x-jedison-*</code>),
+<code>osl-vendor</code> (-&gt; <code>x-osl-*</code>), <code>smw-vendor</code>, <code>deferred</code>, <code>typo</code> / <code>commented-out</code>,
+<code>drop</code>, <code>standard</code>/<code>jsonld</code>, <code>unclassified</code> (needs review).</p>
+<h3 id="semantic-keywords-x-oold-">Semantic keywords -&gt; x-oold-*<a class="headerlink" href="#semantic-keywords-x-oold-" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>keyword</th>
+<th>position</th>
+<th style="text-align: right;">count</th>
+<th>future equivalent</th>
+<th>note</th>
+<th>example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>uuid</code></td>
+<td>schema</td>
+<td style="text-align: right;">1218</td>
+<td>x-oold-uuid</td>
+<td>schema identity</td>
+<td><code>"0551abcd-6f73-4047-825e-3ded4c8a0ffe"</code></td>
+</tr>
+<tr>
+<td><code>range</code></td>
+<td>schema</td>
+<td style="text-align: right;">216</td>
+<td>x-oold-range</td>
+<td>IRI / array of IRIs / OO-LD subschema</td>
+<td><code>@orderer_default: "Category:OSW3cb8cef2225e403092f098f99bc4c472"</code></td>
+</tr>
+<tr>
+<td><code>subclassof_range</code></td>
+<td>schema</td>
+<td style="text-align: right;">29</td>
+<td>x-oold-subclassof-range</td>
+<td>range constraint on subclass targets</td>
+<td><code>@typical_processes: "Category:OSWe5aa96bffb1c4d95be7fbd46142ad203"</code></td>
+</tr>
+<tr>
+<td><code>x-oold-version</code></td>
+<td>schema</td>
+<td style="text-align: right;">5</td>
+<td>x-oold-version</td>
+<td>already migrated</td>
+<td><code>@generated: "0.1.0"</code></td>
+</tr>
+<tr>
+<td><code>x-oold-reverse-defaultProperties</code></td>
+<td>schema</td>
+<td style="text-align: right;">1</td>
+<td>x-oold-reverse-defaultProperties</td>
+<td>already migrated</td>
+<td><code>["employees"]</code></td>
+</tr>
+<tr>
+<td><code>x-oold-reverse-properties</code></td>
+<td>schema</td>
+<td style="text-align: right;">1</td>
+<td>x-oold-reverse-properties</td>
+<td>already migrated</td>
+<td><code>{"employees":{"type":"array","title":"Employees","items":{"type":"string","format":"autocomplete","title":"Person","$comment":"range is Person","range":"Category:OSW44deaa5b806d41a2a88594f562b110e9...</code></td>
+</tr>
+<tr>
+<td><code>rdf_type</code></td>
+<td>schema</td>
+<td style="text-align: right;">1</td>
+<td>x-oold-instance-rdf-type</td>
+<td>instance rdf:type(s)</td>
+<td><code>{"title":"RDF type","title*":{"de":"RDF-Typ"},"type":"string","default":"schema:EventSeries","options":{"hidden":true}}</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="multilang-annotations-x-oold-multilang-">Multilang annotations -&gt; x-oold-multilang-*<a class="headerlink" href="#multilang-annotations-x-oold-multilang-" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>keyword</th>
+<th>position</th>
+<th style="text-align: right;">count</th>
+<th>future equivalent</th>
+<th>note</th>
+<th>example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>title*</code></td>
+<td>schema</td>
+<td style="text-align: right;">2152</td>
+<td>x-oold-multilang-title</td>
+<td>schema-level language map; NOT the @context multi-mapping notation</td>
+<td><code>{"en":"Country","de":"Land"}</code></td>
+</tr>
+<tr>
+<td><code>description*</code></td>
+<td>schema</td>
+<td style="text-align: right;">1583</td>
+<td>x-oold-multilang-description</td>
+<td>schema-level language map; NOT the @context multi-mapping notation</td>
+<td><code>{"en":"A distinct part of the world, such as a state, nation, or other political entity","de":"Ein bestimmter Teil der Welt, z. B. ein Staat, eine Nation oder eine andere politische Einheit"}</code></td>
+</tr>
+<tr>
+<td><code>default*</code></td>
+<td>schema</td>
+<td style="text-align: right;">2</td>
+<td>x-oold-multilang-default</td>
+<td>schema-level multilang annotation (language map)</td>
+<td><code>@lang: {"en":"en","de":"de"}</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="ui-keywords-x-oold-ui-">UI keywords -&gt; x-oold-ui-*<a class="headerlink" href="#ui-keywords-x-oold-ui-" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>keyword</th>
+<th>position</th>
+<th style="text-align: right;">count</th>
+<th>future equivalent</th>
+<th>note</th>
+<th>example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>defaultProperties</code></td>
+<td>schema</td>
+<td style="text-align: right;">1099</td>
+<td>x-oold-ui-default-property</td>
+<td>root array is extend-only under composition (can add, cannot switch off); per-property boolean is overridable (most-derived-wins)</td>
+<td><code>[]</code></td>
+</tr>
+<tr>
+<td><code>enum_titles</code></td>
+<td>options</td>
+<td style="text-align: right;">442</td>
+<td>x-oold-ui-enum-titles</td>
+<td>jedison x-enumTitles; i18n via enum_titles*</td>
+<td><code>@event_classifier: ["Internal","External"]</code></td>
+</tr>
+<tr>
+<td><code>hidden</code></td>
+<td>options</td>
+<td style="text-align: right;">185</td>
+<td>x-oold-ui-form-hidden</td>
+<td>jedison x-hidden</td>
+<td><code>@creator: true</code></td>
+</tr>
+<tr>
+<td><code>autocomplete</code></td>
+<td>options</td>
+<td style="text-align: right;">175</td>
+<td>x-oold-ui-widget=autocomplete + $data source</td>
+<td>value source is an SMW query -&gt; x-osl-query</td>
+<td><code>@contact_default: {"query":"[[Category:OSW44deaa5b806d41a2a88594f562b110e9]][[HasOu::$(orderer_w)]] OR [[Category:OSW44deaa5b806d41a2a88594f562b110e9]][[HasOrganization::$(orderer_w)]]"}</code></td>
+</tr>
+<tr>
+<td><code>propertyOrder</code></td>
+<td>schema</td>
+<td style="text-align: right;">87</td>
+<td>x-oold-ui-property-order</td>
+<td>jedison x-categoryOrder/order</td>
+<td><code>@label: 1</code></td>
+</tr>
+<tr>
+<td><code>enum_titles*</code></td>
+<td>options</td>
+<td style="text-align: right;">12</td>
+<td>x-oold-ui-enum-titles + * multilang</td>
+<td>language-tagged display titles</td>
+<td><code>@event_classifier: {"de":["Intern","Extern"]}</code></td>
+</tr>
+<tr>
+<td><code>category</code></td>
+<td>schema</td>
+<td style="text-align: right;">4</td>
+<td>x-oold-ui-property-group</td>
+<td>jedison x-category/x-propGroup</td>
+<td><code>@funding: "Category:OSW25bc4daf97644737a76434b88e1d5b21"</code></td>
+</tr>
+<tr>
+<td><code>infoText</code></td>
+<td>options</td>
+<td style="text-align: right;">4</td>
+<td>x-oold-ui-hint</td>
+<td>jedison x-info</td>
+<td><code>@subclass_of: "A car is a vehicle"</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="canonical-reuse-standard-anchor-data-x-enum-">Canonical reuse (standard / $anchor / $data / x-enum-*)<a class="headerlink" href="#canonical-reuse-standard-anchor-data-x-enum-" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>keyword</th>
+<th>position</th>
+<th style="text-align: right;">count</th>
+<th>future equivalent</th>
+<th>note</th>
+<th>example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>x-enum-varnames</code></td>
+<td>schema</td>
+<td style="text-align: right;">430</td>
+<td>x-enum-varnames</td>
+<td>kept: established code-gen names (identifier-safe)</td>
+<td><code>@unit: ["bel","decibel"]</code></td>
+</tr>
+<tr>
+<td><code>id</code></td>
+<td>schema</td>
+<td style="text-align: right;">51</td>
+<td>$anchor OR x-jedison-id (decision)</td>
+<td>json-editor watch ref. $anchor gives real reference semantics (unique per resource, name-pattern, referenceable via $ref) - couples UI to validation; vendor x-jedison-id avoids that. Prefer vendor unless watch-by-anchor is intended.</td>
+<td><code>"shipment_root"</code></td>
+</tr>
+<tr>
+<td><code>readonly</code></td>
+<td>schema</td>
+<td style="text-align: right;">7</td>
+<td>readOnly</td>
+<td>standard JSON Schema readOnly (camelCase)</td>
+<td><code>@text: true</code></td>
+</tr>
+<tr>
+<td><code>enumSource</code></td>
+<td>schema</td>
+<td style="text-align: right;">1</td>
+<td>$data (non-standard) / data-2023 (value source only)</td>
+<td><span class="arithmatex">\(data is a draft-future proposal (json-schema-spec#51), valid only in whole-array form enum:{\)</span>data}; per-item title/value templating stays x-jedison-*</td>
+<td><code>@subchannels: [{"source":"_channels","title":"{{item.node_id}}","value":"{{item.osw_id}}"}]</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="vendor-jedison-ui-rendering-x-jedison-">Vendor: jedison UI rendering -&gt; x-jedison-*<a class="headerlink" href="#vendor-jedison-ui-rendering-x-jedison-" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>keyword</th>
+<th>position</th>
+<th style="text-align: right;">count</th>
+<th>future equivalent</th>
+<th>note</th>
+<th>example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>watch</code></td>
+<td>schema</td>
+<td style="text-align: right;">72</td>
+<td>x-jedison-watch</td>
+<td>json-editor watch/dependency</td>
+<td><code>@contact_default: {"orderer_w":"orderer_default"}</code></td>
+</tr>
+<tr>
+<td><code>grid_columns</code></td>
+<td>options</td>
+<td style="text-align: right;">56</td>
+<td>x-jedison-options.grid_columns</td>
+<td>layout width</td>
+<td><code>@item_type: 12</code></td>
+</tr>
+<tr>
+<td><code>headerTemplate</code></td>
+<td>schema</td>
+<td style="text-align: right;">19</td>
+<td>x-jedison-headerTemplate</td>
+<td>dynamic header (mustache)</td>
+<td><code>@constituents: "{{i1}} - {{self.name}}"</code></td>
+</tr>
+<tr>
+<td><code>compact</code></td>
+<td>options</td>
+<td style="text-align: right;">13</td>
+<td>x-jedison-options.compact</td>
+<td>layout</td>
+<td><code>@yearly_budget_sum: true</code></td>
+</tr>
+<tr>
+<td><code>links</code></td>
+<td>schema</td>
+<td style="text-align: right;">12</td>
+<td>x-jedison-links</td>
+<td>form hyperlinks</td>
+<td><code>@proposal: [{"href":"{{#if self}}/w/index.php?title=Special:Redirect/file/{{self}}&amp;width=200&amp;height=200{{/if}}","mediaType":"image"},{"href":"{{#if self}}/w/index.php?title=Special:Redirect/file/{{self}}{{/if...</code></td>
+</tr>
+<tr>
+<td><code>labelTemplate</code></td>
+<td>schema</td>
+<td style="text-align: right;">10</td>
+<td>x-jedison-labelTemplate</td>
+<td>dynamic label (mustache)</td>
+<td><code>@member_of: "{{result.printouts.label.[0]}}"</code></td>
+</tr>
+<tr>
+<td><code>upload</code></td>
+<td>options</td>
+<td style="text-align: right;">10</td>
+<td>x-jedison-options.upload</td>
+<td>file upload widget config</td>
+<td><code>@proposal: {}</code></td>
+</tr>
+<tr>
+<td><code>enable_array_copy</code></td>
+<td>options</td>
+<td style="text-align: right;">7</td>
+<td>x-jedison-options.enable_array_copy</td>
+<td>behavior</td>
+<td><code>@included_items: true</code></td>
+</tr>
+<tr>
+<td><code>collapsed</code></td>
+<td>options</td>
+<td style="text-align: right;">7</td>
+<td>x-jedison-options.collapsed</td>
+<td>layout</td>
+<td><code>@procedure_files: true</code></td>
+</tr>
+<tr>
+<td><code>array_copy_ignore</code></td>
+<td>options</td>
+<td style="text-align: right;">6</td>
+<td>x-jedison-options.array_copy_ignore</td>
+<td>behavior</td>
+<td><code>@included_items: ["uuid","attachments"]</code></td>
+</tr>
+<tr>
+<td><code>input_width</code></td>
+<td>options</td>
+<td style="text-align: right;">4</td>
+<td>x-jedison-options.input_width</td>
+<td>layout width</td>
+<td><code>@text: "800px"</code></td>
+</tr>
+<tr>
+<td><code>flatpickr</code></td>
+<td>options</td>
+<td style="text-align: right;">2</td>
+<td>x-jedison-flatpickr</td>
+<td>flatpickr date-picker config</td>
+<td><code>@duration: {"enableTime":true,"noCalendar":true,"dateFormat":"H:i","time_24hr":true}</code></td>
+</tr>
+<tr>
+<td><code>disable_collapse</code></td>
+<td>options</td>
+<td style="text-align: right;">2</td>
+<td>x-jedison-options.disable_collapse</td>
+<td>behavior</td>
+<td><code>@yearly_budget_sum: true</code></td>
+</tr>
+<tr>
+<td><code>disable_properties</code></td>
+<td>options</td>
+<td style="text-align: right;">2</td>
+<td>x-jedison-options.disable_properties</td>
+<td>behavior</td>
+<td><code>@yearly_budget_sum: true</code></td>
+</tr>
+<tr>
+<td><code>disable_array_reorder</code></td>
+<td>options</td>
+<td style="text-align: right;">1</td>
+<td>x-jedison-options.disable_array_reorder</td>
+<td>behavior</td>
+<td><code>@yearly_budget: false</code></td>
+</tr>
+<tr>
+<td><code>dependencies</code></td>
+<td>options</td>
+<td style="text-align: right;">1</td>
+<td>x-jedison-options.dependencies</td>
+<td>json-editor visibility dependency</td>
+<td><code>@additional_units: {"subproperty_of":""}</code></td>
+</tr>
+<tr>
+<td><code>inputAttributes</code></td>
+<td>options</td>
+<td style="text-align: right;">1</td>
+<td>x-jedison-options.inputAttributes</td>
+<td>HTML input attributes</td>
+<td><code>@text: {"placeholder":"Title of the entry"}</code></td>
+</tr>
+<tr>
+<td><code>inputAttributes*</code></td>
+<td>options</td>
+<td style="text-align: right;">1</td>
+<td>x-jedison-options.inputAttributes</td>
+<td>multilang variant of inputAttributes*: HTML input attributes</td>
+<td><code>@text: {"de":{"placeholder":"Titel dieses Eintrags"}}</code></td>
+</tr>
+<tr>
+<td><code>display_required_only</code></td>
+<td>options</td>
+<td style="text-align: right;">1</td>
+<td>x-jedison-options.display_required_only</td>
+<td>behavior</td>
+<td><code>true</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="vendor-osl-server-side-mustache-smw-x-osl-">Vendor: OSL server-side (mustache / SMW) -&gt; x-osl-*<a class="headerlink" href="#vendor-osl-server-side-mustache-smw-x-osl-" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>keyword</th>
+<th>position</th>
+<th style="text-align: right;">count</th>
+<th>future equivalent</th>
+<th>note</th>
+<th>example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>eval_template</code></td>
+<td>schema</td>
+<td style="text-align: right;">131</td>
+<td>x-osl-eval-template</td>
+<td>mustache eval template</td>
+<td><code>@creator: [{"type":"mustache","mode":"render","value":"[[{{{creator}}}]]"}]</code></td>
+</tr>
+<tr>
+<td><code>dynamic_template</code></td>
+<td>schema</td>
+<td style="text-align: right;">32</td>
+<td>x-osl-dynamic-template</td>
+<td>mustache template</td>
+<td><code>@text: "{{{sender_}}}-{{{recipient_}}}-{{dateformat 'Ymd_His' dispatch_}}{{#if descriptive_text_}}-{{{descriptive_text_}}}{{/if}}"</code></td>
+</tr>
+<tr>
+<td><code>dynamic_template</code></td>
+<td>options</td>
+<td style="text-align: right;">25</td>
+<td>x-osl-dynamic-template</td>
+<td>mustache template</td>
+<td><code>@text: {"override":"empty"}</code></td>
+</tr>
+<tr>
+<td><code>template</code></td>
+<td>schema</td>
+<td style="text-align: right;">12</td>
+<td>x-osl-template</td>
+<td>mustache template</td>
+<td><code>@value: "{{{numerical_value}}} {{{unit_symbol}}}"</code></td>
+</tr>
+<tr>
+<td><code>query</code></td>
+<td>schema</td>
+<td style="text-align: right;">10</td>
+<td>x-osl-query</td>
+<td>SMW query (data source)</td>
+<td><code>@member_of: "[[HasType::Category:OSW1969007d5acf40539642877659a02c23]] \|?Display_title_of=label"</code></td>
+</tr>
+<tr>
+<td><code>previewWikiTextTemplate</code></td>
+<td>schema</td>
+<td style="text-align: right;">10</td>
+<td>x-osl-preview-template</td>
+<td>wikitext preview template</td>
+<td><code>@member_of: "[[:{{result.fulltext}}]]"</code></td>
+</tr>
+<tr>
+<td><code>data_source_maps</code></td>
+<td>schema</td>
+<td style="text-align: right;">4</td>
+<td>x-osl-data-map</td>
+<td>data source mapping</td>
+<td><code>[{"id":"pub.orcid.org","source":"https://pub.orcid.org/v3.0/{{#split '/' -1}}{{orcid}}{{/split}}","format":"jsonld","label":"ORCID","required":["orcid"],"object_map":{"first_name":"$.givenName","su...</code></td>
+</tr>
+<tr>
+<td><code>render</code></td>
+<td>options</td>
+<td style="text-align: right;">3</td>
+<td>x-osl-render</td>
+<td>render directive</td>
+<td><code>@descriptive_text: "never"</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="vendor-semantic-mediawiki-x-smw-">Vendor: Semantic MediaWiki -&gt; x-smw-*<a class="headerlink" href="#vendor-semantic-mediawiki-x-smw-" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>keyword</th>
+<th>position</th>
+<th style="text-align: right;">count</th>
+<th>future equivalent</th>
+<th>note</th>
+<th>example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>x-smw-quantity-property</code></td>
+<td>schema</td>
+<td style="text-align: right;">935</td>
+<td>x-smw-*</td>
+<td>Semantic MediaWiki property binding</td>
+<td><code>@generated: "Property:HasSoundPressureLevelValue"</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="deferred-query-form-no-current-practical-use">Deferred (query-form, no current practical use)<a class="headerlink" href="#deferred-query-form-no-current-practical-use" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>keyword</th>
+<th>position</th>
+<th style="text-align: right;">count</th>
+<th>future equivalent</th>
+<th>note</th>
+<th>example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>conditional_visible</code></td>
+<td>options</td>
+<td style="text-align: right;">9</td>
+<td>(deferred: query-form)</td>
+<td>OSL query-mode visibility</td>
+<td><code>@start_date_min: {"modes":"query"}</code></td>
+</tr>
+<tr>
+<td><code>role</code></td>
+<td>options</td>
+<td style="text-align: right;">3</td>
+<td>(deferred: query-form)</td>
+<td>recorded, not minted</td>
+<td><code>@start_date_min: {"query":{"filter":"min"}}</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="dropped-on-import-security">Dropped on import (security)<a class="headerlink" href="#dropped-on-import-security" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>keyword</th>
+<th>position</th>
+<th style="text-align: right;">count</th>
+<th>future equivalent</th>
+<th>note</th>
+<th>example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>name</code></td>
+<td>schema</td>
+<td style="text-align: right;">9</td>
+<td>(drop; use title / $id)</td>
+<td>non-standard schema-level 'name' annotation, not a JSON Schema keyword</td>
+<td><code>"BattmoModel"</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="typos-noise-commented-out-normalize-or-drop">Typos / noise / commented-out (normalize or drop)<a class="headerlink" href="#typos-noise-commented-out-normalize-or-drop" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>keyword</th>
+<th>position</th>
+<th style="text-align: right;">count</th>
+<th>future equivalent</th>
+<th>note</th>
+<th>example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>flatpicker</code></td>
+<td>options</td>
+<td style="text-align: right;">6</td>
+<td>x-jedison-flatpickr</td>
+<td>misspelling of flatpickr</td>
+<td><code>@start_date: {}</code></td>
+</tr>
+<tr>
+<td><code>titel*</code></td>
+<td>schema</td>
+<td style="text-align: right;">6</td>
+<td>title*</td>
+<td>normalize spelling</td>
+<td><code>@exact_ontology_match: {"de":"Ontologieübereinstimmung (exakt)"}</code></td>
+</tr>
+<tr>
+<td><code>example</code></td>
+<td>schema</td>
+<td style="text-align: right;">5</td>
+<td>examples</td>
+<td>singular -&gt; standard 'examples'</td>
+<td><code>@imported_from: "schema:Person"</code></td>
+</tr>
+<tr>
+<td><code>desciption</code></td>
+<td>schema</td>
+<td style="text-align: right;">2</td>
+<td>description</td>
+<td>normalize spelling</td>
+<td><code>@din277_label: "Label according to DIN 277"</code></td>
+</tr>
+<tr>
+<td><code>$example</code></td>
+<td>schema</td>
+<td style="text-align: right;">2</td>
+<td>examples</td>
+<td>stray '$' -&gt; standard 'examples'</td>
+<td><code>@characteristics: ""</code></td>
+</tr>
+<tr>
+<td><code>#range</code></td>
+<td>schema</td>
+<td style="text-align: right;">2</td>
+<td>x-oold-range</td>
+<td>stray leading '#'</td>
+<td><code>@characteristic: "Category:Category"</code></td>
+</tr>
+<tr>
+<td><code>#subclassof_range</code></td>
+<td>schema</td>
+<td style="text-align: right;">2</td>
+<td>x-oold-subclassof-range</td>
+<td>stray leading '#'</td>
+<td><code>@characteristic: "Category:Item"</code></td>
+</tr>
+<tr>
+<td><code>Title*</code></td>
+<td>schema</td>
+<td style="text-align: right;">2</td>
+<td>title*</td>
+<td>normalize spelling</td>
+<td><code>@conversion_factor_from_si: {"de":"Umrechnungsfaktor"}</code></td>
+</tr>
+<tr>
+<td><code>optiones</code></td>
+<td>schema</td>
+<td style="text-align: right;">1</td>
+<td>options</td>
+<td>normalize spelling</td>
+<td><code>{"copy_ignore":["uuid","label"]}</code></td>
+</tr>
+<tr>
+<td><code>defaultPropertis</code></td>
+<td>schema</td>
+<td style="text-align: right;">1</td>
+<td>defaultProperties</td>
+<td>normalize spelling</td>
+<td><code>["type_no","manufacturer","data_sheet","safety_data_sheet","supply","specifications"]</code></td>
+</tr>
+<tr>
+<td><code>eval_template_</code></td>
+<td>schema</td>
+<td style="text-align: right;">1</td>
+<td>eval_template</td>
+<td>normalize spelling</td>
+<td><code>@additional_units: {"type":"mustache-wikitext","mode":"render","value":"{{#units}} {{conversion_factor_to_main_unit}} {{#unit_symbols}} {{.}}, {{/unit_symbols}} {{=&lt;% %&gt;=}} {{#set: &lt;%={{ }}=%&gt; \|Corresponds to={{conve...</code></td>
+</tr>
+<tr>
+<td><code>defaultPropertiers</code></td>
+<td>schema</td>
+<td style="text-align: right;">1</td>
+<td>defaultProperties</td>
+<td>normalize spelling</td>
+<td><code>@tester: ["tester_instance","tester_name","tester_channel"]</code></td>
+</tr>
+<tr>
+<td><code>$coment</code></td>
+<td>schema</td>
+<td style="text-align: right;">1</td>
+<td>$comment</td>
+<td>normalize spelling</td>
+<td><code>@weight: "to be reworked with characteristics in place"</code></td>
+</tr>
+<tr>
+<td><code>_format</code></td>
+<td>schema</td>
+<td style="text-align: right;">22</td>
+<td>format</td>
+<td>disabled / commented-out in source; not an active keyword</td>
+<td><code>@uuid: "uuid"</code></td>
+</tr>
+<tr>
+<td><code>_template</code></td>
+<td>schema</td>
+<td style="text-align: right;">11</td>
+<td>template</td>
+<td>disabled / commented-out in source; not an active keyword</td>
+<td><code>@uuid: "dynamic_template"</code></td>
+</tr>
+<tr>
+<td><code>_$ref</code></td>
+<td>schema</td>
+<td style="text-align: right;">2</td>
+<td>$ref</td>
+<td>disabled / commented-out in source; not an active keyword</td>
+<td><code>"/wiki/Category:OSWb79812225c7849b78e98f2b3b10498b3?action=raw&amp;slot=jsonschema"</code></td>
+</tr>
+<tr>
+<td><code>_headerTemplate</code></td>
+<td>schema</td>
+<td style="text-align: right;">2</td>
+<td>headerTemplate</td>
+<td>disabled / commented-out in source; not an active keyword</td>
+<td><code>"{{self.value}}"</code></td>
+</tr>
+<tr>
+<td><code>_description</code></td>
+<td>schema</td>
+<td style="text-align: right;">1</td>
+<td>description</td>
+<td>disabled / commented-out in source; not an active keyword</td>
+<td><code>@yearly_budget_sum_weighted: "weighted with probability of successful funding"</code></td>
+</tr>
+<tr>
+<td><code>_description*</code></td>
+<td>schema</td>
+<td style="text-align: right;">1</td>
+<td>description*</td>
+<td>disabled / commented-out in source; not an active keyword</td>
+<td><code>@yearly_budget_sum_weighted: {"de":"gewichtet mit Erfolgswahrscheinlichkeit"}</code></td>
+</tr>
+<tr>
+<td><code>_watch</code></td>
+<td>schema</td>
+<td style="text-align: right;">1</td>
+<td>watch</td>
+<td>disabled / commented-out in source; not an active keyword</td>
+<td><code>@value: {"probability_of_successful_funding":"probability_of_successful_funding.numerical_value","yearly_budget_sum_value":"yearly_budget.yearly_budget_sum.numerical_value","yearly_budget_sum_unit_symbol":...</code></td>
+</tr>
+<tr>
+<td><code>_autocomplete</code></td>
+<td>options</td>
+<td style="text-align: right;">1</td>
+<td>autocomplete</td>
+<td>disabled / commented-out in source; not an active keyword</td>
+<td><code>@status: {"category":"Category:OSW9725d7a91bab4f1aa68f423e4e9bfcf4"}</code></td>
+</tr>
+<tr>
+<td><code>Xeval_template</code></td>
+<td>schema</td>
+<td style="text-align: right;">1</td>
+<td>eval_template</td>
+<td>disabled / commented-out in source; not an active keyword</td>
+<td><code>@properties: [{"type":"mustache-wikitext","mode":"render","value":"{{=&lt;% %&gt;=}} &lt;%#properties%&gt;* &lt;%name%&gt; {{#if: &lt;%rdf_property%&gt; \|({{Viewer/Link \|page=&lt;%rdf_property%&gt;}}) }}: {{#if: &lt;%characteristic%&gt; \|{{Viewer...</code></td>
+</tr>
+<tr>
+<td><code>data_source_maps_DISABLED</code></td>
+<td>schema</td>
+<td style="text-align: right;">1</td>
+<td>data_source_maps</td>
+<td>disabled / commented-out in source; not an active keyword</td>
+<td><code>[{"id":"api.battmo.open-semantic-lab.org","source":"https://api.battmo.open-semantic-lab.org/api/run/performance-spec","source_":"https://demo.open-semantic-lab.org/api/run/performance-spec","forma...</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="standard-json-ld-keywords-unchanged-passthrough">Standard / JSON-LD keywords (unchanged passthrough)<a class="headerlink" href="#standard-json-ld-keywords-unchanged-passthrough" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>keyword</th>
+<th>position</th>
+<th style="text-align: right;">count</th>
+<th>future equivalent</th>
+<th>note</th>
+<th>example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>@id</code></td>
+<td>context</td>
+<td style="text-align: right;">618</td>
+<td>@id</td>
+<td>JSON-LD @ keyword</td>
+<td><code>@approver_default: {"@id":"Property:HasApprover","@type":"@id"}</code></td>
+</tr>
+<tr>
+<td><code>@type</code></td>
+<td>context</td>
+<td style="text-align: right;">543</td>
+<td>@type</td>
+<td>JSON-LD @ keyword</td>
+<td><code>@approver_default: {"@id":"Property:HasApprover","@type":"@id"}</code></td>
+</tr>
+<tr>
+<td><code>@context</code></td>
+<td>context</td>
+<td style="text-align: right;">36</td>
+<td>@context</td>
+<td>JSON-LD @ keyword</td>
+<td><code>@included_items: {"@id":"Property:HasStatement","@type":"@id","@context":{"item_instance_property":"Property:HasProperty","item_instance":"Property:HasObject"}}</code></td>
+</tr>
+<tr>
+<td><code>@prefix</code></td>
+<td>context</td>
+<td style="text-align: right;">4</td>
+<td>@prefix</td>
+<td>JSON-LD @ keyword</td>
+<td><code>@Category: {"@id":"wiki:Category-3A","@prefix":true}</code></td>
+</tr>
+<tr>
+<td><code>@container</code></td>
+<td>context</td>
+<td style="text-align: right;">3</td>
+<td>@container</td>
+<td>JSON-LD @ keyword</td>
+<td><code>@unionOf: {"@id":"owl:unionOf","@container":"@list","@type":"@id"}</code></td>
+</tr>
+<tr>
+<td><code>@reverse</code></td>
+<td>context</td>
+<td style="text-align: right;">2</td>
+<td>@reverse</td>
+<td>JSON-LD @ keyword</td>
+<td><code>@employees**: {"@reverse":"Property:HasOrganization","@type":"@id"}</code></td>
+</tr>
+<tr>
+<td><code>$comment</code></td>
+<td>options</td>
+<td style="text-align: right;">4</td>
+<td>$comment</td>
+<td>standard JSON Schema comment (also seen misplaced inside options); ignored</td>
+<td><code>@subclass_of: "should be an $example"</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="format-widget-values"><code>format</code> widget values<a class="headerlink" href="#format-widget-values" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>value</th>
+<th style="text-align: right;">count</th>
+<th>classification</th>
+<th>future</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>autocomplete</code></td>
+<td style="text-align: right;">339</td>
+<td>ui-widget</td>
+<td>x-oold-ui-widget="autocomplete" (jedison x-format)</td>
+</tr>
+<tr>
+<td><code>table</code></td>
+<td style="text-align: right;">172</td>
+<td>ui-widget</td>
+<td>x-oold-ui-widget="table" (jedison x-format)</td>
+</tr>
+<tr>
+<td><code>uuid</code></td>
+<td style="text-align: right;">67</td>
+<td>standard-format</td>
+<td>format (unchanged)</td>
+</tr>
+<tr>
+<td><code>url</code></td>
+<td style="text-align: right;">29</td>
+<td>normalize</td>
+<td>format="uri"</td>
+</tr>
+<tr>
+<td><code>tabs</code></td>
+<td style="text-align: right;">20</td>
+<td>ui-widget</td>
+<td>x-oold-ui-widget="tabs" (jedison x-format)</td>
+</tr>
+<tr>
+<td><code>checkbox</code></td>
+<td style="text-align: right;">17</td>
+<td>ui-widget</td>
+<td>x-oold-ui-widget="checkbox" (jedison x-format)</td>
+</tr>
+<tr>
+<td><code>date</code></td>
+<td style="text-align: right;">12</td>
+<td>standard-format</td>
+<td>format (unchanged)</td>
+</tr>
+<tr>
+<td><code>grid-strict</code></td>
+<td style="text-align: right;">9</td>
+<td>ui-widget</td>
+<td>x-oold-ui-widget="grid-strict" (jedison x-format)</td>
+</tr>
+<tr>
+<td><code>number</code></td>
+<td style="text-align: right;">9</td>
+<td>drop</td>
+<td>(drop: not a valid format - looks like a type)</td>
+</tr>
+<tr>
+<td><code>date-time</code></td>
+<td style="text-align: right;">8</td>
+<td>standard-format</td>
+<td>format (unchanged)</td>
+</tr>
+<tr>
+<td><code>grid</code></td>
+<td style="text-align: right;">8</td>
+<td>ui-widget</td>
+<td>x-oold-ui-widget="grid" (jedison x-format)</td>
+</tr>
+<tr>
+<td><code>textarea</code></td>
+<td style="text-align: right;">7</td>
+<td>ui-widget</td>
+<td>x-oold-ui-widget="textarea" (jedison x-format)</td>
+</tr>
+<tr>
+<td><code>uri</code></td>
+<td style="text-align: right;">5</td>
+<td>standard-format</td>
+<td>format (unchanged)</td>
+</tr>
+<tr>
+<td><code>datetime-local</code></td>
+<td style="text-align: right;">4</td>
+<td>ui-widget</td>
+<td>x-oold-ui-widget="datetime-local" (jedison x-format)</td>
+</tr>
+<tr>
+<td><code>dynamic_template</code></td>
+<td style="text-align: right;">3</td>
+<td>osl-vendor</td>
+<td>x-osl-template</td>
+</tr>
+<tr>
+<td><code>text</code></td>
+<td style="text-align: right;">3</td>
+<td>ui-widget</td>
+<td>x-oold-ui-widget="text" (jedison x-format)</td>
+</tr>
+<tr>
+<td><code>email</code></td>
+<td style="text-align: right;">3</td>
+<td>standard-format</td>
+<td>format (unchanged)</td>
+</tr>
+<tr>
+<td><code>duration</code></td>
+<td style="text-align: right;">2</td>
+<td>standard-format</td>
+<td>format (unchanged)</td>
+</tr>
+<tr>
+<td><code>json</code></td>
+<td style="text-align: right;">1</td>
+<td>ui-widget</td>
+<td>x-oold-ui-widget="json" (jedison x-format)</td>
+</tr>
+<tr>
+<td><code>time</code></td>
+<td style="text-align: right;">1</td>
+<td>standard-format</td>
+<td>format (unchanged)</td>
+</tr>
+<tr>
+<td><code>string</code></td>
+<td style="text-align: right;">1</td>
+<td>drop</td>
+<td>(drop: not a valid format - looks like a type)</td>
+</tr>
+<tr>
+<td><code>array</code></td>
+<td style="text-align: right;">1</td>
+<td>drop</td>
+<td>(drop: not a valid format - looks like a type)</td>
+</tr>
+<tr>
+<td>``</td>
+<td style="text-align: right;">1</td>
+<td>drop</td>
+<td>(drop: not a valid format - looks like a type)</td>
+</tr>
+<tr>
+<td><code>choices</code></td>
+<td style="text-align: right;">1</td>
+<td>ui-widget</td>
+<td>x-oold-ui-widget="choices" (jedison x-format)</td>
+</tr>
+<tr>
+<td><code>iri</code></td>
+<td style="text-align: right;">1</td>
+<td>standard-format</td>
+<td>format (unchanged)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="per-repo-schema-file-counts">Per-repo schema file counts<a class="headerlink" href="#per-repo-schema-file-counts" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>repo</th>
+<th style="text-align: right;">schema files</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>world.opensemantic.characteristics.quantitative</code></td>
+<td style="text-align: right;">938</td>
+</tr>
+<tr>
+<td><code>world.opensemantic.base</code></td>
+<td style="text-align: right;">117</td>
+</tr>
+<tr>
+<td><code>world.opensemantic.batteries</code></td>
+<td style="text-align: right;">94</td>
+</tr>
+<tr>
+<td><code>world.opensemantic.core</code></td>
+<td style="text-align: right;">49</td>
+</tr>
+<tr>
+<td><code>world.opensemantic.lab</code></td>
+<td style="text-align: right;">20</td>
+</tr>
+<tr>
+<td><code>world.opensemantic.lab.nts</code></td>
+<td style="text-align: right;">20</td>
+</tr>
+<tr>
+<td><code>world.opensemantic.lab.experimental_work</code></td>
+<td style="text-align: right;">14</td>
+</tr>
+<tr>
+<td><code>world.opensemantic.ontology</code></td>
+<td style="text-align: right;">6</td>
+</tr>
+<tr>
+<td><code>world.opensemantic.quantities</code></td>
+<td style="text-align: right;">5</td>
+</tr>
+<tr>
+<td><code>world.opensemantic.characteristics.basic</code></td>
+<td style="text-align: right;">4</td>
+</tr>
+<tr>
+<td><code>world.opensemantic.demo.lab.virtual</code></td>
+<td style="text-align: right;">2</td>
+</tr>
+<tr>
+<td><code>world.opensemantic.lab.virtual</code></td>
+<td style="text-align: right;">2</td>
+</tr>
+<tr>
+<td><code>world.opensemantic.meta.legal</code></td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr>
+<td><code>world.opensemantic.demo</code></td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr>
+<td><code>world.opensemantic.meta.docs</code></td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr>
+<td><code>world.opensemantic.ontology.schema</code></td>
+<td style="text-align: right;">0</td>
+</tr>
+</tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-circle-arrow-up" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="m16 12-4-4-4 4M12 16V8"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../from-legacy-osw/" class="md-footer__link md-footer__link--prev" aria-label="Previous: From legacy OSW">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 512"><!--! Font Awesome Free 7.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2026 Fonticons, Inc.--><path fill="currentColor" d="M9.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L77.3 256l137.3-137.4c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                From legacy OSW
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../../spec/index.html" class="md-footer__link md-footer__link--next" aria-label="Next: Specification">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                Specification
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 512"><!--! Font Awesome Free 7.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2026 Fonticons, Inc.--><path fill="currentColor" d="M247.1 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L179.2 256 41.9 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Maintained by <a href="https://github.com/OO-LD">OO-LD</a>.
+    </div>
+  
+  
+    Made with
+    <a href="https://zensical.org/" target="_blank" rel="noopener">
+      Zensical
+    </a>
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/OO-LD/oold-schema" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2026 Fonticons, Inc.--><path fill="currentColor" d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate":null,"base":"../..","features":["announce.dismiss","content.code.annotate","content.action.edit","content.action.view","content.code.copy","content.code.select","content.footnote.tooltips","content.tabs.link","content.tooltips","navigation.footer","navigation.indexes","navigation.tabs","navigation.instant","navigation.instant.prefetch","navigation.path","navigation.prune","navigation.top","navigation.tracking","search.highlight"],"search":"../../assets/javascripts/workers/search.b6b7e04f.min.js","tags":null,"translations":{"clipboard.copied":"Copied to clipboard","clipboard.copy":"Copy to clipboard","search.result.more.one":"1 more on this page","search.result.more.other":"# more on this page","search.result.none":"No matching documents","search.result.one":"1 matching document","search.result.other":"# matching documents","search.result.placeholder":"Type to start searching","search.result.term.missing":"Missing","select.version":"Select version"},"version":{"provider":"mike"}}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.d7f30b55.min.js"></script>
+      
+    
+  </body>
+</html>

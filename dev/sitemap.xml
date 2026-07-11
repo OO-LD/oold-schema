@@ -42,4 +42,10 @@
       <url>
         <loc>https://OO-LD.github.io/oold-schema/dev/reference/</loc>
       </url>
+      <url>
+        <loc>https://OO-LD.github.io/oold-schema/dev/migration/from-legacy-osw/</loc>
+      </url>
+      <url>
+        <loc>https://OO-LD.github.io/oold-schema/dev/migration/legacy-keyword-inventory/</loc>
+      </url>
 </urlset>
