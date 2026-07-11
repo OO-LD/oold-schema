@@ -14,7 +14,7 @@ Generated OO-LD contexts SHOULD therefore declare `"@version": 1.1` (the JSON nu
 
 #### Multi-Mapping {#multi-mapping}
 
-JSON-LD allows only a single keyword-IRI mapping (or more precisely, ignores all but the last mapping). There is currently no way to express that a property has two IRIs (e.g. `"label": {"@id": ["schema:name", "skos:prefLabel"]}`, see [json-ld/json-ld.org#160](https://github.com/json-ld/json-ld.org/issues/160)). As a workaround, an additional context notation is provided: `<property>*(*)` pointing to additional `@id` mappings, to document alternative options or drive custom RDF generation. (The redesign of this notation is tracked in [OO-LD/schema#12](https://github.com/OO-LD/schema/issues/12).)
+JSON-LD allows only a single keyword-IRI mapping (or more precisely, ignores all but the last mapping). There is currently no way to express that a property has two IRIs (e.g. `"label": {"@id": ["schema:name", "skos:prefLabel"]}`, see [json-ld/json-ld.org#160](https://github.com/json-ld/json-ld.org/issues/160)). As a lightweight inline workaround, an additional context notation is provided: `<property>*(*)` pointing to additional `@id` mappings, to document alternative options or drive custom RDF generation. For the general case - more than two mappings per term, mappings a subclass can add or drop, and mappings that round-trip to a mapping set - use the structured [`x-oold-context`](#synonyms) notation below.
 
 :::example{title="Documenting alternative mappings"}
 ```json
@@ -88,6 +88,70 @@ Normalized - a single, consistent representation:
   type: schema:Person
 ```
 :::
+
+#### Term mappings and synonyms (`x-oold-context`) {#synonyms}
+
+The `*` notation above documents at most a small, fixed set of alternative `@id`s inline and carries no metadata about each mapping. For the general case OO-LD adds the schema-level keyword `x-oold-context`: an object keyed by term, where each term holds a dict keyed by the **synonym IRI**.
+
+In the minimal case a term simply lists alternative IRIs, each with an empty value (`{}`):
+
+:::example{title="Minimal case - a term with alias IRIs"}
+```json
+{
+  "@context": { "description": "schema:description" },
+  "x-oold-context": {
+    "description": {
+      "rdfs:comment": {},
+      "skos:definition": {}
+    }
+  }
+}
+```
+:::
+
+Here `description` (primarily `schema:description`) also maps to `rdfs:comment` and `skos:definition`. Each bare synonym IRI defaults to `predicate_id: skos:exactMatch` and inherits the primary term's coercion on promotion.
+
+Each value is itself a JSON-LD term-definition fragment (`@type`, `@container`, ...) that is promotable verbatim into `@context`, optionally carrying a strippable `x-sssom` block with mapping metadata:
+
+:::example{title="With coercion and SSSOM metadata"}
+```json
+{
+  "@context": { "name": "schema:name" },
+  "x-oold-context": {
+    "name": {
+      "schema:name": { "x-sssom": { "predicate_id": "skos:exactMatch", "confidence": 1.0 } },
+      "skos:prefLabel": { "x-sssom": { "predicate_id": "skos:exactMatch", "confidence": 0.95 } },
+      "schema:alternateName": { "@container": "@set", "x-sssom": { "predicate_id": "skos:closeMatch" } }
+    }
+  }
+}
+```
+:::
+
+Each entry is one mapping:
+
+- the **key** is the synonym IRI (the SSSOM `object_id`);
+- the **value** is a JSON-LD term-definition fragment (`@type`, `@container`, ...) that is promotable as-is, plus an optional `x-sssom` block;
+- `x-sssom` is strippable metadata: `predicate_id` (default `skos:exactMatch`), optional `confidence` and `mapping_justification`. The `subject_id` is implicit (the term's primary `@context` IRI) and the `object_id` is the key.
+
+This satisfies what the `*` notation cannot:
+
+- **More than two mappings** - the dict holds any number of synonym IRIs.
+- **Ontology family** - prefix-driven: the family is the IRI namespace (`schema:`, `bfo:`, `emmo:`), so RDF export can prioritize a preferred namespace without an explicit tag.
+- **Override under composition** - the dict is keyed by IRI and resolved by the [merge and override model](#merge-and-override-model): most-derived-wins, with `null` removing an inherited mapping. Keys are compared as expanded IRIs, so the compact (`skos:prefLabel`) and full (`http://www.w3.org/2004/02/skos/core#prefLabel`) forms of one IRI are a single key and override correctly across mixed notations.
+- **SSSOM interoperability** - each entry is one [SSSOM](https://github.com/mapping-commons/sssom) mapping row (`subject_id` / `object_id` / `predicate_id` / `confidence` / `mapping_justification`), so a mapping set round-trips to and from `x-oold-context`.
+
+:::example{title="A subclass dropping an inherited mapping"}
+```json
+{
+  "x-oold-context": {
+    "description": { "rdfs:comment": null }
+  }
+}
+```
+:::
+
+To promote to `@context`, an OO-LD preprocessor picks the prioritized synonym (by namespace), then `{ "@id": <key>, ...value without x-sssom }` becomes the term's definition in the real `@context`; the `x-sssom` blocks are dropped, so standard JSON-LD tools then run on a clean context.
 
 ### JSON Schema {#jsonschema-extensions}
 

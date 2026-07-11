@@ -5,7 +5,7 @@ On top of plain JSON Schema and JSON-LD, OO-LD defines a small set of extensions
 **JSON-LD side**
 
 - **Processing mode (`@version`)** - OO-LD relies on JSON-LD 1.1 features (scoped contexts), so contexts should declare `"@version": 1.1`.
-- **Multi-Mapping** - a `<property>*` notation documents alternative IRI mappings for a term (redesign tracked in [#12](https://github.com/OO-LD/schema/issues/12)).
+- **Multi-Mapping / synonyms** - a `<property>*` shorthand documents alternative IRI mappings inline; `x-oold-context` is the structured form (more than two mappings, override under composition, ontology-family prioritization, SSSOM round-trip).
 
 **JSON Schema side**
 
