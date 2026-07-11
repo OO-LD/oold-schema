@@ -16,22 +16,37 @@ import spec_config as cfg  # noqa: E402
 
 html = open(os.path.join(ROOT, "docs", "spec", "index.html"), encoding="utf-8").read()
 
-# ReSpec resolves these bibliography keys from its built-in database; anything
-# else must be declared in localBiblio.
+# ReSpec resolves these bibliography keys from its built-in database (SpecRef);
+# that set is external to this repo, so it stays a small curated list. Anything
+# not here and not in localBiblio must be a typo.
 KNOWN_BIBLIO = {"RFC2119", "RFC7386", "RFC3986", "RFC6906", "JSON-LD11"}
 
-EXPECTED_IDS = sorted([
-    "abstract", "basic-concepts", "compatibility", "composition", "conformance",
-    "design-goals", "expressiveness", "extensions", "iana", "identification",
-    "identification-versioning", "identity", "index", "interoperability",
-    "introduction", "jsonld-extensions", "jsonschema-extensions",
-    "localizing-instance-values", "localizing-schema-annotations",
-    "merge-and-override-model", "merging-remote-contexts", "meta-schema",
-    "multi-mapping", "multilanguage", "ontology-class-iri", "processing-mode",
-    "range-of-properties", "referencing-schema", "reverse-properties",
-    "schema-instances", "security", "semantic-type", "sotd", "terminology",
-    "ui-generation", "versioning", "why-x-oold-ref",
-])
+SECTIONS_DIR = os.path.join(ROOT, "spec", "sections")
+# {#id} attribute on any ATX heading (only these become <section id="..."> ids).
+HEADING_ID = re.compile(r'^\s*#{2,6}\s+.*\{[^}]*#([A-Za-z0-9_-]+)[^}]*\}\s*$', re.M)
+
+
+def expected_ids():
+    """Section ids the generated HTML must contain, derived from the source.
+
+    Every {#id} on a heading in spec/sections/*.md, plus the ids that come from
+    the config rather than a heading (headingless abstract/sotd, and the
+    generated terminology/index sections). Parsing the source instead of a
+    hand-maintained list means new anchors need no bookkeeping here.
+    """
+    ids = set()
+    for entry in cfg.SECTIONS:
+        if entry.get("file"):
+            src = open(os.path.join(SECTIONS_DIR, entry["file"]), encoding="utf-8").read()
+            ids.update(HEADING_ID.findall(src))
+            if entry.get("headingless") and entry.get("id"):
+                ids.add(entry["id"])
+        elif entry.get("generate"):
+            ids.add(entry["generate"])  # "terminology" / "index"
+    return ids
+
+
+EXPECTED_IDS = sorted(expected_ids())
 
 errors = []
 
@@ -63,7 +78,7 @@ extra = [i for i in section_ids if i not in EXPECTED_IDS]
 if missing:
     errors.append("missing expected section ids: " + ", ".join(missing))
 if extra:
-    errors.append("unexpected section ids: " + ", ".join(extra) + " (update EXPECTED_IDS if intentional)")
+    errors.append("unexpected section ids: " + ", ".join(extra) + " (no matching {#id} in spec/sections/*.md or config)")
 
 if errors:
     print("spec check FAILED:", file=sys.stderr)
