@@ -27,6 +27,10 @@ nav = [
     { "Mappings" = "mappings.md" },
     { "Tooling" = "tooling.md" },
     { "Reference" = "reference.md" },
+    { "Migration" = [
+        { "From legacy OSW" = "migration/from-legacy-osw.md" },
+        { "Legacy keyword inventory" = "migration/legacy-keyword-inventory.md" },
+    ]},
     { "Specification" = "spec/index.html" },
 ]
 
