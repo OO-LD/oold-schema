@@ -145,7 +145,7 @@ What changed:
   schema can add a default property but cannot switch one off. Moving the flag to a
   per-property boolean `x-oold-ui-default-property: true` makes it **overridable** - a
   derived schema resets it (to `false`) under most-derived-wins resolution, without
-  restating the whole list. The reverse-property form `x-oold-reverse-defaultProperties`
+  restating the whole list. The reverse-property form `x-oold-reverse-default-properties`
   (also a root array, same extend-only limitation) migrates the same way.
 - `propertyOrder` / `options.category` / `options.infoText` / `options.hidden` become the
   portable `x-oold-ui-*` keywords; `options.enum_titles` becomes `x-oold-ui-enum-titles`.
@@ -173,7 +173,7 @@ different contexts.
 }
 ```
 
-See the [UI annotations section of the spec](../../README.md#ui-generation) for the
+See the [UI annotations section of the spec](../spec/index.html#ui-generation) for the
 normative `x-oold-ui-*` definitions and the overlay format.
 
 ## Common pitfalls
