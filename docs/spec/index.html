@@ -395,7 +395,7 @@ $schema: https://example.org/my-package/1.0.0/b5203131-7321-46bb-8a11-acb3d10158
 <p>Upgrade APIs <em class="rfc2119">MAY</em> provide automated data migration between schema (package) versions, e.g. <code>https://example.org/upgrade/my-package/1.0.0...2.0.0</code>.</p></section></section>
 
 <section id="extensions"><h2>Standard Extensions</h2><p>On top of plain JSON Schema and JSON-LD, OO-LD defines a small set of extensions. This section covers the JSON-LD extensions and the JSON Schema extensions in turn.</p><section id="jsonld-extensions"><h3>JSON-LD</h3><p>OO-LD targets [[JSON-LD11]].</p><section id="processing-mode"><h4>Processing mode (<code>@version</code>)</h4><p>OO-LD composition relies on JSON-LD 1.1 features, in particular scoped contexts: a <code>$ref</code> within a <code>type: object</code> property is reflected as a property-scoped <code>@context</code> (see <a href="#composition"></a>). Such features are unavailable to a processor running in the <code>json-ld-1.0</code> processing mode.</p>
-<p>Generated OO-LD contexts <em class="rfc2119">SHOULD</em> therefore declare <code>&quot;@version&quot;: 1.1</code> (the JSON number <code>1.1</code>, not the string <code>&quot;1.1&quot;</code>). Modern processors default to the 1.1 processing mode, so this is a guard rather than a strict requirement: it prevents a JSON-LD 1.0 processor from silently mis-processing a 1.1 document ([[JSON-LD11]] §4.1.1). Because the first encountered <code>@version</code> entry determines the processing mode, it is sufficient to declare <code>&quot;@version&quot;: 1.1</code> once in the base context of a composition (for example a root <code>Thing</code> schema).</p></section><section id="multi-mapping"><h4>Multi-Mapping</h4><p>JSON-LD allows only a single keyword-IRI mapping (or more precisely, ignores all but the last mapping). There is currently no way to express that a property has two IRIs (e.g. <code>&quot;label&quot;: {&quot;@id&quot;: [&quot;schema:name&quot;, &quot;skos:prefLabel&quot;]}</code>, see <a href="https://github.com/json-ld/json-ld.org/issues/160">json-ld/json-ld.org#160</a>). As a workaround, an additional context notation is provided: <code>&lt;property&gt;*(*)</code> pointing to additional <code>@id</code> mappings, to document alternative options or drive custom RDF generation. (The redesign of this notation is tracked in <a href="https://github.com/OO-LD/schema/issues/12">OO-LD/schema#12</a>.)</p>
+<p>Generated OO-LD contexts <em class="rfc2119">SHOULD</em> therefore declare <code>&quot;@version&quot;: 1.1</code> (the JSON number <code>1.1</code>, not the string <code>&quot;1.1&quot;</code>). Modern processors default to the 1.1 processing mode, so this is a guard rather than a strict requirement: it prevents a JSON-LD 1.0 processor from silently mis-processing a 1.1 document ([[JSON-LD11]] §4.1.1). Because the first encountered <code>@version</code> entry determines the processing mode, it is sufficient to declare <code>&quot;@version&quot;: 1.1</code> once in the base context of a composition (for example a root <code>Thing</code> schema).</p></section><section id="multi-mapping"><h4>Multi-Mapping</h4><p>JSON-LD allows only a single keyword-IRI mapping (or more precisely, ignores all but the last mapping). There is currently no way to express that a property has two IRIs (e.g. <code>&quot;label&quot;: {&quot;@id&quot;: [&quot;schema:name&quot;, &quot;skos:prefLabel&quot;]}</code>, see <a href="https://github.com/json-ld/json-ld.org/issues/160">json-ld/json-ld.org#160</a>). As a lightweight inline workaround, an additional context notation is provided: <code>&lt;property&gt;*(*)</code> pointing to additional <code>@id</code> mappings, to document alternative options or drive custom RDF generation. For the general case - more than two mappings per term, mappings a subclass can add or drop, and mappings that round-trip to a mapping set - use the structured <a href="#synonyms"><code>x-oold-context</code></a> notation below.</p>
 <aside class="example" title="Documenting alternative mappings"><pre><code class="language-json">{
     &quot;@context&quot;: [
         {
@@ -453,7 +453,51 @@ _:b0 &lt;schema:name&gt; &quot;test&quot; .
 - id: demo:person3
   name: Person3
   type: schema:Person
-</code></pre></aside></section></section><section id="jsonschema-extensions"><h3>JSON Schema</h3><p>OO-LD targets [[JSONSCHEMA]] (2020-12) as its normative dialect. An OO-LD schema <em class="rfc2119">SHOULD</em> declare the OO-LD dialect meta-schema (which extends 2020-12) as its <code>$schema</code>, e.g. <code>&quot;$schema&quot;: &quot;https://oo-ld.github.io/oold-schema/latest/meta/oold-meta-schema.json&quot;</code> - pinning a specific version (e.g. <code>.../0.4.0/meta/oold-meta-schema.json</code>) for reproducibility. Declaring the plain 2020-12 meta-schema (<code>https://json-schema.org/draft/2020-12/schema</code>) remains valid for tools that only understand standard JSON Schema.</p>
+</code></pre></aside></section><section id="synonyms"><h4>Term mappings and synonyms (<code>x-oold-context</code>)</h4><p>The <code>*</code> notation above documents at most a small, fixed set of alternative <code>@id</code>s inline and carries no metadata about each mapping. For the general case OO-LD adds the schema-level keyword <code>x-oold-context</code>: an object keyed by term, where each term holds a dict keyed by the <strong>synonym IRI</strong>.</p>
+<p>In the minimal case a term simply lists alternative IRIs, each with an empty value (<code>{}</code>):</p>
+<aside class="example" title="Minimal case - a term with alias IRIs"><pre><code class="language-json">{
+  &quot;@context&quot;: { &quot;description&quot;: &quot;schema:description&quot; },
+  &quot;x-oold-context&quot;: {
+    &quot;description&quot;: {
+      &quot;rdfs:comment&quot;: {},
+      &quot;skos:definition&quot;: {}
+    }
+  }
+}
+</code></pre></aside>
+<p>Here <code>description</code> (primarily <code>schema:description</code>) also maps to <code>rdfs:comment</code> and <code>skos:definition</code>. Each bare synonym IRI defaults to <code>predicate_id: skos:exactMatch</code> and inherits the primary term's coercion on promotion.</p>
+<p>Each value is itself a JSON-LD term-definition fragment (<code>@type</code>, <code>@container</code>, ...) that is promotable verbatim into <code>@context</code>, optionally carrying a strippable <code>x-sssom</code> block with mapping metadata:</p>
+<aside class="example" title="With coercion and SSSOM metadata"><pre><code class="language-json">{
+  &quot;@context&quot;: { &quot;name&quot;: &quot;schema:name&quot; },
+  &quot;x-oold-context&quot;: {
+    &quot;name&quot;: {
+      &quot;schema:name&quot;: { &quot;x-sssom&quot;: { &quot;predicate_id&quot;: &quot;skos:exactMatch&quot;, &quot;confidence&quot;: 1.0 } },
+      &quot;skos:prefLabel&quot;: { &quot;x-sssom&quot;: { &quot;predicate_id&quot;: &quot;skos:exactMatch&quot;, &quot;confidence&quot;: 0.95 } },
+      &quot;schema:alternateName&quot;: { &quot;@container&quot;: &quot;@set&quot;, &quot;x-sssom&quot;: { &quot;predicate_id&quot;: &quot;skos:closeMatch&quot; } }
+    }
+  }
+}
+</code></pre></aside>
+<p>Each entry is one mapping:</p>
+<ul>
+<li>the <strong>key</strong> is the synonym IRI (the SSSOM <code>object_id</code>);</li>
+<li>the <strong>value</strong> is a JSON-LD term-definition fragment (<code>@type</code>, <code>@container</code>, ...) that is promotable as-is, plus an optional <code>x-sssom</code> block;</li>
+<li><code>x-sssom</code> is strippable metadata: <code>predicate_id</code> (default <code>skos:exactMatch</code>), optional <code>confidence</code> and <code>mapping_justification</code>. The <code>subject_id</code> is implicit (the term's primary <code>@context</code> IRI) and the <code>object_id</code> is the key.</li>
+</ul>
+<p>This satisfies what the <code>*</code> notation cannot:</p>
+<ul>
+<li><strong>More than two mappings</strong> - the dict holds any number of synonym IRIs.</li>
+<li><strong>Ontology family</strong> - prefix-driven: the family is the IRI namespace (<code>schema:</code>, <code>bfo:</code>, <code>emmo:</code>), so RDF export can prioritize a preferred namespace without an explicit tag.</li>
+<li><strong>Override under composition</strong> - the dict is keyed by IRI and resolved by the <a href="#merge-and-override-model">merge and override model</a>: most-derived-wins, with <code>null</code> removing an inherited mapping. Keys are compared as expanded IRIs, so the compact (<code>skos:prefLabel</code>) and full (<code>http://www.w3.org/2004/02/skos/core#prefLabel</code>) forms of one IRI are a single key and override correctly across mixed notations.</li>
+<li><strong>SSSOM interoperability</strong> - each entry is one <a href="https://github.com/mapping-commons/sssom">SSSOM</a> mapping row (<code>subject_id</code> / <code>object_id</code> / <code>predicate_id</code> / <code>confidence</code> / <code>mapping_justification</code>), so a mapping set round-trips to and from <code>x-oold-context</code>.</li>
+</ul>
+<aside class="example" title="A subclass dropping an inherited mapping"><pre><code class="language-json">{
+  &quot;x-oold-context&quot;: {
+    &quot;description&quot;: { &quot;rdfs:comment&quot;: null }
+  }
+}
+</code></pre></aside>
+<p>To promote to <code>@context</code>, an OO-LD preprocessor picks the prioritized synonym (by namespace), then <code>{ &quot;@id&quot;: &lt;key&gt;, ...value without x-sssom }</code> becomes the term's definition in the real <code>@context</code>; the <code>x-sssom</code> blocks are dropped, so standard JSON-LD tools then run on a clean context.</p></section></section><section id="jsonschema-extensions"><h3>JSON Schema</h3><p>OO-LD targets [[JSONSCHEMA]] (2020-12) as its normative dialect. An OO-LD schema <em class="rfc2119">SHOULD</em> declare the OO-LD dialect meta-schema (which extends 2020-12) as its <code>$schema</code>, e.g. <code>&quot;$schema&quot;: &quot;https://oo-ld.github.io/oold-schema/latest/meta/oold-meta-schema.json&quot;</code> - pinning a specific version (e.g. <code>.../0.4.0/meta/oold-meta-schema.json</code>) for reproducibility. Declaring the plain 2020-12 meta-schema (<code>https://json-schema.org/draft/2020-12/schema</code>) remains valid for tools that only understand standard JSON Schema.</p>
 <p>2020-12 is <em class="rfc2119">REQUIRED</em>, not merely preferred: OO-LD's composition places <code>$ref</code> alongside sibling keywords (e.g. a property carrying <code>type</code>, <code>x-oold-range</code> and <code>@context</code>, or <code>allOf: [{$ref: ...}]</code> next to <code>properties</code>). Keywords adjacent to <code>$ref</code> are only evaluated from JSON Schema 2019-09 onward; in Draft 4 and Draft 7 they are ignored ([[JSONSCHEMA]] §8.2.3.1). Keywords such as <code>const</code> (used throughout this document) are likewise only available from draft-06 onward. Migration from the earlier Draft-4-style notation: rename <code>definitions</code> to <code>$defs</code>, <code>id</code> to <code>$id</code>, and use the numeric form of <code>exclusiveMinimum</code>/<code>exclusiveMaximum</code> instead of the boolean form.</p><section id="multilanguage"><h4>Multilanguage support</h4><p>There are two distinct localization concerns: translating a schema's own annotations, and translating a value carried by an instance.</p><section id="localizing-schema-annotations"><h5>Localizing schema annotations</h5><p>The JSON Schema annotation keywords <code>title</code> and <code>description</code> carry a single, default human-readable string used by tooling (for example for UI generation). To provide localized variants, OO-LD adds the keywords <code>x-oold-multilang-title</code> and <code>x-oold-multilang-description</code>. Their value <em class="rfc2119">MUST</em> be an object whose keys are <a href="https://www.rfc-editor.org/info/bcp47">BCP 47</a> language tags (e.g. <code>en</code>, <code>de</code>, <code>en-GB</code>) and whose values are the translated strings. A schema <em class="rfc2119">SHOULD</em> still provide a default <code>title</code> / <code>description</code>; a consumer that has no entry for the requested language falls back to that default. These keywords localize the schema's <em>own</em> labels and are not interpreted as JSON-LD.</p>
 <aside class="example" title="Localized schema annotations"><pre><code class="language-json">{
     &quot;title&quot;: &quot;Default Title&quot;,
@@ -759,6 +803,10 @@ intersections (<code>allOf</code>) and inline constraints can be combined to des
 </tr>
 </thead>
 <tbody>
+<tr>
+  <td><code>x-oold-context</code></td>
+  <td>Extended term mappings (synonyms): an object keyed by term, each holding a dict keyed by synonym IRI whose value is a JSON-LD term-definition fragment plus an optional strippable x-sssom block. Supports more than two mappings per term, override under composition (most-derived-wins; null removes), prefix-driven ontology-family prioritization, and SSSOM round-trip. Promoted into @context by OO-LD-aware tooling; see the 'Term mappings and synonyms' section.</td>
+</tr>
 <tr>
   <td><code>x-oold-uuid</code></td>
   <td>Stable UUID identifying this schema across versions and locations.</td>
