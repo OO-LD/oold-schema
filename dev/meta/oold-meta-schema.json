@@ -22,6 +22,13 @@
     "@context": {
       "description": "JSON-LD context for instances of this schema. The schema is consumed as a remote JSON-LD context; this entry is ignored by JSON-Schema validators."
     },
+    "x-oold-context": {
+      "description": "Extended term mappings (synonyms): an object keyed by term, each holding a dict keyed by synonym IRI whose value is a JSON-LD term-definition fragment plus an optional strippable x-sssom block. Supports more than two mappings per term, override under composition (most-derived-wins; null removes), prefix-driven ontology-family prioritization, and SSSOM round-trip. Promoted into @context by OO-LD-aware tooling; see the 'Term mappings and synonyms' section.",
+      "type": "object",
+      "examples": [
+        { "name": { "skos:prefLabel": { "x-sssom": { "predicate_id": "skos:exactMatch", "confidence": 0.95 } } } }
+      ]
+    },
     "x-oold-uuid": {
       "description": "Stable UUID identifying this schema across versions and locations.",
       "type": "string",

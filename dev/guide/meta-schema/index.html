@@ -1110,6 +1110,10 @@
 </thead>
 <tbody>
 <tr>
+<td><code>x-oold-context</code></td>
+<td>Extended term mappings (synonyms): an object keyed by term, each holding a dict keyed by synonym IRI whose value is a JSON-LD term-definition fragment plus an optional strippable x-sssom block. Supports more than two mappings per term, override under composition (most-derived-wins; null removes), prefix-driven ontology-family prioritization, and SSSOM round-trip. Promoted into @context by OO-LD-aware tooling; see the 'Term mappings and synonyms' section.</td>
+</tr>
+<tr>
 <td><code>x-oold-uuid</code></td>
 <td>Stable UUID identifying this schema across versions and locations.</td>
 </tr>
