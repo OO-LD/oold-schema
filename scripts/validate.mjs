@@ -8,6 +8,7 @@
 // x-oold-ref / x-oold-range and @context references are intentionally NOT auto-resolved;
 // they are handled by OO-LD-aware tooling.
 import Ajv2020 from "ajv/dist/2020.js";
+import addFormats from "ajv-formats";
 import $RefParser from "@apidevtools/json-schema-ref-parser";
 import { readFileSync, readdirSync } from "node:fs";
 import { fileURLToPath } from "node:url";
@@ -15,10 +16,16 @@ import { dirname, join } from "node:path";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 const meta = JSON.parse(readFileSync(join(root, "meta", "oold-meta-schema.json"), "utf8"));
+const uiMeta = JSON.parse(readFileSync(join(root, "meta", "oold-ui-meta-schema.json"), "utf8"));
 const exDir = join(root, "examples");
 const files = readdirSync(exDir).filter((f) => f.endsWith(".schema.json"));
 
-const ajv = new Ajv2020({ strict: false });
+// validateFormats: true (ajv default) + ajv-formats turns `format` into an
+// assertion, so uri/uri-reference/uuid/date-time in the examples and meta-schemas
+// are actually checked rather than annotated-and-ignored.
+const ajv = new Ajv2020({ strict: false, validateFormats: true });
+addFormats(ajv);
+ajv.addSchema(uiMeta); // so the core meta-schema can $ref the UI keyword definitions
 const validateAsOOLD = ajv.compile(meta); // also validates the meta-schema against 2020-12
 
 let failures = 0;

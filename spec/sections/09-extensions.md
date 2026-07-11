@@ -227,7 +227,7 @@ A range subschema MAY also carry additional annotations (e.g. `title`, `descript
 
 #### Reverse properties {#reverse-properties}
 
-Many relations are symmetric (e.g. Organization employs Person ⇔ Person works for Organization) and users want to edit them from both sides, without storing the information twice. The keywords `x-oold-reverse-properties`, `x-oold-reverse-default-properties` and `x-oold-reverse-required` declare such a [=reverse property=], mapped with JSON-LD `@reverse` in the `@context`. To make `employees` the reverse of `organization`:
+Many relations are symmetric (e.g. Organization employs Person ⇔ Person works for Organization) and users want to edit them from both sides, without storing the information twice. The keywords `x-oold-reverse-properties` and `x-oold-reverse-required` declare such a [=reverse property=], mapped with JSON-LD `@reverse` in the `@context`. (The earlier `x-oold-reverse-default-properties` array is deprecated: mark a reverse property shown by default with `x-oold-ui-default-property` on the property itself - see [](#ui-generation) - which, unlike the merged array, is overridable under composition.) To make `employees` the reverse of `organization`:
 
 - define `employees` in `x-oold-reverse-properties` of `Organization`;
 - define `organization` in the `properties` of `Person`;
@@ -245,11 +245,11 @@ Many relations are symmetric (e.g. Organization employs Person ⇔ Person works 
   "type": "object",
   "required": ["type"],
   "x-oold-reverse-required": [],
-  "x-oold-reverse-default-properties": ["employees"],
   "x-oold-reverse-properties": {
     "employees": {
       "type": "array",
       "title": "Employees",
+      "x-oold-ui-default-property": true,
       "items": {
         "type": "string",
         "format": "autocomplete",
@@ -289,4 +289,37 @@ An OO-LD-aware implementation uses this to read and modify properties that are a
 
 #### UI Generation {#ui-generation .informative}
 
-Additional keywords defined by [JSON Editor](https://github.com/json-editor/json-editor) (see its [basic features](https://github.com/json-editor/json-editor#readme) and [add-on details](https://github.com/json-editor/json-editor/blob/master/README_ADDON.md)) MAY be used to drive automatic user-interface (form) generation.
+OO-LD schemas double as the source for auto-generated forms and views. UI intent is carried in two layers:
+
+- Portable, renderer-agnostic keywords in the `x-oold-ui-*` vocabulary, defined here. Any form generator can honour them.
+- Renderer-specific keywords passed through under a vendor prefix - `x-jedison-*` for [jedison](https://github.com/germanbisurgi/jedison), the successor of [json-editor](https://github.com/json-editor/json-editor) - for options that do not generalize.
+
+Every keyword keeps the `x-` prefix, so it is a valid JSON Schema extension keyword and a valid OpenAPI 3.0 specification extension, and generic 2020-12 validators ignore it. The `x-oold-ui-*` keywords form their own optional dialect, described by the [OO-LD UI meta-schema](../meta/oold-ui-meta-schema.json); the core meta-schema includes those definitions so an OO-LD schema carrying UI annotations validates in one pass.
+
+##### The `x-oold-ui-*` vocabulary {#ui-vocabulary}
+
+All keywords apply to the (sub)schema of a single property.
+
+{{ render_schema('meta/oold-ui-meta-schema.json') }}
+
+The text-valued keywords have a `x-oold-multilang-*` variant carrying a BCP-47 language map, mirroring `x-oold-multilang-title` (see [](#localizing-schema-annotations)): `x-oold-multilang-ui-hint` and `x-oold-multilang-ui-enum-titles`.
+
+For enum code generation OO-LD keeps the established `x-enum-varnames` (identifier-safe names aligned with `enum`) and its companion `x-enum-descriptions`; these are widely supported vendor extensions (OpenAPI Generator; NSwag's `x-enumNames`) and are distinct from the human display labels in `x-oold-ui-enum-titles`.
+
+`x-oold-ui-default-property` replaces the json-editor `defaultProperties` array (which listed the optional properties shown initially). That array is *extend-only* under composition: because composed schemas merge the arrays, a derived schema can add a default property but cannot switch one off. A per-property boolean is *overridable* - it resolves most-derived-wins (see [](#merge-and-override-model)), so a derived schema sets it to `false` to hide a property a base schema showed. For the same reason `x-oold-reverse-default-properties` is deprecated in favour of `x-oold-ui-default-property` on the reverse property.
+
+##### Widget hints: `format` vs `x-oold-ui-widget` {#widget-hints}
+
+`format` carries the widget hint when its value is a registered JSON Schema 2020-12 format (`date`, `date-time`, `time`, `duration`, `email`, `uri`, `iri`, `uuid`, ...); a validator may check it and a form generator picks the matching input. Values that are not registered formats (`table`, `tabs`, `grid`, `autocomplete`, `textarea`, `checkbox`, `markdown`, `color`, ...) are widget-only and go in `x-oold-ui-widget`, leaving `format` for validation semantics.
+
+##### Delivery: inline or overlay {#ui-delivery}
+
+UI keywords may be embedded in the schema (inline):
+
+{{ example('UiAnnotations') }}
+
+or applied by an *overlay* - a separate document that patches a schema without editing it, following the [OpenAPI Overlay 1.1.0](https://spec.openapis.org/overlay/latest.html) model. Overlays are a general schema-patching mechanism: the `update` actions can inject any keywords (semantics, constraints or presentation), and applying `x-oold-ui-*` annotations is one use case - useful when the schema is generated or owned elsewhere, or when one schema needs different presentation in different contexts. An overlay lists `actions`, each selecting nodes with an [RFC 9535 JSONPath](https://www.rfc-editor.org/rfc/rfc9535) `target` and merging keys via `update` (or removing them via `remove`):
+
+{{ inline_file('examples/UiOverlay.json') }}
+
+The vendor keywords are documented by their respective projects: jedison's `x-jedison-*` (see [germanbisurgi/jedison#58](https://github.com/germanbisurgi/jedison/issues/58) and the overlay proposal [#59](https://github.com/germanbisurgi/jedison/issues/59)) and, for schemas coming from OpenSemanticLab, the server-side `x-osl-*` keywords. Migrating a legacy OpenSemanticWorld schema to these keywords is covered in the [migration guide](../migration/from-legacy-osw/).
