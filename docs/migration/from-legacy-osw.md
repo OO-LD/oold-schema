@@ -56,41 +56,63 @@ The full, per-keyword table with real examples is in
 
 ## Worked example
 
-A real, compact legacy schema (`world.opensemantic.core` `DataProperty`), extended with a
-representative property that carries the common UI and vendor keywords.
+A simplified excerpt of the real `world.opensemantic.core` `Entity` schema (uuid
+`ce353767-c628-45bd-9d88-d6eb3009aec0`). Most properties are omitted for brevity, the
+`@context` is trimmed to a few entries, and the `label` render template is abbreviated;
+the [keyword mapping table](#keyword-mapping-summary) above is the complete reference. Full
+keyword coverage (`range`, `enum`/`enum_titles`, `x-enum-varnames`, ...) lives in the
+table, not in this one schema.
 
 ### Before (legacy OSW)
 
 ```json
 {
-  "@context": ["/wiki/Category:Property?action=raw&slot=jsonschema"],
-  "allOf": [{ "$ref": "/wiki/Category:Property?action=raw&slot=jsonschema" }],
+  "@context": {
+    "schema": "https://schema.org/",
+    "skos": "https://www.w3.org/TR/skos-reference/",
+    "Property": { "@id": "wiki:Property-3A", "@prefix": true },
+    "description": { "@id": "skos:definition" }
+  },
   "type": "object",
-  "uuid": "5339291d-0c2f-475e-9f77-c85679ab6b24",
-  "title": "DataProperty",
-  "title*": { "en": "Data property", "de": "Dateneigenschaft" },
-  "defaultProperties": ["label", "value"],
+  "id": "entity",
+  "uuid": "ce353767-c628-45bd-9d88-d6eb3009aec0",
+  "title": "Entity",
+  "required": ["uuid", "label"],
+  "defaultProperties": ["description"],
   "properties": {
-    "label": {
+    "uuid": {
+      "title": "UUID",
       "type": "string",
-      "propertyOrder": 1,
-      "options": { "category": "General", "infoText": "Human-readable label" }
-    },
-    "unit": {
-      "type": "string",
-      "enum": ["m", "s"],
-      "x-enum-varnames": ["metre", "second"],
-      "options": { "enum_titles": ["Meter", "Sekunde"] }
-    },
-    "internal_id": {
-      "type": "string",
-      "range": "Category:OSW44deaa5b806d41a2a88594f562b110e9",
+      "format": "uuid",
       "options": { "hidden": true }
     },
-    "report": {
-      "type": "string",
+    "label": {
+      "type": "array",
+      "title": "Label(s)",
+      "title*": { "de": "Bezeichnung(en)" },
       "format": "table",
-      "eval_template": [{ "type": "mustache", "mode": "render", "value": "[[{{{label}}}]]" }]
+      "eval_template": [{ "type": "mustache-wikitext", "mode": "render", "value": "{{=<% %>=}} ... <%/label%>" }],
+      "items": { "$ref": "/wiki/JsonSchema:Label?action=raw" },
+      "minItems": 1
+    },
+    "description": {
+      "type": "array",
+      "title": "Description",
+      "title*": { "de": "Beschreibung" },
+      "format": "table",
+      "items": { "$ref": "/wiki/JsonSchema:Description?action=raw" }
+    },
+    "image": {
+      "title": "Image",
+      "title*": { "de": "Bild" },
+      "propertyOrder": 1020,
+      "type": "string",
+      "format": "url"
+    },
+    "query_label": {
+      "title": "Query label",
+      "type": "string",
+      "options": { "hidden": true, "conditional_visible": { "modes": ["query"] } }
     }
   }
 }
@@ -100,35 +122,54 @@ representative property that carries the common UI and vendor keywords.
 
 ```json
 {
-  "@context": ["https://example.org/Property.schema.json"],
-  "allOf": [{ "$ref": "https://example.org/Property.schema.json" }],
+  "$schema": "https://oo-ld.github.io/oold-schema/latest/meta/oold-meta-schema.json",
+  "@context": {
+    "schema": "https://schema.org/",
+    "skos": "https://www.w3.org/TR/skos-reference/",
+    "Property": { "@id": "wiki:Property-3A", "@prefix": true },
+    "description": { "@id": "skos:definition" }
+  },
+  "$id": "Entity.schema.json",
+  "x-jedison-id": "entity",
+  "x-oold-uuid": "ce353767-c628-45bd-9d88-d6eb3009aec0",
+  "title": "Entity",
   "type": "object",
-  "x-oold-uuid": "5339291d-0c2f-475e-9f77-c85679ab6b24",
-  "title": "DataProperty",
-  "x-oold-multilang-title": { "en": "Data property", "de": "Dateneigenschaft" },
+  "required": ["uuid", "label"],
   "properties": {
-    "label": {
+    "uuid": {
+      "title": "UUID",
       "type": "string",
-      "x-oold-ui-default-property": true,
-      "x-oold-ui-property-order": 1,
-      "x-oold-ui-property-group": "General",
-      "x-oold-ui-hint": "Human-readable label"
-    },
-    "unit": {
-      "type": "string",
-      "enum": ["m", "s"],
-      "x-enum-varnames": ["metre", "second"],
-      "x-oold-ui-enum-titles": ["Meter", "Sekunde"]
-    },
-    "internal_id": {
-      "type": "string",
-      "x-oold-range": "Category:OSW44deaa5b806d41a2a88594f562b110e9",
+      "format": "uuid",
       "x-oold-ui-form-hidden": true
     },
-    "report": {
-      "type": "string",
+    "label": {
+      "type": "array",
+      "title": "Label(s)",
+      "x-oold-multilang-title": { "de": "Bezeichnung(en)" },
       "x-oold-ui-widget": "table",
-      "x-osl-eval-template": [{ "type": "mustache", "mode": "render", "value": "[[{{{label}}}]]" }]
+      "x-osl-eval-template": [{ "type": "mustache-wikitext", "mode": "render", "value": "{{=<% %>=}} ... <%/label%>" }],
+      "items": { "$ref": "Label.schema.json" },
+      "minItems": 1
+    },
+    "description": {
+      "type": "array",
+      "title": "Description",
+      "x-oold-multilang-title": { "de": "Beschreibung" },
+      "x-oold-ui-widget": "table",
+      "x-oold-ui-default-property": true,
+      "items": { "$ref": "Description.schema.json" }
+    },
+    "image": {
+      "title": "Image",
+      "x-oold-multilang-title": { "de": "Bild" },
+      "x-oold-ui-property-order": 1020,
+      "type": "string",
+      "format": "uri"
+    },
+    "query_label": {
+      "title": "Query label",
+      "type": "string",
+      "x-oold-ui-form-hidden": true
     }
   }
 }
@@ -136,23 +177,25 @@ representative property that carries the common UI and vendor keywords.
 
 What changed:
 
-- `uuid` -> `x-oold-uuid`; `title*` -> `x-oold-multilang-title`.
-- Raw-slot `@context` / `$ref` URLs (`/wiki/Category:...?action=raw&slot=jsonschema`)
-  become resolvable schema URLs (`$id`-addressable). The schema still composes through
-  standard `allOf` + `$ref`.
-- `defaultProperties: ["label", "value"]` is a root array of the optional properties shown
-  by default. Because composed schemas merge these arrays, it is **extend-only**: a derived
-  schema can add a default property but cannot switch one off. Moving the flag to a
-  per-property boolean `x-oold-ui-default-property: true` makes it **overridable** - a
-  derived schema resets it (to `false`) under most-derived-wins resolution, without
-  restating the whole list. The reverse-property form `x-oold-reverse-default-properties`
-  (also a root array, same extend-only limitation) migrates the same way.
-- `propertyOrder` / `options.category` / `options.infoText` / `options.hidden` become the
-  portable `x-oold-ui-*` keywords; `options.enum_titles` becomes `x-oold-ui-enum-titles`.
+- `uuid` -> `x-oold-uuid`; the per-property `title*` -> `x-oold-multilang-title`.
+- `id` (the json-editor watch id) -> vendor `x-jedison-id`, not `$anchor` (see Pitfalls).
+- Raw-slot `$ref` URLs (`/wiki/JsonSchema:Label?action=raw`) become resolvable schema URLs
+  (`Label.schema.json`, `$id`-addressable). Ordinary composition still uses standard `$ref`.
+- `options: { "hidden": true }` -> `x-oold-ui-form-hidden`; `propertyOrder` ->
+  `x-oold-ui-property-order`.
 - `format: "table"` is not a registered JSON Schema format, so it moves to
-  `x-oold-ui-widget`. A registered format (for example `format: "date"`) would stay put.
-- `range` -> `x-oold-range`; `eval_template` (OSL mustache) -> `x-osl-eval-template`.
-- `x-enum-varnames` is kept as-is (it is an established code-generation convention).
+  `x-oold-ui-widget`; `format: "url"` becomes the registered format `uri` (a registered
+  format such as `uuid` stays put).
+- `eval_template` (OSL server-side mustache) -> `x-osl-eval-template`.
+- `defaultProperties: ["description"]` is a root array of the optional properties shown by
+  default. Because composed schemas merge these arrays, it is **extend-only**: a derived
+  schema can add a default property but cannot switch one off. Moving the flag to a
+  per-property boolean `x-oold-ui-default-property: true` (here on `description`) makes it
+  **overridable** - a derived schema resets it to `false` under most-derived-wins
+  resolution, without restating the whole list. The reverse-property form
+  `x-oold-reverse-default-properties` (also a root array, same limitation) migrates the same way.
+- `options.conditional_visible` / `modes` on `query_label` have no OO-LD equivalent yet
+  (they drove OSL query forms); record them and drop them, do not invent keywords (see Pitfalls).
 
 ## Two ways to deliver UI annotations
 
@@ -164,11 +207,11 @@ different contexts.
 ```json
 {
   "overlay": "1.0.0",
-  "info": { "title": "DataProperty form overlay", "version": "1.0.0" },
-  "extends": "./DataProperty.schema.json",
+  "info": { "title": "Entity form overlay", "version": "1.0.0" },
+  "extends": "./Entity.schema.json",
   "actions": [
-    { "target": "$.properties.internal_id", "update": { "x-oold-ui-form-hidden": true } },
-    { "target": "$.properties.report", "update": { "x-oold-ui-widget": "table" } }
+    { "target": "$.properties.query_label", "update": { "x-oold-ui-form-hidden": false } },
+    { "target": "$.properties.image", "update": { "x-oold-ui-widget": "url" } }
   ]
 }
 ```
