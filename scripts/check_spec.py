@@ -16,10 +16,11 @@ import spec_config as cfg  # noqa: E402
 
 html = open(os.path.join(ROOT, "docs", "spec", "index.html"), encoding="utf-8").read()
 
-# ReSpec resolves these bibliography keys from its built-in database (SpecRef);
-# that set is external to this repo, so it stays a small curated list. Anything
-# not here and not in localBiblio must be a typo.
-KNOWN_BIBLIO = {"RFC2119", "RFC7386", "RFC3986", "RFC6906", "JSON-LD11"}
+# Every bibliography reference is defined in localBiblio (spec_config.py), so the
+# References section is self-contained; a ref not found there is a typo or a
+# missing entry. (Previously some keys were resolved from ReSpec's SpecRef
+# database via a hand-maintained allow-list; that list is no longer needed.)
+KNOWN_BIBLIO = set()
 
 SECTIONS_DIR = os.path.join(ROOT, "spec", "sections")
 # {#id} attribute on any ATX heading (only these become <section id="..."> ids).

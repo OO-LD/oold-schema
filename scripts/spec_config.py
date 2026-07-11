@@ -26,12 +26,55 @@ RESPEC = {
         }
     ],
     "lint": {"no-http-props": False},
+    # Every [[ref]] used in the spec is defined here, so the References section is
+    # self-contained and deterministic rather than depending on ReSpec's SpecRef
+    # database resolving each key (check_spec.py enforces that every ref is present).
     "localBiblio": {
         "JSONSCHEMA": {
             "title": "JSON Schema: A Media Type for Describing JSON Documents (2020-12)",
             "href": "https://json-schema.org/draft/2020-12/json-schema-core",
             "publisher": "JSON Schema Organization",
             "status": "Internet-Draft",
+        },
+        "JSON-LD11": {
+            "title": "JSON-LD 1.1",
+            "href": "https://www.w3.org/TR/json-ld11/",
+            "authors": ["Gregg Kellogg", "Pierre-Antoine Champin", "Dave Longley"],
+            "date": "16 July 2020",
+            "publisher": "W3C",
+            "status": "W3C Recommendation",
+        },
+        "RFC2119": {
+            "title": "Key words for use in RFCs to Indicate Requirement Levels",
+            "href": "https://www.rfc-editor.org/rfc/rfc2119",
+            "authors": ["S. Bradner"],
+            "date": "March 1997",
+            "publisher": "IETF",
+            "status": "Best Current Practice",
+        },
+        "RFC3986": {
+            "title": "Uniform Resource Identifier (URI): Generic Syntax",
+            "href": "https://www.rfc-editor.org/rfc/rfc3986",
+            "authors": ["T. Berners-Lee", "R. Fielding", "L. Masinter"],
+            "date": "January 2005",
+            "publisher": "IETF",
+            "status": "Internet Standard",
+        },
+        "RFC6906": {
+            "title": "The 'profile' Link Relation Type",
+            "href": "https://www.rfc-editor.org/rfc/rfc6906",
+            "authors": ["E. Wilde"],
+            "date": "March 2013",
+            "publisher": "IETF",
+            "status": "Informational",
+        },
+        "RFC7396": {
+            "title": "JSON Merge Patch",
+            "href": "https://www.rfc-editor.org/rfc/rfc7396",
+            "authors": ["P. Hoffman", "J. Snell"],
+            "date": "October 2014",
+            "publisher": "IETF",
+            "status": "Proposed Standard",
         },
         "OOLD-META": {
             "title": "OO-LD Meta-Schema",

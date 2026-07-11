@@ -52,6 +52,61 @@
       "publisher": "JSON Schema Organization",
       "status": "Internet-Draft"
     },
+    "JSON-LD11": {
+      "title": "JSON-LD 1.1",
+      "href": "https://www.w3.org/TR/json-ld11/",
+      "authors": [
+        "Gregg Kellogg",
+        "Pierre-Antoine Champin",
+        "Dave Longley"
+      ],
+      "date": "16 July 2020",
+      "publisher": "W3C",
+      "status": "W3C Recommendation"
+    },
+    "RFC2119": {
+      "title": "Key words for use in RFCs to Indicate Requirement Levels",
+      "href": "https://www.rfc-editor.org/rfc/rfc2119",
+      "authors": [
+        "S. Bradner"
+      ],
+      "date": "March 1997",
+      "publisher": "IETF",
+      "status": "Best Current Practice"
+    },
+    "RFC3986": {
+      "title": "Uniform Resource Identifier (URI): Generic Syntax",
+      "href": "https://www.rfc-editor.org/rfc/rfc3986",
+      "authors": [
+        "T. Berners-Lee",
+        "R. Fielding",
+        "L. Masinter"
+      ],
+      "date": "January 2005",
+      "publisher": "IETF",
+      "status": "Internet Standard"
+    },
+    "RFC6906": {
+      "title": "The 'profile' Link Relation Type",
+      "href": "https://www.rfc-editor.org/rfc/rfc6906",
+      "authors": [
+        "E. Wilde"
+      ],
+      "date": "March 2013",
+      "publisher": "IETF",
+      "status": "Informational"
+    },
+    "RFC7396": {
+      "title": "JSON Merge Patch",
+      "href": "https://www.rfc-editor.org/rfc/rfc7396",
+      "authors": [
+        "P. Hoffman",
+        "J. Snell"
+      ],
+      "date": "October 2014",
+      "publisher": "IETF",
+      "status": "Proposed Standard"
+    },
     "OOLD-META": {
       "title": "OO-LD Meta-Schema",
       "href": "https://github.com/OO-LD/oold-schema/blob/main/meta/oold-meta-schema.json",
@@ -272,7 +327,7 @@ different parent properties. The mapping is attached to the parent property's te
 <p><strong>Propagation (<code>@propagate</code>).</strong> A <code>$ref</code> inside a <code>type: object</code> property is reflected as a property-scoped context, which by default propagates into the whole subtree rooted at that property (&quot;By default ... contexts propagate across node objects, other than for type-scoped contexts, which default to false&quot;). Where a referenced context should apply only to the immediate node, the schema <em class="rfc2119">MUST</em> set <code>&quot;@propagate&quot;: false</code> on that scoped context. Contexts combined in a single array <em class="rfc2119">MUST</em> share the same <code>@propagate</code> value.</p>
 <p><strong>Protected terms (<code>@protected</code>).</strong> A schema <em class="rfc2119">MAY</em> mark terms <code>@protected</code> to prevent later contexts from silently redefining them. When contexts are combined via <code>allOf</code>, redefining a protected term to a different IRI is an error unless the new definition is identical; property-scoped contexts are exempt and may override protected terms within their subtree. Relying on <code>@protected</code> therefore constrains which schemas a schema can be combined with.</p>
 <p><strong>Independent references and base URIs.</strong> A JSON Schema <code>$ref</code> and a JSON-LD <code>@context</code> entry are independent references: they <em class="rfc2119">MAY</em> point to the same document (the typical OO-LD case, where one document is both a schema and a context) or to different documents - for example a plain JSON Schema referenced via <code>$ref</code> together with a separate remote <code>@context</code> that supplies the semantics. Relative references resolve against the schema's <code>$id</code> (the JSON Schema base URI) and, on the JSON-LD side, against <code>@base</code> / the retrieval URL; these base URIs <em class="rfc2119">SHOULD</em> be aligned so a relative reference resolves to the same absolute URL under both. <code>$id</code> <em class="rfc2119">MUST NOT</em> contain a non-empty fragment ([[JSONSCHEMA]] §8.2.1).</p></section><section id="merge-and-override-model"><h3>Merge and override model</h3><p>JSON Schema's validation algebra is purely conjunctive: <code>allOf</code> requires an instance to satisfy every subschema, and the specification defines no merge of the subschemas' keyword <em>values</em> ([[JSONSCHEMA]] §10.2.1.1). Several consumers nonetheless require a single <em>[=resolved schema=]</em> view rather than a conjunction: a UI generator needs exactly one <code>title</code> per field, a code generator flattens an inheritance chain into one class, and an OO-LD preprocessor must produce one <code>@context</code>.</p>
-<p>When such a merge is required, OO-LD resolves the <code>allOf</code> chain by applying <strong>JSON Merge Patch ([[RFC7386]]) semantics</strong>: keyed by object member, most-recently-defined (most-derived) wins, and a <code>null</code> value removes a key. For the <code>@context</code> this coincides with JSON-LD's own override rule. For assertion-bearing keywords the resolved view additionally honors <strong>narrow-only</strong> composition: a derived schema <em class="rfc2119">MAY</em> restrict a constraint but <em class="rfc2119">MUST NOT</em> relax it, matching how code generators let a subclass tighten - never loosen - a superclass property's validation.</p>
+<p>When such a merge is required, OO-LD resolves the <code>allOf</code> chain by applying <strong>JSON Merge Patch ([[RFC7396]]) semantics</strong>: keyed by object member, most-recently-defined (most-derived) wins, and a <code>null</code> value removes a key. For the <code>@context</code> this coincides with JSON-LD's own override rule. For assertion-bearing keywords the resolved view additionally honors <strong>narrow-only</strong> composition: a derived schema <em class="rfc2119">MAY</em> restrict a constraint but <em class="rfc2119">MUST NOT</em> relax it, matching how code generators let a subclass tighten - never loosen - a superclass property's validation.</p>
 <p>This single model governs every place OO-LD collapses composition into a resolved value: single-valued annotations such as <code>title</code> and <code>x-oold-multilang-title</code> resolve most-derived-wins, constraints resolve narrow-only, and additive maps merge by key. A preprocessor applying it produces exactly the view that UI and code generators already compute, so no separate &quot;resolved schema&quot; format is needed.</p></section></section>
 
 <section id="schema-instances"><h2>Schema Instances</h2><p>An [=OO-LD instance=] is a JSON document that conforms to an [=OO-LD schema=]. It references that schema in two ways, both pointing at the same (preferably versioned) schema URL:</p>
