@@ -1111,7 +1111,7 @@
 <li><strong>Multilanguage</strong> - <code>x-oold-multilang-title</code> / <code>x-oold-multilang-description</code> localize a schema's own labels; instance <em>values</em> are localized with standard JSON-LD language maps.</li>
 <li><strong>Range (<code>x-oold-range</code>)</strong> - constrains the type of a referenced object (an IRI, a union of IRIs, or an inline subschema); references inside it use <code>x-oold-ref</code>, not <code>$ref</code>.</li>
 <li><strong>Reverse properties</strong> (<code>x-oold-reverse-*</code>) - edit a symmetric relation from both sides, mapped with JSON-LD <code>@reverse</code>.</li>
-<li><strong>UI Generation</strong> - keywords from <a href="https://github.com/json-editor/json-editor">JSON Editor</a> may drive automatic form generation.</li>
+<li><strong>UI Generation</strong> (<code>x-oold-ui-*</code>) - a portable vocabulary of form/view hints (widget, order, grouping, visibility, enum labels), with vendor pass-through (<code>x-jedison-*</code>) and delivery inline or via an overlay.</li>
 </ul>
 <p>For the normative rules and worked examples of every keyword above, see <a href="../../spec/#extensions">Standard Extensions</a> in the specification.</p>
 
