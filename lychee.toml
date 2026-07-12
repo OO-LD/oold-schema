@@ -12,15 +12,8 @@ user_agent = "Mozilla/5.0 (compatible; oold-schema-linkcheck/1.0; +https://githu
 # anchors use the `{#id}` attribute syntax, which is not standard Markdown; the
 # rendered spec's cross-references are checked separately by scripts/check_spec.py.
 
-# Placeholder / non-resolvable hosts used inside examples.
-exclude = [
-  '^https?://(www\.)?example\.(org|com)(/|$)',
-  '^https?://localhost',
-  '^https?://127\.0\.0\.1',
-  # Transient OpenSemanticLab demo/query API endpoints that appear as example
-  # data (e.g. in the generated legacy keyword inventory), not documentation links.
-  'open-semantic-lab\.org/api/',
-]
+# The ignore list (excluded URL patterns) lives in .lycheeignore, so edge cases
+# are maintained in one place without weakening real links.
 
 # 403/429 mean the target exists but rate-limits or blocks automated agents;
 # treat them as reachable so the check flags only genuinely missing links (404 etc.).

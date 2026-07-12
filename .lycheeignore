@@ -1,0 +1,20 @@
+# Ignore list for the CI link checker (lychee) - one regex per line.
+# Add edge cases here rather than weakening real links.
+
+# Placeholder / non-resolvable hosts used inside examples.
+^https?://(www\.)?example\.(org|com)(/|$)
+^https?://localhost
+^https?://127\.0\.0\.1
+
+# Transient OpenSemanticLab demo/query API endpoints that appear as example
+# data (e.g. in the generated legacy keyword inventory), not documentation links.
+open-semantic-lab\.org/api/
+
+# The spec sections (spec/sections/*.md) are rendered into docs/spec/index.html
+# and served at /<version>/spec/, so their site-relative links (../meta/...,
+# ../migration/...) are written for the deployed layout, not the source tree.
+# A source-based checker resolves them under spec/ and cannot find them; the
+# deployed links are correct and the rendered spec's anchors are covered by
+# scripts/check_spec.py.
+/spec/meta/oold-ui-meta-schema\.json$
+/spec/migration/from-legacy-osw/?$
