@@ -2,6 +2,8 @@
 
 OO-LD Schema aims to connect the structural modelling of objects and subobjects with the modelling of the semantic relations without reinventing the wheel. It therefore combines existing standards, primarily [JSON Schema](https://json-schema.org/) and a [JSON-LD](https://json-ld.org/) context in the same document.
 
+What distinguishes OO-LD from other approaches that unify structure and semantics is that the artefact *is* the source. A single OO-LD document is at the same time a valid JSON Schema and a referenceable JSON-LD remote context, so there is no separate modelling language to learn and no build step that generates - and then has to keep in sync - a separate schema and a separate context. The same property extends to the instance level: an OO-LD instance is a valid JSON-LD document, and OO-LD-aware tooling (for example the `oold` library) resolves the IRIs it references into linked objects, so a stored graph can be navigated as objects rather than as loose identifiers.
+
 - OO-LD schema documents are supported by a wide range of existing tools (all JSON Schema and JSON-LD tooling).
 - OO-LD schema documents themselves follow linked data principles to make them retrievable over the web, allowing flexible schema compositions.
 - OO-LD schemas allow generic ex- and import of RDF.
@@ -30,3 +32,9 @@ This allows to specify well-defined patterns in a directed graph and enables too
 #### Interoperability {#interoperability}
 
 OO-LD schema documents allow to specify all information that is needed to automatically transform data between semantically equivalent but syntactically different notations.
+
+### Positioning {#positioning .informative}
+
+Data modelling is commonly described in three layers: a conceptual layer (RDFS, OWL), a logical layer (SHACL, ShEx) and a physical layer (JSON Schema, XML Schema). Keeping these layers consistent when they are authored separately is a recurring problem. OO-LD is a physical-layer artefact that carries enough conceptual annotation - its JSON-LD `@context` together with keywords such as `x-oold-range` (see [](#extensions)) - to generate the logical layer (SHACL shapes) and the conceptual layer (OWL) from the same source, so the layers cannot drift apart.
+
+OO-LD does not aim to replace established modelling frameworks. Frameworks such as [LinkML](https://linkml.io/), [SPDX 3.0](https://spdx.github.io/spdx-spec/), [jargon.sh](https://jargon.sh/) and [TreeLDR](https://www.spruceid.dev/treeldr/treeldr-overview) compile a bespoke source into JSON Schema and a separate JSON-LD context; OO-LD instead annotates JSON Schema in place and offers generated bridges to the forms other ecosystems expect. A consumer that cannot accept a top-level `@context` - OpenAPI 3.0, or a strict LLM structured-output subset - is served a generated form (`x-jsonld-context` / `x-jsonld-type`, or annotations folded into `title` / `description`; see [](#extensions)) rather than a hand-maintained parallel document, so the single OO-LD source stays authoritative. This positions OO-LD as an interlingua in the physical layer, not as another isolated syntax.
