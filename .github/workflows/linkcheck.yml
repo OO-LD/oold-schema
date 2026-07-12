@@ -1,0 +1,35 @@
+name: linkcheck
+
+# Verify that every [](url) link in the Markdown sources resolves with a good
+# status code. Runs on PRs and pushes to main, plus weekly to catch link rot.
+on:
+  push:
+    branches: [main]
+  pull_request:
+  schedule:
+    - cron: "0 6 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: linkcheck-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  markdown-links:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check all Markdown links
+        uses: lycheeverse/lychee-action@v2
+        with:
+          args: >-
+            --config lychee.toml --no-progress
+            --exclude-path node_modules --exclude-path site
+            "**/*.md"
+          fail: true
+        env:
+          # Authenticated GitHub requests avoid api.github.com / github.com rate limits.
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
