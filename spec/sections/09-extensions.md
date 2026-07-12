@@ -153,6 +153,35 @@ This satisfies what the `*` notation cannot:
 
 To promote to `@context`, an OO-LD preprocessor picks the prioritized synonym (by namespace), then `{ "@id": <key>, ...value without x-sssom }` becomes the term's definition in the real `@context`; the `x-sssom` blocks are dropped, so standard JSON-LD tools then run on a clean context.
 
+#### Framing {#framing}
+
+[JSON-LD 1.1 Framing](https://www.w3.org/TR/json-ld11-framing/) reshapes a flat or arbitrarily-structured RDF graph into a specific tree layout described by a *frame*. An OO-LD schema already describes exactly such a tree - its `properties` give the nesting, its `@context` gives the term IRIs, a type constant (`x-oold-instance-rdf-type`, or a `const` on the `type` property) gives the node type, and [`x-oold-range`](#range-of-properties) gives the type of embedded or referenced objects - so an OO-LD-aware tool MAY auto-construct a frame from the schema. Framing an instance graph with that frame produces a JSON document shaped like the schema, which then validates against the same schema.
+
+This makes an OO-LD schema bidirectional: its `@context` drives expansion (JSON to RDF), and the frame derived from its structure drives framing (RDF back to the schema's JSON tree). The derivation is mechanical: the schema's class type becomes the frame `@type`; object-valued properties become nested frames, inlined with `@embed` or left as IRI references in line with the inline-versus-reference choice `x-oold-range` already records; and `@explicit` / `@requireAll` / `@default` follow from `additionalProperties` and `required`.
+
+:::example{title="Frame auto-constructed from a Person schema"}
+Schema (abbreviated):
+```json
+{
+  "@context": { "schema": "http://schema.org/", "name": "schema:name", "type": "@type" },
+  "$id": "Person.schema.json",
+  "x-oold-instance-rdf-type": ["schema:Person"],
+  "type": "object",
+  "properties": { "name": { "type": "string" } }
+}
+```
+
+Derived frame - selects `schema:Person` nodes and shapes them per the schema:
+```json
+{
+  "@context": { "schema": "http://schema.org/", "name": "schema:name", "type": "@type" },
+  "type": "schema:Person"
+}
+```
+:::
+
+The auto-frame construction and the object-graph reshaping it enables are tracked in [OO-LD/oold-schema#10](https://github.com/OO-LD/oold-schema/issues/10).
+
 ### JSON Schema {#jsonschema-extensions}
 
 OO-LD targets [[JSONSCHEMA]] (2020-12) as its normative dialect. An OO-LD schema SHOULD declare the OO-LD dialect meta-schema (which extends 2020-12) as its `$schema`, e.g. `"$schema": "https://oo-ld.github.io/oold-schema/latest/meta/oold-meta-schema.json"` - pinning a specific version (e.g. `.../0.4.0/meta/oold-meta-schema.json`) for reproducibility. Declaring the plain 2020-12 meta-schema (`https://json-schema.org/draft/2020-12/schema`) remains valid for tools that only understand standard JSON Schema.
