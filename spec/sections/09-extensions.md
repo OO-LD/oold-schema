@@ -180,8 +180,6 @@ Derived frame - selects `schema:Person` nodes and shapes them per the schema:
 ```
 :::
 
-The auto-frame construction and the object-graph reshaping it enables are tracked in [OO-LD/oold-schema#10](https://github.com/OO-LD/oold-schema/issues/10).
-
 ### JSON Schema {#jsonschema-extensions}
 
 OO-LD targets [[JSONSCHEMA]] (2020-12) as its normative dialect. An OO-LD schema SHOULD declare the OO-LD dialect meta-schema (which extends 2020-12) as its `$schema`, e.g. `"$schema": "https://oo-ld.github.io/oold-schema/latest/meta/oold-meta-schema.json"` - pinning a specific version (e.g. `.../0.4.0/meta/oold-meta-schema.json`) for reproducibility. Declaring the plain 2020-12 meta-schema (`https://json-schema.org/draft/2020-12/schema`) remains valid for tools that only understand standard JSON Schema.
