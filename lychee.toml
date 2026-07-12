@@ -1,0 +1,25 @@
+# Configuration for the CI link checker (see .github/workflows/linkcheck.yml).
+# Every [](url) link in the Markdown sources must resolve with a good status.
+
+# Retry transient failures a few times before reporting a link as broken.
+max_retries = 3
+retry_wait_time = 2
+
+# A real browser-ish user agent; some hosts reject the default checker agent.
+user_agent = "Mozilla/5.0 (compatible; oold-schema-linkcheck/1.0; +https://github.com/OO-LD/oold-schema)"
+
+# Same-page heading anchors use the `{#id}` attribute syntax, which is not
+# standard Markdown, so do not verify URL fragments (the rendered spec's
+# cross-references are checked separately by scripts/check_spec.py).
+include_fragments = false
+
+# Placeholder / non-resolvable hosts used inside examples.
+exclude = [
+  '^https?://(www\.)?example\.(org|com)(/|$)',
+  '^https?://localhost',
+  '^https?://127\.0\.0\.1',
+]
+
+# 403/429 mean the target exists but rate-limits or blocks automated agents;
+# treat them as reachable so the check flags only genuinely missing links (404 etc.).
+accept = ["200..=299", "403", "429"]
