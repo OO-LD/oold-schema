@@ -864,7 +864,7 @@ OO-LD adds structural validation (required fields, cardinalities) and a machine-
 | unit / format / encoding overlay | `format`, `x-oold-ui-*` |
 | attribute mapping overlay | `@context` term IRI |
 
-OCA reaches semantics only through an attribute-mapping overlay; OO-LD carries the IRIs natively in `@context`. Where OCA distributes overlays as separate SAID-addressed objects, OO-LD's own [overlay delivery](extensions.md) (OpenAPI Overlay actions for `x-oold-ui-*`) provides the same "patch a schema without editing it" pattern when needed.
+OCA reaches semantics only through an attribute-mapping overlay; OO-LD carries the IRIs natively in `@context`. Where OCA distributes overlays as separate SAID-addressed objects, OO-LD's own [overlay delivery](guide/extensions.md) (OpenAPI Overlay actions for `x-oold-ui-*`) provides the same "patch a schema without editing it" pattern when needed.
 
 ## jargon.sh
 
