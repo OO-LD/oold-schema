@@ -45,7 +45,7 @@ _:b0 <schema:name> "test" .
 ```
 :::
 
-The notation can also drive data transformation and normalization. For example, a dataset in which persons and organizations report their relations in a syntactically non-interoperable way can be normalized into a consistent unified dataset (see [OO-LD/schema#11](https://github.com/OO-LD/schema/issues/11)).
+The notation can also drive data transformation and normalization. For example, a dataset in which persons and organizations report their relations in a syntactically non-interoperable way can be normalized into a consistent unified dataset (see [OO-LD/oold-schema#11](https://github.com/OO-LD/oold-schema/issues/11)).
 
 :::example{title="Normalizing a syntactically non-interoperable dataset"}
 Input - the same relation is reported in three different ways (`works_for`, a distinct `works_for*`, and a backward `employees`):

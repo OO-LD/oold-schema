@@ -17,6 +17,9 @@ exclude = [
   '^https?://(www\.)?example\.(org|com)(/|$)',
   '^https?://localhost',
   '^https?://127\.0\.0\.1',
+  # Transient OpenSemanticLab demo/query API endpoints that appear as example
+  # data (e.g. in the generated legacy keyword inventory), not documentation links.
+  'open-semantic-lab\.org/api/',
 ]
 
 # 403/429 mean the target exists but rate-limits or blocks automated agents;
