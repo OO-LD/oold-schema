@@ -291,7 +291,7 @@ A range subschema MAY also carry additional annotations (e.g. `title`, `descript
 
 ##### Generation targets {#range-generation-targets .informative}
 
-`x-oold-range` (and the reverse properties below) exist so that the logical and conceptual modelling layers can be generated from the same OO-LD source instead of being maintained separately: a range constrains the type of a referenced object, which an OO-LD-aware tool emits as a [SHACL](https://www.w3.org/TR/shacl/) property shape (`sh:class` / `sh:node`) and as an OWL property restriction. [SHACL 1.2](https://www.w3.org/TR/shacl12-core/) (in progress, including Node Expressions for derived values) and OWL are the intended targets; the crosswalk is tracked in [oold-schema#76](https://github.com/OO-LD/oold-schema/issues/76). These are generation targets, not additional validation performed by generic JSON Schema tools.
+`x-oold-range` (and the reverse properties below) exist so that the logical and conceptual modelling layers can be generated from the same OO-LD source instead of being maintained separately: a range constrains the type of a referenced object, which an OO-LD-aware tool emits as a [SHACL](https://www.w3.org/TR/shacl/) property shape (`sh:class` / `sh:node`) and as an OWL property restriction. [SHACL 1.2](https://www.w3.org/TR/shacl12-core/) (in progress, including Node Expressions for derived values) and OWL are the intended targets. These are generation targets, not additional validation performed by generic JSON Schema tools.
 
 #### Reverse properties {#reverse-properties}
 
