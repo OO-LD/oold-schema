@@ -38,7 +38,7 @@ The site covers the concepts and specification in an orientation-style guide wit
 - [Guide](https://OO-LD.github.io/oold-schema/guide/) - basic concepts, composition, schema instances, identification & versioning, extensions, and the meta-schema.
 - [Use Cases](https://OO-LD.github.io/oold-schema/use-cases/), [Mappings](https://OO-LD.github.io/oold-schema/mappings/), [Tooling](https://OO-LD.github.io/oold-schema/tooling/), and [Reference](https://OO-LD.github.io/oold-schema/reference/).
 
-The normative, W3C-style **[Specification](https://OO-LD.github.io/oold-schema/spec/)** (rendered with [ReSpec](https://respec.org/)) accompanies the guide: the guide is for learning, the specification is for conformance and citation.
+The normative, W3C-style **[Specification](https://oo-ld.github.io/oold-schema/latest/spec/)** (rendered with [ReSpec](https://respec.org/)) accompanies the guide: the guide is for learning, the specification is for conformance and citation.
 
 ## Repository contents
 
