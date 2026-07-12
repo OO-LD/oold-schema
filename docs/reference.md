@@ -12,6 +12,26 @@ This page collects informative reference material - the package registry, discus
 
 ## Related Work
 
+### Approaches to unifying structure and semantics
+
+Keeping structure, semantics, shapes, docs and code in sync is a shared goal of many "polyglot" or "single-source" frameworks. They differ mainly on **where the single source of truth lives** and **whether a build step is required**. OO-LD's distinguishing choice is that the artefact *is* the source: one document is at the same time a valid JSON Schema and a referenceable JSON-LD remote context, with no separate modelling language and no compilation.
+
+| Approach | Paradigm | Single source of truth | Build step | RDF / JSON-LD | Domain / adoption |
+| --- | --- | --- | --- | --- | --- |
+| **OO-LD** | Artefact *is* the source | JSON Schema + `@context` in one document | none (optional delivery transforms) | yes (schema is a remote context; instances are JSON-LD) | scientific data / OpenSemanticLab |
+| [LinkML](https://linkml.io/) | Compile from metamodel | bespoke YAML metamodel | yes | generated context / RDF | biomedical; large, very active |
+| [SPDX 3.0](https://spdx.github.io/spdx-spec/) | Compile from model | constrained-Markdown model | yes | generated OWL + SHACL + JSON-LD context | SBOM / supply chain; ISO/OMG scale |
+| [jargon.sh](https://jargon.sh/) | Compile from hosted model (SaaS) | web-hosted domain model | yes | generated context + RDF ontology | UNECE / UNTP Digital Product Passport |
+| [TreeLDR](https://www.spruceid.dev/treeldr/treeldr-overview) | Compile from typed DSL | TreeLDR DSL (RDF intermediate) | yes | generated contexts / RDF | Verifiable Credentials / DIDs |
+| [yml2vocab](https://w3c.github.io/yml2vocab/) | Vocabulary publishing | YAML term list | yes | RDFS vocab + JSON-LD context + HTML | W3C Verifiable Credentials vocabularies |
+| [Croissant](https://github.com/mlcommons/croissant) | Fixed JSON-LD vocabulary | JSON-LD on `schema.org/Dataset` | none | yes (JSON-LD) | ML datasets; NeurIPS, HuggingFace, Kaggle, Google |
+| [OCA](https://oca.colossi.network/specification/) | Overlays on a capture base | capture base + SAID-addressed overlays | bundle assembly | no (bridges via mapping overlay only) | Verifiable Credentials, DPP, privacy |
+| [Semantic Treehouse](https://www.semantic-treehouse.nl/) | Hub / registry | hosted OWL / SHACL / JSON Schema | n/a | yes | dataspaces vocabulary hub (TNO) |
+| [REST-API-LD](https://datatracker.ietf.org/doc/html/draft-polli-restapi-ld-keywords-08) | Annotate JSON Schema in place | JSON Schema / OpenAPI + `x-jsonld-*` | none | yes (context via extension keywords) | eGovernment APIs (Italy); IETF I-D |
+| [WoT JSON Schema in RDF](https://www.w3.org/2019/wot/json-schema) | Annotate JSON Schema in place | JSON Schema + instance-context | none | yes | W3C Web of Things; standards precedent |
+
+Reading: the dominant paradigm is *compile-from-a-source-language* (LinkML, SPDX 3.0, jargon.sh, TreeLDR, yml2vocab), which accepts a bespoke source plus a build step and must then keep generated artefacts in sync. Only REST-API-LD and WoT JSON-Schema-in-RDF share OO-LD's "annotate in place, no new language" property; REST-API-LD is the closest neighbour and is on a standards track. OCA is the opposite philosophy (decentralized overlays, not RDF-native), Semantic Treehouse is a hub rather than a language, and Croissant is a single-domain JSON-LD vocabulary with outsized adoption. The related layers OO-LD generates to - [SHACL](https://www.w3.org/TR/shacl12-core/) (logical) and OWL (conceptual) - are targets rather than competitors. Worked mappings from several of these formats to OO-LD are in [Mappings](mappings.md).
+
 ### Schema Overview
 
 | Name                                                                                                     | Description                                                                                                                                                                                                                                                                                                                                               |
@@ -35,6 +55,13 @@ This page collects informative reference material - the package registry, discus
 | [TheWorldAvatar/ObjectGraphMapper](https://github.com/cambridge-cares/TheWorldAvatar/tree/main/core/ogm) | Class-RDF Mapping in Java via decorators                                                                                                                                                                                                                                                                                                                  |
 | [Cross-Domain Interoperability Framework (CDIF)](https://zenodo.org/records/11236871)                    | CDIF is a set of implementation recommendations, based on profiles of common, domain-neutral metadata standards which are aligned to work together to support core functions required by FAIR.                                                                                                                                                            |
 | [DDI-CDI](https://ddialliance.org/Specification/DDI-CDI/1.0/)               | Cross domain meta data model between domain specific specifications and high - level specifications such as DCAT and Datacite                                                                                                                                                                                                                             |
+| [SPDX 3.0](https://spdx.github.io/spdx-spec/) | Model-driven SBOM / supply-chain standard. A single model generates an OWL ontology with SHACL shapes, a JSON-LD context and a JSON Schema; documents are validated both structurally (JSON Schema) and semantically (SHACL). Same polyglot thesis as OO-LD, but compiled from a bespoke model. |
+| [Croissant](https://github.com/mlcommons/croissant) | MLCommons JSON-LD vocabulary for ML datasets, built on `schema.org/Dataset`. Heavy adoption (NeurIPS dataset tracks, HuggingFace, Kaggle, Google Dataset Search) and an MCP integration. Narrow domain, JSON-LD-native. |
+| [OCA (Overlays Capture Architecture)](https://oca.colossi.network/specification/) | Decentralized semantics: a minimal capture base plus stackable, content-addressed (SAID) overlays (labels, formats, units, mappings, ...). Own serialization, not RDF/JSON-LD/JSON Schema-native; the opposite philosophy to a single unified document. |
+| [jargon.sh](https://jargon.sh/) | Web platform (SaaS) that compiles a hosted domain model into JSON Schema, a JSON-LD context, an RDF ontology and OpenAPI. Used by UNECE / UN Transparency Protocol (UNTP) for Digital Product Passports. |
+| [yml2vocab](https://w3c.github.io/yml2vocab/) | W3C tool that generates an RDFS vocabulary, a JSON-LD context and ReSpec/Bikeshed HTML from a simple YAML term list. Vocabulary-publishing, not a data-schema framework; used widely by the Verifiable Credentials community. |
+| [Semantic Treehouse](https://www.semantic-treehouse.nl/) | TNO vocabulary-hub platform for dataspaces. Hosts and collaboratively maintains vocabularies (OWL, SHACL and, more recently, JSON Schema) rather than defining a serialization; a registry counterpart to OO-LD schemas. |
+| [WoT JSON Schema in RDF](https://www.w3.org/2019/wot/json-schema) | W3C note expressing JSON Schema as RDF and attaching a JSON-LD context to instances via `jsonld:context`. The closest standards precedent for annotating JSON Schema in place. |
 
 ### Data Overview
 
