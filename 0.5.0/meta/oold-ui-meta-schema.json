@@ -1,0 +1,93 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://oo-ld.github.io/oold-schema/0.5.0/meta/oold-ui-meta-schema.json",
+  "$dynamicAnchor": "meta",
+  "title": "OO-LD UI dialect meta-schema",
+  "$comment": "The $id uses the versioned hosting at oo-ld.github.io/oold-schema/ (the source keeps the /latest/ placeholder; each released copy is stamped per release). The oold-ui vocabulary is declared optional (false) so that generic JSON-Schema 2020-12 validators still process the schema. The x-oold-ui-* keyword definitions live in $defs.keywords (plain anchor #keywords) so the main OO-LD meta-schema can include just them, without re-introducing the 2020-12 reference or a second dynamic anchor. Each keyword carries a description and an example so the vocabulary can be rendered into documentation. As with the core dialect, this meta-schema only validates that the keywords are well-formed; the behaviour is supplied by OO-LD-aware form generators (for example jedison).",
+  "$vocabulary": {
+    "https://json-schema.org/draft/2020-12/vocab/core": true,
+    "https://json-schema.org/draft/2020-12/vocab/applicator": true,
+    "https://json-schema.org/draft/2020-12/vocab/unevaluated": true,
+    "https://json-schema.org/draft/2020-12/vocab/validation": true,
+    "https://json-schema.org/draft/2020-12/vocab/meta-data": true,
+    "https://json-schema.org/draft/2020-12/vocab/format-annotation": true,
+    "https://json-schema.org/draft/2020-12/vocab/content": true,
+    "https://oo-ld.github.io/oold-schema/0.5.0/vocab/oold-ui": false
+  },
+  "allOf": [
+    { "$ref": "https://json-schema.org/draft/2020-12/schema" },
+    { "$ref": "#keywords" }
+  ],
+  "$defs": {
+    "keywords": {
+      "$anchor": "keywords",
+      "properties": {
+        "x-oold-ui-widget": {
+          "description": "Widget hint for a value whose intended widget is not a registered JSON Schema format (for example table, tabs, grid, autocomplete, textarea, checkbox, markdown, color). Registered formats (date, uri, uuid, ...) stay in `format`. Maps to jedison `x-format`.",
+          "type": "string",
+          "examples": ["table", "autocomplete", "markdown"]
+        },
+        "x-oold-ui-property-order": {
+          "description": "Display order of this property within its object or group; lower sorts first. Maps to jedison `x-categoryOrder`.",
+          "type": "integer",
+          "examples": [1]
+        },
+        "x-oold-ui-property-group": {
+          "description": "Name of the group, tab or category this property belongs to. Maps to jedison `x-category` / `x-propGroup`.",
+          "type": "string",
+          "examples": ["General", "Contact"]
+        },
+        "x-oold-ui-form-hidden": {
+          "description": "Hide this property in the editing form. Maps to jedison `x-hidden`.",
+          "type": "boolean",
+          "examples": [true]
+        },
+        "x-oold-ui-render-hidden": {
+          "description": "Hide this property in the rendered (read) view.",
+          "type": "boolean",
+          "examples": [true]
+        },
+        "x-oold-ui-enum-titles": {
+          "description": "Human display labels for the default language, aligned positionally with `enum`: the Nth label is the title of the Nth enum value. For `enum: [\"pi\", \"postdoc\", \"phd\"]` the value `[\"Principal investigator\", \"Postdoc\", \"PhD student\"]` labels each option. Localize with `x-oold-multilang-ui-enum-titles`. Distinct from the identifier-safe code names in `x-enum-varnames`. Maps to jedison `x-enumTitles`.",
+          "type": "array",
+          "items": { "type": "string" },
+          "examples": [["Principal investigator", "Postdoc", "PhD student"]]
+        },
+        "x-oold-multilang-ui-enum-titles": {
+          "description": "BCP-47 language map of `x-oold-ui-enum-titles` arrays (mirrors `x-oold-multilang-title`); each array aligns positionally with `enum`. For `enum: [\"pi\", \"postdoc\", \"phd\"]`: {\"en\": [\"Principal investigator\", \"Postdoc\", \"PhD student\"], \"de\": [\"Projektleitung\", \"Postdoc\", \"Doktorand\"]}.",
+          "type": "object",
+          "additionalProperties": { "type": "array", "items": { "type": "string" } },
+          "examples": [{ "en": ["Principal investigator", "Postdoc", "PhD student"], "de": ["Projektleitung", "Postdoc", "Doktorand"] }]
+        },
+        "x-oold-ui-hint": {
+          "description": "Short help text shown with the field, in the default language. Localize with `x-oold-multilang-ui-hint`. Maps to jedison `x-info`.",
+          "type": "string",
+          "examples": ["Full name"]
+        },
+        "x-oold-multilang-ui-hint": {
+          "description": "BCP-47 language map of the `x-oold-ui-hint` text (mirrors `x-oold-multilang-title`).",
+          "type": "object",
+          "additionalProperties": { "type": "string" },
+          "examples": [{ "en": "Full name", "de": "Vollständiger Name" }]
+        },
+        "x-oold-ui-default-property": {
+          "description": "Whether this optional property is shown by default in generated user interfaces. Replaces the object-level `defaultProperties` array: a per-property boolean is overridable under composition (most-derived-wins), so a derived schema can set it false, whereas the merged array form was extend-only.",
+          "type": "boolean",
+          "examples": [true]
+        },
+        "x-enum-varnames": {
+          "description": "Identifier-safe code names aligned positionally with `enum`, for code generation. For `enum: [\"m\", \"s\"]` the value `[\"metre\", \"second\"]` names each option (so a generator can emit `Unit.metre` instead of `Unit.m`). An established vendor extension (OpenAPI Generator; NSwag uses the camelCase `x-enumNames`). Kept as-is; distinct from the human labels in `x-oold-ui-enum-titles`.",
+          "type": "array",
+          "items": { "type": "string" },
+          "examples": [["metre", "second"]]
+        },
+        "x-enum-descriptions": {
+          "description": "Per-value descriptions aligned positionally with `enum`, the established companion of `x-enum-varnames`. For `enum: [\"m\", \"s\"]`: `[\"SI base unit of length\", \"SI base unit of time\"]`.",
+          "type": "array",
+          "items": { "type": "string" },
+          "examples": [["SI base unit of length", "SI base unit of time"]]
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,57 @@
+{
+  "$schema": "https://oo-ld.github.io/oold-schema/0.5.0/meta/oold-meta-schema.json",
+  "$id": "UiAnnotations.schema.json",
+  "@context": [
+    {
+      "@version": 1.1,
+      "schema": "https://schema.org/",
+      "name": "schema:name",
+      "role": "schema:jobTitle",
+      "homepage": { "@id": "schema:url", "@type": "@id" }
+    }
+  ],
+  "x-oold-uuid": "b1e7a0c2-2d4f-4a1e-9c3a-7f0e5d2b6a11",
+  "title": "Researcher",
+  "x-oold-multilang-title": { "en": "Researcher", "de": "Forschende Person" },
+  "x-oold-iri": "schema:Person",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "title": "Name",
+      "x-oold-ui-default-property": true,
+      "x-oold-ui-property-order": 1,
+      "x-oold-ui-property-group": "General",
+      "x-oold-ui-hint": "Full name",
+      "x-oold-multilang-ui-hint": { "en": "Full name", "de": "Vollständiger Name" }
+    },
+    "role": {
+      "type": "string",
+      "title": "Role",
+      "enum": ["pi", "postdoc", "phd"],
+      "x-enum-varnames": ["PrincipalInvestigator", "PostDoc", "PhDStudent"],
+      "x-enum-descriptions": ["Leads the project", "Holds a doctorate", "Doctoral candidate"],
+      "x-oold-ui-enum-titles": ["Principal investigator", "Postdoc", "PhD student"],
+      "x-oold-multilang-ui-enum-titles": { "en": ["Principal investigator", "Postdoc", "PhD student"], "de": ["Projektleitung", "Postdoc", "Doktorand"] },
+      "x-oold-ui-property-order": 2,
+      "x-oold-ui-property-group": "General"
+    },
+    "homepage": {
+      "type": "string",
+      "title": "Homepage",
+      "format": "uri",
+      "x-oold-ui-property-group": "Contact"
+    },
+    "notes": {
+      "type": "string",
+      "title": "Notes",
+      "x-oold-ui-widget": "markdown",
+      "x-oold-ui-property-group": "Contact"
+    },
+    "internal_id": {
+      "type": "string",
+      "title": "Internal id",
+      "x-oold-ui-form-hidden": true
+    }
+  }
+}
