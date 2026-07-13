@@ -553,7 +553,7 @@ _:b0 &lt;schema:name&gt; &quot;test&quot; .
 }
 </code></pre></aside>
 <p>To promote to <code>@context</code>, an OO-LD preprocessor picks the prioritized synonym (by namespace), then <code>{ &quot;@id&quot;: &lt;key&gt;, ...value without x-sssom }</code> becomes the term's definition in the real <code>@context</code>; the <code>x-sssom</code> blocks are dropped, so standard JSON-LD tools then run on a clean context.</p></section><section id="framing"><h4>Framing</h4><p><a href="https://www.w3.org/TR/json-ld11-framing/">JSON-LD 1.1 Framing</a> reshapes a flat or arbitrarily-structured RDF graph into a specific tree layout described by a <em>frame</em>. An OO-LD schema already describes exactly such a tree - its <code>properties</code> give the nesting, its <code>@context</code> gives the term IRIs, a type constant (<code>x-oold-instance-rdf-type</code>, or a <code>const</code> on the <code>type</code> property) gives the node type, and <a href="#range-of-properties"><code>x-oold-range</code></a> gives the type of embedded or referenced objects - so an OO-LD-aware tool <em class="rfc2119">MAY</em> auto-construct a frame from the schema. Framing an instance graph with that frame produces a JSON document shaped like the schema, which then validates against the same schema.</p>
-<p>This makes an OO-LD schema bidirectional: its <code>@context</code> drives expansion (JSON to RDF), and the frame derived from its structure drives framing (RDF back to the schema's JSON tree). The derivation is mechanical: the schema's class type becomes the frame <code>@type</code>; an inlined object property becomes a nested subframe that embeds the referenced node; a reference-valued or <a href="#reverse-properties">reverse</a> property becomes a subframe with <code>@embed: @never</code> so its targets stay IRIs, in line with the inline-versus-reference choice <code>x-oold-range</code> already records; and <code>@explicit</code> / <code>@requireAll</code> / <code>@default</code> follow from <code>additionalProperties</code> and <code>required</code>. The frame's <code>@context</code> is the composition of the referenced schemas' contexts.</p>
+<p>This makes an OO-LD schema bidirectional: its <code>@context</code> drives expansion (JSON to RDF), and the frame derived from its structure drives framing (RDF back to the schema's JSON tree). The derivation is mechanical: the schema's class type becomes the frame <code>@type</code>; an inlined object property becomes a nested subframe that embeds the referenced node; a reference-valued property (including one whose term is mapped with JSON-LD <code>@reverse</code>) becomes a subframe with <code>@embed: @never</code> so its targets stay IRIs, in line with the inline-versus-reference choice <code>x-oold-range</code> already records; and <code>@explicit</code> / <code>@requireAll</code> / <code>@default</code> follow from <code>additionalProperties</code> and <code>required</code>. The frame's <code>@context</code> is the composition of the referenced schemas' contexts.</p>
 <aside class="example" title="RDF to OO-LD schema to frame to instance"><p>An input RDF graph (Turtle) - an organization with an address, and two persons who work for it:</p>
 <pre><code class="language-turtle">@prefix schema: &lt;http://schema.org/&gt; .
 @prefix ex: &lt;https://example.org/&gt; .
@@ -563,7 +563,7 @@ ex:addr1 a schema:PostalAddress ; schema:postalCode &quot;10115&quot; .
 ex:p1    a schema:Person ; schema:worksFor ex:org1 .
 ex:p2    a schema:Person ; schema:worksFor ex:org1 .
 </code></pre>
-<p>The OO-LD schema for <code>Organization</code> - <code>address</code> is an inlined object, <code>employees</code> is the reverse of the persons' <code>schema:worksFor</code> (see <a href="#reverse-properties"></a>):</p>
+<p>The OO-LD schema for <code>Organization</code> - <code>address</code> is an inlined object, and <code>employees</code> is a regular property whose <code>@context</code> term is mapped with JSON-LD <code>@reverse</code> to the persons' <code>schema:worksFor</code>, so listing an employee here yields a <code>worksFor</code> triple on that person:</p>
 <pre><code class="language-json">{
   &quot;@context&quot;: {
     &quot;schema&quot;: &quot;http://schema.org/&quot;,
@@ -575,9 +575,7 @@ ex:p2    a schema:Person ; schema:worksFor ex:org1 .
   &quot;x-oold-instance-rdf-type&quot;: [&quot;schema:Organization&quot;],
   &quot;type&quot;: &quot;object&quot;,
   &quot;properties&quot;: {
-    &quot;address&quot;: { &quot;type&quot;: &quot;object&quot;, &quot;x-oold-range&quot;: &quot;Address.schema.json&quot; }
-  },
-  &quot;x-oold-reverse-properties&quot;: {
+    &quot;address&quot;: { &quot;type&quot;: &quot;object&quot;, &quot;x-oold-range&quot;: &quot;Address.schema.json&quot; },
     &quot;employees&quot;: {
       &quot;type&quot;: &quot;array&quot;,
       &quot;items&quot;: { &quot;type&quot;: &quot;string&quot;, &quot;format&quot;: &quot;iri&quot;, &quot;x-oold-range&quot;: &quot;Person.schema.json&quot; }
@@ -585,6 +583,15 @@ ex:p2    a schema:Person ; schema:worksFor ex:org1 .
   }
 }
 </code></pre>
+<p>referencing a minimal <code>Person</code> stub (only the type is needed here):</p>
+<pre><code class="language-json">{
+  &quot;@context&quot;: { &quot;schema&quot;: &quot;http://schema.org/&quot;, &quot;type&quot;: &quot;@type&quot; },
+  &quot;$id&quot;: &quot;Person.schema.json&quot;,
+  &quot;x-oold-instance-rdf-type&quot;: [&quot;schema:Person&quot;],
+  &quot;type&quot;: &quot;object&quot;
+}
+</code></pre>
+<p>(This uses <code>@reverse</code> on an ordinary property - a read projection. The editor-only <a href="#reverse-properties"><code>x-oold-reverse-properties</code></a> affordance is different: it lets a user edit <code>employees</code> from the <code>Organization</code> while the relation is stored on the <code>Person</code> objects.)</p>
 <p>The frame derived from that schema - embed the address, keep employees as IRIs:</p>
 <pre><code class="language-json">{
   &quot;@context&quot;: {

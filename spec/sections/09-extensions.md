@@ -157,7 +157,7 @@ To promote to `@context`, an OO-LD preprocessor picks the prioritized synonym (b
 
 [JSON-LD 1.1 Framing](https://www.w3.org/TR/json-ld11-framing/) reshapes a flat or arbitrarily-structured RDF graph into a specific tree layout described by a *frame*. An OO-LD schema already describes exactly such a tree - its `properties` give the nesting, its `@context` gives the term IRIs, a type constant (`x-oold-instance-rdf-type`, or a `const` on the `type` property) gives the node type, and [`x-oold-range`](#range-of-properties) gives the type of embedded or referenced objects - so an OO-LD-aware tool MAY auto-construct a frame from the schema. Framing an instance graph with that frame produces a JSON document shaped like the schema, which then validates against the same schema.
 
-This makes an OO-LD schema bidirectional: its `@context` drives expansion (JSON to RDF), and the frame derived from its structure drives framing (RDF back to the schema's JSON tree). The derivation is mechanical: the schema's class type becomes the frame `@type`; an inlined object property becomes a nested subframe that embeds the referenced node; a reference-valued or [reverse](#reverse-properties) property becomes a subframe with `@embed: @never` so its targets stay IRIs, in line with the inline-versus-reference choice `x-oold-range` already records; and `@explicit` / `@requireAll` / `@default` follow from `additionalProperties` and `required`. The frame's `@context` is the composition of the referenced schemas' contexts.
+This makes an OO-LD schema bidirectional: its `@context` drives expansion (JSON to RDF), and the frame derived from its structure drives framing (RDF back to the schema's JSON tree). The derivation is mechanical: the schema's class type becomes the frame `@type`; an inlined object property becomes a nested subframe that embeds the referenced node; a reference-valued property (including one whose term is mapped with JSON-LD `@reverse`) becomes a subframe with `@embed: @never` so its targets stay IRIs, in line with the inline-versus-reference choice `x-oold-range` already records; and `@explicit` / `@requireAll` / `@default` follow from `additionalProperties` and `required`. The frame's `@context` is the composition of the referenced schemas' contexts.
 
 :::example{title="RDF to OO-LD schema to frame to instance"}
 An input RDF graph (Turtle) - an organization with an address, and two persons who work for it:
@@ -171,7 +171,7 @@ ex:p1    a schema:Person ; schema:worksFor ex:org1 .
 ex:p2    a schema:Person ; schema:worksFor ex:org1 .
 ```
 
-The OO-LD schema for `Organization` - `address` is an inlined object, `employees` is the reverse of the persons' `schema:worksFor` (see [](#reverse-properties)):
+The OO-LD schema for `Organization` - `address` is an inlined object, and `employees` is a regular property whose `@context` term is mapped with JSON-LD `@reverse` to the persons' `schema:worksFor`, so listing an employee here yields a `worksFor` triple on that person:
 ```json
 {
   "@context": {
@@ -184,9 +184,7 @@ The OO-LD schema for `Organization` - `address` is an inlined object, `employees
   "x-oold-instance-rdf-type": ["schema:Organization"],
   "type": "object",
   "properties": {
-    "address": { "type": "object", "x-oold-range": "Address.schema.json" }
-  },
-  "x-oold-reverse-properties": {
+    "address": { "type": "object", "x-oold-range": "Address.schema.json" },
     "employees": {
       "type": "array",
       "items": { "type": "string", "format": "iri", "x-oold-range": "Person.schema.json" }
@@ -194,6 +192,18 @@ The OO-LD schema for `Organization` - `address` is an inlined object, `employees
   }
 }
 ```
+
+referencing a minimal `Person` stub (only the type is needed here):
+```json
+{
+  "@context": { "schema": "http://schema.org/", "type": "@type" },
+  "$id": "Person.schema.json",
+  "x-oold-instance-rdf-type": ["schema:Person"],
+  "type": "object"
+}
+```
+
+(This uses `@reverse` on an ordinary property - a read projection. The editor-only [`x-oold-reverse-properties`](#reverse-properties) affordance is different: it lets a user edit `employees` from the `Organization` while the relation is stored on the `Person` objects.)
 
 The frame derived from that schema - embed the address, keep employees as IRIs:
 ```json
