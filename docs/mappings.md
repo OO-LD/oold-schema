@@ -648,3 +648,327 @@ skills:
   - violin
   - boxind
 ```
+
+## REST API Linked Data (x-jsonld-*)
+
+[REST API Linked Data Keywords](https://datatracker.ietf.org/doc/html/draft-polli-restapi-ld-keywords-08) attaches a JSON-LD context to each JSON Schema / OpenAPI Schema Object via `x-jsonld-context` and `x-jsonld-type`, so that JSON-LD lives inside a document that OpenAPI 3.0 accepts (OpenAPI 3.0 rejects a top-level `@context`). This is the same "annotate JSON Schema in place" idea as OO-LD, delivered per class instead of per document. The mapping to and from OO-LD is mechanical and reversible; the forward direction (OO-LD to an OpenAPI 3.0 bundle) is shown in [Use Cases -> Delivery to OpenAPI, MCP and LLM tooling](use-cases.md). The reverse direction ingests a REST-API-LD Schema Object into an OO-LD schema:
+
+### REST-API-LD (OpenAPI 3.0)
+
+```json
+{
+  "components": {
+    "schemas": {
+      "Person": {
+        "x-jsonld-context": { "schema": "http://schema.org/", "name": "schema:name" },
+        "x-jsonld-type": ["schema:Person"],
+        "type": "object",
+        "properties": { "name": { "type": "string" } },
+        "required": ["name"]
+      }
+    }
+  }
+}
+```
+
+### OO-LD Schema
+
+```json
+{
+  "@context": { "schema": "http://schema.org/", "name": "schema:name" },
+  "$id": "Person.schema.json",
+  "x-oold-instance-rdf-type": ["schema:Person"],
+  "title": "Person",
+  "type": "object",
+  "properties": { "name": { "type": "string" } },
+  "required": ["name"]
+}
+```
+
+`x-jsonld-context` maps to the top-level `@context` and `x-jsonld-type` to `x-oold-instance-rdf-type`. Both forms produce the same triples; a bundle of several classes becomes one OO-LD schema package with cross-schema `$ref`s.
+
+## WoT JSON Schema in RDF
+
+The W3C Web of Things note [JSON Schema in RDF](https://www.w3.org/2019/wot/json-schema) attaches a JSON-LD context to a schema's instances with the `jsonld:context` property, keeping the JSON Schema keywords and the instance context in one document - the closest standards precedent for OO-LD.
+
+### WoT
+
+```json
+{
+  "@context": { "jsonld": "http://www.w3.org/ns/json-ld#" },
+  "jsonld:context": "http://schema.org",
+  "type": "object",
+  "description": "Schema of a commercial product with GTIN and manufacturer",
+  "properties": {
+    "gtin14": { "type": "string" },
+    "manufacturer": { "type": "string" }
+  }
+}
+```
+
+### OO-LD Schema
+
+```json
+{
+  "@context": "http://schema.org",
+  "title": "Product",
+  "description": "Schema of a commercial product with GTIN and manufacturer",
+  "type": "object",
+  "properties": {
+    "gtin14": { "type": "string" },
+    "manufacturer": { "type": "string" }
+  }
+}
+```
+
+The `jsonld:context` value becomes OO-LD's top-level `@context` (here a remote context URL). OO-LD does not wrap the context under a `jsonld:` term, so the schema document is itself directly consumable as a JSON-LD remote context.
+
+## SPDX 3.0
+
+[SPDX 3.0](https://spdx.github.io/spdx-spec/) is model-driven. Its primary notation is not JSON-LD but a **constrained-Markdown model** (one file per class/property in the [`spdx-3-model`](https://github.com/spdx/spdx-3-model) repository); a `spec-parser` then generates the OWL ontology with SHACL shapes, the JSON-LD context, and the JSON Schema. A document is validated both structurally (JSON Schema) and semantically (SHACL). OO-LD reaches the same dual validation from a single artefact - the OO-LD schema *is* the JSON Schema, and its `@context` yields the RDF that SHACL checks - without maintaining a separate generated schema and context.
+
+### SPDX model (constrained Markdown, class `Package`, abbreviated)
+
+```markdown
+# Package
+
+## Metadata
+
+- name: Package
+- SubclassOf: /Software/SoftwareArtifact
+
+## Properties
+
+- packageVersion
+  - type: xsd:string
+  - minCount: 0
+  - maxCount: 1
+- downloadLocation
+  - type: xsd:anyURI
+  - minCount: 0
+  - maxCount: 1
+```
+
+### OO-LD Schema (the same class, single artefact)
+
+```json
+{
+  "@context": "https://spdx.org/rdf/3.0.1/spdx-context.jsonld",
+  "$id": "Package.schema.json",
+  "title": "Package",
+  "allOf": [{ "$ref": "SoftwareArtifact.schema.json" }],
+  "properties": {
+    "type": { "const": "software_Package" },
+    "packageVersion": { "type": "string" },
+    "downloadLocation": { "type": "string", "format": "uri" }
+  }
+}
+```
+
+| SPDX model construct | OO-LD |
+| --- | --- |
+| `# Name` / `name:` metadata | `title` plus the node `type` constant (IRI supplied by `@context`) |
+| `SubclassOf: X` | `allOf: [{ "$ref": "X.schema.json" }]`, context inherited |
+| property `type: xsd:*` | property `type` (with `@type` datatype coercion in `@context`) |
+| `minCount: 1` | property listed in `required` |
+| `maxCount: 1` (vs unbounded) | single value (otherwise `type: array`) |
+| property name / path | a term IRI in `@context` |
+
+The OO-LD schema reuses the SPDX-published JSON-LD context (a remote context), so the property names resolve to the same IRIs and datatypes SPDX defines and an instance validated against this schema expands to SPDX RDF. The difference is authoring: SPDX keeps the model, the JSON Schema and the context as three generated artefacts kept in sync by tooling; OO-LD keeps the one document.
+
+## Croissant (MLCommons)
+
+[Croissant](https://github.com/mlcommons/croissant) describes ML datasets as JSON-LD built on `schema.org/Dataset` plus the `cr:` vocabulary. Unlike SPDX or LinkML there is no separate model notation to compile: a Croissant document is authored directly as JSON-LD, so its primary notation is the instance-shaped document below. Because it is already JSON-LD, an OO-LD schema over the same terms adds structural validation while preserving the semantics.
+
+### Croissant (JSON-LD, authored directly)
+
+```json
+{
+  "@context": { "@vocab": "https://schema.org/", "cr": "http://mlcommons.org/croissant/" },
+  "@type": "sc:Dataset",
+  "name": "simple-pass",
+  "recordSet": [
+    {
+      "@type": "cr:RecordSet",
+      "@id": "images",
+      "field": [
+        { "@type": "cr:Field", "@id": "images/image_content", "dataType": "sc:ImageObject" }
+      ]
+    }
+  ]
+}
+```
+
+### OO-LD Schema
+
+```json
+{
+  "@context": { "sc": "https://schema.org/", "cr": "http://mlcommons.org/croissant/", "type": "@type" },
+  "$id": "Dataset.schema.json",
+  "title": "Dataset",
+  "type": "object",
+  "properties": {
+    "type": { "const": "sc:Dataset" },
+    "name": { "type": "string" },
+    "recordSet": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "type": { "const": "cr:RecordSet" },
+          "field": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "type": { "const": "cr:Field" },
+                "dataType": { "type": "string", "x-oold-range": "sc:ImageObject" }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+```
+
+OO-LD adds structural validation (required fields, cardinalities) and a machine-checkable `x-oold-range` on `dataType`, on top of Croissant's JSON-LD semantics.
+
+## Overlays Capture Architecture (OCA)
+
+[OCA](https://oca.colossi.network/specification/) takes the opposite approach to a single unified document: a minimal capture base carries attribute names and core data types, and separate, content-addressed (SAID) overlays add labels, formats, units, encodings and mappings. OO-LD folds those concerns into one schema; the overlay types have direct OO-LD counterparts.
+
+### OCA (capture base + label and conformance overlays, abbreviated)
+
+```json
+{
+  "capture_base": {
+    "type": "spec/capture_base/1.0",
+    "attributes": { "full_name": "Text", "date_of_birth": "DateTime" }
+  },
+  "overlays": {
+    "label": { "attribute_labels": { "full_name": "Full name", "date_of_birth": "Date of birth" } },
+    "conformance": { "attribute_conformance": { "full_name": "M", "date_of_birth": "O" } }
+  }
+}
+```
+
+### OO-LD Schemas (modular, mirroring the overlays)
+
+OO-LD composes with `$ref` plus a remote `@context` (see the guide's Composition section), so OCA's overlay structure maps directly onto **cross-referencing OO-LD schema modules**: a base capture schema carries the structure and core types, and each overlay becomes a small schema that references the base and contributes exactly one concern (labels, a localized label set, semantics, formats) - the same distributed-authorship pattern as OCA overlays.
+
+Base capture schema (structure and core types only):
+```json
+{
+  "$id": "Person.capture.schema.json",
+  "type": "object",
+  "properties": {
+    "full_name": { "type": "string" },
+    "date_of_birth": { "type": "string", "format": "date" }
+  },
+  "required": ["full_name"]
+}
+```
+
+Label overlay - references the base and sets only labels (a second, differently-labelled overlay is just another such module):
+```json
+{
+  "$id": "Person.label-en.schema.json",
+  "allOf": [{ "$ref": "Person.capture.schema.json" }],
+  "properties": {
+    "full_name": { "title": "Full name" },
+    "date_of_birth": { "title": "Date of birth" }
+  }
+}
+```
+
+Semantics overlay - references the base and adds only the `@context`:
+```json
+{
+  "$id": "Person.semantics.schema.json",
+  "@context": { "schema": "http://schema.org/", "full_name": "schema:name", "date_of_birth": "schema:birthDate" },
+  "allOf": [{ "$ref": "Person.capture.schema.json" }]
+}
+```
+
+The same concerns MAY also be consolidated into one OO-LD document when modularity is not needed; both forms are valid OO-LD.
+
+| OCA overlay | OO-LD |
+| --- | --- |
+| capture base attribute + data type | `properties.<name>` with `type` / `format` |
+| label overlay | `title` (and `x-oold-multilang-title` for languages) |
+| conformance overlay (M/O) | `required` |
+| unit / format / encoding overlay | `format`, `x-oold-ui-*` |
+| attribute mapping overlay | `@context` term IRI |
+| a whole overlay object | a schema module that `$ref`s the base and adds one concern |
+
+The key difference is identity and semantics: OCA addresses overlays by content hash (SAID) and reaches meaning only through a separate attribute-mapping overlay, whereas OO-LD modules are addressed by resolvable `$id` and carry the IRIs natively in `@context`. When patching a schema owned elsewhere rather than layering new modules, OO-LD's own [overlay delivery](guide/extensions.md) (OpenAPI Overlay actions for `x-oold-ui-*`) provides the "patch without editing" pattern.
+
+## TreeLDR
+
+[TreeLDR](https://www.spruceid.dev/treeldr/treeldr-overview) (SpruceID, used in the Verifiable Credentials / DID space) centres on **RDF layouts**. Its primary notation is a JSON layout document that maps a tree value to and from an RDF dataset (`dehydrate` = tree to RDF, `hydrate` = RDF to tree). A layout is a `record` of `fields`, each binding a tree field to an RDF `property` IRI and a value layout (its datatype):
+
+### TreeLDR layout (abbreviated)
+
+```json
+{
+  "id": "https://example.org/#RecordLayout",
+  "type": "record",
+  "prefixes": { "tldr": "https://treeldr.org/prelude#" },
+  "fields": {
+    "id":   { "value": { "layout": "tldr:id" } },
+    "name": { "value": "tldr:string", "property": "https://schema.org/name" }
+  }
+}
+```
+
+### OO-LD Schema
+
+```json
+{
+  "@context": { "schema": "https://schema.org/", "name": "schema:name", "id": "@id" },
+  "$id": "Record.schema.json",
+  "type": "object",
+  "properties": {
+    "id":   { "type": "string", "format": "iri" },
+    "name": { "type": "string" }
+  }
+}
+```
+
+A layout field's `property` becomes an `@context` term IRI, its value layout becomes the JSON Schema `type` (with `@type` coercion), and the field mapped to the node identity (`tldr:id`) becomes `@id`. TreeLDR's dehydrate/hydrate is exactly OO-LD's expansion (via `@context`) and framing (RDF back to the tree, see the guide) - so an OO-LD schema is a layout that additionally validates. TreeLDR also compiles to JSON Schema, JSON-LD contexts and SDKs; those artefacts recombine into an OO-LD schema as in the LinkML mapping above.
+
+## yml2vocab
+
+[yml2vocab](https://w3c.github.io/yml2vocab/) is a vocabulary-publishing tool (widely used by the W3C Verifiable Credentials community): from a short YAML term list it generates an RDFS vocabulary, a JSON-LD context and ReSpec HTML. It defines *terms*, not data schemas, so it is complementary to OO-LD: the context it produces is exactly what an OO-LD schema references in its `@context`.
+
+### yml2vocab (YAML term list, abbreviated)
+
+```yaml
+vocab:
+  - id: ex
+    value: https://example.org/vocab#
+class:
+  - id: Person
+property:
+  - id: name
+    domain: Person
+```
+
+### OO-LD Schema (consuming the generated vocabulary)
+
+```json
+{
+  "@context": ["https://example.org/vocab/context.jsonld", { "type": "@type" }],
+  "$id": "Person.schema.json",
+  "title": "Person",
+  "type": "object",
+  "properties": {
+    "type": { "const": "ex:Person" },
+    "name": { "type": "string" }
+  }
+}
+```
+
+The vocabulary and context that yml2vocab publishes for `ex:Person` / `ex:name` are referenced directly by the OO-LD schema, so the term definitions stay owned by the vocabulary while the OO-LD schema adds structure.

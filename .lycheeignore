@@ -10,6 +10,10 @@
 # data (e.g. in the generated legacy keyword inventory), not documentation links.
 open-semantic-lab\.org/api/
 
+# The WoT "JSON Schema in RDF" note exists but content-negotiates to HTTP 300
+# (Multiple Choices), which the checker rejects; the resource is reachable.
+^https://www\.w3\.org/2019/wot/json-schema$
+
 # The spec sections (spec/sections/*.md) are rendered into docs/spec/index.html
 # and served at /<version>/spec/, so their site-relative links (../meta/...,
 # ../migration/...) are written for the deployed layout, not the source tree.
