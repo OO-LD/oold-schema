@@ -242,6 +242,8 @@ Framing the graph with that frame yields an OO-LD instance document, projected o
 ```
 :::
 
+Framing is not the only option for this transformation. When the source data lives in a triplestore or behind a SPARQL endpoint, a [SPARQL](https://www.w3.org/TR/sparql11-query/) `CONSTRUCT` query - also derivable from the schema - can select and reshape the relevant subgraph directly, including deriving reverse relations such as `employees` from the inverse of `schema:worksFor`; compacting that result with the schema's `@context` (and framing it where nesting is required) yields the same OO-LD instance.
+
 ### JSON Schema {#jsonschema-extensions}
 
 OO-LD targets [[JSONSCHEMA]] (2020-12) as its normative dialect. An OO-LD schema SHOULD declare the OO-LD dialect meta-schema (which extends 2020-12) as its `$schema`, e.g. `"$schema": "https://oo-ld.github.io/oold-schema/latest/meta/oold-meta-schema.json"` - pinning a specific version (e.g. `.../0.4.0/meta/oold-meta-schema.json`) for reproducibility. Declaring the plain 2020-12 meta-schema (`https://json-schema.org/draft/2020-12/schema`) remains valid for tools that only understand standard JSON Schema.
