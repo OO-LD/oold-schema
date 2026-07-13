@@ -153,6 +153,95 @@ This satisfies what the `*` notation cannot:
 
 To promote to `@context`, an OO-LD preprocessor picks the prioritized synonym (by namespace), then `{ "@id": <key>, ...value without x-sssom }` becomes the term's definition in the real `@context`; the `x-sssom` blocks are dropped, so standard JSON-LD tools then run on a clean context.
 
+#### Framing {#framing}
+
+[JSON-LD 1.1 Framing](https://www.w3.org/TR/json-ld11-framing/) reshapes a flat or arbitrarily-structured RDF graph into a specific tree layout described by a *frame*. An OO-LD schema already describes exactly such a tree - its `properties` give the nesting, its `@context` gives the term IRIs, a type constant (`x-oold-instance-rdf-type`, or a `const` on the `type` property) gives the node type, and [`x-oold-range`](#range-of-properties) gives the type of embedded or referenced objects - so an OO-LD-aware tool MAY auto-construct a frame from the schema. Framing an instance graph with that frame produces a JSON document shaped like the schema, which then validates against the same schema.
+
+This makes an OO-LD schema bidirectional: its `@context` drives expansion (JSON to RDF), and the frame derived from its structure drives framing (RDF back to the schema's JSON tree). The derivation is mechanical: the schema's class type becomes the frame `@type`; an inlined object property becomes a nested subframe that embeds the referenced node; a reference-valued property (including one whose term is mapped with JSON-LD `@reverse`) becomes a subframe with `@embed: @never` so its targets stay IRIs, in line with the inline-versus-reference choice `x-oold-range` already records; and `@explicit` / `@requireAll` / `@default` follow from `additionalProperties` and `required`. The frame's `@context` is the composition of the referenced schemas' contexts.
+
+:::example{title="RDF to OO-LD schema to frame to instance"}
+An input RDF graph (Turtle) - an organization with an address, and two persons who work for it:
+```turtle
+@prefix schema: <http://schema.org/> .
+@prefix ex: <https://example.org/> .
+
+ex:org1  a schema:Organization ; schema:address ex:addr1 .
+ex:addr1 a schema:PostalAddress ; schema:postalCode "10115" .
+ex:p1    a schema:Person ; schema:worksFor ex:org1 .
+ex:p2    a schema:Person ; schema:worksFor ex:org1 .
+```
+
+The OO-LD schema for `Organization` - `address` is an inlined object (`$ref`, reflected as a scoped `@context`), and `employees` is a regular property whose `@context` term is mapped with JSON-LD `@reverse` to the persons' `schema:worksFor`, so listing an employee here yields a `worksFor` triple on that person:
+```json
+{
+  "@context": {
+    "schema": "http://schema.org/",
+    "type": "@type",
+    "id": "@id",
+    "address": { "@id": "schema:address", "@context": "Address.schema.json" },
+    "employees": { "@reverse": "schema:worksFor", "@type": "@id" }
+  },
+  "$id": "Organization.schema.json",
+  "x-oold-instance-rdf-type": ["schema:Organization"],
+  "type": "object",
+  "properties": {
+    "address": { "$ref": "Address.schema.json" },
+    "employees": {
+      "type": "array",
+      "items": { "type": "string", "format": "iri", "x-oold-range": "Person.schema.json" }
+    }
+  }
+}
+```
+
+referencing minimal `Address` and `Person` stubs:
+```json
+{
+  "@context": { "schema": "http://schema.org/", "type": "@type", "id": "@id", "postalCode": "schema:postalCode" },
+  "$id": "Address.schema.json",
+  "x-oold-instance-rdf-type": ["schema:PostalAddress"],
+  "type": "object",
+  "properties": { "postalCode": { "type": "string" } }
+}
+```
+```json
+{
+  "@context": { "schema": "http://schema.org/", "type": "@type" },
+  "$id": "Person.schema.json",
+  "x-oold-instance-rdf-type": ["schema:Person"],
+  "type": "object"
+}
+```
+
+(This uses `@reverse` on an ordinary property - a read projection. The editor-only [`x-oold-reverse-properties`](#reverse-properties) affordance is different: it lets a user edit `employees` from the `Organization` while the relation is stored on the `Person` objects.)
+
+The frame derived from that schema reuses the schema as its `@context`, embeds the address, and keeps employees as IRIs:
+```json
+{
+  "@context": "Organization.schema.json",
+  "type": "schema:Organization",
+  "address": { "type": "schema:PostalAddress" },
+  "employees": { "@embed": "@never" }
+}
+```
+
+Framing the graph with that frame yields an OO-LD instance document, projected onto `ex:org1` with the `Address` inlined and the persons listed as `employees` IRIs via `@reverse`. Like any OO-LD instance it references its schema for both semantics (`@context`) and validation (`$schema`):
+```json
+{
+  "@context": ["Organization.schema.json", { "ex": "https://example.org/" }],
+  "$schema": "Organization.schema.json",
+  "id": "ex:org1",
+  "type": "schema:Organization",
+  "address": {
+    "id": "ex:addr1",
+    "type": "schema:PostalAddress",
+    "postalCode": "10115"
+  },
+  "employees": ["ex:p1", "ex:p2"]
+}
+```
+:::
+
 ### JSON Schema {#jsonschema-extensions}
 
 OO-LD targets [[JSONSCHEMA]] (2020-12) as its normative dialect. An OO-LD schema SHOULD declare the OO-LD dialect meta-schema (which extends 2020-12) as its `$schema`, e.g. `"$schema": "https://oo-ld.github.io/oold-schema/latest/meta/oold-meta-schema.json"` - pinning a specific version (e.g. `.../0.4.0/meta/oold-meta-schema.json`) for reproducibility. Declaring the plain 2020-12 meta-schema (`https://json-schema.org/draft/2020-12/schema`) remains valid for tools that only understand standard JSON Schema.
