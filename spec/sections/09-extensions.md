@@ -378,6 +378,10 @@ A range subschema MAY also carry additional annotations (e.g. `title`, `descript
 
 `x-oold-ref` avoids this. Generic tools only follow the standard `$ref` keyword, so they leave `x-oold-ref` untouched; OO-LD-aware tools resolve it deliberately and lazily, with cycle detection. The standard `$ref` continues to be used for ordinary schema composition (`allOf`, `properties`, `$defs`), which bundlers are expected to resolve. Because the only difference is the keyword name, the mapping is reversible: an OO-LD-aware tool can mechanically replace `x-oold-ref` with `$ref` to obtain a plain, fully-resolvable JSON Schema - the explicit opt-in to resolving the (possibly cyclic) graph.
 
+##### Generation targets {#range-generation-targets .informative}
+
+`x-oold-range` (and the reverse properties below) exist so that the logical and conceptual modelling layers can be generated from the same OO-LD source instead of being maintained separately: a range constrains the type of a referenced object, which an OO-LD-aware tool emits as a [SHACL](https://www.w3.org/TR/shacl/) property shape (`sh:class` / `sh:node`) and as an OWL property restriction. [SHACL 1.2](https://www.w3.org/TR/shacl12-core/) (in progress, including Node Expressions for derived values) and OWL are the intended targets. These are generation targets, not additional validation performed by generic JSON Schema tools.
+
 #### Reverse properties {#reverse-properties}
 
 Many relations are symmetric (e.g. Organization employs Person ⇔ Person works for Organization) and users want to edit them from both sides, without storing the information twice. The keywords `x-oold-reverse-properties` and `x-oold-reverse-required` declare such a [=reverse property=], mapped with JSON-LD `@reverse` in the `@context`. (The earlier `x-oold-reverse-default-properties` array is deprecated: mark a reverse property shown by default with `x-oold-ui-default-property` on the property itself - see [](#ui-generation) - which, unlike the merged array, is overridable under composition.) To make `employees` the reverse of `organization`:
@@ -449,6 +453,23 @@ OO-LD schemas double as the source for auto-generated forms and views. UI intent
 
 Every keyword keeps the `x-` prefix, so it is a valid JSON Schema extension keyword and a valid OpenAPI 3.0 specification extension, and generic 2020-12 validators ignore it. The `x-oold-ui-*` keywords form their own optional dialect, described by the [OO-LD UI meta-schema](../meta/oold-ui-meta-schema.json); the core meta-schema includes those definitions so an OO-LD schema carrying UI annotations validates in one pass.
 
+The W3C SHACL 1.2 [User Interfaces](https://www.w3.org/TR/shacl12-ui/) module (First Public Working Draft, 2026) describes the same concern - form and view generation - for RDF graphs. `x-oold-ui-*` is the portable counterpart for the physical (JSON Schema) layer: it rides on JSON Schema and therefore needs no RDF toolchain, while SHACL 1.2 UI targets a SHACL shapes graph. The two are intended to be a crosswalk rather than competing vocabularies. Candidate mappings for the `x-oold-ui-*` vocabulary follow (`sh:` = SHACL core, `shui:` = SHACL UI; SHACL 1.2 UI is a First Public Working Draft, so entries marked *tentative* may still change):
+
+| `x-oold-ui-*` keyword | SHACL 1.2 UI candidate |
+| --- | --- |
+| `x-oold-ui-property-order` | `sh:order` |
+| `x-oold-ui-property-group` | `sh:group` (a `sh:PropertyGroup`) |
+| `x-oold-ui-widget` (and `format`) | `shui:editor` / `shui:viewer` with a widget class (`shui:AutoCompleteEditor`, `shui:EnumSelectEditor`, `shui:DatePickerEditor`, `shui:BooleanEditor`, `shui:TextFieldEditor`, `shui:ImageViewer`, `shui:ValueTableViewer`, ...) |
+| `x-oold-ui-hint` | `sh:description` (help text) |
+| `x-oold-multilang-ui-hint` | `sh:description` with language-tagged strings |
+| `x-oold-ui-enum-titles` | `rdfs:label` on each `sh:in` value, rendered by `shui:EnumSelectEditor` |
+| `x-oold-multilang-ui-enum-titles` | language-tagged `rdfs:label` on each `sh:in` value |
+| `x-oold-ui-form-hidden` | suppress `shui:editor` *(tentative)* |
+| `x-oold-ui-render-hidden` | suppress `shui:viewer` *(tentative)* |
+| `x-oold-ui-default-property` | no direct counterpart; a `shui:propertyRole` / default-visibility convention *(tentative)* |
+
+The OO-LD UI meta-schema MAY itself carry a JSON-LD `@context` recording these term identities, so the vocabulary is self-describing.
+
 ##### The `x-oold-ui-*` vocabulary {#ui-vocabulary}
 
 All keywords apply to the (sub)schema of a single property.
@@ -476,3 +497,13 @@ or applied by an *overlay* - a separate document that patches a schema without e
 {{ inline_file('examples/UiOverlay.json') }}
 
 The vendor keywords are documented by their respective projects: jedison's `x-jedison-*` (see [germanbisurgi/jedison#58](https://github.com/germanbisurgi/jedison/issues/58) and the overlay proposal [#59](https://github.com/germanbisurgi/jedison/issues/59)) and, for schemas coming from OpenSemanticLab, the server-side `x-osl-*` keywords. Migrating a legacy OpenSemanticWorld schema to these keywords is covered in the [migration guide](../migration/from-legacy-osw/).
+
+### Semantic delivery {#semantic-delivery}
+
+An OO-LD schema carries its semantics in the top-level `@context` and, for the RDF type of instances, in `x-oold-instance-rdf-type`. How those reach a consumer depends only on which keywords the consumer tolerates. The native form is preferred; the alternatives below are mechanically generated from it, so the OO-LD document remains the single source and every form yields the same RDF.
+
+- A consumer that accepts arbitrary JSON Schema keywords SHOULD receive the native form unchanged. This covers plain JSON Schema 2020-12 validators, OpenAPI 3.1, and - because they place no restriction on `@context` - Model Context Protocol tool schemas (`inputSchema` / `outputSchema`) as well as LLM tool-use and structured-output APIs, which carry the context through and can use it as grounding.
+- For OpenAPI 3.0, which rejects unprefixed keywords in a Schema Object (and typically bundles several classes with no document root to host one `@context`), the context and type SHOULD be delivered per class as `x-jsonld-context` and `x-jsonld-type` following [REST API Linked Data Keywords](https://datatracker.ietf.org/doc/html/draft-polli-restapi-ld-keywords-08): `@context` maps to `x-jsonld-context` and `x-oold-instance-rdf-type` to `x-jsonld-type`. That draft requires references inside these keywords not to be dereferenced automatically, consistent with the `x-oold-ref` rule (see [](#why-x-oold-ref)). The mapping is reversible, so such an export can be read back into an OO-LD schema.
+- For a strict structured-output subset that rejects unknown keywords entirely, the relevant IRIs MAY instead be folded into the `title` / `description` annotations the model also reads.
+
+Worked examples of each tier, including the per-class OpenAPI 3.0 mapping, are given in the guide (see [Delivery to OpenAPI, MCP and LLM tooling](../use-cases/)).
