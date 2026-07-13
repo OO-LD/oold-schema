@@ -360,7 +360,22 @@ OO-LD schemas double as the source for auto-generated forms and views. UI intent
 
 Every keyword keeps the `x-` prefix, so it is a valid JSON Schema extension keyword and a valid OpenAPI 3.0 specification extension, and generic 2020-12 validators ignore it. The `x-oold-ui-*` keywords form their own optional dialect, described by the [OO-LD UI meta-schema](../meta/oold-ui-meta-schema.json); the core meta-schema includes those definitions so an OO-LD schema carrying UI annotations validates in one pass.
 
-The W3C SHACL 1.2 [User Interfaces](https://www.w3.org/TR/shacl12-ui/) module (First Public Working Draft, 2026) describes the same concern - form and view generation - for RDF graphs. `x-oold-ui-*` is the portable counterpart for the physical (JSON Schema) layer: it rides on JSON Schema and therefore needs no RDF toolchain, while SHACL 1.2 UI targets a SHACL shapes graph. The two are intended to be a crosswalk rather than competing vocabularies: `x-oold-ui-property-order` maps to `sh:order`, `x-oold-ui-property-group` to `sh:group`, and the widget hint (`x-oold-ui-widget` / `format`) to `shui:editor` / `shui:viewer` with the corresponding widget classes. The OO-LD UI meta-schema MAY itself carry a JSON-LD `@context` recording these term identities, so the vocabulary is self-describing.
+The W3C SHACL 1.2 [User Interfaces](https://www.w3.org/TR/shacl12-ui/) module (First Public Working Draft, 2026) describes the same concern - form and view generation - for RDF graphs. `x-oold-ui-*` is the portable counterpart for the physical (JSON Schema) layer: it rides on JSON Schema and therefore needs no RDF toolchain, while SHACL 1.2 UI targets a SHACL shapes graph. The two are intended to be a crosswalk rather than competing vocabularies. Candidate mappings for the `x-oold-ui-*` vocabulary follow (`sh:` = SHACL core, `shui:` = SHACL UI; SHACL 1.2 UI is a First Public Working Draft, so entries marked *tentative* may still change):
+
+| `x-oold-ui-*` keyword | SHACL 1.2 UI candidate |
+| --- | --- |
+| `x-oold-ui-property-order` | `sh:order` |
+| `x-oold-ui-property-group` | `sh:group` (a `sh:PropertyGroup`) |
+| `x-oold-ui-widget` (and `format`) | `shui:editor` / `shui:viewer` with a widget class (`shui:AutoCompleteEditor`, `shui:EnumSelectEditor`, `shui:DatePickerEditor`, `shui:BooleanEditor`, `shui:TextFieldEditor`, `shui:ImageViewer`, `shui:ValueTableViewer`, ...) |
+| `x-oold-ui-hint` | `sh:description` (help text) |
+| `x-oold-multilang-ui-hint` | `sh:description` with language-tagged strings |
+| `x-oold-ui-enum-titles` | `rdfs:label` on each `sh:in` value, rendered by `shui:EnumSelectEditor` |
+| `x-oold-multilang-ui-enum-titles` | language-tagged `rdfs:label` on each `sh:in` value |
+| `x-oold-ui-form-hidden` | suppress `shui:editor` *(tentative)* |
+| `x-oold-ui-render-hidden` | suppress `shui:viewer` *(tentative)* |
+| `x-oold-ui-default-property` | no direct counterpart; a `shui:propertyRole` / default-visibility convention *(tentative)* |
+
+The OO-LD UI meta-schema MAY itself carry a JSON-LD `@context` recording these term identities, so the vocabulary is self-describing.
 
 ##### The `x-oold-ui-*` vocabulary {#ui-vocabulary}
 

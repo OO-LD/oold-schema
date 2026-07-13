@@ -697,7 +697,58 @@ intersections (<code>allOf</code>) and inline constraints can be combined to des
 <li>Renderer-specific keywords passed through under a vendor prefix - <code>x-jedison-*</code> for <a href="https://github.com/germanbisurgi/jedison">jedison</a>, the successor of <a href="https://github.com/json-editor/json-editor">json-editor</a> - for options that do not generalize.</li>
 </ul>
 <p>Every keyword keeps the <code>x-</code> prefix, so it is a valid JSON Schema extension keyword and a valid OpenAPI 3.0 specification extension, and generic 2020-12 validators ignore it. The <code>x-oold-ui-*</code> keywords form their own optional dialect, described by the <a href="../meta/oold-ui-meta-schema.json">OO-LD UI meta-schema</a>; the core meta-schema includes those definitions so an OO-LD schema carrying UI annotations validates in one pass.</p>
-<p>The W3C SHACL 1.2 <a href="https://www.w3.org/TR/shacl12-ui/">User Interfaces</a> module (First Public Working Draft, 2026) describes the same concern - form and view generation - for RDF graphs. <code>x-oold-ui-*</code> is the portable counterpart for the physical (JSON Schema) layer: it rides on JSON Schema and therefore needs no RDF toolchain, while SHACL 1.2 UI targets a SHACL shapes graph. The two are intended to be a crosswalk rather than competing vocabularies: <code>x-oold-ui-property-order</code> maps to <code>sh:order</code>, <code>x-oold-ui-property-group</code> to <code>sh:group</code>, and the widget hint (<code>x-oold-ui-widget</code> / <code>format</code>) to <code>shui:editor</code> / <code>shui:viewer</code> with the corresponding widget classes. The OO-LD UI meta-schema MAY itself carry a JSON-LD <code>@context</code> recording these term identities, so the vocabulary is self-describing.</p><section id="ui-vocabulary"><h5>The <code>x-oold-ui-*</code> vocabulary</h5><p>All keywords apply to the (sub)schema of a single property.</p>
+<p>The W3C SHACL 1.2 <a href="https://www.w3.org/TR/shacl12-ui/">User Interfaces</a> module (First Public Working Draft, 2026) describes the same concern - form and view generation - for RDF graphs. <code>x-oold-ui-*</code> is the portable counterpart for the physical (JSON Schema) layer: it rides on JSON Schema and therefore needs no RDF toolchain, while SHACL 1.2 UI targets a SHACL shapes graph. The two are intended to be a crosswalk rather than competing vocabularies. Candidate mappings for the <code>x-oold-ui-*</code> vocabulary follow (<code>sh:</code> = SHACL core, <code>shui:</code> = SHACL UI; SHACL 1.2 UI is a First Public Working Draft, so entries marked <em>tentative</em> may still change):</p>
+<table class="def">
+<thead>
+<tr>
+  <th><code>x-oold-ui-*</code> keyword</th>
+  <th>SHACL 1.2 UI candidate</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><code>x-oold-ui-property-order</code></td>
+  <td><code>sh:order</code></td>
+</tr>
+<tr>
+  <td><code>x-oold-ui-property-group</code></td>
+  <td><code>sh:group</code> (a <code>sh:PropertyGroup</code>)</td>
+</tr>
+<tr>
+  <td><code>x-oold-ui-widget</code> (and <code>format</code>)</td>
+  <td><code>shui:editor</code> / <code>shui:viewer</code> with a widget class (<code>shui:AutoCompleteEditor</code>, <code>shui:EnumSelectEditor</code>, <code>shui:DatePickerEditor</code>, <code>shui:BooleanEditor</code>, <code>shui:TextFieldEditor</code>, <code>shui:ImageViewer</code>, <code>shui:ValueTableViewer</code>, ...)</td>
+</tr>
+<tr>
+  <td><code>x-oold-ui-hint</code></td>
+  <td><code>sh:description</code> (help text)</td>
+</tr>
+<tr>
+  <td><code>x-oold-multilang-ui-hint</code></td>
+  <td><code>sh:description</code> with language-tagged strings</td>
+</tr>
+<tr>
+  <td><code>x-oold-ui-enum-titles</code></td>
+  <td><code>rdfs:label</code> on each <code>sh:in</code> value, rendered by <code>shui:EnumSelectEditor</code></td>
+</tr>
+<tr>
+  <td><code>x-oold-multilang-ui-enum-titles</code></td>
+  <td>language-tagged <code>rdfs:label</code> on each <code>sh:in</code> value</td>
+</tr>
+<tr>
+  <td><code>x-oold-ui-form-hidden</code></td>
+  <td>suppress <code>shui:editor</code> <em>(tentative)</em></td>
+</tr>
+<tr>
+  <td><code>x-oold-ui-render-hidden</code></td>
+  <td>suppress <code>shui:viewer</code> <em>(tentative)</em></td>
+</tr>
+<tr>
+  <td><code>x-oold-ui-default-property</code></td>
+  <td>no direct counterpart; a <code>shui:propertyRole</code> / default-visibility convention <em>(tentative)</em></td>
+</tr>
+</tbody>
+</table>
+<p>The OO-LD UI meta-schema MAY itself carry a JSON-LD <code>@context</code> recording these term identities, so the vocabulary is self-describing.</p><section id="ui-vocabulary"><h5>The <code>x-oold-ui-*</code> vocabulary</h5><p>All keywords apply to the (sub)schema of a single property.</p>
 <table class="def">
 <thead>
 <tr>
