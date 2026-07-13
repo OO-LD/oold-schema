@@ -905,19 +905,6 @@ The same concerns MAY also be consolidated into one OO-LD document when modulari
 
 The key difference is identity and semantics: OCA addresses overlays by content hash (SAID) and reaches meaning only through a separate attribute-mapping overlay, whereas OO-LD modules are addressed by resolvable `$id` and carry the IRIs natively in `@context`. When patching a schema owned elsewhere rather than layering new modules, OO-LD's own [overlay delivery](guide/extensions.md) (OpenAPI Overlay actions for `x-oold-ui-*`) provides the "patch without editing" pattern.
 
-## jargon.sh
-
-[jargon.sh](https://jargon.sh/) is a collaborative modelling platform. Its primary notation is a textual "models as code" description of classes and properties, authored in the web tool with a live diagram; the model is hosted in the platform rather than committed as a source file. From it jargon generates a JSON Schema, a JSON-LD context, an RDF/OWL ontology, OpenAPI and ReSpec documentation (used by UNECE / UNTP for Digital Product Passports). The two artefacts relevant here - the generated JSON Schema and JSON-LD context - recombine into one OO-LD document:
-
-```text
-jargon model  ->  Person.schema.json     (JSON Schema)
-              ->  Person.context.jsonld   (JSON-LD @context)
-
-OO-LD         =  { ...Person.schema.json, "@context": Person.context.jsonld["@context"] }
-```
-
-A jargon export therefore becomes an OO-LD schema mechanically (merge the generated `@context` into the generated JSON Schema), and conversely an OO-LD schema already carries both without a build step. The same recombination underlies the LinkML mapping above.
-
 ## TreeLDR
 
 [TreeLDR](https://www.spruceid.dev/treeldr/treeldr-overview) (SpruceID, used in the Verifiable Credentials / DID space) centres on **RDF layouts**. Its primary notation is a JSON layout document that maps a tree value to and from an RDF dataset (`dehydrate` = tree to RDF, `hydrate` = RDF to tree). A layout is a `record` of `fields`, each binding a tree field to an RDF `property` IRI and a value layout (its datatype):
