@@ -563,19 +563,20 @@ ex:addr1 a schema:PostalAddress ; schema:postalCode &quot;10115&quot; .
 ex:p1    a schema:Person ; schema:worksFor ex:org1 .
 ex:p2    a schema:Person ; schema:worksFor ex:org1 .
 </code></pre>
-<p>The OO-LD schema for <code>Organization</code> - <code>address</code> is an inlined object, and <code>employees</code> is a regular property whose <code>@context</code> term is mapped with JSON-LD <code>@reverse</code> to the persons' <code>schema:worksFor</code>, so listing an employee here yields a <code>worksFor</code> triple on that person:</p>
+<p>The OO-LD schema for <code>Organization</code> - <code>address</code> is an inlined object (<code>$ref</code>, reflected as a scoped <code>@context</code>), and <code>employees</code> is a regular property whose <code>@context</code> term is mapped with JSON-LD <code>@reverse</code> to the persons' <code>schema:worksFor</code>, so listing an employee here yields a <code>worksFor</code> triple on that person:</p>
 <pre><code class="language-json">{
   &quot;@context&quot;: {
     &quot;schema&quot;: &quot;http://schema.org/&quot;,
     &quot;type&quot;: &quot;@type&quot;,
-    &quot;address&quot;: &quot;schema:address&quot;,
+    &quot;id&quot;: &quot;@id&quot;,
+    &quot;address&quot;: { &quot;@id&quot;: &quot;schema:address&quot;, &quot;@context&quot;: &quot;Address.schema.json&quot; },
     &quot;employees&quot;: { &quot;@reverse&quot;: &quot;schema:worksFor&quot;, &quot;@type&quot;: &quot;@id&quot; }
   },
   &quot;$id&quot;: &quot;Organization.schema.json&quot;,
   &quot;x-oold-instance-rdf-type&quot;: [&quot;schema:Organization&quot;],
   &quot;type&quot;: &quot;object&quot;,
   &quot;properties&quot;: {
-    &quot;address&quot;: { &quot;type&quot;: &quot;object&quot;, &quot;x-oold-range&quot;: &quot;Address.schema.json&quot; },
+    &quot;address&quot;: { &quot;$ref&quot;: &quot;Address.schema.json&quot; },
     &quot;employees&quot;: {
       &quot;type&quot;: &quot;array&quot;,
       &quot;items&quot;: { &quot;type&quot;: &quot;string&quot;, &quot;format&quot;: &quot;iri&quot;, &quot;x-oold-range&quot;: &quot;Person.schema.json&quot; }
@@ -583,7 +584,15 @@ ex:p2    a schema:Person ; schema:worksFor ex:org1 .
   }
 }
 </code></pre>
-<p>referencing a minimal <code>Person</code> stub (only the type is needed here):</p>
+<p>referencing minimal <code>Address</code> and <code>Person</code> stubs:</p>
+<pre><code class="language-json">{
+  &quot;@context&quot;: { &quot;schema&quot;: &quot;http://schema.org/&quot;, &quot;type&quot;: &quot;@type&quot;, &quot;id&quot;: &quot;@id&quot;, &quot;postalCode&quot;: &quot;schema:postalCode&quot; },
+  &quot;$id&quot;: &quot;Address.schema.json&quot;,
+  &quot;x-oold-instance-rdf-type&quot;: [&quot;schema:PostalAddress&quot;],
+  &quot;type&quot;: &quot;object&quot;,
+  &quot;properties&quot;: { &quot;postalCode&quot;: { &quot;type&quot;: &quot;string&quot; } }
+}
+</code></pre>
 <pre><code class="language-json">{
   &quot;@context&quot;: { &quot;schema&quot;: &quot;http://schema.org/&quot;, &quot;type&quot;: &quot;@type&quot; },
   &quot;$id&quot;: &quot;Person.schema.json&quot;,
@@ -592,27 +601,18 @@ ex:p2    a schema:Person ; schema:worksFor ex:org1 .
 }
 </code></pre>
 <p>(This uses <code>@reverse</code> on an ordinary property - a read projection. The editor-only <a href="#reverse-properties"><code>x-oold-reverse-properties</code></a> affordance is different: it lets a user edit <code>employees</code> from the <code>Organization</code> while the relation is stored on the <code>Person</code> objects.)</p>
-<p>The frame derived from that schema - embed the address, keep employees as IRIs:</p>
+<p>The frame derived from that schema reuses the schema as its <code>@context</code>, embeds the address, and keeps employees as IRIs:</p>
 <pre><code class="language-json">{
-  &quot;@context&quot;: {
-    &quot;schema&quot;: &quot;http://schema.org/&quot;, &quot;ex&quot;: &quot;https://example.org/&quot;,
-    &quot;type&quot;: &quot;@type&quot;, &quot;id&quot;: &quot;@id&quot;,
-    &quot;address&quot;: &quot;schema:address&quot;, &quot;postalCode&quot;: &quot;schema:postalCode&quot;,
-    &quot;employees&quot;: { &quot;@reverse&quot;: &quot;schema:worksFor&quot;, &quot;@type&quot;: &quot;@id&quot; }
-  },
+  &quot;@context&quot;: &quot;Organization.schema.json&quot;,
   &quot;type&quot;: &quot;schema:Organization&quot;,
   &quot;address&quot;: { &quot;type&quot;: &quot;schema:PostalAddress&quot; },
   &quot;employees&quot;: { &quot;@embed&quot;: &quot;@never&quot; }
 }
 </code></pre>
-<p>Framing the graph with that frame yields the instance, projected onto <code>ex:org1</code> with the <code>Address</code> inlined and the persons listed as <code>employees</code> IRIs via <code>@reverse</code>:</p>
+<p>Framing the graph with that frame yields an OO-LD instance document, projected onto <code>ex:org1</code> with the <code>Address</code> inlined and the persons listed as <code>employees</code> IRIs via <code>@reverse</code>. Like any OO-LD instance it references its schema for both semantics (<code>@context</code>) and validation (<code>$schema</code>):</p>
 <pre><code class="language-json">{
-  &quot;@context&quot;: {
-    &quot;schema&quot;: &quot;http://schema.org/&quot;, &quot;ex&quot;: &quot;https://example.org/&quot;,
-    &quot;type&quot;: &quot;@type&quot;, &quot;id&quot;: &quot;@id&quot;,
-    &quot;address&quot;: &quot;schema:address&quot;, &quot;postalCode&quot;: &quot;schema:postalCode&quot;,
-    &quot;employees&quot;: { &quot;@reverse&quot;: &quot;schema:worksFor&quot;, &quot;@type&quot;: &quot;@id&quot; }
-  },
+  &quot;@context&quot;: [&quot;Organization.schema.json&quot;, { &quot;ex&quot;: &quot;https://example.org/&quot; }],
+  &quot;$schema&quot;: &quot;Organization.schema.json&quot;,
   &quot;id&quot;: &quot;ex:org1&quot;,
   &quot;type&quot;: &quot;schema:Organization&quot;,
   &quot;address&quot;: {

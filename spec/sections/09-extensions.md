@@ -171,20 +171,21 @@ ex:p1    a schema:Person ; schema:worksFor ex:org1 .
 ex:p2    a schema:Person ; schema:worksFor ex:org1 .
 ```
 
-The OO-LD schema for `Organization` - `address` is an inlined object, and `employees` is a regular property whose `@context` term is mapped with JSON-LD `@reverse` to the persons' `schema:worksFor`, so listing an employee here yields a `worksFor` triple on that person:
+The OO-LD schema for `Organization` - `address` is an inlined object (`$ref`, reflected as a scoped `@context`), and `employees` is a regular property whose `@context` term is mapped with JSON-LD `@reverse` to the persons' `schema:worksFor`, so listing an employee here yields a `worksFor` triple on that person:
 ```json
 {
   "@context": {
     "schema": "http://schema.org/",
     "type": "@type",
-    "address": "schema:address",
+    "id": "@id",
+    "address": { "@id": "schema:address", "@context": "Address.schema.json" },
     "employees": { "@reverse": "schema:worksFor", "@type": "@id" }
   },
   "$id": "Organization.schema.json",
   "x-oold-instance-rdf-type": ["schema:Organization"],
   "type": "object",
   "properties": {
-    "address": { "type": "object", "x-oold-range": "Address.schema.json" },
+    "address": { "$ref": "Address.schema.json" },
     "employees": {
       "type": "array",
       "items": { "type": "string", "format": "iri", "x-oold-range": "Person.schema.json" }
@@ -193,7 +194,16 @@ The OO-LD schema for `Organization` - `address` is an inlined object, and `emplo
 }
 ```
 
-referencing a minimal `Person` stub (only the type is needed here):
+referencing minimal `Address` and `Person` stubs:
+```json
+{
+  "@context": { "schema": "http://schema.org/", "type": "@type", "id": "@id", "postalCode": "schema:postalCode" },
+  "$id": "Address.schema.json",
+  "x-oold-instance-rdf-type": ["schema:PostalAddress"],
+  "type": "object",
+  "properties": { "postalCode": { "type": "string" } }
+}
+```
 ```json
 {
   "@context": { "schema": "http://schema.org/", "type": "@type" },
@@ -205,30 +215,21 @@ referencing a minimal `Person` stub (only the type is needed here):
 
 (This uses `@reverse` on an ordinary property - a read projection. The editor-only [`x-oold-reverse-properties`](#reverse-properties) affordance is different: it lets a user edit `employees` from the `Organization` while the relation is stored on the `Person` objects.)
 
-The frame derived from that schema - embed the address, keep employees as IRIs:
+The frame derived from that schema reuses the schema as its `@context`, embeds the address, and keeps employees as IRIs:
 ```json
 {
-  "@context": {
-    "schema": "http://schema.org/", "ex": "https://example.org/",
-    "type": "@type", "id": "@id",
-    "address": "schema:address", "postalCode": "schema:postalCode",
-    "employees": { "@reverse": "schema:worksFor", "@type": "@id" }
-  },
+  "@context": "Organization.schema.json",
   "type": "schema:Organization",
   "address": { "type": "schema:PostalAddress" },
   "employees": { "@embed": "@never" }
 }
 ```
 
-Framing the graph with that frame yields the instance, projected onto `ex:org1` with the `Address` inlined and the persons listed as `employees` IRIs via `@reverse`:
+Framing the graph with that frame yields an OO-LD instance document, projected onto `ex:org1` with the `Address` inlined and the persons listed as `employees` IRIs via `@reverse`. Like any OO-LD instance it references its schema for both semantics (`@context`) and validation (`$schema`):
 ```json
 {
-  "@context": {
-    "schema": "http://schema.org/", "ex": "https://example.org/",
-    "type": "@type", "id": "@id",
-    "address": "schema:address", "postalCode": "schema:postalCode",
-    "employees": { "@reverse": "schema:worksFor", "@type": "@id" }
-  },
+  "@context": ["Organization.schema.json", { "ex": "https://example.org/" }],
+  "$schema": "Organization.schema.json",
   "id": "ex:org1",
   "type": "schema:Organization",
   "address": {
