@@ -22,3 +22,4 @@ open-semantic-lab\.org/api/
 # scripts/check_spec.py.
 /spec/meta/oold-ui-meta-schema\.json$
 /spec/migration/from-legacy-osw/?$
+/spec/use-cases/?$
