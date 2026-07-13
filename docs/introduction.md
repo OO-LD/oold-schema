@@ -2,6 +2,8 @@
 
 OO-LD Schema aims to connect the structural modelling of objects and subobjects with the modelling of the semantic relations without reinventing the wheel. It therefore combines existing standards, primarily [JSON Schema](https://json-schema.org/) and a [JSON-LD](https://json-ld.org/) context in the same document.
 
+What makes OO-LD different from other approaches that unify structure and semantics is that the artefact *is* the source: one document is at the same time a valid JSON Schema and a referenceable JSON-LD remote context, so there is no separate modelling language and no build step generating a schema and a context that then have to be kept in sync. The same holds at the instance level - an OO-LD instance is a valid JSON-LD document, and OO-LD-aware tooling resolves the IRIs it references into linked objects, so a stored graph can be navigated as objects.
+
 *Why OO-LD?*
 
 - OO-LD schema documents are supported by a wide range of existing tools (all JSON Schema and JSON-LD tooling!)
@@ -49,4 +51,6 @@ OO-LD schema documents allow to specify all information that is needed to automa
 ![OO-LD Bridge General Software](https://opensemantic.world/wiki/Special:Redirect/file/OSW01a9133879e94df19a8e617d91d28f39.drawio.svg)
 > OO-LD as bridge between linked data and the general software domain
 
-A detailed comparison with related schema languages and data models (OWL, SHACL, Asset Administration Shell, SAMM, LinkML, dlite, NOMAD, and more) is collected in the [Reference » Related Work](reference.md#related-work) table.
+Data modelling is often described in three layers: conceptual (RDFS, OWL), logical (SHACL, ShEx) and physical (JSON Schema, XML Schema). OO-LD is a physical-layer artefact that carries enough conceptual annotation to generate the logical and conceptual layers from the same source. Rather than replacing frameworks like LinkML, SPDX or TreeLDR - which compile a bespoke source into a separate schema and context - OO-LD annotates JSON Schema in place and offers generated bridges (for example `x-jsonld-*` for OpenAPI and MCP delivery) to the forms other ecosystems expect. It therefore acts as an interlingua rather than yet another isolated syntax.
+
+A detailed comparison with related schema languages and data models (OWL, SHACL, Asset Administration Shell, SAMM, LinkML, SPDX, Croissant, dlite, NOMAD, and more) is collected in the [Reference » Related Work](reference.md#related-work) table.
