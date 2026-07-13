@@ -555,7 +555,77 @@ _:b0 &lt;schema:name&gt; &quot;test&quot; .
   }
 }
 </code></pre></aside>
-<p>To promote to <code>@context</code>, an OO-LD preprocessor picks the prioritized synonym (by namespace), then <code>{ &quot;@id&quot;: &lt;key&gt;, ...value without x-sssom }</code> becomes the term's definition in the real <code>@context</code>; the <code>x-sssom</code> blocks are dropped, so standard JSON-LD tools then run on a clean context.</p></section></section><section id="jsonschema-extensions"><h3>JSON Schema</h3><p>OO-LD targets [[JSONSCHEMA]] (2020-12) as its normative dialect. An OO-LD schema <em class="rfc2119">SHOULD</em> declare the OO-LD dialect meta-schema (which extends 2020-12) as its <code>$schema</code>, e.g. <code>&quot;$schema&quot;: &quot;https://oo-ld.github.io/oold-schema/latest/meta/oold-meta-schema.json&quot;</code> - pinning a specific version (e.g. <code>.../0.4.0/meta/oold-meta-schema.json</code>) for reproducibility. Declaring the plain 2020-12 meta-schema (<code>https://json-schema.org/draft/2020-12/schema</code>) remains valid for tools that only understand standard JSON Schema.</p>
+<p>To promote to <code>@context</code>, an OO-LD preprocessor picks the prioritized synonym (by namespace), then <code>{ &quot;@id&quot;: &lt;key&gt;, ...value without x-sssom }</code> becomes the term's definition in the real <code>@context</code>; the <code>x-sssom</code> blocks are dropped, so standard JSON-LD tools then run on a clean context.</p></section><section id="framing"><h4>Framing</h4><p><a href="https://www.w3.org/TR/json-ld11-framing/">JSON-LD 1.1 Framing</a> reshapes a flat or arbitrarily-structured RDF graph into a specific tree layout described by a <em>frame</em>. An OO-LD schema already describes exactly such a tree - its <code>properties</code> give the nesting, its <code>@context</code> gives the term IRIs, a type constant (<code>x-oold-instance-rdf-type</code>, or a <code>const</code> on the <code>type</code> property) gives the node type, and <a href="#range-of-properties"><code>x-oold-range</code></a> gives the type of embedded or referenced objects - so an OO-LD-aware tool <em class="rfc2119">MAY</em> auto-construct a frame from the schema. Framing an instance graph with that frame produces a JSON document shaped like the schema, which then validates against the same schema.</p>
+<p>This makes an OO-LD schema bidirectional: its <code>@context</code> drives expansion (JSON to RDF), and the frame derived from its structure drives framing (RDF back to the schema's JSON tree). The derivation is mechanical: the schema's class type becomes the frame <code>@type</code>; an inlined object property becomes a nested subframe that embeds the referenced node; a reference-valued property (including one whose term is mapped with JSON-LD <code>@reverse</code>) becomes a subframe with <code>@embed: @never</code> so its targets stay IRIs, in line with the inline-versus-reference choice <code>x-oold-range</code> already records; and <code>@explicit</code> / <code>@requireAll</code> / <code>@default</code> follow from <code>additionalProperties</code> and <code>required</code>. The frame's <code>@context</code> is the composition of the referenced schemas' contexts.</p>
+<aside class="example" title="RDF to OO-LD schema to frame to instance"><p>An input RDF graph (Turtle) - an organization with an address, and two persons who work for it:</p>
+<pre><code class="language-turtle">@prefix schema: &lt;http://schema.org/&gt; .
+@prefix ex: &lt;https://example.org/&gt; .
+
+ex:org1  a schema:Organization ; schema:address ex:addr1 .
+ex:addr1 a schema:PostalAddress ; schema:postalCode &quot;10115&quot; .
+ex:p1    a schema:Person ; schema:worksFor ex:org1 .
+ex:p2    a schema:Person ; schema:worksFor ex:org1 .
+</code></pre>
+<p>The OO-LD schema for <code>Organization</code> - <code>address</code> is an inlined object (<code>$ref</code>, reflected as a scoped <code>@context</code>), and <code>employees</code> is a regular property whose <code>@context</code> term is mapped with JSON-LD <code>@reverse</code> to the persons' <code>schema:worksFor</code>, so listing an employee here yields a <code>worksFor</code> triple on that person:</p>
+<pre><code class="language-json">{
+  &quot;@context&quot;: {
+    &quot;schema&quot;: &quot;http://schema.org/&quot;,
+    &quot;type&quot;: &quot;@type&quot;,
+    &quot;id&quot;: &quot;@id&quot;,
+    &quot;address&quot;: { &quot;@id&quot;: &quot;schema:address&quot;, &quot;@context&quot;: &quot;Address.schema.json&quot; },
+    &quot;employees&quot;: { &quot;@reverse&quot;: &quot;schema:worksFor&quot;, &quot;@type&quot;: &quot;@id&quot; }
+  },
+  &quot;$id&quot;: &quot;Organization.schema.json&quot;,
+  &quot;x-oold-instance-rdf-type&quot;: [&quot;schema:Organization&quot;],
+  &quot;type&quot;: &quot;object&quot;,
+  &quot;properties&quot;: {
+    &quot;address&quot;: { &quot;$ref&quot;: &quot;Address.schema.json&quot; },
+    &quot;employees&quot;: {
+      &quot;type&quot;: &quot;array&quot;,
+      &quot;items&quot;: { &quot;type&quot;: &quot;string&quot;, &quot;format&quot;: &quot;iri&quot;, &quot;x-oold-range&quot;: &quot;Person.schema.json&quot; }
+    }
+  }
+}
+</code></pre>
+<p>referencing minimal <code>Address</code> and <code>Person</code> stubs:</p>
+<pre><code class="language-json">{
+  &quot;@context&quot;: { &quot;schema&quot;: &quot;http://schema.org/&quot;, &quot;type&quot;: &quot;@type&quot;, &quot;id&quot;: &quot;@id&quot;, &quot;postalCode&quot;: &quot;schema:postalCode&quot; },
+  &quot;$id&quot;: &quot;Address.schema.json&quot;,
+  &quot;x-oold-instance-rdf-type&quot;: [&quot;schema:PostalAddress&quot;],
+  &quot;type&quot;: &quot;object&quot;,
+  &quot;properties&quot;: { &quot;postalCode&quot;: { &quot;type&quot;: &quot;string&quot; } }
+}
+</code></pre>
+<pre><code class="language-json">{
+  &quot;@context&quot;: { &quot;schema&quot;: &quot;http://schema.org/&quot;, &quot;type&quot;: &quot;@type&quot; },
+  &quot;$id&quot;: &quot;Person.schema.json&quot;,
+  &quot;x-oold-instance-rdf-type&quot;: [&quot;schema:Person&quot;],
+  &quot;type&quot;: &quot;object&quot;
+}
+</code></pre>
+<p>(This uses <code>@reverse</code> on an ordinary property - a read projection. The editor-only <a href="#reverse-properties"><code>x-oold-reverse-properties</code></a> affordance is different: it lets a user edit <code>employees</code> from the <code>Organization</code> while the relation is stored on the <code>Person</code> objects.)</p>
+<p>The frame derived from that schema reuses the schema as its <code>@context</code>, embeds the address, and keeps employees as IRIs:</p>
+<pre><code class="language-json">{
+  &quot;@context&quot;: &quot;Organization.schema.json&quot;,
+  &quot;type&quot;: &quot;schema:Organization&quot;,
+  &quot;address&quot;: { &quot;type&quot;: &quot;schema:PostalAddress&quot; },
+  &quot;employees&quot;: { &quot;@embed&quot;: &quot;@never&quot; }
+}
+</code></pre>
+<p>Framing the graph with that frame yields an OO-LD instance document, projected onto <code>ex:org1</code> with the <code>Address</code> inlined and the persons listed as <code>employees</code> IRIs via <code>@reverse</code>. Like any OO-LD instance it references its schema for both semantics (<code>@context</code>) and validation (<code>$schema</code>):</p>
+<pre><code class="language-json">{
+  &quot;@context&quot;: [&quot;Organization.schema.json&quot;, { &quot;ex&quot;: &quot;https://example.org/&quot; }],
+  &quot;$schema&quot;: &quot;Organization.schema.json&quot;,
+  &quot;id&quot;: &quot;ex:org1&quot;,
+  &quot;type&quot;: &quot;schema:Organization&quot;,
+  &quot;address&quot;: {
+    &quot;id&quot;: &quot;ex:addr1&quot;,
+    &quot;type&quot;: &quot;schema:PostalAddress&quot;,
+    &quot;postalCode&quot;: &quot;10115&quot;
+  },
+  &quot;employees&quot;: [&quot;ex:p1&quot;, &quot;ex:p2&quot;]
+}
+</code></pre></aside></section></section><section id="jsonschema-extensions"><h3>JSON Schema</h3><p>OO-LD targets [[JSONSCHEMA]] (2020-12) as its normative dialect. An OO-LD schema <em class="rfc2119">SHOULD</em> declare the OO-LD dialect meta-schema (which extends 2020-12) as its <code>$schema</code>, e.g. <code>&quot;$schema&quot;: &quot;https://oo-ld.github.io/oold-schema/latest/meta/oold-meta-schema.json&quot;</code> - pinning a specific version (e.g. <code>.../0.4.0/meta/oold-meta-schema.json</code>) for reproducibility. Declaring the plain 2020-12 meta-schema (<code>https://json-schema.org/draft/2020-12/schema</code>) remains valid for tools that only understand standard JSON Schema.</p>
 <p>2020-12 is <em class="rfc2119">REQUIRED</em>, not merely preferred: OO-LD's composition places <code>$ref</code> alongside sibling keywords (e.g. a property carrying <code>type</code>, <code>x-oold-range</code> and <code>@context</code>, or <code>allOf: [{$ref: ...}]</code> next to <code>properties</code>). Keywords adjacent to <code>$ref</code> are only evaluated from JSON Schema 2019-09 onward; in Draft 4 and Draft 7 they are ignored ([[JSONSCHEMA]] §8.2.3.1). Keywords such as <code>const</code> (used throughout this document) are likewise only available from draft-06 onward. Migration from the earlier Draft-4-style notation: rename <code>definitions</code> to <code>$defs</code>, <code>id</code> to <code>$id</code>, and use the numeric form of <code>exclusiveMinimum</code>/<code>exclusiveMaximum</code> instead of the boolean form.</p><section id="multilanguage"><h4>Multilanguage support</h4><p>There are two distinct localization concerns: translating a schema's own annotations, and translating a value carried by an instance.</p><section id="localizing-schema-annotations"><h5>Localizing schema annotations</h5><p>The JSON Schema annotation keywords <code>title</code> and <code>description</code> carry a single, default human-readable string used by tooling (for example for UI generation). To provide localized variants, OO-LD adds the keywords <code>x-oold-multilang-title</code> and <code>x-oold-multilang-description</code>. Their value <em class="rfc2119">MUST</em> be an object whose keys are <a href="https://www.rfc-editor.org/info/bcp47">BCP 47</a> language tags (e.g. <code>en</code>, <code>de</code>, <code>en-GB</code>) and whose values are the translated strings. A schema <em class="rfc2119">SHOULD</em> still provide a default <code>title</code> / <code>description</code>; a consumer that has no entry for the requested language falls back to that default. These keywords localize the schema's <em>own</em> labels and are not interpreted as JSON-LD.</p>
 <aside class="example" title="Localized schema annotations"><pre><code class="language-json">{
     &quot;title&quot;: &quot;Default Title&quot;,
