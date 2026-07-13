@@ -768,6 +768,17 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#approaches-to-unifying-structure-and-semantics" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Approaches to unifying structure and semantics
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#schema-overview" class="md-nav__link">
     <span class="md-ellipsis">
       <span class="md-typeset">
@@ -959,6 +970,17 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#approaches-to-unifying-structure-and-semantics" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Approaches to unifying structure and semantics
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#schema-overview" class="md-nav__link">
     <span class="md-ellipsis">
       <span class="md-typeset">
@@ -1035,6 +1057,103 @@
 <li>In the context of YAML-LD: <a href="https://github.com/w3c/yaml-ld/issues/19">https://github.com/w3c/yaml-ld/issues/19</a></li>
 </ul>
 <h2 id="related-work">Related Work<a class="headerlink" href="#related-work" title="Permanent link">&para;</a></h2>
+<h3 id="approaches-to-unifying-structure-and-semantics">Approaches to unifying structure and semantics<a class="headerlink" href="#approaches-to-unifying-structure-and-semantics" title="Permanent link">&para;</a></h3>
+<p>Keeping structure, semantics, shapes, docs and code in sync is a shared goal of many "polyglot" or "single-source" frameworks. They differ mainly on <strong>where the single source of truth lives</strong> and <strong>whether a build step is required</strong>. OO-LD's distinguishing choice is that the artefact <em>is</em> the source: one document is at the same time a valid JSON Schema and a referenceable JSON-LD remote context, with no separate modelling language and no compilation.</p>
+<table>
+<thead>
+<tr>
+<th>Approach</th>
+<th>Paradigm</th>
+<th>Single source of truth</th>
+<th>Build step</th>
+<th>RDF / JSON-LD</th>
+<th>Domain / adoption</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>OO-LD</strong></td>
+<td>Artefact <em>is</em> the source</td>
+<td>JSON Schema + <code>@context</code> in one document</td>
+<td>none (optional delivery transforms)</td>
+<td>yes (schema is a remote context; instances are JSON-LD)</td>
+<td>general; scientific data in particular (OpenSemanticLab)</td>
+</tr>
+<tr>
+<td><a href="https://linkml.io/">LinkML</a></td>
+<td>Compile from metamodel</td>
+<td>bespoke YAML metamodel</td>
+<td>yes</td>
+<td>generated context / RDF</td>
+<td>biomedical; large, very active</td>
+</tr>
+<tr>
+<td><a href="https://spdx.github.io/spdx-spec/">SPDX 3.0</a></td>
+<td>Compile from model</td>
+<td>constrained-Markdown model</td>
+<td>yes</td>
+<td>generated OWL + SHACL + JSON-LD context</td>
+<td>SBOM / supply chain; ISO/OMG scale</td>
+</tr>
+<tr>
+<td><a href="https://www.spruceid.dev/treeldr/treeldr-overview">TreeLDR</a></td>
+<td>Compile from typed DSL</td>
+<td>JSON RDF layout (records/fields)</td>
+<td>yes</td>
+<td>generated contexts / RDF</td>
+<td>Verifiable Credentials / DIDs</td>
+</tr>
+<tr>
+<td><a href="https://w3c.github.io/yml2vocab/">yml2vocab</a></td>
+<td>Vocabulary publishing</td>
+<td>YAML term list</td>
+<td>yes</td>
+<td>RDFS vocab + JSON-LD context + HTML</td>
+<td>W3C Verifiable Credentials vocabularies</td>
+</tr>
+<tr>
+<td><a href="https://github.com/mlcommons/croissant">Croissant</a></td>
+<td>Fixed JSON-LD vocabulary</td>
+<td>JSON-LD on <code>schema.org/Dataset</code></td>
+<td>none</td>
+<td>yes (JSON-LD)</td>
+<td>ML datasets; NeurIPS, HuggingFace, Kaggle, Google</td>
+</tr>
+<tr>
+<td><a href="https://oca.colossi.network/specification/">OCA</a></td>
+<td>Overlays on a capture base</td>
+<td>capture base + SAID-addressed overlays</td>
+<td>bundle assembly</td>
+<td>no (bridges via mapping overlay only)</td>
+<td>Verifiable Credentials, DPP, privacy</td>
+</tr>
+<tr>
+<td><a href="https://www.semantic-treehouse.nl/">Semantic Treehouse</a></td>
+<td>Hub / registry</td>
+<td>hosted OWL / SHACL / JSON Schema</td>
+<td>n/a</td>
+<td>yes</td>
+<td>dataspaces vocabulary hub (TNO)</td>
+</tr>
+<tr>
+<td><a href="https://datatracker.ietf.org/doc/html/draft-polli-restapi-ld-keywords-08">REST-API-LD</a></td>
+<td>Annotate JSON Schema in place</td>
+<td>JSON Schema / OpenAPI + <code>x-jsonld-*</code></td>
+<td>none</td>
+<td>yes (context via extension keywords)</td>
+<td>eGovernment APIs (Italy); IETF I-D</td>
+</tr>
+<tr>
+<td><a href="https://www.w3.org/2019/wot/json-schema">WoT JSON Schema in RDF</a></td>
+<td>Annotate JSON Schema in place</td>
+<td>JSON Schema + instance-context</td>
+<td>none</td>
+<td>yes</td>
+<td>W3C Web of Things; standards precedent</td>
+</tr>
+</tbody>
+</table>
+<p>Reading: the dominant paradigm is <em>compile-from-a-source-language</em> (LinkML, SPDX 3.0, TreeLDR, yml2vocab), which accepts a bespoke source plus a build step and must then keep generated artefacts in sync. Only REST-API-LD and WoT JSON-Schema-in-RDF share OO-LD's "annotate in place, no new language" property; REST-API-LD is the closest neighbour and is on a standards track. OCA is the opposite philosophy (decentralized overlays, not RDF-native), Semantic Treehouse is a hub rather than a language, and Croissant is a single-domain JSON-LD vocabulary with outsized adoption. The related layers OO-LD generates to - <a href="https://www.w3.org/TR/shacl12-core/">SHACL</a> (logical) and OWL (conceptual) - are targets rather than competitors. Worked mappings from several of these formats to OO-LD are in <a href="../mappings/">Mappings</a>.</p>
 <h3 id="schema-overview">Schema Overview<a class="headerlink" href="#schema-overview" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
@@ -1119,6 +1238,30 @@
 <tr>
 <td><a href="https://ddialliance.org/Specification/DDI-CDI/1.0/">DDI-CDI</a></td>
 <td>Cross domain meta data model between domain specific specifications and high - level specifications such as DCAT and Datacite</td>
+</tr>
+<tr>
+<td><a href="https://spdx.github.io/spdx-spec/">SPDX 3.0</a></td>
+<td>Model-driven SBOM / supply-chain standard. A single model generates an OWL ontology with SHACL shapes, a JSON-LD context and a JSON Schema; documents are validated both structurally (JSON Schema) and semantically (SHACL). Same polyglot thesis as OO-LD, but compiled from a bespoke model.</td>
+</tr>
+<tr>
+<td><a href="https://github.com/mlcommons/croissant">Croissant</a></td>
+<td>MLCommons JSON-LD vocabulary for ML datasets, built on <code>schema.org/Dataset</code>. Heavy adoption (NeurIPS dataset tracks, HuggingFace, Kaggle, Google Dataset Search) and an MCP integration. Narrow domain, JSON-LD-native.</td>
+</tr>
+<tr>
+<td><a href="https://oca.colossi.network/specification/">OCA (Overlays Capture Architecture)</a></td>
+<td>Decentralized semantics: a minimal capture base plus stackable, content-addressed (SAID) overlays (labels, formats, units, mappings, ...). Own serialization, not RDF/JSON-LD/JSON Schema-native; the opposite philosophy to a single unified document.</td>
+</tr>
+<tr>
+<td><a href="https://w3c.github.io/yml2vocab/">yml2vocab</a></td>
+<td>W3C tool that generates an RDFS vocabulary, a JSON-LD context and ReSpec/Bikeshed HTML from a simple YAML term list. Vocabulary-publishing, not a data-schema framework; used widely by the Verifiable Credentials community.</td>
+</tr>
+<tr>
+<td><a href="https://www.semantic-treehouse.nl/">Semantic Treehouse</a></td>
+<td>TNO vocabulary-hub platform for dataspaces. Hosts and collaboratively maintains vocabularies (OWL, SHACL and, more recently, JSON Schema) rather than defining a serialization; a registry counterpart to OO-LD schemas.</td>
+</tr>
+<tr>
+<td><a href="https://www.w3.org/2019/wot/json-schema">WoT JSON Schema in RDF</a></td>
+<td>W3C note expressing JSON Schema as RDF and attaching a JSON-LD context to instances via <code>jsonld:context</code>. The closest standards precedent for annotating JSON Schema in place.</td>
 </tr>
 </tbody>
 </table>
