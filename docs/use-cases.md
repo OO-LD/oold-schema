@@ -120,3 +120,11 @@ maps to the following OpenAPI 3.0 document, one Schema Object per class (the `$i
   }
 }
 ```
+
+## Structured knowledge bases (the "LLM Wiki" pattern)
+
+An LLM-maintained knowledge base only *compounds* if what accumulates is structured. Unqualified links and free text do not scale - a personal wiki decays to prose and dead links within a couple of years, a team or corporate one faster - because every question forces the model to re-read and re-derive. What accumulates value is typed, queryable entities.
+
+OO-LD gives each entry a schema-defined structured payload alongside its prose. Because an OO-LD schema is at once a JSON Schema and a JSON-LD context, the *same* schema (a) generates the human edit form, (b) constrains LLM structured-output extraction, and (c) yields an RDF knowledge graph queryable with SPARQL across all entries - so "find contradictions, orphans or duplicates" becomes a graph query rather than a re-read.
+
+The workflow this enables, and where current research sits, is the ingest loop: take an unstructured knowledge chunk, select the schema(s) that represent it, then fill them correctly *and* deduplicate against entities that already exist. That last step - entity resolution against a live graph - is the hard part. [OpenSemanticLab](https://github.com/OpenSemanticLab) is the reference implementation of this pattern; the broader idea is discussed in the [Reference](reference.md#discussion) pointers.
