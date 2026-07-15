@@ -488,6 +488,10 @@ For enum code generation OO-LD keeps the established `x-enum-varnames` (identifi
 
 `format` carries the widget hint when its value is a registered JSON Schema 2020-12 format (`date`, `date-time`, `time`, `duration`, `email`, `uri`, `iri`, `uuid`, ...); a validator may check it and a form generator picks the matching input. Values that are not registered formats (`table`, `tabs`, `grid`, `autocomplete`, `textarea`, `checkbox`, `markdown`, `color`, ...) are widget-only and go in `x-oold-ui-widget`, leaving `format` for validation semantics.
 
+##### Validator vs. form widget {#validator-vs-widget .informative}
+
+A modern JSON Schema 2020-12 toolchain - ajv, the json-editor / jedison built-in validator, Hyperjump, Pydantic v2, OpenAPI 3.1 - honours `const` and keywords placed alongside `$ref`, so OO-LD's composition constructs validate as written; the older assumption that such tooling silently drops them does not hold for these validators. A narrower caveat concerns UI generation rather than validation: a form generator's *widget rendering* of a keyword may differ from what its *validator* enforces - for example json-editor validates `const` but does not necessarily render the field as a fixed value. A consumer restricted to a Draft-4-only JSON Schema processor remains the exception, since keywords adjacent to `$ref` and `const` are only guaranteed from later drafts.
+
 ##### Delivery: inline or overlay {#ui-delivery}
 
 UI keywords may be embedded in the schema (inline):
