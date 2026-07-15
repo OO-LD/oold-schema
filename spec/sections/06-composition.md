@@ -138,3 +138,20 @@ JSON Schema's validation algebra is purely conjunctive: `allOf` requires an inst
 When such a merge is required, OO-LD resolves the `allOf` chain by applying **JSON Merge Patch ([[RFC7396]]) semantics**: keyed by object member, most-recently-defined (most-derived) wins, and a `null` value removes a key. For the `@context` this coincides with JSON-LD's own override rule. For assertion-bearing keywords the resolved view additionally honors **narrow-only** composition: a derived schema MAY restrict a constraint but MUST NOT relax it, matching how code generators let a subclass tighten - never loosen - a superclass property's validation.
 
 This single model governs every place OO-LD collapses composition into a resolved value: single-valued annotations such as `title` and `x-oold-multilang-title` resolve most-derived-wins, constraints resolve narrow-only, and additive maps merge by key. A preprocessor applying it produces exactly the view that UI and code generators already compute, so no separate "resolved schema" format is needed.
+
+### Closing composed objects {#closing-composed-objects .informative}
+
+Because `allOf` composition is conjunctive, `additionalProperties: false` on one subschema rejects the members that the other composed subschemas contribute, so it cannot close a composed object. To close such an object - rejecting members that no composed subschema declares - use `unevaluatedProperties: false` ([[JSONSCHEMA]] §11.3), which is evaluated after the `allOf` branches and therefore accounts for their properties. A schema closed this way should still allow the instance-level `$schema` and `@context` members (see [](#schema-instances)).
+
+:::example{title="Closing an inherited object with `unevaluatedProperties`"}
+```yaml
+$id: Employee.schema.json
+allOf:
+  - $ref: Person.schema.json
+properties:
+  employeeId:
+    type: string
+unevaluatedProperties: false
+```
+An instance may carry the `Person` properties, `employeeId`, and `$schema` / `@context`; any other member is rejected.
+:::
