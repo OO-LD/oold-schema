@@ -716,6 +716,17 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#structured-knowledge-bases-the-llm-wiki-pattern" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Structured knowledge bases (the "LLM Wiki" pattern)
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -985,6 +996,17 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#structured-knowledge-bases-the-llm-wiki-pattern" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Structured knowledge bases (the "LLM Wiki" pattern)
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1140,6 +1162,10 @@
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
+<h2 id="structured-knowledge-bases-the-llm-wiki-pattern">Structured knowledge bases (the "LLM Wiki" pattern)<a class="headerlink" href="#structured-knowledge-bases-the-llm-wiki-pattern" title="Permanent link">&para;</a></h2>
+<p>An LLM-maintained knowledge base only <em>compounds</em> if what accumulates is structured. Unqualified links and free text do not scale - a personal wiki decays to prose and dead links within a couple of years, a team or corporate one faster - because every question forces the model to re-read and re-derive. What accumulates value is typed, queryable entities.</p>
+<p>OO-LD gives each entry a schema-defined structured payload alongside its prose. Because an OO-LD schema is at once a JSON Schema and a JSON-LD context, the <em>same</em> schema (a) generates the human edit form, (b) constrains LLM structured-output extraction, and (c) yields an RDF knowledge graph queryable with SPARQL across all entries - so "find contradictions, orphans or duplicates" becomes a graph query rather than a re-read.</p>
+<p>The workflow this enables, and where current research sits, is the ingest loop: take an unstructured knowledge chunk, select the schema(s) that represent it, then fill them correctly <em>and</em> deduplicate against entities that already exist. That last step - entity resolution against a live graph - is the hard part. <a href="https://github.com/OpenSemanticLab">OpenSemanticLab</a> is the reference implementation of this pattern; the broader idea is discussed in the <a href="../reference/#discussion">Reference</a> pointers.</p>
 
 
 
