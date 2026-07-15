@@ -9,6 +9,7 @@ This page collects informative reference material - the package registry, discus
 ## Discussion
 
 - In the context of YAML-LD: <https://github.com/w3c/yaml-ld/issues/19>
+- The "LLM Wiki" pattern (persistent, LLM-maintained knowledge bases), and OO-LD's structured take on it: <https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f>
 
 ## Related Work
 

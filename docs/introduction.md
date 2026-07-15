@@ -12,6 +12,7 @@ What makes OO-LD different from other approaches that unify structure and semant
 - OO-LD schemas are compatible with LLM APIs
 - OO-LD schemas can be used as function (dataclasses) and API signatures (OpenAPI)
 - OO-LD schemas can be used to define graphical user interfaces, in particular forms
+- OO-LD schemas turn a wiki or document store into a compounding, SPARQL-queryable knowledge base - the ["LLM Wiki" pattern](use-cases.md#structured-knowledge-bases-the-llm-wiki-pattern)
 
 ![OSL Technologie Stack](https://opensemantic.world/wiki/Special:Redirect/file/OSW95a74be1e22d4b6e9e4f836127d5915a.drawio.svg)
 
