@@ -188,7 +188,7 @@ The OO-LD schema for `Organization` - `address` is an inlined object (`$ref`, re
     "address": { "$ref": "Address.schema.json" },
     "employees": {
       "type": "array",
-      "items": { "type": "string", "format": "iri", "x-oold-range": "Person.schema.json" }
+      "items": { "type": "string", "x-oold-range": "Person.schema.json" }
     }
   }
 }
@@ -373,6 +373,15 @@ intersections (`allOf`) and inline constraints can be combined to describe an an
 :::
 
 A range subschema MAY also carry additional annotations (e.g. `title`, `description` or further `x-oold-*` keywords) to support tooling - for example a human-readable label for an autocomplete dropdown, or hints used when generating a SHACL shape.
+
+##### Lexical form of the reference {#range-reference-form}
+
+The value of an IRI-valued property is a JSON string. Its role as a reference comes from the `@context` (`"@type": "@id"`) and its class from `x-oold-range`; the string's *lexical* form is deliberately left open, because OO-LD instances routinely use compact IRIs, aliased terms and context-relative names. A schema MAY additionally constrain that form, by case:
+
+- **Full (absolute) IRIs only** - `"format": "iri"`. `iri` and `iri-reference` are defined by JSON Schema but omitted by the widely used [`ajv-formats`](https://github.com/ajv-validator/ajv-formats); ajv provides them through the [`ajv-formats-draft2019`](https://github.com/luzlab/ajv-formats-draft2019) plugin. Note that `iri` rejects a *compact* IRI such as `ex:alice` (which validates as `uri` but not as `iri`), so use it only where values are always fully qualified.
+- **Prefixed (compact) IRIs only** - a `"pattern"`, since no `format` matches a `prefix:reference` shape. `"^[A-Za-z_][\\w.-]*:(?!//)\\S*$"` accepts `ex:alice` and `schema:Person` (and, unavoidably, non-hierarchical schemes such as `urn:...`) while rejecting `http://…`, `:x` and a bare `x`. The prefix MUST be defined in the `@context`.
+- **Bare terms resolved by the context** - no `format` or `pattern`: a plain string such as `alice` is expanded against the context's `@base` (for `@id`) or `@vocab`, so it cannot be validated in isolation.
+- **Any of these** - leave the property as `"type": "string"` with no lexical constraint and rely on `"@type": "@id"` and `x-oold-range` for typing. This is the default, and the RECOMMENDED choice unless a stricter form is genuinely required.
 
 ##### Why `x-oold-ref` and not `$ref` {#why-x-oold-ref}
 

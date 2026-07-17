@@ -1,0 +1,7 @@
+{
+  "$schema": "RdfPerson.schema.json",
+  "@context": "RdfPerson.schema.json",
+  "id": "ex:alice",
+  "type": "schema:Person",
+  "name": "Alice"
+}

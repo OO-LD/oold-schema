@@ -28,6 +28,11 @@ nav = [
     { "Tooling" = "tooling.md" },
     { "Reference" = "reference.md" },
     { "Migration" = [
+        { "Overview" = "migration/index.md" },
+        { "From JSON Schema" = "migration/from-json-schema.md" },
+        { "From RDF / JSON-LD" = "migration/from-rdf.md" },
+        { "From OWL or SHACL" = "migration/from-owl-shacl.md" },
+        { "From a Python dataclass" = "migration/from-python.md" },
         { "From legacy OSW" = "migration/from-legacy-osw.md" },
         { "Legacy keyword inventory" = "migration/legacy-keyword-inventory.md" },
     ]},
