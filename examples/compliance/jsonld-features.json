@@ -1,0 +1,27 @@
+[
+  {
+    "$comment": "OO-LD-specific JSON-LD constructs only (not vanilla JSON-LD). Each group names an example schema via schemaRef; the instance references it as a remote @context, so the OO-LD composition (base-class context inheritance, property-$ref scoped context) is exercised end to end. `valid` checks JSON Schema validation; `expectRdf` checks the resulting RDF by dataset isomorphism (jsonld.canonize).",
+    "feature": "inheritance: a subclass inherits its base classes' @context and JSON Schema (Researcher -> Person -> Thing)",
+    "schemaRef": "Researcher.schema.json",
+    "tests": [
+      {
+        "description": "name (from Thing), works_for (from Person) and affiliation (from Researcher) all resolve via the inherited contexts",
+        "data": { "@context": "Researcher.schema.json", "$schema": "Researcher.schema.json", "id": "https://example.org/alice", "name": "Alice", "works_for": "https://example.org/acme", "affiliation": "https://example.org/uni" },
+        "valid": true,
+        "expectRdf": "<https://example.org/alice> <http://schema.org/affiliation> \"https://example.org/uni\" .\n<https://example.org/alice> <http://schema.org/name> \"Alice\" .\n<https://example.org/alice> <http://schema.org/worksFor> \"https://example.org/acme\" .\n"
+      }
+    ]
+  },
+  {
+    "feature": "composition: a property $ref pulls in the referenced schema's @context as a property-scoped context (Organization.address -> Address)",
+    "schemaRef": "Organization.schema.json",
+    "tests": [
+      {
+        "description": "the nested address expands with Address's scoped context (country -> schema:addressCountry, streetAddress -> schema:streetAddress)",
+        "data": { "@context": "Organization.schema.json", "$schema": "Organization.schema.json", "id": "https://example.org/acme", "name": "ACME", "address": { "country": "DE", "streetAddress": "Main St 1" } },
+        "valid": true,
+        "expectRdf": "<https://example.org/acme> <http://schema.org/address> _:b0 .\n<https://example.org/acme> <http://schema.org/name> \"ACME\" .\n_:b0 <http://schema.org/addressCountry> \"DE\" .\n_:b0 <http://schema.org/streetAddress> \"Main St 1\" .\n"
+      }
+    ]
+  }
+]

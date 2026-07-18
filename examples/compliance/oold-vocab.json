@@ -1,0 +1,85 @@
+[
+  {
+    "$comment": "Keep in sync with meta/oold-meta-schema.json and meta/oold-ui-meta-schema.json: scripts/validate.mjs asserts every x-oold-* / x-oold-ui-* keyword defined there is covered by at least one case below. Each `schemas` entry is checked against the OO-LD meta-schema (well-formedness), not an instance.",
+    "description": "a fully annotated OO-LD schema is well-formed (covers every x-oold-* and x-oold-ui-* keyword)",
+    "schemas": [
+      {
+        "description": "all keywords well-formed",
+        "valid": true,
+        "schema": {
+          "$schema": "https://oo-ld.github.io/oold-schema/latest/meta/oold-meta-schema.json",
+          "x-oold-uuid": "b5203131-7321-46bb-8a11-acb3d1015840",
+          "x-oold-version": "1.0.0",
+          "x-oold-prior-version": "0.9.0",
+          "x-oold-backward-compatible-with": "0.9.0/Person.schema.json",
+          "x-oold-incompatible-with": "0.8.0/Person.schema.json",
+          "x-oold-iri": "schema:Person",
+          "x-oold-instance-rdf-type": ["schema:Person"],
+          "x-oold-multilang-title": { "en": "Person", "de": "Person" },
+          "x-oold-multilang-description": { "en": "A person", "de": "Eine Person" },
+          "x-oold-context": { "name": { "skos:prefLabel": {} } },
+          "x-oold-reverse-properties": { "employees": { "type": "array", "title": "Employees" } },
+          "x-oold-reverse-required": ["employees"],
+          "x-oold-reverse-default-properties": ["employees"],
+          "type": "object",
+          "properties": {
+            "ref": { "type": "string", "x-oold-range": { "allOf": [{ "x-oold-ref": "Person.schema.json" }] } },
+            "role": {
+              "type": "string",
+              "enum": ["pi", "postdoc"],
+              "x-oold-ui-widget": "select",
+              "x-oold-ui-property-order": 1,
+              "x-oold-ui-property-group": "General",
+              "x-oold-ui-form-hidden": false,
+              "x-oold-ui-render-hidden": false,
+              "x-oold-ui-enum-titles": ["PI", "Postdoc"],
+              "x-oold-multilang-ui-enum-titles": { "en": ["PI", "Postdoc"] },
+              "x-oold-ui-hint": "Role in the project",
+              "x-oold-multilang-ui-hint": { "en": "Role in the project" },
+              "x-oold-ui-default-property": true,
+              "x-enum-varnames": ["PrincipalInvestigator", "PostDoc"],
+              "x-enum-descriptions": ["Leads the project", "Holds a doctorate"]
+            }
+          }
+        }
+      }
+    ]
+  },
+  {
+    "description": "core x-oold-* keywords reject malformed values",
+    "schemas": [
+      { "description": "x-oold-uuid not a uuid", "valid": false, "schema": { "$schema": "https://oo-ld.github.io/oold-schema/latest/meta/oold-meta-schema.json", "x-oold-uuid": "nope" } },
+      { "description": "x-oold-version not a string", "valid": false, "schema": { "$schema": "https://oo-ld.github.io/oold-schema/latest/meta/oold-meta-schema.json", "x-oold-version": 1 } },
+      { "description": "x-oold-prior-version not a string", "valid": false, "schema": { "$schema": "https://oo-ld.github.io/oold-schema/latest/meta/oold-meta-schema.json", "x-oold-prior-version": 1 } },
+      { "description": "x-oold-backward-compatible-with not a string", "valid": false, "schema": { "$schema": "https://oo-ld.github.io/oold-schema/latest/meta/oold-meta-schema.json", "x-oold-backward-compatible-with": 1 } },
+      { "description": "x-oold-incompatible-with not a string", "valid": false, "schema": { "$schema": "https://oo-ld.github.io/oold-schema/latest/meta/oold-meta-schema.json", "x-oold-incompatible-with": 1 } },
+      { "description": "x-oold-iri not a string", "valid": false, "schema": { "$schema": "https://oo-ld.github.io/oold-schema/latest/meta/oold-meta-schema.json", "x-oold-iri": 1 } },
+      { "description": "x-oold-instance-rdf-type not an array", "valid": false, "schema": { "$schema": "https://oo-ld.github.io/oold-schema/latest/meta/oold-meta-schema.json", "x-oold-instance-rdf-type": "schema:Person" } },
+      { "description": "x-oold-ref not a string", "valid": false, "schema": { "$schema": "https://oo-ld.github.io/oold-schema/latest/meta/oold-meta-schema.json", "x-oold-ref": 1 } },
+      { "description": "x-oold-range as a number", "valid": false, "schema": { "$schema": "https://oo-ld.github.io/oold-schema/latest/meta/oold-meta-schema.json", "x-oold-range": 42 } },
+      { "description": "x-oold-multilang-title not an object", "valid": false, "schema": { "$schema": "https://oo-ld.github.io/oold-schema/latest/meta/oold-meta-schema.json", "x-oold-multilang-title": "Person" } },
+      { "description": "x-oold-multilang-description not an object", "valid": false, "schema": { "$schema": "https://oo-ld.github.io/oold-schema/latest/meta/oold-meta-schema.json", "x-oold-multilang-description": "a person" } },
+      { "description": "x-oold-context not an object", "valid": false, "schema": { "$schema": "https://oo-ld.github.io/oold-schema/latest/meta/oold-meta-schema.json", "x-oold-context": "x" } },
+      { "description": "x-oold-reverse-properties not an object", "valid": false, "schema": { "$schema": "https://oo-ld.github.io/oold-schema/latest/meta/oold-meta-schema.json", "x-oold-reverse-properties": "x" } },
+      { "description": "x-oold-reverse-required not an array", "valid": false, "schema": { "$schema": "https://oo-ld.github.io/oold-schema/latest/meta/oold-meta-schema.json", "x-oold-reverse-required": "x" } },
+      { "description": "x-oold-reverse-default-properties not an array", "valid": false, "schema": { "$schema": "https://oo-ld.github.io/oold-schema/latest/meta/oold-meta-schema.json", "x-oold-reverse-default-properties": "x" } }
+    ]
+  },
+  {
+    "description": "UI x-oold-ui-* / x-enum-* keywords reject malformed values",
+    "schemas": [
+      { "description": "x-oold-ui-widget not a string", "valid": false, "schema": { "$schema": "https://oo-ld.github.io/oold-schema/latest/meta/oold-meta-schema.json", "x-oold-ui-widget": 1 } },
+      { "description": "x-oold-ui-property-order not an integer", "valid": false, "schema": { "$schema": "https://oo-ld.github.io/oold-schema/latest/meta/oold-meta-schema.json", "x-oold-ui-property-order": "first" } },
+      { "description": "x-oold-ui-property-group not a string", "valid": false, "schema": { "$schema": "https://oo-ld.github.io/oold-schema/latest/meta/oold-meta-schema.json", "x-oold-ui-property-group": 1 } },
+      { "description": "x-oold-ui-form-hidden not a boolean", "valid": false, "schema": { "$schema": "https://oo-ld.github.io/oold-schema/latest/meta/oold-meta-schema.json", "x-oold-ui-form-hidden": "x" } },
+      { "description": "x-oold-ui-render-hidden not a boolean", "valid": false, "schema": { "$schema": "https://oo-ld.github.io/oold-schema/latest/meta/oold-meta-schema.json", "x-oold-ui-render-hidden": "x" } },
+      { "description": "x-oold-ui-enum-titles not an array", "valid": false, "schema": { "$schema": "https://oo-ld.github.io/oold-schema/latest/meta/oold-meta-schema.json", "x-oold-ui-enum-titles": "x" } },
+      { "description": "x-oold-multilang-ui-enum-titles not an object", "valid": false, "schema": { "$schema": "https://oo-ld.github.io/oold-schema/latest/meta/oold-meta-schema.json", "x-oold-multilang-ui-enum-titles": "x" } },
+      { "description": "x-oold-ui-hint not a string", "valid": false, "schema": { "$schema": "https://oo-ld.github.io/oold-schema/latest/meta/oold-meta-schema.json", "x-oold-ui-hint": 1 } },
+      { "description": "x-oold-multilang-ui-hint not an object", "valid": false, "schema": { "$schema": "https://oo-ld.github.io/oold-schema/latest/meta/oold-meta-schema.json", "x-oold-multilang-ui-hint": 1 } },
+      { "description": "x-oold-ui-default-property not a boolean", "valid": false, "schema": { "$schema": "https://oo-ld.github.io/oold-schema/latest/meta/oold-meta-schema.json", "x-oold-ui-default-property": "x" } },
+      { "description": "x-enum-varnames not an array", "valid": false, "schema": { "$schema": "https://oo-ld.github.io/oold-schema/latest/meta/oold-meta-schema.json", "x-enum-varnames": "x" } },
+      { "description": "x-enum-descriptions not an array", "valid": false, "schema": { "$schema": "https://oo-ld.github.io/oold-schema/latest/meta/oold-meta-schema.json", "x-enum-descriptions": "x" } }
+    ]
+  }
+]
