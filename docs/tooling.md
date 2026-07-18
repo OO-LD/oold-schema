@@ -39,7 +39,7 @@ These run on every schema and instance in [`examples/`](https://github.com/OO-LD
 
 ### Deterministic per-feature suites
 
-Precise fixtures with exact expected outcomes live in [`examples/compliance/`](https://github.com/OO-LD/oold-schema/tree/main/examples/compliance):
+Precise fixtures with exact expected outcomes live in [`examples/compliance/`](../examples/compliance/):
 
 - **Vocabulary well-formedness** (`oold-vocab.json`) - candidate schemas checked against the meta-schema, asserting each `x-oold-*` / `x-oold-ui-*` keyword is accepted when well-formed and rejected when malformed. A coverage cross-check reads the keyword list from the meta-schemas and fails if any keyword is untested, keeping the suite in sync with them.
 - **OO-LD JSON-LD constructs** (`jsonld-features.json`) - only the constructs OO-LD adds on top of plain JSON-LD (base-class `@context` inheritance, property-`$ref` scoped contexts), not vanilla JSON-LD. Each case merges the [JSON Schema Test Suite](https://github.com/json-schema-org/JSON-Schema-Test-Suite) shape (`valid`) with the [JSON-LD Test Suite](https://w3c.github.io/json-ld-api/tests/) shape (`expectRdf`, compared by RDF dataset isomorphism; `expectErrorCode` for negatives).
