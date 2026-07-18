@@ -16,7 +16,7 @@ install: ## Install the Node dependencies (schema validation)
 	@npm install
 
 .PHONY: validate
-validate: ## Validate the example schemas against the OO-LD meta-schema
+validate: ## Validate example schemas + instances (meta-schema, formats, JSON-LD)
 	@"$(NODE)" scripts/validate.mjs
 
 .PHONY: spec

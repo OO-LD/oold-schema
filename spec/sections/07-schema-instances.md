@@ -50,8 +50,7 @@ To keep instance keys variable-name-friendly, schemas SHOULD expose `@id` throug
   },
   "properties": {
     "id": {
-      "type": "string",
-      "format": "iri"
+      "type": "string"
     }
   }
 }

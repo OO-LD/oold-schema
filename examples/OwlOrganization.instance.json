@@ -1,0 +1,7 @@
+{
+  "$schema": "OwlOrganization.schema.json",
+  "@context": "OwlOrganization.schema.json",
+  "id": "ex:acme",
+  "type": "schema:Organization",
+  "employee": ["ex:alice"]
+}
