@@ -12,36 +12,36 @@
         <meta name="author" content="OO-LD Contributors">
       
       
-        <link rel="canonical" href="https://OO-LD.github.io/oold-schema/dev/guide/">
+        <link rel="canonical" href="https://OO-LD.github.io/oold-schema/dev/migration/from-rdf/">
       
       
-        <link rel="prev" href="../get-started/">
+        <link rel="prev" href="../from-json-schema/">
       
       
-        <link rel="next" href="./basic-concepts/">
+        <link rel="next" href="../from-owl-shacl/">
       
       
         
       
       
-      <link rel="icon" href="../assets/OO-LD_logo.jpg">
+      <link rel="icon" href="../../assets/OO-LD_logo.jpg">
       <meta name="generator" content="zensical-0.0.51">
     
     
       
-        <title>Guide - OO-LD Schema</title>
+        <title>From RDF, in particular JSON-LD - OO-LD Schema</title>
       
     
     
       
         
       
-      <link rel="stylesheet" href="../assets/stylesheets/modern/main.62c9b9cc.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/modern/main.62c9b9cc.min.css">
       
         
           
         
-        <link rel="stylesheet" href="../assets/stylesheets/modern/palette.dfe2e883.min.css">
+        <link rel="stylesheet" href="../../assets/stylesheets/modern/palette.dfe2e883.min.css">
       
       
 
@@ -60,9 +60,9 @@
       
     
     
-      <link rel="stylesheet" href="../stylesheets/extra.css">
+      <link rel="stylesheet" href="../../stylesheets/extra.css">
     
-    <script>__md_scope=new URL("..",location),__md_scope.pathname.endsWith("/")||(__md_scope=new URL(__md_scope.pathname+"/",location)),__md_hash=e=>[...e].reduce(((e,t)=>(e<<5)-e+t.charCodeAt(0)),0),__md_get=(e,t=localStorage,_=__md_scope)=>JSON.parse(t.getItem(_.pathname+"."+e)),__md_set=(e,t,_=localStorage,a=__md_scope)=>{try{_.setItem(a.pathname+"."+e,JSON.stringify(t))}catch(e){}},document.documentElement.setAttribute("data-platform",navigator.platform)</script>
+    <script>__md_scope=new URL("../..",location),__md_scope.pathname.endsWith("/")||(__md_scope=new URL(__md_scope.pathname+"/",location)),__md_hash=e=>[...e].reduce(((e,t)=>(e<<5)-e+t.charCodeAt(0)),0),__md_get=(e,t=localStorage,_=__md_scope)=>JSON.parse(t.getItem(_.pathname+"."+e)),__md_set=(e,t,_=localStorage,a=__md_scope)=>{try{_.setItem(a.pathname+"."+e,JSON.stringify(t))}catch(e){}},document.documentElement.setAttribute("data-platform",navigator.platform)</script>
     
       
 
@@ -87,7 +87,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#guide" class="md-skip">
+        <a href="#from-rdf-in-particular-json-ld" class="md-skip">
           Skip to content
         </a>
       
@@ -105,9 +105,9 @@
 
 <header class="md-header" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="./.." title="OO-LD Schema" class="md-header__button md-logo" aria-label="OO-LD Schema" data-md-component="logo">
+    <a href="../.." title="OO-LD Schema" class="md-header__button md-logo" aria-label="OO-LD Schema" data-md-component="logo">
       
-  <img src="../assets/OO-LD_logo.jpg" alt="OO-LD Schema">
+  <img src="../../assets/OO-LD_logo.jpg" alt="OO-LD Schema">
 
     </a>
     <label class="md-header__button md-icon" for="__drawer" aria-label="Navigation">
@@ -124,7 +124,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Guide
+              From RDF, in particular JSON-LD
             
           </span>
         </div>
@@ -208,7 +208,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="./.." class="md-tabs__link">
+      <a href="../.." class="md-tabs__link">
         
   
   Home
@@ -224,7 +224,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="../introduction/" class="md-tabs__link">
+      <a href="../../introduction/" class="md-tabs__link">
         
   
   Introduction
@@ -240,10 +240,114 @@
   
   
     <li class="md-tabs__item">
-      <a href="../get-started/" class="md-tabs__link">
+      <a href="../../get-started/" class="md-tabs__link">
         
   
   Get Started
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+      
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../guide/" class="md-tabs__link">
+          
+  
+  Guide
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../use-cases/" class="md-tabs__link">
+        
+  
+  Use Cases
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../mappings/" class="md-tabs__link">
+        
+  
+  Mappings
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../tooling/" class="md-tabs__link">
+        
+  
+  Tooling
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../reference/" class="md-tabs__link">
+        
+  
+  Reference
 
       </a>
     </li>
@@ -281,111 +385,7 @@
     
     
       <li class="md-tabs__item md-tabs__item--active">
-        <a href="././" class="md-tabs__link">
-          
-  
-  Guide
-
-        </a>
-      </li>
-    
-  
-
-      
-        
-  
-  
-  
-  
-    <li class="md-tabs__item">
-      <a href="../use-cases/" class="md-tabs__link">
-        
-  
-  Use Cases
-
-      </a>
-    </li>
-  
-
-      
-        
-  
-  
-  
-  
-    <li class="md-tabs__item">
-      <a href="../mappings/" class="md-tabs__link">
-        
-  
-  Mappings
-
-      </a>
-    </li>
-  
-
-      
-        
-  
-  
-  
-  
-    <li class="md-tabs__item">
-      <a href="../tooling/" class="md-tabs__link">
-        
-  
-  Tooling
-
-      </a>
-    </li>
-  
-
-      
-        
-  
-  
-  
-  
-    <li class="md-tabs__item">
-      <a href="../reference/" class="md-tabs__link">
-        
-  
-  Reference
-
-      </a>
-    </li>
-  
-
-      
-        
-  
-  
-  
-  
-    
-      
-      
-        
-          
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-    
-    
-    
-    
-      <li class="md-tabs__item">
-        <a href="../migration/" class="md-tabs__link">
+        <a href="../" class="md-tabs__link">
           
   
   Migration
@@ -402,7 +402,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="../spec/index.html" class="md-tabs__link">
+      <a href="../../spec/index.html" class="md-tabs__link">
         
   
   Specification
@@ -434,9 +434,9 @@
 
 <nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="./.." title="OO-LD Schema" class="md-nav__button md-logo" aria-label="OO-LD Schema" data-md-component="logo">
+    <a href="../.." title="OO-LD Schema" class="md-nav__button md-logo" aria-label="OO-LD Schema" data-md-component="logo">
       
-  <img src="../assets/OO-LD_logo.jpg" alt="OO-LD Schema">
+  <img src="../../assets/OO-LD_logo.jpg" alt="OO-LD Schema">
 
     </a>
     OO-LD Schema
@@ -463,7 +463,7 @@
   
   
     <li class="md-nav__item">
-      <a href="./.." class="md-nav__link">
+      <a href="../.." class="md-nav__link">
         
   
   
@@ -489,7 +489,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../introduction/" class="md-nav__link">
+      <a href="../../introduction/" class="md-nav__link">
         
   
   
@@ -515,7 +515,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../get-started/" class="md-nav__link">
+      <a href="../../get-started/" class="md-nav__link">
         
   
   
@@ -523,361 +523,6 @@
     
   
   Get Started
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-    
-      
-      
-  
-  
-    
-  
-  
-  
-    
-    
-      
-        
-          
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-    
-    
-    
-      
-        
-        
-      
-      
-    
-    
-      
-    
-    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
-      
-        
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
-        
-          
-          <div class="md-nav__link md-nav__container">
-            <a href="././" class="md-nav__link md-nav__link--active">
-              
-  
-  
-  <span class="md-ellipsis">
-    
-  
-  Guide
-
-    
-  </span>
-  
-  
-
-            </a>
-            
-              
-              <label class="md-nav__link md-nav__link--active" for="__nav_4" id="__nav_4_label" tabindex="">
-                <span class="md-nav__icon md-icon"></span>
-              </label>
-            
-          </div>
-        
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
-          <label class="md-nav__title" for="__nav_4">
-            <span class="md-nav__icon md-icon"></span>
-            
-  
-  Guide
-
-          </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="./basic-concepts/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-  Basic Concepts
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="./composition/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-  Composition
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="./schema-instances/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-  Schema Instances
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="./identification-versioning/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-  Identification & Versioning
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="./extensions/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-  Extensions
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="./meta-schema/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-  Meta-schema & Vocabulary
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-          </ul>
-        </nav>
-      
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../use-cases/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-  Use Cases
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../mappings/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-  Mappings
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../tooling/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-  Tooling
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../reference/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-  Reference
 
     
   </span>
@@ -932,7 +577,7 @@
   
   
   
-    <a href="../migration/" class="md-nav__link">
+    <a href="../../guide/" class="md-nav__link">
       
   
   
@@ -964,7 +609,464 @@
   
   
     <li class="md-nav__item">
-      <a href="../spec/index.html" class="md-nav__link">
+      <a href="../../use-cases/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Use Cases
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../mappings/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Mappings
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tooling/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Tooling
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Reference
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" checked>
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Migration
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_9" id="__nav_9_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+  Migration
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../from-json-schema/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  From JSON Schema
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  From RDF / JSON-LD
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="././" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  From RDF / JSON-LD
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+
+<nav class="md-nav md-nav--secondary" aria-label="On this page">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      On this page
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-plain-rdf-triples-turtle" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        1. Plain RDF triples (Turtle)
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-compact-json-ld" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        2. Compact JSON-LD
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-oo-ld-schema-the-context-plus-structural-validation" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        3. OO-LD schema: the context plus structural validation
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-the-instance-referencing-the-schema" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        4. The instance, referencing the schema
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#next-steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Next steps
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../from-owl-shacl/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  From OWL or SHACL
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../from-python/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  From a Python dataclass
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../from-legacy-osw/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  From legacy OSW
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../legacy-keyword-inventory/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Legacy keyword inventory
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../spec/index.html" class="md-nav__link">
         
   
   
@@ -1024,10 +1126,54 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#contents" class="md-nav__link">
+  <a href="#1-plain-rdf-triples-turtle" class="md-nav__link">
     <span class="md-ellipsis">
       <span class="md-typeset">
-        Contents
+        1. Plain RDF triples (Turtle)
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-compact-json-ld" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        2. Compact JSON-LD
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-oo-ld-schema-the-context-plus-structural-validation" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        3. OO-LD schema: the context plus structural validation
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-the-instance-referencing-the-schema" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        4. The instance, referencing the schema
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#next-steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Next steps
       </span>
     </span>
   </a>
@@ -1059,7 +1205,7 @@
   
   
     <li class="md-path__item">
-      <a href="./.." class="md-path__link">
+      <a href="../.." class="md-path__link">
         
   
   <span class="md-ellipsis">
@@ -1099,11 +1245,11 @@
     
     
       <li class="md-path__item">
-        <a href="././" class="md-path__link">
+        <a href="../" class="md-path__link">
           
   
   <span class="md-ellipsis">
-    Guide
+    Migration
   </span>
 
         </a>
@@ -1120,7 +1266,7 @@
                 
                   
   
-    <a href="https://github.com/OO-LD/oold-schema/edit/main/docs/guide/index.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
+    <a href="https://github.com/OO-LD/oold-schema/edit/main/docs/migration/from-rdf.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
       
       <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-file-pen" viewBox="0 0 24 24"><path d="M12.659 22H18a2 2 0 0 0 2-2V8a2.4 2.4 0 0 0-.706-1.706l-3.588-3.588A2.4 2.4 0 0 0 14 2H6a2 2 0 0 0-2 2v9.34"/><path d="M14 2v5a1 1 0 0 0 1 1h5M10.378 12.622a1 1 0 0 1 3 3.003L8.36 20.637a2 2 0 0 1-.854.506l-2.867.837a.5.5 0 0 1-.62-.62l.836-2.869a2 2 0 0 1 .506-.853z"/></svg>
     </a>
@@ -1129,23 +1275,78 @@
     
       
     
-    <a href="https://github.com/OO-LD/oold-schema/raw/main/docs/guide/index.md" title="View source of this page" class="md-content__button md-icon">
+    <a href="https://github.com/OO-LD/oold-schema/raw/main/docs/migration/from-rdf.md" title="View source of this page" class="md-content__button md-icon">
       
       <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-file-code-2" viewBox="0 0 24 24"><path d="M4 12.15V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.706.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2h-3.35"/><path d="M14 2v5a1 1 0 0 0 1 1h5M5 16l-3 3 3 3M9 22l3-3-3-3"/></svg>
     </a>
   
 
 
-<h1 id="guide">Guide<a class="headerlink" href="#guide" title="Permanent link">&para;</a></h1>
-<p>This guide is a non-normative walk-through of OO-LD Schema. It follows the same orientation as the <a href="https://www.w3.org/TR/json-ld/">JSON-LD specification</a>: each concept is introduced with a short explanation and worked examples. For the exact, normative rules - and the RFC 2119 keywords - always refer to the <a href="../spec/index.html">Specification</a>.</p>
-<h2 id="contents">Contents<a class="headerlink" href="#contents" title="Permanent link">&para;</a></h2>
+<h1 id="from-rdf-in-particular-json-ld">From RDF, in particular JSON-LD<a class="headerlink" href="#from-rdf-in-particular-json-ld" title="Permanent link">&para;</a></h1>
+<p>You already have data as RDF. OO-LD lets a single document be both the JSON-LD <strong>context</strong> that turns that RDF into idiomatic JSON and the <strong>JSON Schema</strong> that validates the result, so meaning and structure travel together. Follow one <code>schema:Person</code> from triples to a validated OO-LD instance.</p>
+<h2 id="1-plain-rdf-triples-turtle">1. Plain RDF triples (Turtle)<a class="headerlink" href="#1-plain-rdf-triples-turtle" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><span class="k">@prefix</span><span class="w"> </span><span class="nn">schema:</span><span class="w"> </span><span class="nv">&lt;http://schema.org/&gt;</span><span class="w"> </span><span class="p">.</span>
+
+<span class="nv">&lt;https://example.org/alice&gt;</span>
+    <span class="kt">a</span> <span class="nn">schema</span><span class="p">:</span><span class="nt">Person</span> <span class="p">;</span>
+    <span class="nn">schema</span><span class="p">:</span><span class="nt">name</span> <span class="s">&quot;Alice&quot;</span> <span class="p">.</span>
+</code></pre></div>
+<h2 id="2-compact-json-ld">2. Compact JSON-LD<a class="headerlink" href="#2-compact-json-ld" title="Permanent link">&para;</a></h2>
+<p>A context that aliases <code>id</code> to <code>@id</code>, <code>type</code> to <code>@type</code>, and <code>name</code> to <code>schema:name</code> - plus an <code>ex</code> prefix for our own IRIs - compacts those triples into plain-looking JSON:</p>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;@context&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;@id&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;@type&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;ex&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;https://example.org/&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;schema&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;http://schema.org/&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;schema:name&quot;</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ex:alice&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;schema:Person&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Alice&quot;</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>Any JSON-LD processor round-trips between (1) and (2); the JSON keys stay as plain as <code>name</code> and <code>type</code>, and <code>id</code> shortens to the compact IRI <code>ex:alice</code>.</p>
+<h2 id="3-oo-ld-schema-the-context-plus-structural-validation">3. OO-LD schema: the context plus structural validation<a class="headerlink" href="#3-oo-ld-schema-the-context-plus-structural-validation" title="Permanent link">&para;</a></h2>
+<p>The OO-LD schema carries that same <code>@context</code> and adds a JSON Schema shape, so the JSON is not only meaningful but validated. Because <code>type</code> is now a normal (aliased) property, the class is modelled as a <code>const</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;$schema&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;https://oo-ld.github.io/oold-schema/latest/meta/oold-meta-schema.json&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;$id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;RdfPerson.schema.json&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;x-oold-iri&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;schema:Person&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;@context&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;@id&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;@type&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;ex&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;https://example.org/&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;schema&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;http://schema.org/&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;schema:name&quot;</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Person&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;object&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;properties&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;string&quot;</span><span class="w"> </span><span class="p">},</span>
+<span class="w">    </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;string&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;const&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;schema:Person&quot;</span><span class="w"> </span><span class="p">},</span>
+<span class="w">    </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;string&quot;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>The schema-level <code>type: "object"</code> (a JSON Schema keyword) and the <code>type</code> <em>property</em> (the aliased <code>@type</code>) coexist without clashing. A <code>const</code> pins the class exactly, which is fine for a standalone type. Under inheritance it is too strict - a subtype could not set its own class - so use <code>default</code> instead of <code>const</code> (a derived schema widens it), or record the classes in <code>x-oold-instance-rdf-type</code>, which composes across the inheritance chain and is materialized on export.</p>
+<h2 id="4-the-instance-referencing-the-schema">4. The instance, referencing the schema<a class="headerlink" href="#4-the-instance-referencing-the-schema" title="Permanent link">&para;</a></h2>
+<p>The stored instance is the JSON-LD document from (2) with one change: instead of an inline context it names the schema (a relative reference here, a versioned URL when deployed) as a <strong>remote <code>@context</code></strong>, and the same reference as <code>$schema</code>. The schema then supplies both the context and the validation:</p>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;$schema&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;RdfPerson.schema.json&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;@context&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;RdfPerson.schema.json&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ex:alice&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;schema:Person&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Alice&quot;</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>Consumed as a remote context this reproduces the JSON-LD in (2), and exporting it yields the triples in (1). The short <code>id</code> works because <code>ex:</code> is a context prefix, which expands whether the context is inline or remote. A context <code>@base</code> is less portable for the remote case: the JSON-LD context-processing algorithm skips <code>@base</code> while processing a remote context, yet some processors still apply it - so prefer a prefix (compact IRI) to keep instance IRIs short.</p>
+<p>The schema and instance are committed example files (<code>examples/RdfPerson.schema.json</code>, <code>examples/RdfPerson.instance.json</code>), covered by <code>make validate</code>: meta-schema, formats, and JSON-LD conversion to RDF.</p>
+<h2 id="next-steps">Next steps<a class="headerlink" href="#next-steps" title="Permanent link">&para;</a></h2>
 <ul>
-<li><a href="basic-concepts/">Basic Concepts</a> - how one document serves as both a JSON Schema and a JSON-LD context, and how inheritance is expressed.</li>
-<li><a href="composition/">Composition</a> - assembling complex types from independent schemas, merging remote contexts, and the merge-and-override model.</li>
-<li><a href="schema-instances/">Schema Instances</a> - how instances reference their schema (<code>@context</code>, <code>$schema</code>), carry identity (<code>@id</code>), and carry their semantic type.</li>
-<li><a href="identification-versioning/">Identification &amp; Versioning</a> - <code>$id</code>, <code>x-oold-uuid</code>, the ontology class IRI (<code>x-oold-iri</code>), and version keywords.</li>
-<li><a href="extensions/">Extensions</a> - the JSON-LD and JSON Schema extensions OO-LD adds (<code>@version</code>, multi-mapping, multilanguage, <code>x-oold-range</code>, reverse properties, UI generation).</li>
-<li><a href="meta-schema/">Meta-schema &amp; Vocabulary</a> - the OO-LD dialect meta-schema and the full <code>x-oold-*</code> keyword table.</li>
+<li><a href="../../guide/basic-concepts/">Basic Concepts</a> - schema-as-context.</li>
+<li><a href="../../guide/schema-instances/">Schema Instances</a> - <code>$schema</code>, remote <code>@context</code>, <code>@id</code> and type on instances.</li>
+<li><a href="../from-owl-shacl/">From OWL or SHACL</a> - if your starting point is an ontology or shapes.</li>
 </ul>
 
 
@@ -1186,7 +1387,7 @@
       <nav class="md-footer__inner md-grid" aria-label="Footer" >
         
           
-          <a href="../get-started/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Get Started">
+          <a href="../from-json-schema/" class="md-footer__link md-footer__link--prev" aria-label="Previous: From JSON Schema">
             <div class="md-footer__button md-icon">
               
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 512"><!--! Font Awesome Free 7.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2026 Fonticons, Inc.--><path fill="currentColor" d="M9.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L77.3 256l137.3-137.4c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg>
@@ -1196,20 +1397,20 @@
                 Previous
               </span>
               <div class="md-ellipsis">
-                Get Started
+                From JSON Schema
               </div>
             </div>
           </a>
         
         
           
-          <a href="./basic-concepts/" class="md-footer__link md-footer__link--next" aria-label="Next: Basic Concepts">
+          <a href="../from-owl-shacl/" class="md-footer__link md-footer__link--next" aria-label="Next: From OWL or SHACL">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 Next
               </span>
               <div class="md-ellipsis">
-                Basic Concepts
+                From OWL or SHACL
               </div>
             </div>
             <div class="md-footer__button md-icon">
@@ -1266,10 +1467,10 @@
     
       
       
-      <script id="__config" type="application/json">{"annotate":null,"base":"..","features":["announce.dismiss","content.code.annotate","content.action.edit","content.action.view","content.code.copy","content.code.select","content.footnote.tooltips","content.tabs.link","content.tooltips","navigation.footer","navigation.indexes","navigation.tabs","navigation.instant","navigation.instant.prefetch","navigation.path","navigation.prune","navigation.top","navigation.tracking","search.highlight"],"search":"../assets/javascripts/workers/search.b6b7e04f.min.js","tags":null,"translations":{"clipboard.copied":"Copied to clipboard","clipboard.copy":"Copy to clipboard","search.result.more.one":"1 more on this page","search.result.more.other":"# more on this page","search.result.none":"No matching documents","search.result.one":"1 matching document","search.result.other":"# matching documents","search.result.placeholder":"Type to start searching","search.result.term.missing":"Missing","select.version":"Select version"},"version":{"provider":"mike"}}</script>
+      <script id="__config" type="application/json">{"annotate":null,"base":"../..","features":["announce.dismiss","content.code.annotate","content.action.edit","content.action.view","content.code.copy","content.code.select","content.footnote.tooltips","content.tabs.link","content.tooltips","navigation.footer","navigation.indexes","navigation.tabs","navigation.instant","navigation.instant.prefetch","navigation.path","navigation.prune","navigation.top","navigation.tracking","search.highlight"],"search":"../../assets/javascripts/workers/search.b6b7e04f.min.js","tags":null,"translations":{"clipboard.copied":"Copied to clipboard","clipboard.copy":"Copy to clipboard","search.result.more.one":"1 more on this page","search.result.more.other":"# more on this page","search.result.none":"No matching documents","search.result.one":"1 matching document","search.result.other":"# matching documents","search.result.placeholder":"Type to start searching","search.result.term.missing":"Missing","select.version":"Select version"},"version":{"provider":"mike"}}</script>
     
     
-      <script src="../assets/javascripts/bundle.d7f30b55.min.js"></script>
+      <script src="../../assets/javascripts/bundle.d7f30b55.min.js"></script>
       
     
   </body>

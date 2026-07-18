@@ -1,0 +1,19 @@
+{
+  "$schema": "https://oo-ld.github.io/oold-schema/dev/meta/oold-meta-schema.json",
+  "$id": "RdfPerson.schema.json",
+  "x-oold-iri": "schema:Person",
+  "@context": {
+    "id": "@id",
+    "type": "@type",
+    "ex": "https://example.org/",
+    "schema": "http://schema.org/",
+    "name": "schema:name"
+  },
+  "title": "Person",
+  "type": "object",
+  "properties": {
+    "id": { "type": "string" },
+    "type": { "type": "string", "const": "schema:Person" },
+    "name": { "type": "string" }
+  }
+}

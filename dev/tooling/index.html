@@ -25,7 +25,7 @@
       
       
       <link rel="icon" href="../assets/OO-LD_logo.jpg">
-      <meta name="generator" content="zensical-0.0.50">
+      <meta name="generator" content="zensical-0.0.51">
     
     
       
@@ -365,6 +365,18 @@
       
       
         
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
       
         
       
@@ -373,7 +385,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../migration/from-legacy-osw/" class="md-tabs__link">
+        <a href="../migration/" class="md-tabs__link">
           
   
   Migration
@@ -740,6 +752,45 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#validation-and-test-suites" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Validation and test suites
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Validation and test suites">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#general-workflow-any-schema-no-fixtures" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        General workflow (any schema, no fixtures)
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#deterministic-per-feature-suites" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Deterministic per-feature suites
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -784,6 +835,18 @@
     
       
         
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
       
         
       
@@ -805,14 +868,14 @@
   
   
   
-    <a href="../migration/from-legacy-osw/" class="md-nav__link">
+    <a href="../migration/" class="md-nav__link">
       
   
   
   <span class="md-ellipsis">
     
   
-  Migration
+  Overview
 
     
   </span>
@@ -929,6 +992,45 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#validation-and-test-suites" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Validation and test suites
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Validation and test suites">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#general-workflow-any-schema-no-fixtures" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        General workflow (any schema, no fixtures)
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#deterministic-per-feature-suites" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Deterministic per-feature suites
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -992,6 +1094,24 @@
 <li><a href="https://oo-ld.github.io/playground-awl/">Semantic Workflow Description</a></li>
 <li><a href="https://repolab.github.io/jupyterlite-playground/lab/index.html?fromURL=https://raw.githubusercontent.com/OO-LD/awl-python/refs/heads/main/examples/human_in_the_loop_async.ipynb">Human-in-the-Loop UI Workflow</a></li>
 </ul>
+<h2 id="validation-and-test-suites">Validation and test suites<a class="headerlink" href="#validation-and-test-suites" title="Permanent link">&para;</a></h2>
+<p>The <a href="https://github.com/OO-LD/oold-schema"><code>oold-schema</code></a> repository ships a validation harness (<a href="https://github.com/OO-LD/oold-schema/blob/main/scripts/validate.mjs"><code>scripts/validate.mjs</code></a>) with two tiers. Run both with <code>make validate</code>, or <code>make check</code> (which also re-renders the spec and builds the site); CI runs <code>make check</code> on every push.</p>
+<h3 id="general-workflow-any-schema-no-fixtures">General workflow (any schema, no fixtures)<a class="headerlink" href="#general-workflow-any-schema-no-fixtures" title="Permanent link">&para;</a></h3>
+<p>These run on every schema and instance in <a href="https://github.com/OO-LD/oold-schema/tree/main/examples"><code>examples/</code></a> with no per-schema test data, so they apply to any OO-LD schema you write:</p>
+<ul>
+<li><strong>Well-formedness</strong> - the schema validates against the OO-LD meta-schema and its <code>$ref</code> composition resolves.</li>
+<li><strong>Auto-generated instance</strong> - an instance is generated (via <a href="https://github.com/json-schema-faker/json-schema-faker">json-schema-faker</a>, all properties, declared <code>format</code>s respected) and must validate against the schema; this catches unsatisfiable schemas.</li>
+<li><strong>Branch iteration</strong> - each <code>oneOf</code> / <code>anyOf</code> branch is pinned in turn and an instance generated for it, exercising every variant deterministically.</li>
+<li><strong>RDF roundtrip</strong> - each instance is converted instance -&gt; RDF -&gt; instance and compared; it fails if a property is lost, which means the <code>@context</code> does not map it.</li>
+</ul>
+<h3 id="deterministic-per-feature-suites">Deterministic per-feature suites<a class="headerlink" href="#deterministic-per-feature-suites" title="Permanent link">&para;</a></h3>
+<p>Precise fixtures with exact expected outcomes live in <a href="../../examples/compliance/"><code>examples/compliance/</code></a>:</p>
+<ul>
+<li><strong>Vocabulary well-formedness</strong> (<code>oold-vocab.json</code>) - candidate schemas checked against the meta-schema, asserting each <code>x-oold-*</code> / <code>x-oold-ui-*</code> keyword is accepted when well-formed and rejected when malformed. A coverage cross-check reads the keyword list from the meta-schemas and fails if any keyword is untested, keeping the suite in sync with them.</li>
+<li><strong>OO-LD JSON-LD constructs</strong> (<code>jsonld-features.json</code>) - only the constructs OO-LD adds on top of plain JSON-LD (base-class <code>@context</code> inheritance, property-<code>$ref</code> scoped contexts), not vanilla JSON-LD. Each case merges the <a href="https://github.com/json-schema-org/JSON-Schema-Test-Suite">JSON Schema Test Suite</a> shape (<code>valid</code>) with the <a href="https://w3c.github.io/json-ld-api/tests/">JSON-LD Test Suite</a> shape (<code>expectRdf</code>, compared by RDF dataset isomorphism; <code>expectErrorCode</code> for negatives).</li>
+</ul>
+<p>To extend it: add a case to <code>oold-vocab.json</code> whenever you add a meta-schema keyword (the coverage check will otherwise fail), or add an <code>examples/compliance/&lt;feature&gt;.json</code> group that names an example schema via <code>schemaRef</code> and asserts <code>valid</code> / <code>expectRdf</code> per instance.</p>
+<p>OO-LD <em>semantic</em> behaviour that a validator and a JSON-LD processor cannot check on their own - <code>x-oold-range</code> enforcement, composition merge and most-derived-wins override, <code>x-oold-ref</code> resolution - is a conformance target for the <a href="https://github.com/OO-LD/oold-python"><code>oold</code></a> library and reuses the same fixture format.</p>
 
 
 

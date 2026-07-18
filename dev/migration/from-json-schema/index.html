@@ -12,30 +12,36 @@
         <meta name="author" content="OO-LD Contributors">
       
       
+        <link rel="canonical" href="https://OO-LD.github.io/oold-schema/dev/migration/from-json-schema/">
       
+      
+        <link rel="prev" href="../">
+      
+      
+        <link rel="next" href="../from-rdf/">
       
       
         
       
       
-      <link rel="icon" href="/oold-schema/dev/assets/OO-LD_logo.jpg">
+      <link rel="icon" href="../../assets/OO-LD_logo.jpg">
       <meta name="generator" content="zensical-0.0.51">
     
     
       
-        <title>OO-LD Schema</title>
+        <title>From JSON Schema - OO-LD Schema</title>
       
     
     
       
         
       
-      <link rel="stylesheet" href="/oold-schema/dev/assets/stylesheets/modern/main.62c9b9cc.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/modern/main.62c9b9cc.min.css">
       
         
           
         
-        <link rel="stylesheet" href="/oold-schema/dev/assets/stylesheets/modern/palette.dfe2e883.min.css">
+        <link rel="stylesheet" href="../../assets/stylesheets/modern/palette.dfe2e883.min.css">
       
       
 
@@ -54,9 +60,9 @@
       
     
     
-      <link rel="stylesheet" href="/oold-schema/dev/stylesheets/extra.css">
+      <link rel="stylesheet" href="../../stylesheets/extra.css">
     
-    <script>__md_scope=new URL("/oold-schema/dev",location),__md_scope.pathname.endsWith("/")||(__md_scope=new URL(__md_scope.pathname+"/",location)),__md_hash=e=>[...e].reduce(((e,t)=>(e<<5)-e+t.charCodeAt(0)),0),__md_get=(e,t=localStorage,_=__md_scope)=>JSON.parse(t.getItem(_.pathname+"."+e)),__md_set=(e,t,_=localStorage,a=__md_scope)=>{try{_.setItem(a.pathname+"."+e,JSON.stringify(t))}catch(e){}},document.documentElement.setAttribute("data-platform",navigator.platform)</script>
+    <script>__md_scope=new URL("../..",location),__md_scope.pathname.endsWith("/")||(__md_scope=new URL(__md_scope.pathname+"/",location)),__md_hash=e=>[...e].reduce(((e,t)=>(e<<5)-e+t.charCodeAt(0)),0),__md_get=(e,t=localStorage,_=__md_scope)=>JSON.parse(t.getItem(_.pathname+"."+e)),__md_set=(e,t,_=localStorage,a=__md_scope)=>{try{_.setItem(a.pathname+"."+e,JSON.stringify(t))}catch(e){}},document.documentElement.setAttribute("data-platform",navigator.platform)</script>
     
       
 
@@ -80,7 +86,8 @@
     <label class="md-overlay" for="__drawer" aria-label="Navigation"></label>
     <div data-md-component="skip">
       
-        <a href="#__skip" class="md-skip">
+        
+        <a href="#from-json-schema" class="md-skip">
           Skip to content
         </a>
       
@@ -98,9 +105,9 @@
 
 <header class="md-header" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="/oold-schema/dev/" title="OO-LD Schema" class="md-header__button md-logo" aria-label="OO-LD Schema" data-md-component="logo">
+    <a href="../.." title="OO-LD Schema" class="md-header__button md-logo" aria-label="OO-LD Schema" data-md-component="logo">
       
-  <img src="/oold-schema/dev/assets/OO-LD_logo.jpg" alt="OO-LD Schema">
+  <img src="../../assets/OO-LD_logo.jpg" alt="OO-LD Schema">
 
     </a>
     <label class="md-header__button md-icon" for="__drawer" aria-label="Navigation">
@@ -117,7 +124,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              
+              From JSON Schema
             
           </span>
         </div>
@@ -201,7 +208,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="/oold-schema/dev/" class="md-tabs__link">
+      <a href="../.." class="md-tabs__link">
         
   
   Home
@@ -217,7 +224,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="/oold-schema/dev/introduction/" class="md-tabs__link">
+      <a href="../../introduction/" class="md-tabs__link">
         
   
   Introduction
@@ -233,7 +240,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="/oold-schema/dev/get-started/" class="md-tabs__link">
+      <a href="../../get-started/" class="md-tabs__link">
         
   
   Get Started
@@ -272,7 +279,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="/oold-schema/dev/guide/" class="md-tabs__link">
+        <a href="../../guide/" class="md-tabs__link">
           
   
   Guide
@@ -289,7 +296,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="/oold-schema/dev/use-cases/" class="md-tabs__link">
+      <a href="../../use-cases/" class="md-tabs__link">
         
   
   Use Cases
@@ -305,7 +312,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="/oold-schema/dev/mappings/" class="md-tabs__link">
+      <a href="../../mappings/" class="md-tabs__link">
         
   
   Mappings
@@ -321,7 +328,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="/oold-schema/dev/tooling/" class="md-tabs__link">
+      <a href="../../tooling/" class="md-tabs__link">
         
   
   Tooling
@@ -337,7 +344,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="/oold-schema/dev/reference/" class="md-tabs__link">
+      <a href="../../reference/" class="md-tabs__link">
         
   
   Reference
@@ -350,6 +357,8 @@
         
   
   
+  
+    
   
   
     
@@ -375,8 +384,8 @@
     
     
     
-      <li class="md-tabs__item">
-        <a href="/oold-schema/dev/migration/" class="md-tabs__link">
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../" class="md-tabs__link">
           
   
   Migration
@@ -393,7 +402,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="/oold-schema/dev/spec/index.html" class="md-tabs__link">
+      <a href="../../spec/index.html" class="md-tabs__link">
         
   
   Specification
@@ -425,9 +434,9 @@
 
 <nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="/oold-schema/dev/" title="OO-LD Schema" class="md-nav__button md-logo" aria-label="OO-LD Schema" data-md-component="logo">
+    <a href="../.." title="OO-LD Schema" class="md-nav__button md-logo" aria-label="OO-LD Schema" data-md-component="logo">
       
-  <img src="/oold-schema/dev/assets/OO-LD_logo.jpg" alt="OO-LD Schema">
+  <img src="../../assets/OO-LD_logo.jpg" alt="OO-LD Schema">
 
     </a>
     OO-LD Schema
@@ -454,7 +463,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/oold-schema/dev/" class="md-nav__link">
+      <a href="../.." class="md-nav__link">
         
   
   
@@ -480,7 +489,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/oold-schema/dev/introduction/" class="md-nav__link">
+      <a href="../../introduction/" class="md-nav__link">
         
   
   
@@ -506,7 +515,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/oold-schema/dev/get-started/" class="md-nav__link">
+      <a href="../../get-started/" class="md-nav__link">
         
   
   
@@ -568,7 +577,7 @@
   
   
   
-    <a href="/oold-schema/dev/guide/" class="md-nav__link">
+    <a href="../../guide/" class="md-nav__link">
       
   
   
@@ -600,7 +609,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/oold-schema/dev/use-cases/" class="md-nav__link">
+      <a href="../../use-cases/" class="md-nav__link">
         
   
   
@@ -626,7 +635,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/oold-schema/dev/mappings/" class="md-nav__link">
+      <a href="../../mappings/" class="md-nav__link">
         
   
   
@@ -652,7 +661,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/oold-schema/dev/tooling/" class="md-nav__link">
+      <a href="../../tooling/" class="md-nav__link">
         
   
   
@@ -678,7 +687,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/oold-schema/dev/reference/" class="md-nav__link">
+      <a href="../../reference/" class="md-nav__link">
         
   
   
@@ -700,6 +709,8 @@
       
       
   
+  
+    
   
   
   
@@ -726,40 +737,279 @@
     
     
       
+        
+        
+      
       
     
     
       
-        
-        
-      
     
-    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
       
         
-  
-  
-  
-    <a href="/oold-schema/dev/migration/" class="md-nav__link">
-      
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" checked>
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../" class="md-nav__link ">
+              
   
   
   <span class="md-ellipsis">
     
   
-  Overview
+  Migration
 
     
   </span>
   
   
 
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_9" id="__nav_9_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+  Migration
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
       
-        <span class="md-nav__icon md-icon"></span>
       
-    </a>
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  From JSON Schema
+
+    
+  </span>
+  
   
 
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="././" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  From JSON Schema
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+
+<nav class="md-nav md-nav--secondary" aria-label="On this page">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      On this page
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#next-steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Next steps
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../from-rdf/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  From RDF / JSON-LD
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../from-owl-shacl/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  From OWL or SHACL
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../from-python/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  From a Python dataclass
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../from-legacy-osw/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  From legacy OSW
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../legacy-keyword-inventory/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Legacy keyword inventory
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
       
     </li>
   
@@ -772,7 +1022,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/oold-schema/dev/spec/index.html" class="md-nav__link">
+      <a href="../../spec/index.html" class="md-nav__link">
         
   
   
@@ -805,6 +1055,13 @@
                     
                     
                     
+                      
+                    
+                    
+                      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+                      <div class="md-sidebar-button__wrapper">
+                        <label class="md-sidebar-button" for="__toc"></label>
+                      </div>
                     
                   
                   <div class="md-sidebar__inner">
@@ -815,6 +1072,27 @@
   
   
   
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      On this page
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#next-steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Next steps
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
   
 </nav>
                   </div>
@@ -832,11 +1110,141 @@
   
 
 
+  <nav class="md-path" aria-label="Navigation" >
+    <ol class="md-path__list">
+      
+        
+  
+  
+    <li class="md-path__item">
+      <a href="../.." class="md-path__link">
+        
+  
+  <span class="md-ellipsis">
+    Home
+  </span>
+
+      </a>
+    </li>
+  
+
+      
+      
+        
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+      <li class="md-path__item">
+        <a href="../" class="md-path__link">
+          
+  
+  <span class="md-ellipsis">
+    Migration
+  </span>
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ol>
+  </nav>
+
               
               <article class="md-content__inner md-typeset">
                 
-  <h1>404 - Not found</h1>
+                  
+  
+    <a href="https://github.com/OO-LD/oold-schema/edit/main/docs/migration/from-json-schema.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-file-pen" viewBox="0 0 24 24"><path d="M12.659 22H18a2 2 0 0 0 2-2V8a2.4 2.4 0 0 0-.706-1.706l-3.588-3.588A2.4 2.4 0 0 0 14 2H6a2 2 0 0 0-2 2v9.34"/><path d="M14 2v5a1 1 0 0 0 1 1h5M10.378 12.622a1 1 0 0 1 3 3.003L8.36 20.637a2 2 0 0 1-.854.506l-2.867.837a.5.5 0 0 1-.62-.62l.836-2.869a2 2 0 0 1 .506-.853z"/></svg>
+    </a>
+  
+  
+    
+      
+    
+    <a href="https://github.com/OO-LD/oold-schema/raw/main/docs/migration/from-json-schema.md" title="View source of this page" class="md-content__button md-icon">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-file-code-2" viewBox="0 0 24 24"><path d="M4 12.15V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.706.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2h-3.35"/><path d="M14 2v5a1 1 0 0 0 1 1h5M5 16l-3 3 3 3M9 22l3-3-3-3"/></svg>
+    </a>
+  
 
+
+<h1 id="from-json-schema">From JSON Schema<a class="headerlink" href="#from-json-schema" title="Permanent link">&para;</a></h1>
+<p>You already describe the <strong>structure</strong> of your data with JSON Schema. An OO-LD schema <em>is</em> a JSON Schema, so yours is almost there - you add its <strong>meaning</strong>:</p>
+<ol>
+<li>An <code>@context</code> that maps your property names to semantic terms (IRIs).</li>
+<li><code>$schema</code> pointing at the OO-LD meta-schema, so OO-LD-aware tools recognize the dialect.</li>
+</ol>
+<p>Before - a plain JSON Schema:</p>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Minimal&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;object&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;properties&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;string&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Name of the thing&quot;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>After - the same schema as OO-LD:</p>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;$schema&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;https://oo-ld.github.io/oold-schema/latest/meta/oold-meta-schema.json&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;$id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Minimal.schema.json&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;@context&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;schema&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;http://schema.org/&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;schema:name&quot;</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Minimal&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;object&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;properties&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;string&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Name of the thing&quot;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>Your existing JSON Schema validators keep working unchanged: <code>@context</code> and every <code>x-oold-*</code> keyword are extension keywords that generic 2020-12 validators ignore. Keep JSON keys tool-friendly by aliasing (<code>name</code> -&gt; <code>schema:name</code>) instead of using IRIs as property names.</p>
+<h2 id="next-steps">Next steps<a class="headerlink" href="#next-steps" title="Permanent link">&para;</a></h2>
+<ul>
+<li><a href="../../guide/basic-concepts/">Basic Concepts</a> - how one document is both a schema and a context.</li>
+<li><a href="../../guide/composition/">Composition</a> - assemble types from reusable building blocks.</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                
               </article>
             </div>
           
@@ -856,6 +1264,44 @@
       
         <footer class="md-footer">
   
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../" class="md-footer__link md-footer__link--prev" aria-label="Previous: Overview">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 512"><!--! Font Awesome Free 7.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2026 Fonticons, Inc.--><path fill="currentColor" d="M9.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L77.3 256l137.3-137.4c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                Overview
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../from-rdf/" class="md-footer__link md-footer__link--next" aria-label="Next: From RDF &#x2f; JSON-LD">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                From RDF / JSON-LD
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 512"><!--! Font Awesome Free 7.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2026 Fonticons, Inc.--><path fill="currentColor" d="M247.1 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L179.2 256 41.9 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
     
   
   <div class="md-footer-meta md-typeset">
@@ -903,10 +1349,10 @@
     
       
       
-      <script id="__config" type="application/json">{"annotate":null,"base":"/oold-schema/dev","features":["announce.dismiss","content.code.annotate","content.action.edit","content.action.view","content.code.copy","content.code.select","content.footnote.tooltips","content.tabs.link","content.tooltips","navigation.footer","navigation.indexes","navigation.tabs","navigation.instant","navigation.instant.prefetch","navigation.path","navigation.prune","navigation.top","navigation.tracking","search.highlight"],"search":"/oold-schema/dev/assets/javascripts/workers/search.b6b7e04f.min.js","tags":null,"translations":{"clipboard.copied":"Copied to clipboard","clipboard.copy":"Copy to clipboard","search.result.more.one":"1 more on this page","search.result.more.other":"# more on this page","search.result.none":"No matching documents","search.result.one":"1 matching document","search.result.other":"# matching documents","search.result.placeholder":"Type to start searching","search.result.term.missing":"Missing","select.version":"Select version"},"version":{"provider":"mike"}}</script>
+      <script id="__config" type="application/json">{"annotate":null,"base":"../..","features":["announce.dismiss","content.code.annotate","content.action.edit","content.action.view","content.code.copy","content.code.select","content.footnote.tooltips","content.tabs.link","content.tooltips","navigation.footer","navigation.indexes","navigation.tabs","navigation.instant","navigation.instant.prefetch","navigation.path","navigation.prune","navigation.top","navigation.tracking","search.highlight"],"search":"../../assets/javascripts/workers/search.b6b7e04f.min.js","tags":null,"translations":{"clipboard.copied":"Copied to clipboard","clipboard.copy":"Copy to clipboard","search.result.more.one":"1 more on this page","search.result.more.other":"# more on this page","search.result.none":"No matching documents","search.result.one":"1 matching document","search.result.other":"# matching documents","search.result.placeholder":"Type to start searching","search.result.term.missing":"Missing","select.version":"Select version"},"version":{"provider":"mike"}}</script>
     
     
-      <script src="/oold-schema/dev/assets/javascripts/bundle.d7f30b55.min.js"></script>
+      <script src="../../assets/javascripts/bundle.d7f30b55.min.js"></script>
       
     
   </body>

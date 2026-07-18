@@ -43,6 +43,21 @@
         <loc>https://OO-LD.github.io/oold-schema/dev/reference/</loc>
       </url>
       <url>
+        <loc>https://OO-LD.github.io/oold-schema/dev/migration/</loc>
+      </url>
+      <url>
+        <loc>https://OO-LD.github.io/oold-schema/dev/migration/from-json-schema/</loc>
+      </url>
+      <url>
+        <loc>https://OO-LD.github.io/oold-schema/dev/migration/from-rdf/</loc>
+      </url>
+      <url>
+        <loc>https://OO-LD.github.io/oold-schema/dev/migration/from-owl-shacl/</loc>
+      </url>
+      <url>
+        <loc>https://OO-LD.github.io/oold-schema/dev/migration/from-python/</loc>
+      </url>
+      <url>
         <loc>https://OO-LD.github.io/oold-schema/dev/migration/from-legacy-osw/</loc>
       </url>
       <url>
