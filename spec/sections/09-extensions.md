@@ -376,12 +376,12 @@ A range subschema MAY also carry additional annotations (e.g. `title`, `descript
 
 ##### Lexical form of the reference {#range-reference-form}
 
-The value of an IRI-valued property is a JSON string. Its role as a reference comes from the `@context` (`"@type": "@id"`) and its class from `x-oold-range`; the string's *lexical* form is deliberately left open, because OO-LD instances routinely use compact IRIs, aliased terms and context-relative names. A schema MAY additionally constrain that form, by case:
+The value of an IRI-valued property is a JSON string. Its role as a reference comes from the `@context` (`"@type": "@id"`) and its class from `x-oold-range`. Its *lexical* form SHOULD be constrained with an IRI/URI-family `format` so that malformed values are rejected; the choices, from most to least permissive:
 
-- **Full (absolute) IRIs only** - `"format": "iri"`. `iri` and `iri-reference` are defined by JSON Schema but omitted by the widely used [`ajv-formats`](https://github.com/ajv-validator/ajv-formats); ajv provides them through the [`ajv-formats-draft2019`](https://github.com/luzlab/ajv-formats-draft2019) plugin. Note that `iri` rejects a *compact* IRI such as `ex:alice` (which validates as `uri` but not as `iri`), so use it only where values are always fully qualified.
-- **Prefixed (compact) IRIs only** - a `"pattern"`, since no `format` matches a `prefix:reference` shape. `"^[A-Za-z_][\\w.-]*:(?!//)\\S*$"` accepts `ex:alice` and `schema:Person` (and, unavoidably, non-hierarchical schemes such as `urn:...`) while rejecting `http://…`, `:x` and a bare `x`. The prefix MUST be defined in the `@context`.
-- **Bare terms resolved by the context** - no `format` or `pattern`: a plain string such as `alice` is expanded against the context's `@base` (for `@id`) or `@vocab`, so it cannot be validated in isolation.
-- **Any of these** - leave the property as `"type": "string"` with no lexical constraint and rely on `"@type": "@id"` and `x-oold-range` for typing. This is the default, and the RECOMMENDED choice unless a stricter form is genuinely required.
+- **Any IRI reference** - `"format": "iri-reference"`. By [[RFC3987]] this accepts absolute IRIs, compact IRIs (`ex:alice`, `schema:Person`) and context-relative references alike - the forms OO-LD instances routinely use - so it is the **RECOMMENDED** default. It also accepts a bare term such as `alice`, expanded against the context's `@base` / `@vocab`.
+- **Absolute IRIs only** - `"format": "iri"`. A compact IRI is itself a valid absolute IRI (scheme `ex`, path `alice`), so `iri` accepts `ex:alice`; choose it to additionally forbid relative references.
+- **Stricter, ASCII only** - `"format": "uri"` or `"uri-reference"`, where values are known not to use internationalized (non-ASCII) IRIs.
+- **Compact form specifically** - a `"pattern"` such as `"^[A-Za-z_][\\w.-]*:(?!//)\\S*$"`, which accepts `ex:alice` and `schema:Person` while rejecting `http://…`; the prefix MUST be defined in the `@context`.
 
 ##### Why `x-oold-ref` and not `$ref` {#why-x-oold-ref}
 

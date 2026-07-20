@@ -1,0 +1,254 @@
+[
+  {
+    "$comment": "Round-trip-safe projection of an ambiguous property range (literal | reference | embedded object), using the address = Text | PostalAddress | Place example from the specification (Property value forms, Projection to RDF and round-trip). The `lintSchemas` group is checked against meta/oold-pattern-lint.schema.json; the `tests` group projects each value form to RDF (expectRdf, dataset isomorphism).",
+    "description": "the pattern lint rejects a literal term coerced to xsd:string, accepts a plain literal term",
+    "lintSchemas": [
+      {
+        "description": "a plain literal term (no @type) round-trips - lint passes",
+        "valid": true,
+        "schema": {
+          "@context": {
+            "schema": "http://schema.org/",
+            "address": { "@id": "schema:address" }
+          }
+        }
+      },
+      {
+        "description": "a non-default datatype (xsd:date) coerces and round-trips - lint passes",
+        "valid": true,
+        "schema": {
+          "@context": {
+            "schema": "http://schema.org/",
+            "xsd": "http://www.w3.org/2001/XMLSchema#",
+            "founded": { "@id": "schema:foundingDate", "@type": "xsd:date" }
+          }
+        }
+      },
+      {
+        "description": "@type: xsd:string is never selected on the way back from RDF - lint fails (CURIE form)",
+        "valid": false,
+        "schema": {
+          "@context": {
+            "schema": "http://schema.org/",
+            "xsd": "http://www.w3.org/2001/XMLSchema#",
+            "address": { "@id": "schema:address", "@type": "xsd:string" }
+          }
+        }
+      },
+      {
+        "description": "@type as the full XSD string IRI is rejected the same way, incl. in a scoped @context",
+        "valid": false,
+        "schema": {
+          "@context": {
+            "schema": "http://schema.org/",
+            "address": {
+              "@id": "schema:address",
+              "@context": {
+                "streetAddress": { "@id": "schema:streetAddress", "@type": "http://www.w3.org/2001/XMLSchema#string" }
+              }
+            }
+          }
+        }
+      }
+    ]
+  },
+  {
+    "feature": "value-form: one plain `address` term projects a literal, a reference, and an embedded object to distinct RDF shapes",
+    "schema": {
+      "$schema": "https://oo-ld.github.io/oold-schema/latest/meta/oold-meta-schema.json",
+      "x-oold-instance-rdf-type": ["schema:Organization"],
+      "@context": {
+        "schema": "http://schema.org/",
+        "id": "@id",
+        "type": "@type",
+        "address": {
+          "@id": "schema:address",
+          "@context": {
+            "PostalAddress": "schema:PostalAddress",
+            "streetAddress": "schema:streetAddress",
+            "postalCode": "schema:postalCode"
+          }
+        }
+      },
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "address": {
+          "x-oold-range": ["schema:Text", "schema:PostalAddress", "schema:Place"],
+          "anyOf": [
+            { "type": "string" },
+            { "type": "object", "required": ["id"], "properties": { "id": { "type": "string" } } },
+            { "type": "object", "properties": { "type": {}, "streetAddress": { "type": "string" }, "postalCode": { "type": "string" } } }
+          ]
+        }
+      }
+    },
+    "tests": [
+      {
+        "description": "a bare string value becomes a plain literal",
+        "data": { "id": "https://example.org/acme", "address": "Mainstreet 1, 10115 Example City" },
+        "valid": true,
+        "expectRdf": "<https://example.org/acme> <http://schema.org/address> \"Mainstreet 1, 10115 Example City\" .\n"
+      },
+      {
+        "description": "an object carrying only id becomes an IRI reference",
+        "data": { "id": "https://example.org/acme", "address": { "id": "https://example.org/address/A1" } },
+        "valid": true,
+        "expectRdf": "<https://example.org/acme> <http://schema.org/address> <https://example.org/address/A1> .\n"
+      },
+      {
+        "description": "a typed object becomes a blank node with rdf:type and its own properties",
+        "data": { "id": "https://example.org/acme", "address": { "type": "PostalAddress", "streetAddress": "Mainstreet 1", "postalCode": "10115" } },
+        "valid": true,
+        "expectRdf": "_:b0 <http://schema.org/postalCode> \"10115\" .\n_:b0 <http://schema.org/streetAddress> \"Mainstreet 1\" .\n_:b0 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://schema.org/PostalAddress> .\n<https://example.org/acme> <http://schema.org/address> _:b0 .\n"
+      }
+    ]
+  },
+  {
+    "feature": "separate-keys: a canonical @type:@id `address` term (reference or embedded object) plus a plain `address_text` companion (literal), all projecting to schema:address",
+    "schema": {
+      "$schema": "https://oo-ld.github.io/oold-schema/latest/meta/oold-meta-schema.json",
+      "x-oold-instance-rdf-type": ["schema:Organization"],
+      "@context": {
+        "schema": "http://schema.org/",
+        "id": "@id",
+        "type": "@type",
+        "address": {
+          "@id": "schema:address",
+          "@type": "@id",
+          "@context": {
+            "PostalAddress": "schema:PostalAddress",
+            "streetAddress": "schema:streetAddress",
+            "postalCode": "schema:postalCode"
+          }
+        },
+        "address_text": { "@id": "schema:address" }
+      },
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "address": {
+          "x-oold-range": ["schema:PostalAddress", "schema:Place"],
+          "anyOf": [
+            { "type": "string" },
+            { "type": "object", "properties": { "type": {}, "streetAddress": { "type": "string" }, "postalCode": { "type": "string" } } }
+          ]
+        },
+        "address_text": { "type": "string" }
+      }
+    },
+    "tests": [
+      {
+        "description": "the literal is written under the plain address_text companion",
+        "data": { "id": "https://example.org/acme", "address_text": "Mainstreet 1, 10115 Example City" },
+        "valid": true,
+        "expectRdf": "<https://example.org/acme> <http://schema.org/address> \"Mainstreet 1, 10115 Example City\" .\n"
+      },
+      {
+        "description": "a bare IRI string under the @type:@id address term is a reference",
+        "data": { "id": "https://example.org/acme", "address": "https://example.org/address/A1" },
+        "valid": true,
+        "expectRdf": "<https://example.org/acme> <http://schema.org/address> <https://example.org/address/A1> .\n"
+      },
+      {
+        "description": "a typed object under the address term is still an embedded blank node",
+        "data": { "id": "https://example.org/acme", "address": { "type": "PostalAddress", "streetAddress": "Mainstreet 1", "postalCode": "10115" } },
+        "valid": true,
+        "expectRdf": "_:b0 <http://schema.org/postalCode> \"10115\" .\n_:b0 <http://schema.org/streetAddress> \"Mainstreet 1\" .\n_:b0 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://schema.org/PostalAddress> .\n<https://example.org/acme> <http://schema.org/address> _:b0 .\n"
+      }
+    ]
+  },
+  {
+    "feature": "language-tagged text: an @language term projects a string to a language-tagged literal",
+    "schema": {
+      "$schema": "https://oo-ld.github.io/oold-schema/latest/meta/oold-meta-schema.json",
+      "x-oold-instance-rdf-type": ["schema:Organization"],
+      "@context": {
+        "schema": "http://schema.org/",
+        "id": "@id",
+        "name": { "@id": "schema:name", "@language": "de" }
+      },
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" }
+      }
+    },
+    "tests": [
+      {
+        "description": "the name string carries the term's language tag in RDF",
+        "data": { "id": "https://example.org/acme", "name": "ACME GmbH" },
+        "valid": true,
+        "expectRdf": "<https://example.org/acme> <http://schema.org/name> \"ACME GmbH\"@de .\n"
+      }
+    ]
+  },
+  {
+    "feature": "reverse round-trip: an exported instance reconstructs from RDF through the minimal schema-derived frame (literals and references by compaction, embedded objects by framing, arrays kept stable by @container:@set)",
+    "$comment": "The instance carries its materialized root type (schema:Organization), as a compliant export must, so the schema-derived frame can pick it as the frame root and nest the embedded object beneath it. Reconstruction uses scripts/schema_to_frame.mjs; [roundtrip] asserts instance == reconstruction after canonicalization.",
+    "schema": {
+      "$schema": "https://oo-ld.github.io/oold-schema/latest/meta/oold-meta-schema.json",
+      "x-oold-instance-rdf-type": ["schema:Organization"],
+      "@context": {
+        "schema": "http://schema.org/",
+        "id": "@id",
+        "type": "@type",
+        "address": {
+          "@id": "schema:address",
+          "@context": {
+            "PostalAddress": "schema:PostalAddress",
+            "streetAddress": "schema:streetAddress",
+            "postalCode": "schema:postalCode"
+          }
+        },
+        "keywords": { "@id": "schema:keywords", "@container": "@set" }
+      },
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "type": { "type": ["string", "array"] },
+        "address": {
+          "x-oold-range": ["schema:Text", "schema:PostalAddress", "schema:Place"],
+          "anyOf": [
+            { "type": "string" },
+            { "type": "object", "required": ["id"], "properties": { "id": { "type": "string" } } },
+            { "type": "object", "properties": { "type": {}, "streetAddress": { "type": "string" }, "postalCode": { "type": "string" } } }
+          ]
+        },
+        "keywords": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "tests": [
+      {
+        "description": "a literal address reconstructs by compaction",
+        "data": { "id": "https://example.org/acme", "type": "schema:Organization", "address": "Mainstreet 1, 10115 Example City" },
+        "valid": true,
+        "roundtrip": true
+      },
+      {
+        "description": "a reference address reconstructs as { id } (the target has no local triples)",
+        "data": { "id": "https://example.org/acme", "type": "schema:Organization", "address": { "id": "https://example.org/address/A1" } },
+        "valid": true,
+        "roundtrip": true
+      },
+      {
+        "description": "an embedded address reconstructs as a nested object through the frame",
+        "data": { "id": "https://example.org/acme", "type": "schema:Organization", "address": { "type": "PostalAddress", "streetAddress": "Mainstreet 1", "postalCode": "10115" } },
+        "valid": true,
+        "roundtrip": true
+      },
+      {
+        "description": "a multi-valued keywords array is kept as a set",
+        "data": { "id": "https://example.org/acme", "type": "schema:Organization", "keywords": ["a", "b"] },
+        "valid": true,
+        "roundtrip": true
+      },
+      {
+        "description": "a single-element keywords array stays an array (would collapse to a scalar without @container:@set)",
+        "data": { "id": "https://example.org/acme", "type": "schema:Organization", "keywords": ["x"] },
+        "valid": true,
+        "roundtrip": true
+      }
+    ]
+  }
+]

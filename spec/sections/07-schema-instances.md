@@ -101,3 +101,80 @@ Alternatively, an instance MAY carry the type inline as a `type` property (self-
 :::
 
 If an inline `type` is present it MUST be consistent with the schema's `x-oold-instance-rdf-type`. Note that `@type` alone lets a consumer locate the schema (case 3 above) only when one of the type IRIs resolves to an OO-LD schema.
+
+Under composition, `x-oold-instance-rdf-type` follows the same most-derived-wins rule as the rest of the schema (see [](#composition)): the nearest declaration in the `allOf` chain is authoritative and REPLACES - it does not append to - a base class's value. Superclass types are recoverable by ontology inference (`rdfs:subClassOf`) and so need not be materialized; a schema that wants a supertype carried in the data lists it explicitly (e.g. `["schema:Researcher", "schema:Person"]`).
+
+### Property value forms {#value-forms}
+
+A property whose value denotes another resource takes one of three forms in an instance, distinguished by the shape of the JSON value, and each projects to RDF differently:
+
+- a **literal** - a bare scalar (string, number, boolean), e.g. `"Mainstreet 1"`;
+- a **reference** - an object carrying an `@id` (or its `id` alias), e.g. `{ "id": "https://example.org/PlaceA" }`, denoting an independent entity by IRI;
+- an **embedded object** - a nested object with its own properties and no independent identity, e.g. `{ "type": "PostalAddress", "streetAddress": "..." }`, which becomes a blank node.
+
+:::example{title="One `address` property, three value forms"}
+```json
+{
+  "address": "Mainstreet 1, 10115 Example City"
+}
+{
+  "address": { "id": "https://example.org/address/A1" }
+}
+{
+  "address": { "type": "PostalAddress", "streetAddress": "Mainstreet 1", "postalCode": "10115" }
+}
+```
+:::
+
+A single `@context` term cannot interpret a bare string as **both** a literal and an IRI: `@type: "@id"` coerces every string value to an IRI (so free text becomes an - often invalid, then dropped - IRI), while a plain term keeps every string a literal. A property whose range is references only therefore uses `@type: "@id"` and MAY be written as a bare IRI string; a property whose range includes free text MUST NOT use `@type: "@id"`.
+
+For a property whose range mixes free text with references and/or embedded objects (for example `Text | PostalAddress | Place`), two patterns keep the instance round-trippable (see [](#round-trip)); a model ecosystem SHOULD adopt one of them consistently:
+
+1. **Value-form** - a single plain term (no `@type: "@id"`); the value shape alone disambiguates: a bare scalar is a literal, `{ "id": ... }` is a reference, a typed object is embedded. References are written as objects, and the term MUST NOT carry `@type`.
+2. **Separate keys** - a canonical term `p` with `@type: "@id"` (a bare IRI string reference, plus embedded objects via a scoped `@context`) and a companion `p_text` that is a plain term for the literal.
+
+:::example{title="The two patterns for an ambiguous `address` term"}
+Value-form - one plain term; the value shape disambiguates:
+```json
+{
+  "address": {
+    "@id": "schema:address",
+    "@context": { "PostalAddress": { "@id": "schema:PostalAddress" } }
+  }
+}
+```
+Separate keys - a canonical `@type: "@id"` term for references and embedded objects, plus a plain `address_text` companion for the literal:
+```json
+{
+  "address": {
+    "@id": "schema:address",
+    "@type": "@id",
+    "@context": { "PostalAddress": { "@id": "schema:PostalAddress" } }
+  },
+  "address_text": { "@id": "schema:address" }
+}
+```
+:::
+
+:::note{title="A literal term is never coerced to `xsd:string`"}
+`xsd:string` is RDF's default datatype and is elided from plain string literals, so a term declaring `@type: "xsd:string"` is never selected when a string value is compacted back from RDF - the value would reappear under the full predicate IRI instead. A literal term MUST be left plain (no `@type`). Non-default datatypes (`xsd:date`, `xsd:integer`, `xsd:float`, ...) stay explicit on the literal and do round-trip, so datatype coercion for those is correct.
+:::
+
+Whichever pattern is chosen, `x-oold-range` records the permitted target type(s) on the reference and embedded branches (see [](#range-of-properties)).
+
+:::note{title="Cached members beside `@id` are a convention, not a signal"}
+A reference can carry sibling members beside `@id` (a cached label, coordinates, ...) for denormalization or offline display. In RDF these become ordinary assertions about the referenced IRI, indistinguishable from authoritative statements - their status as a *cache* is not recoverable from the data, and a generic consumer reads them as authoritative. Treating them instead as indicative, potentially outdated copies whose authoritative values live on the referenced target (so the target's own property wins on conflict) is a contract an implementation or ecosystem adopts, not something the specification can impose on every consumer. An ecosystem that stores such cached values should state the contract explicitly, and may mark cached members - for example with a dedicated annotation - so that consumers which do not share the contract can still tell them apart from authoritative data.
+:::
+
+### Projection to RDF and round-trip {#round-trip}
+
+An OO-LD instance projects to RDF through its `@context` and can be reconstructed from RDF. Because RDF is an unordered set of triples over a flat graph, faithful reconstruction follows a fixed contract:
+
+- **Literals and references** reconstruct by JSON-LD compaction against the schema's `@context` alone.
+- **Embedded objects** are flattened in RDF, and compaction does not re-nest a flat graph, so reconstructing the tree requires [Framing](#framing) - the frame can be as small as `{ "<property>": {} }`. The embedded object needs an explicit `type` **only** when the property's scoped `@context` is *type-scoped* - keyed by the value's `@type` to distinguish several embedded types (or to stamp the node's `rdf:type`); a *flat* scoped context for a single embedded type needs none. Where required, tooling materializes the type on export (see [](#semantic-type)).
+- **Multi-valued properties** are set-valued in RDF: order is not preserved, duplicates are removed, and a single value compacts to a scalar. Because the reconstruction MUST re-validate, a property that is *strictly* an array (JSON Schema `type: "array"`) MUST declare `@container: "@set"` (or `"@list"`): without it a single-element array returns as a scalar and violates the `array` type. A property that also permits a scalar (an `anyOf`/`oneOf` of a literal and an array) MAY declare it for a stable array shape, but need not - the scalar form still validates, and a single value and a one-element array are JSON-LD-equivalent. Round-trip equality is set equality; use `@list` only where order is significant, at the cost of merge and query ergonomics.
+- **Language-tagged text** uses `@language` (or `@container: "@language"`) so multilingual instance values round-trip - distinct from `x-oold-multilang-title` / `x-oold-multilang-description`, which localize the schema's own annotations, not instance data.
+
+:::note{title="Typed literals canonicalize"}
+A datatype-coerced value round-trips by RDF value, not byte-for-byte: e.g. the JSON number `40.75` under `@type: "xsd:float"` becomes the canonical lexical form `"4.075E1"` and returns as that string. Round-trip equality for typed literals is value equality after datatype canonicalization.
+:::

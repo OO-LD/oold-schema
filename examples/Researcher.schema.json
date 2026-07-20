@@ -8,7 +8,7 @@
     "Person.schema.json",
     {
       "schema": "http://schema.org/",
-      "affiliation": "schema:affiliation"
+      "affiliation": { "@id": "schema:affiliation", "@type": "@id" }
     }
   ],
   "title": "Researcher",
@@ -18,8 +18,8 @@
   "properties": {
     "affiliation": {
       "type": "string",
-      "format": "autocomplete",
-      "description": "A German organization the researcher is affiliated with",
+      "format": "iri-reference",
+      "description": "A German organization the researcher is affiliated with (IRI reference)",
       "x-oold-range": {
         "allOf": [
           { "x-oold-ref": "Organization.schema.json" },
