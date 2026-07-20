@@ -1,0 +1,26 @@
+{
+  "$schema": "https://oo-ld.github.io/oold-schema/0.7.0/meta/oold-meta-schema.json",
+  "$id": "OwlOrganization.schema.json",
+  "x-oold-iri": "schema:Organization",
+  "@context": {
+    "id": "@id",
+    "type": "@type",
+    "ex": "https://example.org/",
+    "schema": "http://schema.org/",
+    "employee": { "@id": "schema:employee", "@type": "@id", "@container": "@set" }
+  },
+  "title": "Organization",
+  "type": "object",
+  "properties": {
+    "id": { "type": "string" },
+    "type": { "type": "string", "const": "schema:Organization" },
+    "employee": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "format": "iri-reference",
+        "x-oold-range": "RdfPerson.schema.json"
+      }
+    }
+  }
+}

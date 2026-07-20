@@ -1,0 +1,47 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://oo-ld.github.io/oold-schema/0.7.0/meta/oold-pattern-lint.schema.json",
+  "title": "OO-LD round-trip pattern lint",
+  "description": "SHOULD-level constraints on a schema's @context that keep instances round-trip-safe, checkable by JSON Schema alone. This is distinct from oold-meta-schema.json, which asserts MUST-level well-formedness. It currently enforces that no term coerces a literal to xsd:string: xsd:string is RDF's default datatype and is elided from plain literals, so a term declaring @type: xsd:string is never selected when the value is compacted back from RDF and the round-trip is lossy (see the specification, Property value forms). CURIEs are matched in their conventional xsd: form and as the full XSD IRI; a term that coerces to xsd:string through a non-standard prefix mapping is beyond what a single JSON Schema can resolve and is left to tooling.",
+  "type": "object",
+  "properties": {
+    "@context": { "$ref": "#/$defs/context" }
+  },
+  "$defs": {
+    "context": {
+      "oneOf": [
+        { "type": "null" },
+        { "type": "string" },
+        { "type": "array", "items": { "$ref": "#/$defs/context" } },
+        { "$ref": "#/$defs/contextObject" }
+      ]
+    },
+    "contextObject": {
+      "type": "object",
+      "patternProperties": {
+        "^@": true,
+        "^[^@]": { "$ref": "#/$defs/termValue" }
+      },
+      "additionalProperties": { "$ref": "#/$defs/termValue" }
+    },
+    "termValue": {
+      "oneOf": [
+        { "type": "null" },
+        { "type": "string" },
+        { "$ref": "#/$defs/termDefinition" }
+      ]
+    },
+    "termDefinition": {
+      "type": "object",
+      "properties": {
+        "@type": { "$ref": "#/$defs/notXsdString" },
+        "@context": { "$ref": "#/$defs/context" }
+      }
+    },
+    "notXsdString": {
+      "not": {
+        "enum": ["xsd:string", "http://www.w3.org/2001/XMLSchema#string"]
+      }
+    }
+  }
+}
