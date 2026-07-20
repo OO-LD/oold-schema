@@ -8,7 +8,7 @@
     "Thing.schema.json",
     {
       "schema": "http://schema.org/",
-      "works_for": "schema:worksFor"
+      "works_for": { "@id": "schema:worksFor", "@type": "@id" }
     }
   ],
   "title": "Person",
@@ -18,8 +18,8 @@
   "properties": {
     "works_for": {
       "type": "string",
-      "format": "autocomplete",
-      "description": "Organization the person works for",
+      "format": "iri-reference",
+      "description": "Organization the person works for (IRI reference)",
       "x-oold-range": "Organization.schema.json"
     }
   }

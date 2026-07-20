@@ -686,6 +686,23 @@
         
       
       
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Schema Instances
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
       <a href="././" class="md-nav__link md-nav__link--active">
         
   
@@ -701,6 +718,48 @@
   
 
       </a>
+      
+        
+
+
+<nav class="md-nav md-nav--secondary" aria-label="On this page">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      On this page
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#property-value-forms" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Property value forms
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#round-trip-to-rdf-and-back" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Round-trip to RDF and back
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
       
     </li>
   
@@ -1010,6 +1069,11 @@
                       
                     
                     
+                      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+                      <div class="md-sidebar-button__wrapper">
+                        <label class="md-sidebar-button" for="__toc"></label>
+                      </div>
+                    
                   
                   <div class="md-sidebar__inner">
                     
@@ -1021,6 +1085,36 @@
   
     
   
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      On this page
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#property-value-forms" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Property value forms
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#round-trip-to-rdf-and-back" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Round-trip to RDF and back
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
   
 </nav>
                   </div>
@@ -1132,7 +1226,18 @@
 <span class="nt">$schema</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://example.org/my-package/1.0.0/Person.schema.json</span>
 </code></pre></div>
 <p>An instance can also carry its own identity as an <code>@id</code> (usually exposed through an aliased <code>id</code> property), and on export its semantic <code>@type</code> is materialized from the schema's <code>x-oold-instance-rdf-type</code>.</p>
-<p>For the full rules - how a tool resolves an instance's schema, the standards-conformant <code>describedby</code> HTTP alternative, <code>@id</code> handling, and how the semantic type is carried (with examples) - see <a href="../../spec/#schema-instances">Schema Instances</a> in the specification.</p>
+<h2 id="property-value-forms">Property value forms<a class="headerlink" href="#property-value-forms" title="Permanent link">&para;</a></h2>
+<p>A property that points at another resource can appear in three forms: a plain <strong>literal</strong> (<code>"Mainstreet 1, 10115 Example City"</code>), a <strong>reference</strong> to an entity by IRI (<code>{ "id": "https://example.org/address/A1" }</code>), or an <strong>embedded object</strong> with no identity of its own (<code>{ "type": "PostalAddress", "streetAddress": "..." }</code>). Each projects to RDF differently, so the schema's <code>@context</code> has to be set up to match the forms a property allows.</p>
+<p>The tricky case is a property whose range mixes free text with references or embedded objects (schema.org's <code>address = Text | PostalAddress | Place</code> is a typical example). A single <code>@context</code> term cannot read a bare string as both a literal and an IRI, so OO-LD offers two round-trip-safe patterns:</p>
+<ul>
+<li><strong>Value-form</strong> - one plain term; the JSON value shape alone tells the forms apart. Object references keep an <code>id</code>, and a reference can also carry cached hints (a label, coordinates) beside it.</li>
+<li><strong>Separate keys</strong> - a canonical <code>@type: "@id"</code> term for references and embedded objects, plus a plain companion term (e.g. <code>address_text</code>) for the literal.</li>
+</ul>
+<p>Pick one and use it consistently across a model ecosystem. The OpenSemanticWorld schema packages use the separate-keys pattern, and <code>oold-python</code> currently supports that one; the value-form pattern additionally lets a reference store cached information such as a label or a display IRI. Both are committed example schemas whose every form is round-trip-checked by <code>make validate</code>: <code>examples/Contact.schema.json</code> (value-form <code>address</code>) and <code>examples/ContactSeparateKeys.schema.json</code> (canonical <code>address</code> plus a plain <code>address_text</code>).</p>
+<h2 id="round-trip-to-rdf-and-back">Round-trip to RDF and back<a class="headerlink" href="#round-trip-to-rdf-and-back" title="Permanent link">&para;</a></h2>
+<p>Literals and references reconstruct from RDF by plain JSON-LD compaction, but an embedded object is flattened into a separate node in RDF and has to be re-nested with <a href="../../spec/#framing">framing</a> (OO-LD derives the frame from the schema). Repeated properties are set-valued in RDF - order and duplicates are not preserved - so declare <code>@container: "@set"</code> to keep the array shape stable, and use <code>@language</code> for multilingual instance text.</p>
+<p>Any member sitting beside <code>@id</code> in a reference is a <strong>cache</strong>: indicative, possibly stale data. Where it disagrees with the referenced target's own properties, the target wins.</p>
+<p>For the full rules - how a tool resolves an instance's schema, the standards-conformant <code>describedby</code> HTTP alternative, <code>@id</code> handling, how the semantic type is carried, the two ambiguous-range patterns, and the RDF round-trip contract (all with examples) - see <a href="../../spec/#schema-instances">Schema Instances</a> in the specification.</p>
 
 
 

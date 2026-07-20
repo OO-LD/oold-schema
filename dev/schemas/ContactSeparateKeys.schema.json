@@ -1,0 +1,46 @@
+{
+  "$schema": "https://oo-ld.github.io/oold-schema/dev/meta/oold-meta-schema.json",
+  "$id": "ContactSeparateKeys.schema.json",
+  "x-oold-uuid": "a7b8c9d0-1e2f-4a3b-8c5d-6e7f8a9b0c1d",
+  "x-oold-version": "1.0.0",
+  "x-oold-instance-rdf-type": ["schema:Organization"],
+  "@context": [
+    "Thing.schema.json",
+    {
+      "schema": "http://schema.org/",
+      "address": {
+        "@id": "schema:address",
+        "@type": "@id",
+        "@context": {
+          "PostalAddress": "schema:PostalAddress",
+          "streetAddress": "schema:streetAddress",
+          "postalCode": "schema:postalCode"
+        }
+      },
+      "address_text": { "@id": "schema:address" }
+    }
+  ],
+  "title": "Contact (separate keys)",
+  "x-oold-multilang-title": { "en": "Contact (separate keys)", "de": "Kontakt (getrennte Schluessel)" },
+  "allOf": [{ "$ref": "Thing.schema.json" }],
+  "type": "object",
+  "properties": {
+    "address": {
+      "description": "A reference to a Place by IRI, or an embedded PostalAddress. This is the separate-keys pattern (see the specification, Property value forms): the canonical @type:@id term carries references and embedded objects, while literal address text goes in the companion `address_text`. Both map to schema:address; on the way back from RDF a literal routes to `address_text` and a node/IRI to `address`.",
+      "x-oold-range": ["schema:PostalAddress", "schema:Place"],
+      "anyOf": [
+        { "type": "string", "format": "iri-reference", "description": "Reference to a Place by IRI (bare IRI string)" },
+        {
+          "type": "object",
+          "description": "Embedded PostalAddress",
+          "properties": {
+            "type": { "type": "string", "default": "PostalAddress" },
+            "streetAddress": { "type": "string" },
+            "postalCode": { "type": "string" }
+          }
+        }
+      ]
+    },
+    "address_text": { "type": "string", "description": "Literal address text (companion of the canonical `address` term)" }
+  }
+}
