@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://oo-ld.github.io/oold-schema/0.6.0/meta/oold-ui-meta-schema.json",
+  "$id": "https://oo-ld.github.io/oold-schema/0.7.0/meta/oold-ui-meta-schema.json",
   "$dynamicAnchor": "meta",
   "title": "OO-LD UI dialect meta-schema",
   "$comment": "The $id uses the versioned hosting at oo-ld.github.io/oold-schema/ (the source keeps the /latest/ placeholder; each released copy is stamped per release). The oold-ui vocabulary is declared optional (false) so that generic JSON-Schema 2020-12 validators still process the schema. The x-oold-ui-* keyword definitions live in $defs.keywords (plain anchor #keywords) so the main OO-LD meta-schema can include just them, without re-introducing the 2020-12 reference or a second dynamic anchor. Each keyword carries a description and an example so the vocabulary can be rendered into documentation. As with the core dialect, this meta-schema only validates that the keywords are well-formed; the behaviour is supplied by OO-LD-aware form generators (for example jedison).",
@@ -12,7 +12,7 @@
     "https://json-schema.org/draft/2020-12/vocab/meta-data": true,
     "https://json-schema.org/draft/2020-12/vocab/format-annotation": true,
     "https://json-schema.org/draft/2020-12/vocab/content": true,
-    "https://oo-ld.github.io/oold-schema/0.6.0/vocab/oold-ui": false
+    "https://oo-ld.github.io/oold-schema/0.7.0/vocab/oold-ui": false
   },
   "allOf": [
     { "$ref": "https://json-schema.org/draft/2020-12/schema" },

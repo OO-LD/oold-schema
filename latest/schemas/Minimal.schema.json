@@ -1,5 +1,5 @@
 {
-  "$schema": "https://oo-ld.github.io/oold-schema/0.6.0/meta/oold-meta-schema.json",
+  "$schema": "https://oo-ld.github.io/oold-schema/0.7.0/meta/oold-meta-schema.json",
   "$id": "Minimal.schema.json",
   "@context": {
     "schema": "http://schema.org/",

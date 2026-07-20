@@ -1,0 +1,49 @@
+{
+  "$schema": "https://oo-ld.github.io/oold-schema/0.7.0/meta/oold-meta-schema.json",
+  "$id": "Contact.schema.json",
+  "x-oold-uuid": "f3a1c2d4-5b6e-47a8-9c0d-1e2f3a4b5c6d",
+  "x-oold-version": "1.0.0",
+  "x-oold-instance-rdf-type": ["schema:Organization"],
+  "@context": [
+    "Thing.schema.json",
+    {
+      "schema": "http://schema.org/",
+      "address": {
+        "@id": "schema:address",
+        "@context": {
+          "PostalAddress": "schema:PostalAddress",
+          "streetAddress": "schema:streetAddress",
+          "postalCode": "schema:postalCode"
+        }
+      }
+    }
+  ],
+  "title": "Contact",
+  "x-oold-multilang-title": { "en": "Contact", "de": "Kontakt" },
+  "allOf": [{ "$ref": "Thing.schema.json" }],
+  "type": "object",
+  "properties": {
+    "address": {
+      "description": "An address given as free text, as a reference to a Place by IRI, or as an embedded PostalAddress. This is the value-form pattern: a single plain term whose value shape disambiguates (see the specification, Property value forms).",
+      "x-oold-range": ["schema:Text", "schema:PostalAddress", "schema:Place"],
+      "anyOf": [
+        { "type": "string", "description": "Literal address text" },
+        {
+          "type": "object",
+          "description": "Reference to a Place by IRI",
+          "required": ["id"],
+          "properties": { "id": { "type": "string", "format": "iri-reference" } }
+        },
+        {
+          "type": "object",
+          "description": "Embedded PostalAddress",
+          "properties": {
+            "type": { "type": "string", "default": "PostalAddress" },
+            "streetAddress": { "type": "string" },
+            "postalCode": { "type": "string" }
+          }
+        }
+      ]
+    }
+  }
+}

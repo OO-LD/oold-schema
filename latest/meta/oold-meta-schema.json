@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://oo-ld.github.io/oold-schema/0.6.0/meta/oold-meta-schema.json",
+  "$id": "https://oo-ld.github.io/oold-schema/0.7.0/meta/oold-meta-schema.json",
   "$dynamicAnchor": "meta",
   "title": "OO-LD dialect meta-schema",
   "$comment": "The $id uses the versioned hosting at oo-ld.github.io/oold-schema/ (the source keeps the /latest/ placeholder; each released copy is stamped per release). The OO-LD vocabulary is declared optional (false) so that generic JSON-Schema 2020-12 validators still process OO-LD schemas. The UI keyword definitions are included via the oold-ui-meta-schema #keywords anchor so a schema carrying x-oold-ui-* annotations validates in one pass.",
@@ -12,11 +12,11 @@
     "https://json-schema.org/draft/2020-12/vocab/meta-data": true,
     "https://json-schema.org/draft/2020-12/vocab/format-annotation": true,
     "https://json-schema.org/draft/2020-12/vocab/content": true,
-    "https://oo-ld.github.io/oold-schema/0.6.0/vocab/oold": false
+    "https://oo-ld.github.io/oold-schema/0.7.0/vocab/oold": false
   },
   "allOf": [
     { "$ref": "https://json-schema.org/draft/2020-12/schema" },
-    { "$ref": "https://oo-ld.github.io/oold-schema/0.6.0/meta/oold-ui-meta-schema.json#keywords" }
+    { "$ref": "https://oo-ld.github.io/oold-schema/0.7.0/meta/oold-ui-meta-schema.json#keywords" }
   ],
   "properties": {
     "@context": {

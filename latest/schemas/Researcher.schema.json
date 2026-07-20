@@ -1,5 +1,5 @@
 {
-  "$schema": "https://oo-ld.github.io/oold-schema/0.6.0/meta/oold-meta-schema.json",
+  "$schema": "https://oo-ld.github.io/oold-schema/0.7.0/meta/oold-meta-schema.json",
   "$id": "Researcher.schema.json",
   "x-oold-uuid": "d7425353-9543-48dd-ac33-ce5f3137a62a",
   "x-oold-version": "1.0.0",
@@ -8,7 +8,7 @@
     "Person.schema.json",
     {
       "schema": "http://schema.org/",
-      "affiliation": "schema:affiliation"
+      "affiliation": { "@id": "schema:affiliation", "@type": "@id" }
     }
   ],
   "title": "Researcher",
@@ -18,8 +18,8 @@
   "properties": {
     "affiliation": {
       "type": "string",
-      "format": "autocomplete",
-      "description": "A German organization the researcher is affiliated with",
+      "format": "iri-reference",
+      "description": "A German organization the researcher is affiliated with (IRI reference)",
       "x-oold-range": {
         "allOf": [
           { "x-oold-ref": "Organization.schema.json" },

@@ -1,5 +1,5 @@
 {
-  "$schema": "https://oo-ld.github.io/oold-schema/0.6.0/meta/oold-meta-schema.json",
+  "$schema": "https://oo-ld.github.io/oold-schema/0.7.0/meta/oold-meta-schema.json",
   "$id": "RdfPerson.schema.json",
   "x-oold-iri": "schema:Person",
   "@context": {

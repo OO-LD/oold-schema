@@ -86,6 +86,17 @@
       "publisher": "IETF",
       "status": "Internet Standard"
     },
+    "RFC3987": {
+      "title": "Internationalized Resource Identifiers (IRIs)",
+      "href": "https://www.rfc-editor.org/rfc/rfc3987",
+      "authors": [
+        "M. Duerst",
+        "M. Suignard"
+      ],
+      "date": "January 2005",
+      "publisher": "IETF",
+      "status": "Proposed Standard"
+    },
     "RFC6906": {
       "title": "The 'profile' Link Relation Type",
       "href": "https://www.rfc-editor.org/rfc/rfc6906",
@@ -113,7 +124,7 @@
       "publisher": "OO-LD"
     }
   },
-  "subtitle": "Version v0.6.0"
+  "subtitle": "Version v0.7.0"
 };
   </script>
   <script type="module">
@@ -397,7 +408,57 @@ $schema: https://example.org/my-package/1.0.0/Person.schema.json
 }
 </code></pre></aside>
 <div class="note" title="Why `default` and not `const`"><p><code>const</code> would also fix the type, but it would prevent a subclass from overriding or extending it (for example a subclass adding <code>schema:Researcher</code>). With <code>default</code> a subclass can redefine the property.</p></div>
-<p>If an inline <code>type</code> is present it <em class="rfc2119">MUST</em> be consistent with the schema's <code>x-oold-instance-rdf-type</code>. Note that <code>@type</code> alone lets a consumer locate the schema (case 3 above) only when one of the type IRIs resolves to an OO-LD schema.</p></section></section>
+<p>If an inline <code>type</code> is present it <em class="rfc2119">MUST</em> be consistent with the schema's <code>x-oold-instance-rdf-type</code>. Note that <code>@type</code> alone lets a consumer locate the schema (case 3 above) only when one of the type IRIs resolves to an OO-LD schema.</p>
+<p>Under composition, <code>x-oold-instance-rdf-type</code> follows the same most-derived-wins rule as the rest of the schema (see <a href="#composition"></a>): the nearest declaration in the <code>allOf</code> chain is authoritative and REPLACES - it does not append to - a base class's value. Superclass types are recoverable by ontology inference (<code>rdfs:subClassOf</code>) and so need not be materialized; a schema that wants a supertype carried in the data lists it explicitly (e.g. <code>[&quot;schema:Researcher&quot;, &quot;schema:Person&quot;]</code>).</p></section><section id="value-forms"><h3>Property value forms</h3><p>A property whose value denotes another resource takes one of three forms in an instance, distinguished by the shape of the JSON value, and each projects to RDF differently:</p>
+<ul>
+<li>a <strong>literal</strong> - a bare scalar (string, number, boolean), e.g. <code>&quot;Mainstreet 1&quot;</code>;</li>
+<li>a <strong>reference</strong> - an object carrying an <code>@id</code> (or its <code>id</code> alias), e.g. <code>{ &quot;id&quot;: &quot;https://example.org/PlaceA&quot; }</code>, denoting an independent entity by IRI;</li>
+<li>an <strong>embedded object</strong> - a nested object with its own properties and no independent identity, e.g. <code>{ &quot;type&quot;: &quot;PostalAddress&quot;, &quot;streetAddress&quot;: &quot;...&quot; }</code>, which becomes a blank node.</li>
+</ul>
+<aside class="example" title="One `address` property, three value forms"><pre><code class="language-json">{
+  &quot;address&quot;: &quot;Mainstreet 1, 10115 Example City&quot;
+}
+{
+  &quot;address&quot;: { &quot;id&quot;: &quot;https://example.org/address/A1&quot; }
+}
+{
+  &quot;address&quot;: { &quot;type&quot;: &quot;PostalAddress&quot;, &quot;streetAddress&quot;: &quot;Mainstreet 1&quot;, &quot;postalCode&quot;: &quot;10115&quot; }
+}
+</code></pre></aside>
+<p>A single <code>@context</code> term cannot interpret a bare string as <strong>both</strong> a literal and an IRI: <code>@type: &quot;@id&quot;</code> coerces every string value to an IRI (so free text becomes an - often invalid, then dropped - IRI), while a plain term keeps every string a literal. A property whose range is references only therefore uses <code>@type: &quot;@id&quot;</code> and <em class="rfc2119">MAY</em> be written as a bare IRI string; a property whose range includes free text <em class="rfc2119">MUST NOT</em> use <code>@type: &quot;@id&quot;</code>.</p>
+<p>For a property whose range mixes free text with references and/or embedded objects (for example <code>Text | PostalAddress | Place</code>), two patterns keep the instance round-trippable (see <a href="#round-trip"></a>); a model ecosystem <em class="rfc2119">SHOULD</em> adopt one of them consistently:</p>
+<ol>
+<li><strong>Value-form</strong> - a single plain term (no <code>@type: &quot;@id&quot;</code>); the value shape alone disambiguates: a bare scalar is a literal, <code>{ &quot;id&quot;: ... }</code> is a reference, a typed object is embedded. References are written as objects, and the term <em class="rfc2119">MUST NOT</em> carry <code>@type</code>.</li>
+<li><strong>Separate keys</strong> - a canonical term <code>p</code> with <code>@type: &quot;@id&quot;</code> (a bare IRI string reference, plus embedded objects via a scoped <code>@context</code>) and a companion <code>p_text</code> that is a plain term for the literal.</li>
+</ol>
+<aside class="example" title="The two patterns for an ambiguous `address` term"><p>Value-form - one plain term; the value shape disambiguates:</p>
+<pre><code class="language-json">{
+  &quot;address&quot;: {
+    &quot;@id&quot;: &quot;schema:address&quot;,
+    &quot;@context&quot;: { &quot;PostalAddress&quot;: { &quot;@id&quot;: &quot;schema:PostalAddress&quot; } }
+  }
+}
+</code></pre>
+<p>Separate keys - a canonical <code>@type: &quot;@id&quot;</code> term for references and embedded objects, plus a plain <code>address_text</code> companion for the literal:</p>
+<pre><code class="language-json">{
+  &quot;address&quot;: {
+    &quot;@id&quot;: &quot;schema:address&quot;,
+    &quot;@type&quot;: &quot;@id&quot;,
+    &quot;@context&quot;: { &quot;PostalAddress&quot;: { &quot;@id&quot;: &quot;schema:PostalAddress&quot; } }
+  },
+  &quot;address_text&quot;: { &quot;@id&quot;: &quot;schema:address&quot; }
+}
+</code></pre></aside>
+<div class="note" title="A literal term is never coerced to `xsd:string`"><p><code>xsd:string</code> is RDF's default datatype and is elided from plain string literals, so a term declaring <code>@type: &quot;xsd:string&quot;</code> is never selected when a string value is compacted back from RDF - the value would reappear under the full predicate IRI instead. A literal term <em class="rfc2119">MUST</em> be left plain (no <code>@type</code>). Non-default datatypes (<code>xsd:date</code>, <code>xsd:integer</code>, <code>xsd:float</code>, ...) stay explicit on the literal and do round-trip, so datatype coercion for those is correct.</p></div>
+<p>Whichever pattern is chosen, <code>x-oold-range</code> records the permitted target type(s) on the reference and embedded branches (see <a href="#range-of-properties"></a>).</p>
+<div class="note" title="Cached members beside `@id` are a convention, not a signal"><p>A reference can carry sibling members beside <code>@id</code> (a cached label, coordinates, ...) for denormalization or offline display. In RDF these become ordinary assertions about the referenced IRI, indistinguishable from authoritative statements - their status as a <em>cache</em> is not recoverable from the data, and a generic consumer reads them as authoritative. Treating them instead as indicative, potentially outdated copies whose authoritative values live on the referenced target (so the target's own property wins on conflict) is a contract an implementation or ecosystem adopts, not something the specification can impose on every consumer. An ecosystem that stores such cached values should state the contract explicitly, and may mark cached members - for example with a dedicated annotation - so that consumers which do not share the contract can still tell them apart from authoritative data.</p></div></section><section id="round-trip"><h3>Projection to RDF and round-trip</h3><p>An OO-LD instance projects to RDF through its <code>@context</code> and can be reconstructed from RDF. Because RDF is an unordered set of triples over a flat graph, faithful reconstruction follows a fixed contract:</p>
+<ul>
+<li><strong>Literals and references</strong> reconstruct by JSON-LD compaction against the schema's <code>@context</code> alone.</li>
+<li><strong>Embedded objects</strong> are flattened in RDF, and compaction does not re-nest a flat graph, so reconstructing the tree requires <a href="#framing">Framing</a> - the frame can be as small as <code>{ &quot;&lt;property&gt;&quot;: {} }</code>. The embedded object needs an explicit <code>type</code> <strong>only</strong> when the property's scoped <code>@context</code> is <em>type-scoped</em> - keyed by the value's <code>@type</code> to distinguish several embedded types (or to stamp the node's <code>rdf:type</code>); a <em>flat</em> scoped context for a single embedded type needs none. Where required, tooling materializes the type on export (see <a href="#semantic-type"></a>).</li>
+<li><strong>Multi-valued properties</strong> are set-valued in RDF: order is not preserved, duplicates are removed, and a single value compacts to a scalar. Because the reconstruction <em class="rfc2119">MUST</em> re-validate, a property that is <em>strictly</em> an array (JSON Schema <code>type: &quot;array&quot;</code>) <em class="rfc2119">MUST</em> declare <code>@container: &quot;@set&quot;</code> (or <code>&quot;@list&quot;</code>): without it a single-element array returns as a scalar and violates the <code>array</code> type. A property that also permits a scalar (an <code>anyOf</code>/<code>oneOf</code> of a literal and an array) <em class="rfc2119">MAY</em> declare it for a stable array shape, but need not - the scalar form still validates, and a single value and a one-element array are JSON-LD-equivalent. Round-trip equality is set equality; use <code>@list</code> only where order is significant, at the cost of merge and query ergonomics.</li>
+<li><strong>Language-tagged text</strong> uses <code>@language</code> (or <code>@container: &quot;@language&quot;</code>) so multilingual instance values round-trip - distinct from <code>x-oold-multilang-title</code> / <code>x-oold-multilang-description</code>, which localize the schema's own annotations, not instance data.</li>
+</ul>
+<div class="note" title="Typed literals canonicalize"><p>A datatype-coerced value round-trips by RDF value, not byte-for-byte: e.g. the JSON number <code>40.75</code> under <code>@type: &quot;xsd:float&quot;</code> becomes the canonical lexical form <code>&quot;4.075E1&quot;</code> and returns as that string. Round-trip equality for typed literals is value equality after datatype canonicalization.</p></div></section></section>
 
 <section id="identification-versioning"><h2>Identification and Versioning</h2><section id="identification"><h3>Identification</h3><p>OO-LD schemas <em class="rfc2119">MUST</em> have a <code>$id</code> ([[JSONSCHEMA]] §8.2.1) which works as a global and unique identifier of the schema. The value of <code>$id</code> <em class="rfc2119">MAY</em> be an absolute URI (details below). The schema <em class="rfc2119">SHOULD</em> be resolvable via this URI. The schema <em class="rfc2119">SHOULD</em> have an annotation <code>x-oold-uuid</code> with a UUID value.</p>
 <aside class="example" title="A schema `$id` and its `x-oold-uuid`"><pre><code class="language-yaml">$id: https://example.org/Foo.schema.json
@@ -720,12 +781,12 @@ intersections (<code>allOf</code>) and inline constraints can be combined to des
   ]
 }
 </code></pre></aside>
-<p>A range subschema <em class="rfc2119">MAY</em> also carry additional annotations (e.g. <code>title</code>, <code>description</code> or further <code>x-oold-*</code> keywords) to support tooling - for example a human-readable label for an autocomplete dropdown, or hints used when generating a SHACL shape.</p><section id="range-reference-form"><h5>Lexical form of the reference</h5><p>The value of an IRI-valued property is a JSON string. Its role as a reference comes from the <code>@context</code> (<code>&quot;@type&quot;: &quot;@id&quot;</code>) and its class from <code>x-oold-range</code>; the string's <em>lexical</em> form is deliberately left open, because OO-LD instances routinely use compact IRIs, aliased terms and context-relative names. A schema <em class="rfc2119">MAY</em> additionally constrain that form, by case:</p>
+<p>A range subschema <em class="rfc2119">MAY</em> also carry additional annotations (e.g. <code>title</code>, <code>description</code> or further <code>x-oold-*</code> keywords) to support tooling - for example a human-readable label for an autocomplete dropdown, or hints used when generating a SHACL shape.</p><section id="range-reference-form"><h5>Lexical form of the reference</h5><p>The value of an IRI-valued property is a JSON string. Its role as a reference comes from the <code>@context</code> (<code>&quot;@type&quot;: &quot;@id&quot;</code>) and its class from <code>x-oold-range</code>. Its <em>lexical</em> form <em class="rfc2119">SHOULD</em> be constrained with an IRI/URI-family <code>format</code> so that malformed values are rejected; the choices, from most to least permissive:</p>
 <ul>
-<li><strong>Full (absolute) IRIs only</strong> - <code>&quot;format&quot;: &quot;iri&quot;</code>. <code>iri</code> and <code>iri-reference</code> are defined by JSON Schema but omitted by the widely used <a href="https://github.com/ajv-validator/ajv-formats"><code>ajv-formats</code></a>; ajv provides them through the <a href="https://github.com/luzlab/ajv-formats-draft2019"><code>ajv-formats-draft2019</code></a> plugin. Note that <code>iri</code> rejects a <em>compact</em> IRI such as <code>ex:alice</code> (which validates as <code>uri</code> but not as <code>iri</code>), so use it only where values are always fully qualified.</li>
-<li><strong>Prefixed (compact) IRIs only</strong> - a <code>&quot;pattern&quot;</code>, since no <code>format</code> matches a <code>prefix:reference</code> shape. <code>&quot;^[A-Za-z_][\\w.-]*:(?!//)\\S*$&quot;</code> accepts <code>ex:alice</code> and <code>schema:Person</code> (and, unavoidably, non-hierarchical schemes such as <code>urn:...</code>) while rejecting <code>http://…</code>, <code>:x</code> and a bare <code>x</code>. The prefix <em class="rfc2119">MUST</em> be defined in the <code>@context</code>.</li>
-<li><strong>Bare terms resolved by the context</strong> - no <code>format</code> or <code>pattern</code>: a plain string such as <code>alice</code> is expanded against the context's <code>@base</code> (for <code>@id</code>) or <code>@vocab</code>, so it cannot be validated in isolation.</li>
-<li><strong>Any of these</strong> - leave the property as <code>&quot;type&quot;: &quot;string&quot;</code> with no lexical constraint and rely on <code>&quot;@type&quot;: &quot;@id&quot;</code> and <code>x-oold-range</code> for typing. This is the default, and the <em class="rfc2119">RECOMMENDED</em> choice unless a stricter form is genuinely required.</li>
+<li><strong>Any IRI reference</strong> - <code>&quot;format&quot;: &quot;iri-reference&quot;</code>. By [[RFC3987]] this accepts absolute IRIs, compact IRIs (<code>ex:alice</code>, <code>schema:Person</code>) and context-relative references alike - the forms OO-LD instances routinely use - so it is the <strong><em class="rfc2119">RECOMMENDED</em></strong> default. It also accepts a bare term such as <code>alice</code>, expanded against the context's <code>@base</code> / <code>@vocab</code>.</li>
+<li><strong>Absolute IRIs only</strong> - <code>&quot;format&quot;: &quot;iri&quot;</code>. A compact IRI is itself a valid absolute IRI (scheme <code>ex</code>, path <code>alice</code>), so <code>iri</code> accepts <code>ex:alice</code>; choose it to additionally forbid relative references.</li>
+<li><strong>Stricter, ASCII only</strong> - <code>&quot;format&quot;: &quot;uri&quot;</code> or <code>&quot;uri-reference&quot;</code>, where values are known not to use internationalized (non-ASCII) IRIs.</li>
+<li><strong>Compact form specifically</strong> - a <code>&quot;pattern&quot;</code> such as <code>&quot;^[A-Za-z_][\\w.-]*:(?!//)\\S*$&quot;</code>, which accepts <code>ex:alice</code> and <code>schema:Person</code> while rejecting <code>http://…</code>; the prefix <em class="rfc2119">MUST</em> be defined in the <code>@context</code>.</li>
 </ul></section><section id="why-x-oold-ref"><h5>Why <code>x-oold-ref</code> and not <code>$ref</code></h5><p><code>x-oold-range</code> is a custom keyword, so a <code>$ref</code> placed inside it is undefined behavior for generic JSON Schema tooling ([[JSONSCHEMA]] §9.4.2). In practice the behavior is not merely undefined but inconsistent: generic reference resolvers eagerly inline such a <code>$ref</code>, and because <code>x-oold-range</code> targets can form a cyclic graph of schemas this can pull in an unbounded graph, while schema-aware bundlers instead drop it.</p>
 <p><code>x-oold-ref</code> avoids this. Generic tools only follow the standard <code>$ref</code> keyword, so they leave <code>x-oold-ref</code> untouched; OO-LD-aware tools resolve it deliberately and lazily, with cycle detection. The standard <code>$ref</code> continues to be used for ordinary schema composition (<code>allOf</code>, <code>properties</code>, <code>$defs</code>), which bundlers are expected to resolve. Because the only difference is the keyword name, the mapping is reversible: an OO-LD-aware tool can mechanically replace <code>x-oold-ref</code> with <code>$ref</code> to obtain a plain, fully-resolvable JSON Schema - the explicit opt-in to resolving the (possibly cyclic) graph.</p></section><section id="range-generation-targets" class="informative"><h5>Generation targets</h5><p><code>x-oold-range</code> (and the reverse properties below) exist so that the logical and conceptual modelling layers can be generated from the same OO-LD source instead of being maintained separately: a range constrains the type of a referenced object, which an OO-LD-aware tool emits as a <a href="https://www.w3.org/TR/shacl/">SHACL</a> property shape (<code>sh:class</code> / <code>sh:node</code>) and as an OWL property restriction. <a href="https://www.w3.org/TR/shacl12-core/">SHACL 1.2</a> (in progress, including Node Expressions for derived values) and OWL are the intended targets. These are generation targets, not additional validation performed by generic JSON Schema tools.</p></section></section><section id="reverse-properties"><h4>Reverse properties</h4><p>Many relations are symmetric (e.g. Organization employs Person ⇔ Person works for Organization) and users want to edit them from both sides, without storing the information twice. The keywords <code>x-oold-reverse-properties</code> and <code>x-oold-reverse-required</code> declare such a [=reverse property=], mapped with JSON-LD <code>@reverse</code> in the <code>@context</code>. (The earlier <code>x-oold-reverse-default-properties</code> array is deprecated: mark a reverse property shown by default with <code>x-oold-ui-default-property</code> on the property itself - see <a href="#ui-generation"></a> - which, unlike the merged array, is overridable under composition.) To make <code>employees</code> the reverse of <code>organization</code>:</p>
 <ul>
@@ -907,7 +968,9 @@ intersections (<code>allOf</code>) and inline constraints can be combined to des
       &quot;schema&quot;: &quot;https://schema.org/&quot;,
       &quot;name&quot;: &quot;schema:name&quot;,
       &quot;role&quot;: &quot;schema:jobTitle&quot;,
-      &quot;homepage&quot;: { &quot;@id&quot;: &quot;schema:url&quot;, &quot;@type&quot;: &quot;@id&quot; }
+      &quot;homepage&quot;: { &quot;@id&quot;: &quot;schema:url&quot;, &quot;@type&quot;: &quot;@id&quot; },
+      &quot;notes&quot;: &quot;schema:comment&quot;,
+      &quot;internal_id&quot;: &quot;schema:identifier&quot;
     }
   ],
   &quot;x-oold-uuid&quot;: &quot;b1e7a0c2-2d4f-4a1e-9c3a-7f0e5d2b6a11&quot;,

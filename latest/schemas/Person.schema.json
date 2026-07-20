@@ -1,5 +1,5 @@
 {
-  "$schema": "https://oo-ld.github.io/oold-schema/0.6.0/meta/oold-meta-schema.json",
+  "$schema": "https://oo-ld.github.io/oold-schema/0.7.0/meta/oold-meta-schema.json",
   "$id": "Person.schema.json",
   "x-oold-uuid": "b5203131-7321-46bb-8a11-acb3d1015840",
   "x-oold-version": "1.0.0",
@@ -8,7 +8,7 @@
     "Thing.schema.json",
     {
       "schema": "http://schema.org/",
-      "works_for": "schema:worksFor"
+      "works_for": { "@id": "schema:worksFor", "@type": "@id" }
     }
   ],
   "title": "Person",
@@ -18,8 +18,8 @@
   "properties": {
     "works_for": {
       "type": "string",
-      "format": "autocomplete",
-      "description": "Organization the person works for",
+      "format": "iri-reference",
+      "description": "Organization the person works for (IRI reference)",
       "x-oold-range": "Organization.schema.json"
     }
   }
