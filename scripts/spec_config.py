@@ -60,6 +60,14 @@ RESPEC = {
             "publisher": "IETF",
             "status": "Internet Standard",
         },
+        "RFC3987": {
+            "title": "Internationalized Resource Identifiers (IRIs)",
+            "href": "https://www.rfc-editor.org/rfc/rfc3987",
+            "authors": ["M. Duerst", "M. Suignard"],
+            "date": "January 2005",
+            "publisher": "IETF",
+            "status": "Proposed Standard",
+        },
         "RFC6906": {
             "title": "The 'profile' Link Relation Type",
             "href": "https://www.rfc-editor.org/rfc/rfc6906",

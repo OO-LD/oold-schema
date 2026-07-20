@@ -8,7 +8,7 @@
         "description": "name (from Thing), works_for (from Person) and affiliation (from Researcher) all resolve via the inherited contexts",
         "data": { "@context": "Researcher.schema.json", "$schema": "Researcher.schema.json", "id": "https://example.org/alice", "name": "Alice", "works_for": "https://example.org/acme", "affiliation": "https://example.org/uni" },
         "valid": true,
-        "expectRdf": "<https://example.org/alice> <http://schema.org/affiliation> \"https://example.org/uni\" .\n<https://example.org/alice> <http://schema.org/name> \"Alice\" .\n<https://example.org/alice> <http://schema.org/worksFor> \"https://example.org/acme\" .\n"
+        "expectRdf": "<https://example.org/alice> <http://schema.org/affiliation> <https://example.org/uni> .\n<https://example.org/alice> <http://schema.org/name> \"Alice\" .\n<https://example.org/alice> <http://schema.org/worksFor> <https://example.org/acme> .\n"
       }
     ]
   },

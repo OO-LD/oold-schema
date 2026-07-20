@@ -7,7 +7,9 @@
       "schema": "https://schema.org/",
       "name": "schema:name",
       "role": "schema:jobTitle",
-      "homepage": { "@id": "schema:url", "@type": "@id" }
+      "homepage": { "@id": "schema:url", "@type": "@id" },
+      "notes": "schema:comment",
+      "internal_id": "schema:identifier"
     }
   ],
   "x-oold-uuid": "b1e7a0c2-2d4f-4a1e-9c3a-7f0e5d2b6a11",
