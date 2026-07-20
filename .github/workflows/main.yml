@@ -13,10 +13,6 @@ env:
   ZENSICAL_VERSION: "0.0.46"
   MIKE_SPEC: "git+https://github.com/squidfunk/mike.git@2.2.0+zensical-0.1.0"
 
-concurrency:
-  group: pages-${{ github.ref }}
-  cancel-in-progress: false
-
 jobs:
   validate:
     runs-on: ubuntu-latest
@@ -49,6 +45,13 @@ jobs:
   deploy:
     needs: validate
     runs-on: ubuntu-latest
+    # Serialize ALL deploys on one group so concurrent runs never race to push
+    # gh-pages. A per-ref group let a main push (-> dev) and a tag push (-> release)
+    # deploy simultaneously, and one lost the fast-forward (seen releasing v0.5.0).
+    # Queue rather than cancel so no deploy is dropped.
+    concurrency:
+      group: pages-deploy
+      cancel-in-progress: false
     permissions:
       contents: write  # mike pushes to gh-pages
     steps:
