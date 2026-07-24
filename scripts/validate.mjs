@@ -1,3 +1,9 @@
+#!/usr/bin/env node
+// With no argument this validates this package's own examples/ (full two-tier suite). Given a
+// directory argument (`oold-validate <dir>`) it validates that directory's *.schema.json with
+// the general-workflow tier only - so a downstream repo can conformance-check its generated
+// schemas with the upstream pipeline. The meta-schemas always come from this package.
+//
 // Validates the OO-LD example schemas and instances, fully offline:
 //   1. the meta-schema is valid against JSON-Schema 2020-12 (ajv validates it on compile);
 //   2. each example schema is a well-formed OO-LD schema (validated against the meta-schema)
@@ -24,10 +30,13 @@ import { schemaToFrame, embeddedProperties, instanceRdfTypes } from "./schema_to
 import { arrayPropertiesMissingContainer, iriReferencesMissingFormat } from "./pattern_lint.mjs";
 import { readFileSync, readdirSync } from "node:fs";
 import { fileURLToPath } from "node:url";
-import { dirname, join } from "node:path";
+import { dirname, join, resolve } from "node:path";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
-const exDir = join(root, "examples");
+// Target schema directory: a CLI argument (an external repo's schemas) or, by default, this
+// package's own examples/. Meta-schemas are always loaded from this package (below).
+const targetArg = process.argv[2];
+const exDir = targetArg ? resolve(process.cwd(), targetArg) : join(root, "examples");
 const meta = JSON.parse(readFileSync(join(root, "meta", "oold-meta-schema.json"), "utf8"));
 const uiMeta = JSON.parse(readFileSync(join(root, "meta", "oold-ui-meta-schema.json"), "utf8"));
 const patternLint = JSON.parse(readFileSync(join(root, "meta", "oold-pattern-lint.schema.json"), "utf8"));
@@ -357,7 +366,7 @@ const complianceFiles = (() => { try { return readdirSync(complianceDir).filter(
 const RDF_BASE = "https://oo-ld.test/";
 const coveredKeywords = new Set();
 
-console.log("\nCompliance suite (deterministic, per feature):");
+if (complianceFiles.length) console.log("\nCompliance suite (deterministic, per feature):");
 for (const file of complianceFiles) {
   const groups = JSON.parse(readFileSync(join(complianceDir, file), "utf8"));
   for (const group of groups) {
@@ -437,15 +446,19 @@ for (const file of complianceFiles) {
   }
 }
 
-// vocab coverage: every keyword defined in the meta-schemas must have a well-formedness test
-console.log("\nVocab coverage (meta-schema keywords vs oold-vocab.json):");
-const definedKeywords = [
-  ...Object.keys(meta.properties).filter((k) => k.startsWith("x-oold-")),
-  ...Object.keys(uiMeta.$defs.keywords.properties),
-];
-const uncovered = definedKeywords.filter((k) => !coveredKeywords.has(k));
-if (!uncovered.length) ok(`all ${definedKeywords.length} x-oold-* / x-oold-ui-* keywords are covered`);
-else bad(`UNCOVERED  ${uncovered.length} keyword(s) defined in the meta-schemas but not tested: ${uncovered.join(", ")}`);
+// vocab coverage: every keyword defined in the meta-schemas must have a well-formedness test.
+// This cross-checks the compliance fixtures, so it only applies to self-validation (a target
+// directory without a compliance/ suite is not expected to cover the vocabulary).
+if (complianceFiles.length) {
+  console.log("\nVocab coverage (meta-schema keywords vs oold-vocab.json):");
+  const definedKeywords = [
+    ...Object.keys(meta.properties).filter((k) => k.startsWith("x-oold-")),
+    ...Object.keys(uiMeta.$defs.keywords.properties),
+  ];
+  const uncovered = definedKeywords.filter((k) => !coveredKeywords.has(k));
+  if (!uncovered.length) ok(`all ${definedKeywords.length} x-oold-* / x-oold-ui-* keywords are covered`);
+  else bad(`UNCOVERED  ${uncovered.length} keyword(s) defined in the meta-schemas but not tested: ${uncovered.join(", ")}`);
+}
 
 console.log(`\n${total - failures}/${total} checks passed${warnings ? `, ${warnings} warning(s)` : ""}`);
 process.exit(failures ? 1 : 0);
