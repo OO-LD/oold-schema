@@ -1,0 +1,18 @@
+{
+  "@graph": [
+    {
+      "id": "demo:person1",
+      "type": "schema:Person",
+      "name": "Person1",
+      "works_for": "demo:organizationA",
+      "works_for*": "demo:organizationB"
+    },
+    { "id": "demo:organizationA", "type": "schema:Organization" },
+    { "id": "demo:organizationB", "type": "schema:Organization" },
+    {
+      "id": "demo:organizationC",
+      "type": "schema:Organization",
+      "employees": "demo:person1"
+    }
+  ]
+}

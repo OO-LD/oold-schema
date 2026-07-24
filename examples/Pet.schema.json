@@ -1,0 +1,13 @@
+{
+  "$schema": "https://oo-ld.github.io/oold-schema/latest/meta/oold-meta-schema.json",
+  "$id": "Pet.schema.json",
+  "@context": {
+    "ex": "https://example.org/",
+    "name": "ex:petName"
+  },
+  "title": "Pet",
+  "type": "object",
+  "properties": {
+    "name": { "type": "string", "description": "Name of the pet" }
+  }
+}

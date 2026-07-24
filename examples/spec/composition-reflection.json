@@ -1,0 +1,17 @@
+{
+  "@context": [
+    "B.schema.json",
+    "P0.schema.json",
+    { "p1": { "@context": "P1.schema.json" } },
+    { "p2": { "@context": ["P2a.schema.json", "P2b.schema.json"] } },
+    { "p3": { "@context": { "keyword_in_P3a": "ex:Property1", "keyword_in_P3b": "ex:Property2" } } }
+  ],
+  "$id": "A.schema.json",
+  "allOf": [ { "$ref": "B.schema.json" } ],
+  "properties": {
+    "p0": { "type": "string", "$ref": "P0.schema.json" },
+    "p1": { "type": "object", "$ref": "P1.schema.json" },
+    "p2": { "type": "object", "allOf": [ { "$ref": "P2a.schema.json" }, { "$ref": "P2b.schema.json" } ] },
+    "p3": { "oneOf": [ { "$ref": "P3a.schema.json" }, { "$ref": "P3b.schema.json" } ] }
+  }
+}
