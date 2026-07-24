@@ -55,3 +55,14 @@ OO-LD schema documents allow to specify all information that is needed to automa
 Data modelling is often described in three layers: conceptual (RDFS, OWL), logical (SHACL, ShEx) and physical (JSON Schema, XML Schema). OO-LD is a physical-layer artefact that carries enough conceptual annotation to generate the logical and conceptual layers from the same source. Rather than replacing frameworks like LinkML, SPDX or TreeLDR - which compile a bespoke source into a separate schema and context - OO-LD annotates JSON Schema in place and offers generated bridges (for example `x-jsonld-*` for OpenAPI and MCP delivery) to the forms other ecosystems expect. It therefore acts as an interlingua rather than yet another isolated syntax.
 
 A detailed comparison with related schema languages and data models (OWL, SHACL, Asset Administration Shell, SAMM, LinkML, SPDX, Croissant, dlite, NOMAD, and more) is collected in the [Reference » Related Work](reference.md#related-work) table.
+
+## Getting involved
+
+Questions, ideas and design discussion are welcome - for now all in the issue tracker (one searchable place while the community is small):
+
+- **Question** (usage, tooling, spec interpretation) - open an issue with the [`question`](https://github.com/OO-LD/oold-schema/labels/question) label.
+- **Open-ended discussion / proposal** - open an issue with the [`discussion`](https://github.com/OO-LD/oold-schema/labels/discussion) label.
+- **Bug or feature** - open a regular [issue](https://github.com/OO-LD/oold-schema/issues).
+- **Contributions** - pull requests are welcome; for larger changes, open a `discussion` issue first.
+
+JSON Schema and JSON-LD take the same approach on their spec repos, keeping questions and proposals as labelled issues. We'll consider GitHub Discussions or a chat once demand grows.
