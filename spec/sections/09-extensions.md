@@ -48,45 +48,13 @@ _:b0 <schema:name> "test" .
 The notation can also drive data transformation and normalization. For example, a dataset in which persons and organizations report their relations in a syntactically non-interoperable way can be normalized into a consistent unified dataset (see [OO-LD/oold-schema#11](https://github.com/OO-LD/oold-schema/issues/11)).
 
 :::example{title="Normalizing a syntactically non-interoperable dataset"}
-Input - the same relation is reported in three different ways (`works_for`, a distinct `works_for*`, and a backward `employees`):
-```yaml
-"@graph":
-- id: demo:person1
-  type: schema:Person
-  name: Person1
-  works_for: demo:organizationA # forward relation
-  works_for*: demo:organizationB # forward relation but different property
-- id: demo:organizationA
-  type: schema:Organization
-- id: demo:organizationB
-  type: schema:Organization
-- id: demo:organizationC
-  type: schema:Organization
-  employees: demo:person1 # backwards relation
-```
+Input - the same relation is reported in three different ways: a forward `works_for`, a distinct forward `works_for*`, and a backward `employees`:
+
+{{ inline_file('examples/spec/normalize-input.json') }}
 
 Normalized - a single, consistent representation:
-```yaml
-"@graph":
-- employees:
-  - demo:person1
-  - demo:person2
-  - demo:person3
-  id: demo:organizationA
-  label:
-  - lang: en
-    text: organizationA
-  type: schema:Organization
-- id: demo:person1
-  name: Person1
-  type: schema:Person
-- id: demo:person2
-  name: Person2
-  type: schema:Person
-- id: demo:person3
-  name: Person3
-  type: schema:Person
-```
+
+{{ inline_file('examples/spec/normalize-output.json') }}
 :::
 
 #### Term mappings and synonyms (`x-oold-context`) {#synonyms}
@@ -363,11 +331,16 @@ intersections (`allOf`) and inline constraints can be combined to describe an an
 
 :::example{title="Range as a subschema (Organization located in Germany)"}
 ```json
-"x-oold-range": {
-  "allOf": [
-    { "x-oold-ref": "Organization.schema.json" },
-    { "properties": { "address": { "properties": { "country": { "const": "DE" } } } } }
-  ]
+{
+  "works_for": {
+    "type": "string",
+    "x-oold-range": {
+      "allOf": [
+        { "x-oold-ref": "Organization.schema.json" },
+        { "properties": { "address": { "properties": { "country": { "const": "DE" } } } } }
+      ]
+    }
+  }
 }
 ```
 :::
@@ -395,65 +368,22 @@ The value of an IRI-valued property is a JSON string. Its role as a reference co
 
 #### Reverse properties {#reverse-properties}
 
-Many relations are symmetric (e.g. Organization employs Person ⇔ Person works for Organization) and users want to edit them from both sides, without storing the information twice. The keywords `x-oold-reverse-properties` and `x-oold-reverse-required` declare such a [=reverse property=], mapped with JSON-LD `@reverse` in the `@context`. (The earlier `x-oold-reverse-default-properties` array is deprecated: mark a reverse property shown by default with `x-oold-ui-default-property` on the property itself - see [](#ui-generation) - which, unlike the merged array, is overridable under composition.) To make `employees` the reverse of `organization`:
+Many relations are symmetric (e.g. Organization employs Person ⇔ Person works for Organization) and users want to edit them from both sides, without storing the information twice. The keywords `x-oold-reverse-properties` and `x-oold-reverse-required` declare such a [=reverse property=], mapped with JSON-LD `@reverse` in the `@context`. (The earlier `x-oold-reverse-default-properties` array is deprecated: mark a reverse property shown by default with `x-oold-ui-default-property` on the property itself - see [](#ui-generation) - which, unlike the merged array, is overridable under composition.) To make `employees` the reverse of `works_for`:
 
-- define `employees` in `x-oold-reverse-properties` of `Organization`;
-- define `organization` in the `properties` of `Person`;
-- map `organization` to a semantic property, e.g. `schema:worksFor`, in the `@context` of `Person`;
-- map `employees` with `@reverse` to the same property in the `@context` of `Organization` ([[JSON-LD11]] reverse properties).
+- define `works_for` in the `properties` of `Person`, mapped to a semantic property (`schema:worksFor`) in the `@context` of `Person`;
+- define `employees` in `x-oold-reverse-properties` of `Organization`, mapped with `@reverse` to the same property in the `@context` of `Organization` ([[JSON-LD11]] reverse properties).
 
 :::example{title="Reverse property across two schemas"}
-`Organization.schema.json`:
-```json
-{
-  "@context": [
-    { "employees": { "@reverse": "schema:worksFor", "@type": "@id" } }
-  ],
-  "title": "Organization",
-  "type": "object",
-  "required": ["type"],
-  "x-oold-reverse-required": [],
-  "x-oold-reverse-properties": {
-    "employees": {
-      "type": "array",
-      "title": "Employees",
-      "x-oold-ui-default-property": true,
-      "items": {
-        "type": "string",
-        "format": "autocomplete",
-        "title": "Person",
-        "x-oold-range": "Person.schema.json"
-      }
-    }
-  }
-}
-```
+`Organization.schema.json` declares `employees` as the reverse property (the `address` composition and `Thing` inheritance are unrelated to this demonstration):
 
-`Person.schema.json`:
-```json
-{
-  "@context": [
-    { "organization": { "@id": "schema:worksFor", "@type": "@id" } }
-  ],
-  "title": "Person",
-  "defaultProperties": ["organization"],
-  "properties": {
-    "organization": {
-      "title": "Organization",
-      "description": "Organization(s) the person is affiliated with. E.g., university, research institute, company, etc.",
-      "type": "array",
-      "items": {
-        "type": "string",
-        "format": "autocomplete",
-        "x-oold-range": "Organization.schema.json"
-      }
-    }
-  }
-}
-```
+{{ example('Organization') }}
+
+`Person.schema.json` carries the forward `works_for` property:
+
+{{ example('Person') }}
 :::
 
-An OO-LD-aware implementation uses this to read and modify properties that are actually stored in another object: loading an `Organization` editor prepopulates `employees` by querying which persons work for it; storing the `Organization` writes it into each referenced person's `organization` field; and removing a person from `employees` removes the organization from theirs.
+An OO-LD-aware implementation uses this to read and modify properties that are actually stored in another object: loading an `Organization` editor prepopulates `employees` by querying which persons work for it; storing the `Organization` writes it into each referenced person's `works_for` field; and removing a person from `employees` removes the organization from theirs.
 
 #### UI Generation {#ui-generation .informative}
 

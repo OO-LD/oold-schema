@@ -5,17 +5,21 @@
 OO-LD schemas MUST have a `$id` ([[JSONSCHEMA]] §8.2.1) which works as a global and unique identifier of the schema. The value of `$id` MAY be an absolute URI (details below). The schema SHOULD be resolvable via this URI. The schema SHOULD have an annotation `x-oold-uuid` with a UUID value.
 
 :::example{title="A schema `$id` and its `x-oold-uuid`"}
-```yaml
-$id: https://example.org/Foo.schema.json
-x-oold-uuid: b5203131-7321-46bb-8a11-acb3d1015840
-title: Foo
+```json
+{
+  "$id": "https://example.org/Foo.schema.json",
+  "x-oold-uuid": "b5203131-7321-46bb-8a11-acb3d1015840",
+  "title": "Foo"
+}
 ```
 
 It is recommended to use the UUID also in the `$id`:
-```yaml
-$id: https://example.org/b5203131-7321-46bb-8a11-acb3d1015840.schema.json
-x-oold-uuid: b5203131-7321-46bb-8a11-acb3d1015840
-title: Foo
+```json
+{
+  "$id": "https://example.org/b5203131-7321-46bb-8a11-acb3d1015840.schema.json",
+  "x-oold-uuid": "b5203131-7321-46bb-8a11-acb3d1015840",
+  "title": "Foo"
+}
 ```
 :::
 
@@ -27,11 +31,13 @@ title: Foo
 - `x-oold-instance-rdf-type` - the `rdf:type`s that instances carry on export (see [](#semantic-type)). These are stamped onto instance data; `x-oold-iri` describes the schema itself.
 
 :::example{title="Distinguishing document URL, ontology class, and instance type"}
-```yaml
-$id: https://example.org/my-package/1.0.0/Person.schema.json
-x-oold-iri: https://schema.org/Person
-x-oold-instance-rdf-type: ["schema:Person"]
-title: Person
+```json
+{
+  "$id": "https://example.org/my-package/1.0.0/Person.schema.json",
+  "x-oold-iri": "https://schema.org/Person",
+  "x-oold-instance-rdf-type": ["schema:Person"],
+  "title": "Person"
+}
 ```
 :::
 
@@ -44,12 +50,14 @@ OO-LD-aware tooling uses `x-oold-iri` to anchor the schema in an ontology graph,
 The schema version SHOULD be indicated by `x-oold-version`; a prior version MAY be indicated with `x-oold-prior-version`:
 
 :::example{title="Version annotations"}
-```yaml
-$id: https://example.org/b5203131-7321-46bb-8a11-acb3d1015840.schema.json
-x-oold-uuid: b5203131-7321-46bb-8a11-acb3d1015840
-title: Foo
-x-oold-version: 1.1.0
-x-oold-prior-version: 1.0.0
+```json
+{
+  "$id": "https://example.org/b5203131-7321-46bb-8a11-acb3d1015840.schema.json",
+  "x-oold-uuid": "b5203131-7321-46bb-8a11-acb3d1015840",
+  "title": "Foo",
+  "x-oold-version": "1.1.0",
+  "x-oold-prior-version": "1.0.0"
+}
 ```
 :::
 
@@ -64,42 +72,48 @@ Since a package combines multiple schemas, the package version does in general n
 Schemas MAY indicate explicit backward-compatibility with `x-oold-backward-compatible-with` and `x-oold-incompatible-with`:
 
 :::example{title="Declaring backward-compatibility"}
-```yaml
-$id: https://example.org/my-package/2.1.0/b5203131-7321-46bb-8a11-acb3d1015840.schema.json
-x-oold-uuid: b5203131-7321-46bb-8a11-acb3d1015840
-title: Foo
-x-oold-version: 1.1.0
-x-oold-prior-version: 1.0.0
-x-oold-backward-compatible-with: https://example.org/my-package/2.0.0/b5203131-7321-46bb-8a11-acb3d1015840.schema.json
-x-oold-incompatible-with: https://example.org/my-package/1.0.0/b5203131-7321-46bb-8a11-acb3d1015840.schema.json
+```json
+{
+  "$id": "https://example.org/my-package/2.1.0/b5203131-7321-46bb-8a11-acb3d1015840.schema.json",
+  "x-oold-uuid": "b5203131-7321-46bb-8a11-acb3d1015840",
+  "title": "Foo",
+  "x-oold-version": "1.1.0",
+  "x-oold-prior-version": "1.0.0",
+  "x-oold-backward-compatible-with": "https://example.org/my-package/2.0.0/b5203131-7321-46bb-8a11-acb3d1015840.schema.json",
+  "x-oold-incompatible-with": "https://example.org/my-package/1.0.0/b5203131-7321-46bb-8a11-acb3d1015840.schema.json"
+}
 ```
 :::
 
 Schemas within a package or package repository MAY use relative URIs ([[RFC3986]] §5.1). For example, `A.schema.json` referenced from `https://raw.githubusercontent.com/MyOrg/my-package/refs/heads/2.0.0/`:
 
 :::example{title="Relative `$ref` inside a package"}
-```yaml
-$id: B.schema.json
-title: Foo
-allOf:
-  - $ref: A.schema.json
+```json
+{
+  "$id": "B.schema.json",
+  "title": "Foo",
+  "allOf": [ { "$ref": "A.schema.json" } ]
+}
 ```
 
 expands to:
-```yaml
-$id: https://raw.githubusercontent.com/MyOrg/my-package/refs/heads/2.0.0/B.schema.json
-title: Foo
-allOf:
-  - $ref: https://raw.githubusercontent.com/MyOrg/my-package/refs/heads/2.0.0/A.schema.json
+```json
+{
+  "$id": "https://raw.githubusercontent.com/MyOrg/my-package/refs/heads/2.0.0/B.schema.json",
+  "title": "Foo",
+  "allOf": [ { "$ref": "https://raw.githubusercontent.com/MyOrg/my-package/refs/heads/2.0.0/A.schema.json" } ]
+}
 ```
 :::
 
 Instance documents SHOULD always use a versioned schema URL to make clear which schema version they comply with:
 
 :::example{title="An instance pinned to a schema version"}
-```yaml
-"@context": https://example.org/my-package/1.0.0/b5203131-7321-46bb-8a11-acb3d1015840.schema.json
-$schema: https://example.org/my-package/1.0.0/b5203131-7321-46bb-8a11-acb3d1015840.schema.json
+```json
+{
+  "@context": "https://example.org/my-package/1.0.0/b5203131-7321-46bb-8a11-acb3d1015840.schema.json",
+  "$schema": "https://example.org/my-package/1.0.0/b5203131-7321-46bb-8a11-acb3d1015840.schema.json"
+}
 ```
 :::
 
