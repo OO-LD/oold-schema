@@ -74,6 +74,28 @@
       "publisher": "IETF",
       "status": "Best Current Practice"
     },
+    "RFC8259": {
+      "title": "The JavaScript Object Notation (JSON) Data Interchange Format",
+      "href": "https://www.rfc-editor.org/rfc/rfc8259",
+      "authors": [
+        "T. Bray"
+      ],
+      "date": "December 2017",
+      "publisher": "IETF",
+      "status": "Internet Standard"
+    },
+    "RFC8785": {
+      "title": "JSON Canonicalization Scheme (JCS)",
+      "href": "https://www.rfc-editor.org/rfc/rfc8785",
+      "authors": [
+        "A. Rundgren",
+        "B. Jordan",
+        "S. Erdtman"
+      ],
+      "date": "June 2020",
+      "publisher": "IETF",
+      "status": "Informational"
+    },
     "RFC3986": {
       "title": "Uniform Resource Identifier (URI): Generic Syntax",
       "href": "https://www.rfc-editor.org/rfc/rfc3986",
@@ -136,6 +158,27 @@
     const schedule = () => setTimeout(runMermaid, 500);  // let ReSpec finish rearranging first
     if (document.readyState === "complete") schedule(); else window.addEventListener("load", schedule);
   </script>
+  <style>
+    .ex-tabs { margin: 1em 0; }
+    .ex-tablist { display: flex; gap: .25rem; border-bottom: 1px solid #ccc; margin-bottom: .5em; }
+    .ex-tab { border: 0; background: none; padding: .3em .8em; cursor: pointer; font: inherit; color: #555; border-bottom: 2px solid transparent; }
+    .ex-tab[aria-selected="true"] { color: #005a9c; border-bottom-color: #005a9c; font-weight: 600; }
+    .ex-panel[hidden] { display: none; }
+  </style>
+  <script>
+    // Toggle the JSON / YAML example tabs (event delegation; runs regardless of ReSpec).
+    document.addEventListener("click", function (e) {
+      var tab = e.target.closest(".ex-tab");
+      if (!tab) return;
+      var group = tab.closest(".ex-tabs");
+      group.querySelectorAll(".ex-tab").forEach(function (b) {
+        b.setAttribute("aria-selected", b === tab ? "true" : "false");
+      });
+      group.querySelectorAll(".ex-panel").forEach(function (p) {
+        p.hidden = (p.id !== tab.dataset.panel);
+      });
+    });
+  </script>
 </head>
 <body>
 <p class="copyright">Copyright &copy; the OO-LD contributors. This document is made available under the <a rel="license" href="https://creativecommons.org/publicdomain/zero/1.0/">CC0 1.0 Universal</a> Public Domain Dedication; W3C liability, trademark and document-license rules do <strong>not</strong> apply.</p>
@@ -167,7 +210,9 @@
 <p>OO-LD inverts the order. Because it is JSON Schema first, a term exists as a plain structural property with no semantics attached; an author MAY leave it unmapped, map it to a single IRI, or map it to several concurrent IRIs (see <a href="#multi-mapping"></a> and <a href="#synonyms"></a>). An unmapped term produces no triples under JSON-LD expansion; to prevent such terms from being dropped silently, an author MAY declare <code>@vocab</code> in the <code>@context</code>, which maps every otherwise-unmapped term to a default (local) namespace so it still round-trips to RDF under a provisional IRI until a curated mapping is assigned. Any data can be serialized as JSON and therefore described by a schema, so the structural model - validation, forms, code generation, transport - is always available, and semantics can be added later, incrementally, one term at a time. The floor on this deferral is identity, not zero: graph-shaped data still needs identifiers for its links (carried by IRI-valued properties and <a href="#range-of-properties"></a>), but the vocabulary and meaning of each field can be deferred without blocking any of the structural uses. This is the boundary to RDF/SHACL: they cannot withhold semantic commitment, OO-LD can.</p></section></section>
 
 <section id="conformance"><h2>Conformance</h2><p>As well as sections marked as non-normative, all authoring guidelines, diagrams, examples, and notes in this specification are non-normative. Everything else in this specification is normative.</p>
-<p>The key words <em class="rfc2119">MUST</em>, <em class="rfc2119">MUST NOT</em>, <em class="rfc2119">REQUIRED</em>, <em class="rfc2119">SHALL</em>, <em class="rfc2119">SHALL NOT</em>, <em class="rfc2119">SHOULD</em>, <em class="rfc2119">SHOULD NOT</em>, <em class="rfc2119">RECOMMENDED</em>, <em class="rfc2119">MAY</em>, and <em class="rfc2119">OPTIONAL</em> in this document are to be interpreted as described in [[!RFC2119]].</p></section>
+<p>The key words <em class="rfc2119">MUST</em>, <em class="rfc2119">MUST NOT</em>, <em class="rfc2119">REQUIRED</em>, <em class="rfc2119">SHALL</em>, <em class="rfc2119">SHALL NOT</em>, <em class="rfc2119">SHOULD</em>, <em class="rfc2119">SHOULD NOT</em>, <em class="rfc2119">RECOMMENDED</em>, <em class="rfc2119">MAY</em>, and <em class="rfc2119">OPTIONAL</em> in this document are to be interpreted as described in [[!RFC2119]].</p><section id="notation"><h3>Notation</h3><p>The normative data model of OO-LD is the JSON data model shared by [[JSONSCHEMA]] and [[JSON-LD11]]. JSON ([[RFC8259]]) is the canonical serialization: a conforming OO-LD schema or instance <em class="rfc2119">MUST</em> be interchangeable as JSON, and the canonical form used for identity and integrity (for example content-hashing a versioned schema) is its JSON Canonicalization Scheme ([[RFC8785]]) serialization.</p>
+<p>A document <em class="rfc2119">MAY</em> additionally be authored or served as YAML, provided it stays within the JSON-compatible subset of <a href="https://yaml.org/spec/1.2.2/">YAML 1.2</a>: no tags, anchors, aliases, or merge keys; a single document; and no implicit typing beyond what JSON expresses. Within this subset - the same profile adopted by <a href="https://github.com/w3c/yaml-ld">YAML-LD</a> - a YAML document maps one-to-one onto the JSON data model and converts to the canonical JSON without loss. YAML outside this subset is NOT a conforming OO-LD serialization.</p>
+<p>Authors using YAML should be aware that YAML comments and implicit type coercions (for example the strings <code>NO</code> or <code>1.10</code> read as a boolean or a truncated number by some parsers) do not survive conversion to the canonical JSON; the JSON form is authoritative. Examples in this specification are shown as JSON, with an equivalent YAML rendering available under &quot;View as YAML&quot;.</p></section></section>
 
 <section id="terminology">
   <h2>Terminology</h2>
@@ -189,7 +234,12 @@
 </section>
 
 <section id="basic-concepts"><h2>Basic Concepts</h2><p>The core idea is that an [=OO-LD schema=] is always both a valid JSON Schema and a reference-able JSON-LD [=remote context=] as defined in [[JSON-LD11]] §3.1 (<em>not</em> a JSON-LD document). In this way a complete OO-LD class / schema hierarchy is consume-able by JSON Schema-only and JSON-LD-only tools while OO-LD-aware tools can provide extended features on top (e.g. UI autocomplete dropdowns for string-IRI fields based on a SPARQL backend, or SHACL shape / JSON-LD frame generation).</p>
-<aside class="example" title="A minimal OO-LD schema"><pre><code class="language-json">{
+<aside class="example" title="A minimal OO-LD schema"><div class="ex-tabs">
+<div class="ex-tablist" role="tablist"><button class="ex-tab" role="tab" aria-selected="true" data-panel="ex1j">JSON</button><button class="ex-tab" role="tab" aria-selected="false" data-panel="ex1y">View as YAML</button></div>
+
+<div class="ex-panel" id="ex1j" role="tabpanel">
+
+<pre><code class="language-json">{
   &quot;$schema&quot;: &quot;https://oo-ld.github.io/oold-schema/latest/meta/oold-meta-schema.json&quot;,
   &quot;$id&quot;: &quot;Minimal.schema.json&quot;,
   &quot;@context&quot;: {
@@ -202,7 +252,26 @@
     &quot;name&quot;: { &quot;type&quot;: &quot;string&quot;, &quot;description&quot;: &quot;Name of the thing&quot; }
   }
 }
-</code></pre></aside>
+</code></pre>
+</div>
+
+<div class="ex-panel" id="ex1y" role="tabpanel" hidden>
+
+<pre><code class="language-yaml">$schema: https://oo-ld.github.io/oold-schema/latest/meta/oold-meta-schema.json
+$id: Minimal.schema.json
+'@context':
+  schema: http://schema.org/
+  name: schema:name
+title: Minimal
+type: object
+properties:
+  name:
+    type: string
+    description: Name of the thing
+</code></pre>
+</div>
+
+</div></aside>
 <p>There is an asymmetry between how schemas and instances are consumed:</p>
 <ul>
 <li>An [=OO-LD schema=] is consumed as a JSON-LD [=remote context=] (referenced by its URL from an instance's <code>@context</code>), never as a JSON-LD document. OO-LD schema documents <em class="rfc2119">MUST NOT</em> be interpreted as JSON-LD documents, because that would apply the schema's own <code>@context</code> to the schema itself and produce incorrect triples.</li>
@@ -959,6 +1028,11 @@ intersections (<code>allOf</code>) and inline constraints can be combined to des
 <p>The text-valued keywords have a <code>x-oold-multilang-*</code> variant carrying a BCP-47 language map, mirroring <code>x-oold-multilang-title</code> (see <a href="#localizing-schema-annotations"></a>): <code>x-oold-multilang-ui-hint</code> and <code>x-oold-multilang-ui-enum-titles</code>.</p>
 <p>For enum code generation OO-LD keeps the established <code>x-enum-varnames</code> (identifier-safe names aligned with <code>enum</code>) and its companion <code>x-enum-descriptions</code>; these are widely supported vendor extensions (OpenAPI Generator; NSwag's <code>x-enumNames</code>) and are distinct from the human display labels in <code>x-oold-ui-enum-titles</code>.</p>
 <p><code>x-oold-ui-default-property</code> replaces the json-editor <code>defaultProperties</code> array (which listed the optional properties shown initially). That array is <em>extend-only</em> under composition: because composed schemas merge the arrays, a derived schema can add a default property but cannot switch one off. A per-property boolean is <em>overridable</em> - it resolves most-derived-wins (see <a href="#merge-and-override-model"></a>), so a derived schema sets it to <code>false</code> to hide a property a base schema showed. For the same reason <code>x-oold-reverse-default-properties</code> is deprecated in favour of <code>x-oold-ui-default-property</code> on the reverse property.</p></section><section id="widget-hints"><h5>Widget hints: <code>format</code> vs <code>x-oold-ui-widget</code></h5><p><code>format</code> carries the widget hint when its value is a registered JSON Schema 2020-12 format (<code>date</code>, <code>date-time</code>, <code>time</code>, <code>duration</code>, <code>email</code>, <code>uri</code>, <code>iri</code>, <code>uuid</code>, ...); a validator may check it and a form generator picks the matching input. Values that are not registered formats (<code>table</code>, <code>tabs</code>, <code>grid</code>, <code>autocomplete</code>, <code>textarea</code>, <code>checkbox</code>, <code>markdown</code>, <code>color</code>, ...) are widget-only and go in <code>x-oold-ui-widget</code>, leaving <code>format</code> for validation semantics.</p></section><section id="validator-vs-widget" class="informative"><h5>Validator vs. form widget</h5><p>A modern JSON Schema 2020-12 toolchain - ajv, the json-editor / jedison built-in validator, Hyperjump, Pydantic v2, OpenAPI 3.1 - honours <code>const</code> and keywords placed alongside <code>$ref</code>, so OO-LD's composition constructs validate as written; the older assumption that such tooling silently drops them does not hold for these validators. A narrower caveat concerns UI generation rather than validation: a form generator's <em>widget rendering</em> of a keyword may differ from what its <em>validator</em> enforces - for example json-editor validates <code>const</code> but does not necessarily render the field as a fixed value. A consumer restricted to a Draft-4-only JSON Schema processor remains the exception, since keywords adjacent to <code>$ref</code> and <code>const</code> are only guaranteed from later drafts.</p></section><section id="ui-delivery"><h5>Delivery: inline or overlay</h5><p>UI keywords may be embedded in the schema (inline):</p>
+<div class="ex-tabs">
+<div class="ex-tablist" role="tablist"><button class="ex-tab" role="tab" aria-selected="true" data-panel="ex2j">JSON</button><button class="ex-tab" role="tab" aria-selected="false" data-panel="ex2y">View as YAML</button></div>
+
+<div class="ex-panel" id="ex2j" role="tabpanel">
+
 <pre><code class="language-json">{
   &quot;$schema&quot;: &quot;https://oo-ld.github.io/oold-schema/latest/meta/oold-meta-schema.json&quot;,
   &quot;$id&quot;: &quot;UiAnnotations.schema.json&quot;,
@@ -1019,7 +1093,95 @@ intersections (<code>allOf</code>) and inline constraints can be combined to des
   }
 }
 </code></pre>
+</div>
+
+<div class="ex-panel" id="ex2y" role="tabpanel" hidden>
+
+<pre><code class="language-yaml">$schema: https://oo-ld.github.io/oold-schema/latest/meta/oold-meta-schema.json
+$id: UiAnnotations.schema.json
+'@context':
+- '@version': 1.1
+  schema: https://schema.org/
+  name: schema:name
+  role: schema:jobTitle
+  homepage:
+    '@id': schema:url
+    '@type': '@id'
+  notes: schema:comment
+  internal_id: schema:identifier
+x-oold-uuid: b1e7a0c2-2d4f-4a1e-9c3a-7f0e5d2b6a11
+title: Researcher
+x-oold-multilang-title:
+  en: Researcher
+  de: Forschende Person
+x-oold-iri: schema:Person
+type: object
+properties:
+  name:
+    type: string
+    title: Name
+    x-oold-ui-default-property: true
+    x-oold-ui-property-order: 1
+    x-oold-ui-property-group: General
+    x-oold-ui-hint: Full name
+    x-oold-multilang-ui-hint:
+      en: Full name
+      de: Vollständiger Name
+  role:
+    type: string
+    title: Role
+    enum:
+    - pi
+    - postdoc
+    - phd
+    x-enum-varnames:
+    - PrincipalInvestigator
+    - PostDoc
+    - PhDStudent
+    x-enum-descriptions:
+    - Leads the project
+    - Holds a doctorate
+    - Doctoral candidate
+    x-oold-ui-enum-titles:
+    - Principal investigator
+    - Postdoc
+    - PhD student
+    x-oold-multilang-ui-enum-titles:
+      en:
+      - Principal investigator
+      - Postdoc
+      - PhD student
+      de:
+      - Projektleitung
+      - Postdoc
+      - Doktorand
+    x-oold-ui-property-order: 2
+    x-oold-ui-property-group: General
+  homepage:
+    type: string
+    title: Homepage
+    format: uri
+    x-oold-ui-property-group: Contact
+  notes:
+    type: string
+    title: Notes
+    x-oold-ui-widget: markdown
+    x-oold-ui-property-group: Contact
+  internal_id:
+    type: string
+    title: Internal id
+    x-oold-ui-form-hidden: true
+</code></pre>
+</div>
+
+</div>
+
 <p>or applied by an <em>overlay</em> - a separate document that patches a schema without editing it, following the <a href="https://spec.openapis.org/overlay/latest.html">OpenAPI Overlay 1.1.0</a> model. Overlays are a general schema-patching mechanism: the <code>update</code> actions can inject any keywords (semantics, constraints or presentation), and applying <code>x-oold-ui-*</code> annotations is one use case - useful when the schema is generated or owned elsewhere, or when one schema needs different presentation in different contexts. An overlay lists <code>actions</code>, each selecting nodes with an <a href="https://www.rfc-editor.org/rfc/rfc9535">RFC 9535 JSONPath</a> <code>target</code> and merging keys via <code>update</code> (or removing them via <code>remove</code>):</p>
+<div class="ex-tabs">
+<div class="ex-tablist" role="tablist"><button class="ex-tab" role="tab" aria-selected="true" data-panel="ex3j">JSON</button><button class="ex-tab" role="tab" aria-selected="false" data-panel="ex3y">View as YAML</button></div>
+
+<div class="ex-panel" id="ex3j" role="tabpanel">
+
 <pre><code class="language-json">{
   &quot;overlay&quot;: &quot;1.0.0&quot;,
   &quot;info&quot;: {
@@ -1048,6 +1210,37 @@ intersections (<code>allOf</code>) and inline constraints can be combined to des
   ]
 }
 </code></pre>
+</div>
+
+<div class="ex-panel" id="ex3y" role="tabpanel" hidden>
+
+<pre><code class="language-yaml">overlay: 1.0.0
+info:
+  title: Researcher admin overlay
+  version: 1.0.0
+  description: Applies presentation-only x-oold-ui-* keywords to Researcher without editing the schema.
+    An overlay is a general schema-patching mechanism (OpenAPI Overlay 1.1.0); UI annotation is one use
+    case.
+extends: ./UiAnnotations.schema.json
+actions:
+- target: $.properties.internal_id
+  description: Show the internal id for admins.
+  update:
+    x-oold-ui-form-hidden: false
+- target: $.properties.notes
+  description: Render notes as a plain textarea instead of markdown.
+  update:
+    x-oold-ui-widget: textarea
+- target: $.properties.role
+  description: Drop the render-time grouping for a flat admin form.
+  remove: false
+  update:
+    x-oold-ui-property-group: Identity
+</code></pre>
+</div>
+
+</div>
+
 <p>The vendor keywords are documented by their respective projects: jedison's <code>x-jedison-*</code> (see <a href="https://github.com/germanbisurgi/jedison/issues/58">germanbisurgi/jedison#58</a> and the overlay proposal <a href="https://github.com/germanbisurgi/jedison/issues/59">#59</a>) and, for schemas coming from OpenSemanticLab, the server-side <code>x-osl-*</code> keywords. Migrating a legacy OpenSemanticWorld schema to these keywords is covered in the <a href="../migration/from-legacy-osw/">migration guide</a>.</p></section></section></section><section id="semantic-delivery"><h3>Semantic delivery</h3><p>An OO-LD schema carries its semantics in the top-level <code>@context</code> and, for the RDF type of instances, in <code>x-oold-instance-rdf-type</code>. How those reach a consumer depends only on which keywords the consumer tolerates. The native form is preferred; the alternatives below are mechanically generated from it, so the OO-LD document remains the single source and every form yields the same RDF.</p>
 <ul>
 <li>A consumer that accepts arbitrary JSON Schema keywords <em class="rfc2119">SHOULD</em> receive the native form unchanged. This covers plain JSON Schema 2020-12 validators, OpenAPI 3.1, and - because they place no restriction on <code>@context</code> - Model Context Protocol tool schemas (<code>inputSchema</code> / <code>outputSchema</code>) as well as LLM tool-use and structured-output APIs, which carry the context through and can use it as grounding.</li>

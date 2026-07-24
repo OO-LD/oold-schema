@@ -52,6 +52,22 @@ RESPEC = {
             "publisher": "IETF",
             "status": "Best Current Practice",
         },
+        "RFC8259": {
+            "title": "The JavaScript Object Notation (JSON) Data Interchange Format",
+            "href": "https://www.rfc-editor.org/rfc/rfc8259",
+            "authors": ["T. Bray"],
+            "date": "December 2017",
+            "publisher": "IETF",
+            "status": "Internet Standard",
+        },
+        "RFC8785": {
+            "title": "JSON Canonicalization Scheme (JCS)",
+            "href": "https://www.rfc-editor.org/rfc/rfc8785",
+            "authors": ["A. Rundgren", "B. Jordan", "S. Erdtman"],
+            "date": "June 2020",
+            "publisher": "IETF",
+            "status": "Informational",
+        },
         "RFC3986": {
             "title": "Uniform Resource Identifier (URI): Generic Syntax",
             "href": "https://www.rfc-editor.org/rfc/rfc3986",
