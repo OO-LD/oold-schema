@@ -65,6 +65,17 @@ make check      # validate + spec lint + site build (what CI runs)
 
 The docs and the spec renderer run on Python via [uv](https://docs.astral.sh/uv/) - no local Python setup required; the schema validator runs on Node (`make install` once).
 
+## Getting involved
+
+Questions, ideas and design discussion are welcome - for now all in the issue tracker (one searchable place while the community is small):
+
+- **Question** (usage, tooling, spec interpretation) - open an issue with the [`question`](https://github.com/OO-LD/oold-schema/labels/question) label.
+- **Open-ended discussion / proposal** - open an issue with the [`discussion`](https://github.com/OO-LD/oold-schema/labels/discussion) label.
+- **Bug or feature** - open a regular [issue](https://github.com/OO-LD/oold-schema/issues).
+- **Contributions** - pull requests are welcome; for larger changes, open a `discussion` issue first.
+
+We'll consider GitHub Discussions or a chat once demand grows.
+
 ## License
 
 Released under [CC0 1.0 Universal](LICENSE).
