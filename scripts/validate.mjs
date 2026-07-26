@@ -244,7 +244,7 @@ async function roundtrip(schema, sample, ctxRef) {
   const types = instanceRdfTypes(schema);
   if (types && !("type" in sample) && !("@type" in sample)) doc["@type"] = types;
   const nquads = await jsonld.toRDF(doc, { base: ctxRef, format: "application/n-quads" });
-  const back = await jsonld.fromRDF(nquads, { format: "application/n-quads" });
+  const back = await jsonld.fromRDF(nquads, { format: "application/n-quads", useNativeTypes: true });
   const restored = embeddedProperties(schema).length
     ? await jsonld.frame(back, schemaToFrame(schema, ctxRef), { base: ctxRef, omitDefault: true })
     : await jsonld.compact(back, ctxRef, { base: ctxRef });
@@ -393,7 +393,7 @@ for (const f of instanceFiles) {
     const nquads = await jsonld.toRDF(inst, { base: BASE + f, format: "application/n-quads" });
     const triples = nquads.split("\n").filter((l) => l.trim()).length;
     if (!triples) throw new Error("produced no triples");
-    const back = await jsonld.fromRDF(nquads, { format: "application/n-quads" });
+    const back = await jsonld.fromRDF(nquads, { format: "application/n-quads", useNativeTypes: true });
     // Literals and references reconstruct by compaction; embedded (blank-node) objects
     // need framing, so when the schema embeds objects, reconstruct with the minimal
     // schema-derived frame (see scripts/schema_to_frame.mjs) instead of plain compaction.
@@ -509,7 +509,7 @@ for (const file of complianceFiles) {
             const doc = t.data["@context"] ? { ...t.data } : { "@context": ctx, ...t.data };
             delete doc.$schema;
             const nq = await jsonld.toRDF(doc, { base: rdfBase, format: "application/n-quads" });
-            const back = await jsonld.fromRDF(nq, { format: "application/n-quads" });
+            const back = await jsonld.fromRDF(nq, { format: "application/n-quads", useNativeTypes: true });
             const restored = embeddedProperties(featureSchema).length
               ? await jsonld.frame(back, schemaToFrame(featureSchema, frameCtxRef), { base: rdfBase, omitDefault: true })
               : await jsonld.compact(back, frameCtxRef, { base: rdfBase });
