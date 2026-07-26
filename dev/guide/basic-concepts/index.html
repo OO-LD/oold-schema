@@ -1219,6 +1219,9 @@
 <h1 id="basic-concepts">Basic Concepts<a class="headerlink" href="#basic-concepts" title="Permanent link">&para;</a></h1>
 <p>The core idea is that an OO-LD document is always both a valid JSON Schema and a reference-able JSON-LD remote context (not a JSON-LD document). In this way a complete OO-LD class / schema hierarchy is usable by JSON Schema-only and JSON-LD-only tools, while OO-LD-aware tools add features on top (UI autocomplete for IRI fields, SHACL shape or JSON-LD frame generation, ...).</p>
 <p>A minimal example:</p>
+<div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">JSON</label><label for="__tabbed_1_2">View as YAML</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
 <span class="w">  </span><span class="nt">&quot;$schema&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;https://oo-ld.github.io/oold-schema/latest/meta/oold-meta-schema.json&quot;</span><span class="p">,</span>
 <span class="w">  </span><span class="nt">&quot;$id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Minimal.schema.json&quot;</span><span class="p">,</span>
@@ -1233,6 +1236,23 @@
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="nt">$schema</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://oo-ld.github.io/oold-schema/latest/meta/oold-meta-schema.json</span>
+<span class="nt">$id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Minimal.schema.json</span>
+<span class="s">&#39;@context&#39;</span><span class="p p-Indicator">:</span>
+<span class="w">  </span><span class="nt">schema</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">http://schema.org/</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">schema:name</span>
+<span class="nt">title</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Minimal</span>
+<span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">object</span>
+<span class="nt">properties</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
+<span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Name of the thing</span>
+</code></pre></div>
+</div>
+</div>
+</div>
 <p>You can explore this in the <a href="https://oo-ld.github.io/playground/">interactive playground</a>.</p>
 <h2 id="schemas-vs-instances">Schemas vs. instances<a class="headerlink" href="#schemas-vs-instances" title="Permanent link">&para;</a></h2>
 <p>A <strong>schema</strong> is consumed as a JSON-LD <em>remote context</em> (referenced from an instance's <code>@context</code>), never expanded as a document. An <strong>instance</strong> <em>is</em> a JSON-LD document and is processed as such. This asymmetry is what lets one document act both as a JSON Schema <code>$ref</code> target and as a JSON-LD context.</p>

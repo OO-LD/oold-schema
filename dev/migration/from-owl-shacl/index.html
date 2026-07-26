@@ -1236,6 +1236,9 @@
    <span class="nn">sh</span><span class="p">:</span><span class="nt">property</span> <span class="p">[</span> <span class="nn">sh</span><span class="p">:</span><span class="nt">path</span> <span class="nn">schema</span><span class="p">:</span><span class="nt">employee</span> <span class="p">;</span> <span class="nn">sh</span><span class="p">:</span><span class="nt">class</span> <span class="nn">schema</span><span class="p">:</span><span class="nt">Person</span> <span class="p">]</span> <span class="p">.</span>
 </code></pre></div>
 <p>The same as an OO-LD schema - <code>x-oold-iri</code> is the class, the <code>@context</code> maps the relation to its predicate and marks it a reference, and <code>x-oold-range</code> carries the <code>sh:class</code> target:</p>
+<div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">JSON</label><label for="__tabbed_1_2">View as YAML</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
 <span class="w">  </span><span class="nt">&quot;$schema&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;https://oo-ld.github.io/oold-schema/latest/meta/oold-meta-schema.json&quot;</span><span class="p">,</span>
 <span class="w">  </span><span class="nt">&quot;$id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;OwlOrganization.schema.json&quot;</span><span class="p">,</span>
@@ -1263,6 +1266,38 @@
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="nt">$schema</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://oo-ld.github.io/oold-schema/latest/meta/oold-meta-schema.json</span>
+<span class="nt">$id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">OwlOrganization.schema.json</span>
+<span class="nt">x-oold-iri</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">schema:Organization</span>
+<span class="s">&#39;@context&#39;</span><span class="p p-Indicator">:</span>
+<span class="w">  </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;@id&#39;</span>
+<span class="w">  </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;@type&#39;</span>
+<span class="w">  </span><span class="nt">ex</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://example.org/</span>
+<span class="w">  </span><span class="nt">schema</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">http://schema.org/</span>
+<span class="w">  </span><span class="nt">employee</span><span class="p">:</span>
+<span class="w">    </span><span class="s">&#39;@id&#39;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">schema:employee</span>
+<span class="w">    </span><span class="s">&#39;@type&#39;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="s">&#39;@id&#39;</span>
+<span class="w">    </span><span class="s">&#39;@container&#39;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="s">&#39;@set&#39;</span>
+<span class="nt">title</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Organization</span>
+<span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">object</span>
+<span class="nt">properties</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">id</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
+<span class="w">  </span><span class="nt">type</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
+<span class="w">    </span><span class="nt">const</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">schema:Organization</span>
+<span class="w">  </span><span class="nt">employee</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">array</span>
+<span class="w">    </span><span class="nt">items</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
+<span class="w">      </span><span class="nt">format</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">iri-reference</span>
+<span class="w">      </span><span class="nt">x-oold-range</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">RdfPerson.schema.json</span>
+</code></pre></div>
+</div>
+</div>
+</div>
 <p>The <code>employee</code> value is a plain string; <code>"@type": "@id"</code> in the context makes it an IRI reference and <code>x-oold-range</code> restricts its class - no string <code>format</code> is needed (see <a href="../../spec/#range-reference-form">the reference form of a range</a> in the specification for why <code>format: "iri"</code> is a poor fit for IRI-valued properties). This schema and an instance are committed example files (<code>examples/OwlOrganization.schema.json</code>, <code>examples/OwlOrganization.instance.json</code>), covered by <code>make validate</code>.</p>
 <p>That covers the common object-modelling subset; OO-LD does not aim to express the full OWL axiom set or every SHACL constraint. For how OO-LD relates to these and other schema languages, and for worked mappings, see:</p>
 <ul>

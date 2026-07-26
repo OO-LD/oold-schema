@@ -1222,8 +1222,10 @@
 <li><code>@context</code> - the schema URL, loaded as a JSON-LD remote context. This is what makes the instance a JSON-LD document.</li>
 <li><code>$schema</code> - the schema URL, identifying the schema the instance validates against.</li>
 </ul>
-<div class="highlight"><pre><span></span><code><span class="s">&quot;@context&quot;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://example.org/my-package/1.0.0/Person.schema.json</span>
-<span class="nt">$schema</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://example.org/my-package/1.0.0/Person.schema.json</span>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;@context&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;https://example.org/my-package/1.0.0/Person.schema.json&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;$schema&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;https://example.org/my-package/1.0.0/Person.schema.json&quot;</span>
+<span class="p">}</span>
 </code></pre></div>
 <p>An instance can also carry its own identity as an <code>@id</code> (usually exposed through an aliased <code>id</code> property), and on export its semantic <code>@type</code> is materialized from the schema's <code>x-oold-instance-rdf-type</code>.</p>
 <h2 id="property-value-forms">Property value forms<a class="headerlink" href="#property-value-forms" title="Permanent link">&para;</a></h2>
