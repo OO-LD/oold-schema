@@ -2,6 +2,9 @@
 
 OO-LD can act as a bridge between several existing schema languages and data models. This page shows how selected formats map to OO-LD schemas and instances.
 
+!!! note "Notation on this page"
+    Unlike the rest of the documentation, where JSON is the canonical notation (see the specification's [Notation](spec/index.html#notation) section), the examples here are shown in **YAML**. Several of the compared formats (LinkML, NOMAD, dlite, yml2vocab) are natively YAML, so the OO-LD side is shown in YAML too for a direct, line-by-line comparison.
+
 ## Asset Administration Shell
 
 Asset Administration Shell combines schema and data in a single documents. Semantics are introduced by annotations keywords.

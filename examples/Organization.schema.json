@@ -8,7 +8,8 @@
     "Thing.schema.json",
     {
       "schema": "http://schema.org/",
-      "address": { "@id": "schema:address", "@context": "Address.schema.json" }
+      "address": { "@id": "schema:address", "@context": "Address.schema.json" },
+      "employees": { "@reverse": "schema:worksFor", "@type": "@id" }
     }
   ],
   "title": "Organization",
@@ -20,6 +21,19 @@
       "type": "object",
       "$ref": "Address.schema.json",
       "description": "Postal address of the organization"
+    }
+  },
+  "x-oold-reverse-properties": {
+    "employees": {
+      "type": "array",
+      "title": "Employees",
+      "description": "Persons who work for this organization; stored on each Person as works_for, editable here via JSON-LD @reverse.",
+      "x-oold-ui-default-property": true,
+      "items": {
+        "type": "string",
+        "format": "iri-reference",
+        "x-oold-range": "Person.schema.json"
+      }
     }
   }
 }

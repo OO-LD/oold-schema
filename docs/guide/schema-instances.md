@@ -5,9 +5,11 @@ An OO-LD instance is a JSON document that conforms to an OO-LD schema. It refere
 - `@context` - the schema URL, loaded as a JSON-LD remote context. This is what makes the instance a JSON-LD document.
 - `$schema` - the schema URL, identifying the schema the instance validates against.
 
-```yaml
-"@context": https://example.org/my-package/1.0.0/Person.schema.json
-$schema: https://example.org/my-package/1.0.0/Person.schema.json
+```json
+{
+  "@context": "https://example.org/my-package/1.0.0/Person.schema.json",
+  "$schema": "https://example.org/my-package/1.0.0/Person.schema.json"
+}
 ```
 
 An instance can also carry its own identity as an `@id` (usually exposed through an aliased `id` property), and on export its semantic `@type` is materialized from the schema's `x-oold-instance-rdf-type`.

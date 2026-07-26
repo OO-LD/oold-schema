@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # /// script
 # requires-python = ">=3.10"
-# dependencies = ["mistune==3.3.2", "jinja2>=3,<4"]
+# dependencies = ["mistune==3.3.2", "jinja2>=3,<4", "pyyaml==6.0.2"]
 # ///
 """Render the ReSpec spec docs/spec/index.html from spec/sections/*.md.
 
@@ -170,8 +170,34 @@ def render_index():
     )
 
 
+# Styling + toggle for the JSON / "View as YAML" example tabs emitted by
+# macros._spec_tabs. Kept minimal and dependency-free; injected into <head>.
+TAB_ASSETS = """  <style>
+    .ex-tabs { margin: 1em 0; }
+    .ex-tablist { display: flex; gap: .25rem; border-bottom: 1px solid #ccc; margin-bottom: .5em; }
+    .ex-tab { border: 0; background: none; padding: .3em .8em; cursor: pointer; font: inherit; color: #555; border-bottom: 2px solid transparent; }
+    .ex-tab[aria-selected="true"] { color: #005a9c; border-bottom-color: #005a9c; font-weight: 600; }
+    .ex-panel[hidden] { display: none; }
+  </style>
+  <script>
+    // Toggle the JSON / YAML example tabs (event delegation; runs regardless of ReSpec).
+    document.addEventListener("click", function (e) {
+      var tab = e.target.closest(".ex-tab");
+      if (!tab) return;
+      var group = tab.closest(".ex-tabs");
+      group.querySelectorAll(".ex-tab").forEach(function (b) {
+        b.setAttribute("aria-selected", b === tab ? "true" : "false");
+      });
+      group.querySelectorAll(".ex-panel").forEach(function (p) {
+        p.hidden = (p.id !== tab.dataset.panel);
+      });
+    });
+  </script>"""
+
+
 def render_head():
     respec = json.dumps(cfg.RESPEC, indent=2, ensure_ascii=False)
+    tab_assets = TAB_ASSETS
     return f"""<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -192,6 +218,7 @@ def render_head():
     const schedule = () => setTimeout(runMermaid, 500);  // let ReSpec finish rearranging first
     if (document.readyState === "complete") schedule(); else window.addEventListener("load", schedule);
   </script>
+{tab_assets}
 </head>
 <body>
 <p class="copyright">Copyright &copy; the OO-LD contributors. This document is made available under the <a rel="license" href="https://creativecommons.org/publicdomain/zero/1.0/">CC0 1.0 Universal</a> Public Domain Dedication; W3C liability, trademark and document-license rules do <strong>not</strong> apply.</p>"""

@@ -1,7 +1,9 @@
 # Pin zensical to match .github/workflows/main.yml for reproducible
 # documentation builds. Override on the command line, e.g. `make docs ZENSICAL_VERSION=0.0.47`.
 ZENSICAL_VERSION ?= 0.0.46
-ZENSICAL := uvx zensical@$(ZENSICAL_VERSION)
+# --with pyyaml==6.0.2 so the shared macros (macros.py) can import yaml to render the
+# JSON / "View as YAML" example tabs during the docs build.
+ZENSICAL := uvx --with pyyaml==6.0.2 zensical@$(ZENSICAL_VERSION)
 
 # The spec renderer runs on Python via uv (like zensical); its dependencies are
 # pinned inline in the script (PEP 723), so `uv run` needs no extra flags and the

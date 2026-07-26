@@ -1,0 +1,13 @@
+{
+  "@graph": [
+    {
+      "id": "demo:organizationA",
+      "type": "schema:Organization",
+      "employees": ["demo:person1", "demo:person2", "demo:person3"],
+      "label": [ { "lang": "en", "text": "organizationA" } ]
+    },
+    { "id": "demo:person1", "type": "schema:Person", "name": "Person1" },
+    { "id": "demo:person2", "type": "schema:Person", "name": "Person2" },
+    { "id": "demo:person3", "type": "schema:Person", "name": "Person3" }
+  ]
+}

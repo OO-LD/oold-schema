@@ -14,7 +14,7 @@ In general, we want to keep keywords in 'instance' JSON-documents (=> property n
     "name": "schema:name",
     "type": "@type"
   },
-  "x-oold-iri": "ex:RawData",
+  "x-oold-iri": "schema:Person",
   "title": "Person",
   "type": "object",
   "properties": {
@@ -45,7 +45,7 @@ class Person(BaseModel):
                 "name": "schema:name",
                 "type": "@type"
             },
-            "x-oold-iri": "ex:RawData",  # the IRI of the class
+            "x-oold-iri": "schema:Person",  # the IRI of the class
         }
     )
     type: Optional[str] = "schema:Person"

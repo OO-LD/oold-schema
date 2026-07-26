@@ -1,0 +1,6 @@
+{
+  "@context": "PersonWithPet.schema.json",
+  "$schema": "PersonWithPet.schema.json",
+  "name": "Max",
+  "pets": [ { "name": "Bruno" } ]
+}

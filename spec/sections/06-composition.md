@@ -5,91 +5,33 @@ Composition is how an [=OO-LD schema=] incorporates multiple independent schemas
 It MUST NOT be required to further process an OO-LD schema document in order to interpret it as a JSON-LD context. This implies that all occurrences of `$ref` in the schema are reflected in the JSON-LD context. `$ref` within properties of `type: object` MUST be listed as a scoped JSON-LD context. `$ref` within all other property types and at the root level of the OO-LD schema MUST be listed at the root level of the JSON-LD context. In case of multiple `$ref` within `allOf` the corresponding remote contexts are merged into an array-valued `@context` (see [](#merging-remote-contexts)). For `oneOf` / `anyOf` this requires care to avoid conflicts. At any time the importing OO-LD schema MAY define its own or override the imported JSON-LD context.
 
 :::example{title="Reflecting each `$ref` into the `@context`"}
-```yaml
-"@context":
-  - B.schema.json
-  - P1.schema.json
-  - p1:
-    "@context": P1.schema.json
-  - p2:
-    "@context": 
-      - P2a.schema.json
-      - P2b.schema.json
-  - p3:
-    "@context":
-      keyword_in_P3a: ex:Property1
-      keyword_in_P3b: ex:Property2
-$id: A.schema.json
-allOf:
-  - $ref: B.schema.json
-properties:
-  p0:
-    type: string
-    $ref: P0.schema.json
-  p1:
-    type: object
-    $ref: P1.schema.json
-  p2:
-    type: object
-    allOf:
-      $ref: P2a.schema.json
-      $ref: P2b.schema.json
-  p3:
-    oneOf:
-      $ref: P3a.schema.json
-      $ref: P3b.schema.json
-```
+{{ inline_file('examples/spec/composition-reflection.json') }}
 :::
 
 :::example{title="A nested context and the RDF it produces"}
 A `Pet` schema:
-```yaml
-"@context": 
-  name: ex:petName
-$id: Pet.schema.json
-properties:
-  name:
-    type: string
-```
 
-A `Person` schema that embeds `Pet` under a property-scoped context:
-```yaml
-"@context": 
-  name: schema:name
-  pets:
-    "@id": ex:hasPet
-    "@context": Pet.schema.json
-$id: Person.schema.json
-properties:
-  name:
-    type: string
-  pets:
-    type: array
-    items: 
-      $ref: Pet.schema.json
-```
+{{ example('Pet') }}
+
+A `PersonWithPet` schema that embeds `Pet` under a property-scoped context:
+
+{{ example('PersonWithPet') }}
 
 An instance:
-```yaml
-"@context": Person.schema.json
-$schema: Person.schema.json
-name: Max
-pets:
-  - name: Bruno
-```
 
-Referencing `Person.schema.json` as the context is equivalent to inlining the reflected contexts:
-```yaml
-"@context": 
-  name: schema:name
-  pets:
-    "@id": ex:hasPet
-    "@context":
-      name: ex:petName
-$schema: Person.schema.json
-name: Max
-pets:
-  - name: Bruno
+{{ inline_file('examples/PersonWithPet.instance.json') }}
+
+Referencing `PersonWithPet.schema.json` as the context is equivalent to inlining the reflected contexts:
+```json
+{
+  "@context": {
+    "name": "schema:name",
+    "pets": { "@id": "ex:hasPet", "@context": { "name": "ex:petName" } }
+  },
+  "$schema": "PersonWithPet.schema.json",
+  "name": "Max",
+  "pets": [ { "name": "Bruno" } ]
+}
 ```
 
 which expands (via the reflected contexts) to the RDF:
@@ -144,14 +86,15 @@ This single model governs every place OO-LD collapses composition into a resolve
 Because `allOf` composition is conjunctive, `additionalProperties: false` on one subschema rejects the members that the other composed subschemas contribute, so it cannot close a composed object. To close such an object - rejecting members that no composed subschema declares - use `unevaluatedProperties: false` ([[JSONSCHEMA]] §11.3), which is evaluated after the `allOf` branches and therefore accounts for their properties. A schema closed this way should still allow the instance-level `$schema` and `@context` members (see [](#schema-instances)).
 
 :::example{title="Closing an inherited object with `unevaluatedProperties`"}
-```yaml
-$id: Employee.schema.json
-allOf:
-  - $ref: Person.schema.json
-properties:
-  employeeId:
-    type: string
-unevaluatedProperties: false
+```json
+{
+  "$id": "Employee.schema.json",
+  "allOf": [ { "$ref": "Person.schema.json" } ],
+  "properties": {
+    "employeeId": { "type": "string" }
+  },
+  "unevaluatedProperties": false
+}
 ```
 An instance may carry the `Person` properties, `employeeId`, and `$schema` / `@context`; any other member is rejected.
 :::

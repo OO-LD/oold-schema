@@ -6,9 +6,11 @@ An [=OO-LD instance=] is a JSON document that conforms to an [=OO-LD schema=]. I
 - `$schema` - the schema URL, identifying the schema the instance is intended to validate against.
 
 :::example{title="An instance referencing its schema"}
-```yaml
-"@context": https://example.org/my-package/1.0.0/Person.schema.json
-$schema: https://example.org/my-package/1.0.0/Person.schema.json
+```json
+{
+  "@context": "https://example.org/my-package/1.0.0/Person.schema.json",
+  "$schema": "https://example.org/my-package/1.0.0/Person.schema.json"
+}
 ```
 :::
 
@@ -113,16 +115,17 @@ A property whose value denotes another resource takes one of three forms in an i
 - an **embedded object** - a nested object with its own properties and no independent identity, e.g. `{ "type": "PostalAddress", "streetAddress": "..." }`, which becomes a blank node.
 
 :::example{title="One `address` property, three value forms"}
+Literal:
 ```json
-{
-  "address": "Mainstreet 1, 10115 Example City"
-}
-{
-  "address": { "id": "https://example.org/address/A1" }
-}
-{
-  "address": { "type": "PostalAddress", "streetAddress": "Mainstreet 1", "postalCode": "10115" }
-}
+{ "address": "Mainstreet 1, 10115 Example City" }
+```
+Reference (by `id`/`@id`):
+```json
+{ "address": { "id": "https://example.org/address/A1" } }
+```
+Embedded object:
+```json
+{ "address": { "type": "PostalAddress", "streetAddress": "Mainstreet 1", "postalCode": "10115" } }
 ```
 :::
 

@@ -1,0 +1,20 @@
+{
+  "$schema": "https://oo-ld.github.io/oold-schema/latest/meta/oold-meta-schema.json",
+  "$id": "PersonWithPet.schema.json",
+  "@context": {
+    "ex": "https://example.org/",
+    "schema": "http://schema.org/",
+    "name": "schema:name",
+    "pets": { "@id": "ex:hasPet", "@container": "@set", "@context": "Pet.schema.json" }
+  },
+  "title": "Person with pet",
+  "type": "object",
+  "properties": {
+    "name": { "type": "string", "description": "Name of the person" },
+    "pets": {
+      "type": "array",
+      "description": "Pets owned by the person (embedded via a property-scoped context)",
+      "items": { "$ref": "Pet.schema.json" }
+    }
+  }
+}

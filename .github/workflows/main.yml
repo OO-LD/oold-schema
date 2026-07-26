@@ -69,14 +69,15 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
       - name: Build only (pull request)
         if: github.event_name != 'push'
-        run: uvx zensical@${{ env.ZENSICAL_VERSION }} build --clean
+        # --with pyyaml: the shared macros render JSON / "View as YAML" example tabs.
+        run: uvx --with pyyaml==6.0.2 zensical@${{ env.ZENSICAL_VERSION }} build --clean
       - name: Publish dev (push to main)
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         run: |
           # Stamp the served schema copies with this version id so they self-identify
           # (the source keeps the /latest/ placeholder; staged copies are gitignored).
           sed -i 's#/oold-schema/latest/#/oold-schema/dev/#g' docs/meta/*.json docs/schemas/*.json
-          uvx --from "$MIKE_SPEC" mike deploy --push dev
+          uvx --with pyyaml==6.0.2 --from "$MIKE_SPEC" mike deploy --push dev
       - name: Publish release (tag vX.Y.Z)
         if: startsWith(github.ref, 'refs/tags/v')
         run: |
@@ -86,6 +87,6 @@ jobs:
           sed -i "s#/oold-schema/latest/#/oold-schema/$ver/#g" docs/meta/*.json docs/schemas/*.json
           # --alias-type=copy so /latest/ is a real directory (its schema JSON is
           # fetchable; a redirect alias would 404 for machine schema references).
-          MIKE="uvx --from $MIKE_SPEC mike"
+          MIKE="uvx --with pyyaml==6.0.2 --from $MIKE_SPEC mike"
           $MIKE deploy --push --alias-type=copy --update-aliases "$ver" latest
           $MIKE set-default --push latest
