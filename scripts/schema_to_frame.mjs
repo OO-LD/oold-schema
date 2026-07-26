@@ -36,9 +36,26 @@ export function contextTerms(context, out = {}) {
 }
 
 // Properties that embed an object: their @context term carries a scoped @context.
+// Properties that embed an object, detected from the JSON Schema shape - a property whose
+// value (or array items, or an anyOf/oneOf branch) is an object with its own properties or a
+// $ref to a type. A scoped @context is a strong signal too, but it is not mandatory (an
+// embed can be mapped by the ambient/top-level context), so shape is the primary signal.
 export function embeddedProperties(schema) {
+  const isEmbed = (node) => {
+    if (!node || typeof node !== "object") return false;
+    if ("$ref" in node) return true;
+    if (node.type === "object" && node.properties) return true;
+    if (node.items) return isEmbed(node.items);
+    for (const kw of ["anyOf", "oneOf", "allOf"]) {
+      if (Array.isArray(node[kw]) && node[kw].some(isEmbed)) return true;
+    }
+    return false;
+  };
+  const props = schema.properties || {};
+  const structural = Object.keys(props).filter((k) => isEmbed(props[k]));
   const terms = contextTerms(schema["@context"]);
-  return Object.keys(terms).filter((t) => "@context" in terms[t]);
+  const scoped = Object.keys(terms).filter((t) => "@context" in terms[t]);
+  return [...new Set([...structural, ...scoped])];
 }
 
 // The instance rdf:type(s) a schema declares. Composition is most-derived-wins
