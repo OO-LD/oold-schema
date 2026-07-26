@@ -44,6 +44,14 @@ RESPEC = {
             "publisher": "W3C",
             "status": "W3C Recommendation",
         },
+        "JSONLD11-API": {
+            "title": "JSON-LD 1.1 Processing Algorithms and API",
+            "href": "https://www.w3.org/TR/json-ld11-api/",
+            "authors": ["Gregg Kellogg", "Dave Longley", "Pierre-Antoine Champin"],
+            "date": "16 July 2020",
+            "publisher": "W3C",
+            "status": "W3C Recommendation",
+        },
         "RFC2119": {
             "title": "Key words for use in RFCs to Indicate Requirement Levels",
             "href": "https://www.rfc-editor.org/rfc/rfc2119",
