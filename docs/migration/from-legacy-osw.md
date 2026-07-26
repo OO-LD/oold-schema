@@ -122,7 +122,7 @@ table, not in this one schema.
 
 ```json
 {
-  "$schema": "https://oo-ld.github.io/oold-schema/latest/meta/oold-meta-schema.json",
+  "$schema": "https://oo-ld.org/latest/meta/oold-meta-schema.json",
   "@context": {
     "schema": "https://schema.org/",
     "skos": "https://www.w3.org/TR/skos-reference/",

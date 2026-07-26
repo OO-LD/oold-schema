@@ -75,16 +75,16 @@ jobs:
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         run: |
           # Stamp the served schema copies with this version id so they self-identify
-          # (the source keeps the /latest/ placeholder; staged copies are gitignored).
-          sed -i 's#/oold-schema/latest/#/oold-schema/dev/#g' docs/meta/*.json docs/schemas/*.json
+          # (the source keeps the oo-ld.org/latest/ placeholder; staged copies are gitignored).
+          sed -i 's#oo-ld.org/latest/#oo-ld.org/dev/#g' docs/meta/*.json docs/schemas/*.json
           uvx --with pyyaml==6.0.2 --from "$MIKE_SPEC" mike deploy --push dev
       - name: Publish release (tag vX.Y.Z)
         if: startsWith(github.ref, 'refs/tags/v')
         run: |
           ver="${GITHUB_REF_NAME#v}"   # full semver (e.g. 0.4.0) -> served at /0.4.0/, matching OO-LD package-versioning
           # Stamp the concrete version into the served schemas so /X.Y.Z/ self-identifies
-          # (spec-compliant + reproducible); the source keeps the /latest/ placeholder.
-          sed -i "s#/oold-schema/latest/#/oold-schema/$ver/#g" docs/meta/*.json docs/schemas/*.json
+          # (spec-compliant + reproducible); the source keeps the oo-ld.org/latest/ placeholder.
+          sed -i "s#oo-ld.org/latest/#oo-ld.org/$ver/#g" docs/meta/*.json docs/schemas/*.json
           # --alias-type=copy so /latest/ is a real directory (its schema JSON is
           # fetchable; a redirect alias would 404 for machine schema references).
           MIKE="uvx --with pyyaml==6.0.2 --from $MIKE_SPEC mike"

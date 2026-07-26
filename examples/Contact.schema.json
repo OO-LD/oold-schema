@@ -1,5 +1,5 @@
 {
-  "$schema": "https://oo-ld.github.io/oold-schema/latest/meta/oold-meta-schema.json",
+  "$schema": "https://oo-ld.org/latest/meta/oold-meta-schema.json",
   "$id": "Contact.schema.json",
   "x-oold-uuid": "f3a1c2d4-5b6e-47a8-9c0d-1e2f3a4b5c6d",
   "x-oold-version": "1.0.0",

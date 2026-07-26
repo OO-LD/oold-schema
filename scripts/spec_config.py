@@ -15,14 +15,14 @@ RESPEC = {
         {"name": "Andreas Räder", "company": "OO-LD", "companyURL": "https://github.com/OO-LD"},
     ],
     "github": {"repoURL": "https://github.com/OO-LD/oold-schema", "branch": "main"},
-    "latestVersion": "https://oo-ld.github.io/oold-schema/latest/spec/",
-    "edDraftURI": "https://oo-ld.github.io/oold-schema/dev/spec/",
+    "latestVersion": "https://oo-ld.org/latest/spec/",
+    "edDraftURI": "https://oo-ld.org/dev/spec/",
     "logos": [
         {
             "src": "../assets/OO-LD_logo.jpg",
             "alt": "OO-LD logo",
             "height": 80,
-            "url": "https://OO-LD.github.io/oold-schema/",
+            "url": "https://oo-ld.org/",
         }
     ],
     "lint": {"no-http-props": False},

@@ -21,7 +21,7 @@ What makes OO-LD different from other approaches that unify structure and semant
 New to OO-LD? Head to [Get Started](get-started.md) for a first hands-on example, then work through the [Guide](guide/index.md).
 
 !!! note "Guide vs. Specification"
-    This site is the didactic, example-driven **guide (primer)**. The normative, W3C-style **[Specification](spec/index.html)** defines the conformance requirements (`MUST`/`SHOULD`) with defined terms and references. The two are cross-linked: use the guide to learn, the specification to cite.
+    This site is the didactic, example-driven **guide (primer)**. The normative, W3C-style **[Specification](spec/)** defines the conformance requirements (`MUST`/`SHOULD`) with defined terms and references. The two are cross-linked: use the guide to learn, the specification to cite.
 
 ## Fundamentals
 

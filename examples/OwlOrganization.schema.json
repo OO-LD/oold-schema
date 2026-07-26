@@ -1,5 +1,5 @@
 {
-  "$schema": "https://oo-ld.github.io/oold-schema/latest/meta/oold-meta-schema.json",
+  "$schema": "https://oo-ld.org/latest/meta/oold-meta-schema.json",
   "$id": "OwlOrganization.schema.json",
   "x-oold-iri": "schema:Organization",
   "@context": {

@@ -55,7 +55,7 @@
   {
     "feature": "value-form: one plain `address` term projects a literal, a reference, and an embedded object to distinct RDF shapes",
     "schema": {
-      "$schema": "https://oo-ld.github.io/oold-schema/latest/meta/oold-meta-schema.json",
+      "$schema": "https://oo-ld.org/latest/meta/oold-meta-schema.json",
       "x-oold-instance-rdf-type": ["schema:Organization"],
       "@context": {
         "schema": "http://schema.org/",
@@ -107,7 +107,7 @@
   {
     "feature": "separate-keys: a canonical @type:@id `address` term (reference or embedded object) plus a plain `address_text` companion (literal), all projecting to schema:address",
     "schema": {
-      "$schema": "https://oo-ld.github.io/oold-schema/latest/meta/oold-meta-schema.json",
+      "$schema": "https://oo-ld.org/latest/meta/oold-meta-schema.json",
       "x-oold-instance-rdf-type": ["schema:Organization"],
       "@context": {
         "schema": "http://schema.org/",
@@ -161,7 +161,7 @@
   {
     "feature": "language-tagged text: an @language term projects a string to a language-tagged literal",
     "schema": {
-      "$schema": "https://oo-ld.github.io/oold-schema/latest/meta/oold-meta-schema.json",
+      "$schema": "https://oo-ld.org/latest/meta/oold-meta-schema.json",
       "x-oold-instance-rdf-type": ["schema:Organization"],
       "@context": {
         "schema": "http://schema.org/",
@@ -187,7 +187,7 @@
     "feature": "reverse round-trip: an exported instance reconstructs from RDF through the minimal schema-derived frame (literals and references by compaction, embedded objects by framing, arrays kept stable by @container:@set)",
     "$comment": "The instance carries its materialized root type (schema:Organization), as a compliant export must, so the schema-derived frame can pick it as the frame root and nest the embedded object beneath it. Reconstruction uses scripts/schema_to_frame.mjs; [roundtrip] asserts instance == reconstruction after canonicalization.",
     "schema": {
-      "$schema": "https://oo-ld.github.io/oold-schema/latest/meta/oold-meta-schema.json",
+      "$schema": "https://oo-ld.org/latest/meta/oold-meta-schema.json",
       "x-oold-instance-rdf-type": ["schema:Organization"],
       "@context": {
         "schema": "http://schema.org/",
