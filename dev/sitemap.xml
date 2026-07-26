@@ -1,66 +1,66 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
       <url>
-        <loc>https://OO-LD.github.io/oold-schema/dev/</loc>
+        <loc>https://oo-ld.org/dev/</loc>
       </url>
       <url>
-        <loc>https://OO-LD.github.io/oold-schema/dev/introduction/</loc>
+        <loc>https://oo-ld.org/dev/introduction/</loc>
       </url>
       <url>
-        <loc>https://OO-LD.github.io/oold-schema/dev/get-started/</loc>
+        <loc>https://oo-ld.org/dev/get-started/</loc>
       </url>
       <url>
-        <loc>https://OO-LD.github.io/oold-schema/dev/guide/</loc>
+        <loc>https://oo-ld.org/dev/guide/</loc>
       </url>
       <url>
-        <loc>https://OO-LD.github.io/oold-schema/dev/guide/basic-concepts/</loc>
+        <loc>https://oo-ld.org/dev/guide/basic-concepts/</loc>
       </url>
       <url>
-        <loc>https://OO-LD.github.io/oold-schema/dev/guide/composition/</loc>
+        <loc>https://oo-ld.org/dev/guide/composition/</loc>
       </url>
       <url>
-        <loc>https://OO-LD.github.io/oold-schema/dev/guide/schema-instances/</loc>
+        <loc>https://oo-ld.org/dev/guide/schema-instances/</loc>
       </url>
       <url>
-        <loc>https://OO-LD.github.io/oold-schema/dev/guide/identification-versioning/</loc>
+        <loc>https://oo-ld.org/dev/guide/identification-versioning/</loc>
       </url>
       <url>
-        <loc>https://OO-LD.github.io/oold-schema/dev/guide/extensions/</loc>
+        <loc>https://oo-ld.org/dev/guide/extensions/</loc>
       </url>
       <url>
-        <loc>https://OO-LD.github.io/oold-schema/dev/guide/meta-schema/</loc>
+        <loc>https://oo-ld.org/dev/guide/meta-schema/</loc>
       </url>
       <url>
-        <loc>https://OO-LD.github.io/oold-schema/dev/use-cases/</loc>
+        <loc>https://oo-ld.org/dev/use-cases/</loc>
       </url>
       <url>
-        <loc>https://OO-LD.github.io/oold-schema/dev/mappings/</loc>
+        <loc>https://oo-ld.org/dev/mappings/</loc>
       </url>
       <url>
-        <loc>https://OO-LD.github.io/oold-schema/dev/tooling/</loc>
+        <loc>https://oo-ld.org/dev/tooling/</loc>
       </url>
       <url>
-        <loc>https://OO-LD.github.io/oold-schema/dev/reference/</loc>
+        <loc>https://oo-ld.org/dev/reference/</loc>
       </url>
       <url>
-        <loc>https://OO-LD.github.io/oold-schema/dev/migration/</loc>
+        <loc>https://oo-ld.org/dev/migration/</loc>
       </url>
       <url>
-        <loc>https://OO-LD.github.io/oold-schema/dev/migration/from-json-schema/</loc>
+        <loc>https://oo-ld.org/dev/migration/from-json-schema/</loc>
       </url>
       <url>
-        <loc>https://OO-LD.github.io/oold-schema/dev/migration/from-rdf/</loc>
+        <loc>https://oo-ld.org/dev/migration/from-rdf/</loc>
       </url>
       <url>
-        <loc>https://OO-LD.github.io/oold-schema/dev/migration/from-owl-shacl/</loc>
+        <loc>https://oo-ld.org/dev/migration/from-owl-shacl/</loc>
       </url>
       <url>
-        <loc>https://OO-LD.github.io/oold-schema/dev/migration/from-python/</loc>
+        <loc>https://oo-ld.org/dev/migration/from-python/</loc>
       </url>
       <url>
-        <loc>https://OO-LD.github.io/oold-schema/dev/migration/from-legacy-osw/</loc>
+        <loc>https://oo-ld.org/dev/migration/from-legacy-osw/</loc>
       </url>
       <url>
-        <loc>https://OO-LD.github.io/oold-schema/dev/migration/legacy-keyword-inventory/</loc>
+        <loc>https://oo-ld.org/dev/migration/legacy-keyword-inventory/</loc>
       </url>
 </urlset>
