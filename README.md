@@ -29,16 +29,16 @@ The JSON Schema part (`type`, `properties`) describes the structure; the `@conte
 
 ## Documentation
 
-📖 **Full documentation: <https://OO-LD.github.io/oold-schema/>**
+📖 **Full documentation: <https://oo-ld.org/>**
 
 The site covers the concepts and specification in an orientation-style guide with worked examples:
 
-- [Introduction](https://oo-ld.github.io/oold-schema/latest/introduction/) - what OO-LD is and why.
-- [Get Started](https://oo-ld.github.io/oold-schema/latest/get-started/) - a first hands-on example.
-- [Guide](https://oo-ld.github.io/oold-schema/latest/guide/) - basic concepts, composition, schema instances, identification & versioning, extensions, and the meta-schema.
-- [Use Cases](https://oo-ld.github.io/oold-schema/latest/use-cases/), [Mappings](https://oo-ld.github.io/oold-schema/latest/mappings/), [Tooling](https://oo-ld.github.io/oold-schema/latest/tooling/), and [Reference](https://oo-ld.github.io/oold-schema/latest/reference/).
+- [Introduction](https://oo-ld.org/latest/introduction/) - what OO-LD is and why.
+- [Get Started](https://oo-ld.org/latest/get-started/) - a first hands-on example.
+- [Guide](https://oo-ld.org/latest/guide/) - basic concepts, composition, schema instances, identification & versioning, extensions, and the meta-schema.
+- [Use Cases](https://oo-ld.org/latest/use-cases/), [Mappings](https://oo-ld.org/latest/mappings/), [Tooling](https://oo-ld.org/latest/tooling/), and [Reference](https://oo-ld.org/latest/reference/).
 
-The normative, W3C-style **[Specification](https://oo-ld.github.io/oold-schema/latest/spec/)** (rendered with [ReSpec](https://respec.org/)) accompanies the guide: the guide is for learning, the specification is for conformance and citation.
+The normative, W3C-style **[Specification](https://oo-ld.org/latest/spec/)** (rendered with [ReSpec](https://respec.org/)) accompanies the guide: the guide is for learning, the specification is for conformance and citation.
 
 ## Repository contents
 

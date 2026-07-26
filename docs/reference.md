@@ -1,6 +1,6 @@
 # Reference
 
-This page collects informative reference material - the package registry, discussion pointers, and a comparison with related work. The normative IANA / media-type considerations, security considerations, and the bibliography are in the [Specification](spec/index.html).
+This page collects informative reference material - the package registry, discussion pointers, and a comparison with related work. The normative IANA / media-type considerations, security considerations, and the bibliography are in the [Specification](spec/).
 
 ## Registry
 

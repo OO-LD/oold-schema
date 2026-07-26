@@ -13,7 +13,7 @@ The core idea of OO-LD is that a single document is at once a valid **JSON Schem
 - `$id` gives the schema a stable identity and `$schema` declares the OO-LD dialect (the meta-schema).
 
 !!! note "JSON or YAML?"
-    JSON is the canonical notation for OO-LD. YAML is an equivalent, more human-friendly rendering as long as it stays within the JSON-compatible subset (no anchors, tags, or implicit typing surprises), so every example here has a **"View as YAML"** tab. See the specification's [Notation](spec/index.html#notation) section for the normative rule.
+    JSON is the canonical notation for OO-LD. YAML is an equivalent, more human-friendly rendering as long as it stays within the JSON-compatible subset (no anchors, tags, or implicit typing surprises), so every example here has a **"View as YAML"** tab. See the specification's [Notation](spec/#notation) section for the normative rule.
 
 ## Step 2 - Try it in the playground
 
