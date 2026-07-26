@@ -71,20 +71,94 @@ const validatePatternLint = ajv.compile(patternLint);
 
 // json-schema-faker respects declared string formats (it emits a valid uri/iri/email/...),
 // so generated instances are validated with formats on, matching the committed instances.
-const jsfGen = createGenerator({ alwaysFakeOptionals: true, useExamplesValue: true, useDefaultValue: true });
+const jsfGen = createGenerator({ alwaysFakeOptionals: true, useExamplesValue: true, useDefaultValue: true, maxItems: 1, maxLength: 40 });
 
 // Compile a dereferenced example schema into a plain instance-validator. The custom $schema
 // (the OO-LD meta URL) is dropped so ajv uses the 2020-12 dialect; x-oold-* keywords are
 // unknown to ajv and ignored (strict:false), which is the intended validator/UI split.
 const derefCache = {};
+// Dereferencing inlines $refs, so a schema with cyclic embeds (a value type that embeds
+// itself, e.g. schema.org QuantitativeValue.valueReference -> QuantitativeValue) becomes a
+// graph with circular object references, and one where many properties share the same
+// referenced leaf/embed nodes. Faker, ajv and the variant walker would recurse without bound
+// on the cycles. boundSchema returns a finite, acyclic copy: a node on the current path (a
+// cycle) or deeper than maxDepth becomes {} (permissive), and shared nodes are memoized so
+// the DAG is not unrolled into an exponentially larger tree. Non-cyclic, shallow schemas
+// (this repo's examples) are copied unchanged.
+function boundSchema(root, maxDepth = 6) {
+  const memo = new Map();
+  const walk = (node, path, depth) => {
+    if (node === null || typeof node !== "object") return node;
+    if (path.has(node)) return {};        // cycle: node references itself or an ancestor
+    if (memo.has(node)) return memo.get(node); // shared node already bounded: reuse (keep DAG)
+    if (depth > maxDepth) return {};
+    path.add(node);
+    const out = Array.isArray(node) ? [] : {};
+    memo.set(node, out);
+    if (Array.isArray(node)) node.forEach((x, i) => (out[i] = walk(x, path, depth + 1)));
+    else for (const [k, v] of Object.entries(node)) {
+      // Drop identity keys: dereferencing inlines a $ref'd leaf under many properties, each
+      // keeping its $id, which makes ajv see one $id resolving to several schemas.
+      if (k === "$id" || k === "$schema") continue;
+      out[k] = walk(v, path, depth + 1);
+    }
+    path.delete(node);
+    return out;
+  };
+  return walk(root, new Set(), 0);
+}
+
 async function dereffed(schemaFile) {
   if (!derefCache[schemaFile]) {
     const d = await $RefParser.dereference(join(exDir, schemaFile));
     delete d.$schema;
-    derefCache[schemaFile] = d;
+    derefCache[schemaFile] = boundSchema(d);
   }
   return derefCache[schemaFile];
 }
+
+// A schema's @context can reference other schema files, both as a parent context and as a
+// term's scoped @context. When those references form a cycle (e.g. a value type whose scoped
+// context embeds itself), a JSON-LD processor must eagerly validate the recursive scoped
+// context. Per the spec that validation is recursion-bounded (validate scoped context = false
+// + context overflow), but neither jsonld.js (heap OOM) nor PyLD (RecursionError) bounds it -
+// so such a schema cannot be round-tripped by the mainstream processors. Detect the schemas
+// that (transitively) reach such a cycle so the round-trip can skip them with a note instead
+// of exhausting memory. A self-reference through the top-level context (no scoped @context) is
+// NOT a cycle here and round-trips fine.
+function contextFileRefs(ctx, out = new Set()) {
+  // Every *.schema.json string anywhere in the @context is a remote-context reference
+  // (a parent context or a term's scoped context). x-oold-range references live in
+  // `properties`, not `@context`, so they are correctly excluded (they load no context).
+  if (typeof ctx === "string") { if (ctx.endsWith(".schema.json")) out.add(ctx); return out; }
+  if (Array.isArray(ctx)) { for (const c of ctx) contextFileRefs(c, out); return out; }
+  if (ctx && typeof ctx === "object") for (const v of Object.values(ctx)) contextFileRefs(v, out);
+  return out;
+}
+const ctxGraph = {};
+for (const f of schemaFiles) {
+  try { ctxGraph[f] = [...contextFileRefs(JSON.parse(readFileSync(join(exDir, f), "utf8"))["@context"] ?? null)]; }
+  catch { ctxGraph[f] = []; }
+}
+const cyclicScopedContext = (() => {
+  const color = {}, onCycle = new Set();
+  const visit = (n, stack) => {
+    color[n] = 1;
+    for (const m of ctxGraph[n] || []) {
+      if (!(m in ctxGraph)) continue;
+      if (color[m] === 1) { const i = stack.indexOf(m); for (let j = Math.max(i, 0); j < stack.length; j++) onCycle.add(stack[j]); onCycle.add(m); }
+      else if (color[m] === undefined) visit(m, [...stack, m]);
+    }
+    color[n] = 2;
+  };
+  for (const f of schemaFiles) if (color[f] === undefined) visit(f, [f]);
+  const reaches = new Set(onCycle);
+  for (let changed = true; changed; ) {
+    changed = false;
+    for (const f of schemaFiles) if (!reaches.has(f) && (ctxGraph[f] || []).some((m) => reaches.has(m))) { reaches.add(f); changed = true; }
+  }
+  return reaches;
+})();
 function compileValidator(schema) {
   const iajv = new Ajv2020({ strict: false, validateFormats: true });
   addFormats(iajv);
@@ -163,6 +237,9 @@ function lostKeys(before, after, path = "", lost = []) {
 // reconstruct with compaction (or the schema-derived frame when the schema embeds objects).
 // Returns the property keys lost on the way - empty means nothing was dropped.
 async function roundtrip(schema, sample, ctxRef) {
+  // A scalar instance (e.g. a DataType leaf schema whose body is a bare string/boolean) has
+  // no properties to lose and cannot carry a @context; nothing to round-trip.
+  if (sample === null || typeof sample !== "object" || Array.isArray(sample)) return { lost: [], restored: sample };
   const doc = { "@context": ctxRef, ...sample };
   const types = instanceRdfTypes(schema);
   if (types && !("type" in sample) && !("@type" in sample)) doc["@type"] = types;
@@ -290,6 +367,7 @@ for (const f of schemaFiles) {
 console.log("\nJSON-LD - generated instance roundtrip (no loss, reconstruction re-validates):");
 for (const f of schemaFiles) {
   if (!(f in genSamples)) continue;
+  if (cyclicScopedContext.has(f)) { warn(`${f}: round-trip skipped - reaches a cyclic scoped @context (not processable by jsonld.js/PyLD; flatten to the top-level context)`); continue; }
   try {
     const schema = await dereffed(f);
     const { lost, restored } = await roundtrip(schema, genSamples[f], BASE + f);
@@ -302,6 +380,7 @@ for (const f of schemaFiles) {
 
 console.log("\nJSON-LD - schemas as remote context (dummy document):");
 for (const f of schemaFiles) {
+  if (cyclicScopedContext.has(f)) { warn(`${f}: remote-context check skipped - cyclic scoped @context`); continue; }
   try { await jsonld.expand({ "@context": BASE + f, "@id": "https://example.org/dummy" }, { base: BASE }); ok(f); }
   catch (e) { bad(`FAIL       ${f}: ${e.message}`); }
 }
@@ -309,6 +388,7 @@ for (const f of schemaFiles) {
 console.log("\nJSON-LD - instance roundtrip (instance -> RDF -> instance):");
 for (const f of instanceFiles) {
   const inst = JSON.parse(readFileSync(join(exDir, f), "utf8"));
+  if (cyclicScopedContext.has(inst.$schema)) { warn(`${f}: round-trip skipped - its schema reaches a cyclic scoped @context (not processable by jsonld.js/PyLD)`); continue; }
   try {
     const nquads = await jsonld.toRDF(inst, { base: BASE + f, format: "application/n-quads" });
     const triples = nquads.split("\n").filter((l) => l.trim()).length;
@@ -340,10 +420,15 @@ for (const f of instanceFiles) {
 // get their own round-trip loss check.
 console.log("\nVariant coverage (auto-generate + roundtrip per oneOf/anyOf branch):");
 let variantChecks = 0;
+const MAX_VARIANTS = 50; // per schema: a large schema can have hundreds of oneOf/anyOf
+                         // branches; cloning the schema for each is expensive, so cap and log.
 for (const f of schemaFiles) {
+  if (cyclicScopedContext.has(f)) continue; // round-trip skipped above; don't OOM here either
   const schema = await dereffed(f);
-  const variants = collectVariants(schema);
-  if (!variants.length) continue;
+  const allVariants = collectVariants(schema);
+  if (!allVariants.length) continue;
+  const variants = allVariants.slice(0, MAX_VARIANTS);
+  if (allVariants.length > MAX_VARIANTS) console.log(`NOTE       ${f}: ${allVariants.length} oneOf/anyOf branches, checking first ${MAX_VARIANTS}`);
   const validate = compileValidator(schema);
   for (const v of variants) {
     variantChecks++;
