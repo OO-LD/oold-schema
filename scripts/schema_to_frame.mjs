@@ -41,9 +41,11 @@ export function contextTerms(context, out = {}) {
 // $ref to a type. A scoped @context is a strong signal too, but it is not mandatory (an
 // embed can be mapped by the ambient/top-level context), so shape is the primary signal.
 export function embeddedProperties(schema) {
+  // An embed is an *object* value: type "object" with its own properties. A $ref alone is not
+  // enough - it may point at a scalar DataType leaf (a literal, not an embed) - and after
+  // dereferencing a real embed is inlined as such an object anyway.
   const isEmbed = (node) => {
     if (!node || typeof node !== "object") return false;
-    if ("$ref" in node) return true;
     if (node.type === "object" && node.properties) return true;
     if (node.items) return isEmbed(node.items);
     for (const kw of ["anyOf", "oneOf", "allOf"]) {
@@ -51,7 +53,15 @@ export function embeddedProperties(schema) {
     }
     return false;
   };
-  const props = schema.properties || {};
+  // Properties may live in allOf members (a dereferenced subclass chain inlines each
+  // superclass as an allOf entry), so collect the full composed property map.
+  const collectProps = (node, out = {}) => {
+    if (!node || typeof node !== "object") return out;
+    for (const [k, v] of Object.entries(node.properties || {})) if (!(k in out)) out[k] = v;
+    for (const sub of node.allOf || []) collectProps(sub, out);
+    return out;
+  };
+  const props = collectProps(schema);
   const structural = Object.keys(props).filter((k) => isEmbed(props[k]));
   const terms = contextTerms(schema["@context"]);
   const scoped = Object.keys(terms).filter((t) => "@context" in terms[t]);

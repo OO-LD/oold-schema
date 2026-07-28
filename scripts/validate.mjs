@@ -82,30 +82,76 @@ const derefCache = {};
 // graph with circular object references, and one where many properties share the same
 // referenced leaf/embed nodes. Faker, ajv and the variant walker would recurse without bound
 // on the cycles. boundSchema returns a finite, acyclic copy: a node on the current path (a
-// cycle) or deeper than maxDepth becomes {} (permissive), and shared nodes are memoized so
-// the DAG is not unrolled into an exponentially larger tree. Non-cyclic, shallow schemas
-// (this repo's examples) are copied unchanged.
+// cycle) or beyond maxDepth instance levels is cut, and shared nodes are memoized so the DAG
+// is not unrolled into an exponentially larger tree. Non-cyclic, shallow schemas (this
+// repo's examples) are copied unchanged.
+//
+// Depth counts *instance* nesting (properties/items/... descent), not raw JSON nesting: an
+// allOf/anyOf hop or a subclass chain adds JSON depth without nesting the instance, and
+// counting it would cut inherited property constraints (turning them permissive) on any
+// schema a few subclass levels deep.
+//
+// The cut is not {}: an empty schema lets the faker emit null / [] / junk-typed values,
+// which JSON-LD drops or mis-keys, producing false RT-LOSSY/RT-ERROR reports. But it must
+// stay permissive for validation: the same (shared) node can be reached intact via another
+// path, so a typed cut would reject legitimate values. `default` does both - it constrains
+// nothing, while the faker (useDefaultValue) emits the harmless marker string instead of
+// random junk, so samples stay lossless and reconstruction re-validates.
+const CUT_SCHEMA = { default: "x-oold-cut" };
+// JSON Schema keywords whose value (or whose members' values) describes a nested instance
+// level; descending into them consumes depth budget. Everything else (composition, $defs,
+// annotations, @context) is depth-neutral.
+const INSTANCE_KEYWORDS = new Set(["items", "additionalItems", "additionalProperties", "contains", "propertyNames", "unevaluatedItems", "unevaluatedProperties"]);
+const INSTANCE_MAP_KEYWORDS = new Set(["properties", "patternProperties"]);
 function boundSchema(root, maxDepth = 6) {
+  const cut = () => JSON.parse(JSON.stringify(CUT_SCHEMA));
+  // Pass 1: each node's minimum instance depth over all paths reaching it (0-1 BFS: an
+  // instance-keyword descent costs 1, anything else 0). A shared node is then cut (or kept)
+  // identically everywhere, instead of depending on which path happened to reach it first -
+  // otherwise one allOf member can carry an intact copy of a property while another carries
+  // an over-cut permissive copy of the same property, and the faker satisfies only the cut.
+  const minDepth = new Map();
+  const queue = [[root, 0]];
+  while (queue.length) {
+    const [node, depth] = queue.shift();
+    if (node === null || typeof node !== "object") continue;
+    if (minDepth.has(node) && minDepth.get(node) <= depth) continue;
+    minDepth.set(node, depth);
+    if (Array.isArray(node)) {
+      for (const x of node) queue.push([x, depth]);
+      continue;
+    }
+    for (const [k, v] of Object.entries(node)) {
+      const step = INSTANCE_KEYWORDS.has(k) || k === "prefixItems" ? 1 : 0;
+      if (INSTANCE_MAP_KEYWORDS.has(k) && v && typeof v === "object" && !Array.isArray(v)) {
+        queue.push([v, depth]);
+        for (const pv of Object.values(v)) queue.push([pv, depth + 1]);
+      } else {
+        queue.push([v, depth + step]);
+      }
+    }
+  }
+  // Pass 2: copy, cutting cycles (path-local) and nodes whose best depth exceeds the budget.
   const memo = new Map();
-  const walk = (node, path, depth) => {
+  const walk = (node, path) => {
     if (node === null || typeof node !== "object") return node;
-    if (path.has(node)) return {};        // cycle: node references itself or an ancestor
+    if (path.has(node)) return cut();      // cycle: node references itself or an ancestor
     if (memo.has(node)) return memo.get(node); // shared node already bounded: reuse (keep DAG)
-    if (depth > maxDepth) return {};
+    if ((minDepth.get(node) ?? 0) > maxDepth) return cut();
     path.add(node);
     const out = Array.isArray(node) ? [] : {};
     memo.set(node, out);
-    if (Array.isArray(node)) node.forEach((x, i) => (out[i] = walk(x, path, depth + 1)));
+    if (Array.isArray(node)) node.forEach((x, i) => (out[i] = walk(x, path)));
     else for (const [k, v] of Object.entries(node)) {
       // Drop identity keys: dereferencing inlines a $ref'd leaf under many properties, each
       // keeping its $id, which makes ajv see one $id resolving to several schemas.
       if (k === "$id" || k === "$schema") continue;
-      out[k] = walk(v, path, depth + 1);
+      out[k] = walk(v, path);
     }
     path.delete(node);
     return out;
   };
-  return walk(root, new Set(), 0);
+  return walk(root, new Set());
 }
 
 async function dereffed(schemaFile) {
@@ -210,7 +256,12 @@ function canonical(v) {
 // broken) @context term drops out of RDF, so its key disappears from the reconstruction,
 // while value coercion (e.g. a reference string resolving to an absolute IRI) keeps the
 // key and so is not falsely reported.
+// A JSON-LD no-op value: null, [], or an array of nothing but no-ops ([null], [[]], ...).
+// Such a value produces no triples, so its key legitimately disappears on the way back.
+const isNoop = (v) => v === null || (Array.isArray(v) && v.every(isNoop));
+
 function lostKeys(before, after, path = "", lost = []) {
+  if (isNoop(before)) return lost;
   if (Array.isArray(before)) {
     const arr = Array.isArray(after) ? after : after == null ? [] : [after];
     for (const el of before) {
@@ -224,6 +275,7 @@ function lostKeys(before, after, path = "", lost = []) {
       : Array.isArray(after) ? after.find((x) => x && typeof x === "object") || {} : {};
     for (const k of Object.keys(before)) {
       if (k === "@context" || k === "$schema") continue;
+      if (isNoop(before[k])) continue;
       const p = path ? `${path}.${k}` : k;
       if (!(k in a)) lost.push(p);
       else lostKeys(before[k], a[k], p, lost);
@@ -343,6 +395,22 @@ for (const f of instanceFiles) {
   } catch (e) { bad(`ERROR      ${f}: ${e.message}`); }
 }
 
+// The faker draws URLs from a small pool, so two generated `id` values in one document can
+// collide. In RDF the same IRI is the same node: a colliding embed merges into its parent
+// and the round-trip then faithfully reports the merged graph - a false schema failure. Give
+// every generated node a unique id instead (only where the faker already put one).
+let nextId = 0;
+function uniquifyIds(v) {
+  if (Array.isArray(v)) v.forEach(uniquifyIds);
+  else if (v && typeof v === "object") {
+    // A distinct authority (not the document BASE host), or compaction would relativize
+    // the id against the base and break strict `format: iri` schemas.
+    if (typeof v.id === "string") v.id = `https://instances.example.org/id/${nextId++}`;
+    for (const x of Object.values(v)) uniquifyIds(x);
+  }
+  return v;
+}
+
 console.log("\nAuto-generated instances (satisfiability, formats respected):");
 const genSamples = {};
 for (const f of schemaFiles) {
@@ -350,6 +418,7 @@ for (const f of schemaFiles) {
     const schema = await dereffed(f);
     let sample = jsfGen.generate(schema);
     if (sample && typeof sample.then === "function") sample = await sample;
+    uniquifyIds(sample);
     genSamples[f] = sample;
     const validate = compileValidator(schema);
     if (validate(sample)) ok(`${f}`);
@@ -435,6 +504,7 @@ for (const f of schemaFiles) {
     try {
       let sample = jsfGen.generate(v.schema);
       if (sample && typeof sample.then === "function") sample = await sample;
+      uniquifyIds(sample);
       if (!validate(sample)) { bad(`VARIANT    ${f} ${v.label}: generated instance rejected: ` + JSON.stringify(validate.errors)); continue; }
       const { lost, restored } = await roundtrip(schema, sample, BASE + f);
       if (lost.length) bad(`VARIANT-RT ${f} ${v.label}: propert${lost.length > 1 ? "ies" : "y"} lost through RDF: ${lost.join(", ")}`);
