@@ -159,8 +159,8 @@ Separate keys - a canonical `@type: "@id"` term for references and embedded obje
 ```
 :::
 
-:::note{title="A literal term is never coerced to `xsd:string`"}
-`xsd:string` is RDF's default datatype and is elided from plain string literals, so a term declaring `@type: "xsd:string"` is never selected when a string value is compacted back from RDF - the value would reappear under the full predicate IRI instead. A literal term MUST be left plain (no `@type`). Non-default datatypes (`xsd:date`, `xsd:integer`, `xsd:float`, ...) stay explicit on the literal and do round-trip, so datatype coercion for those is correct.
+:::note{title="A literal term is never coerced to a natively-JSON-encoded datatype"}
+A term MUST NOT declare `@type` with a datatype that JSON encodes natively: `xsd:string`, `xsd:boolean`, `xsd:integer`, `xsd:double`, `xsd:float`. `xsd:string` is RDF's default datatype and is elided from plain string literals, and reconstruction converts boolean and numeric literals to native JSON values without an `@type` ([[JSONLD11-API]], RDF to Object Conversion; see [](#round-trip)). In all these cases the value arrives from RDF without a datatype, and a term is never selected against a conflicting or absent type mapping ([[JSONLD11-API]], Term Selection) - the value would reappear under the full predicate IRI instead. This is inherent to the compaction algorithm, not a tooling limitation. Such terms are left plain (no `@type`); the projection to RDF still yields the correct datatype, which JSON-LD derives from the native JSON type ([[JSONLD11-API]], Data Round Tripping). Datatypes without a native JSON encoding (`xsd:date`, `xsd:dateTime`, `xsd:time`, `xsd:duration`, `xsd:anyURI`, ...) stay explicit on the literal through the round-trip, so datatype coercion for those is correct - and is the way to state them, since JSON carries them as plain strings.
 :::
 
 Whichever pattern is chosen, `x-oold-range` records the permitted target type(s) on the reference and embedded branches (see [](#range-of-properties)).

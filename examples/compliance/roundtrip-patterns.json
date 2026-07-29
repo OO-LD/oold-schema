@@ -1,7 +1,7 @@
 [
   {
     "$comment": "Round-trip-safe projection of an ambiguous property range (literal | reference | embedded object), using the address = Text | PostalAddress | Place example from the specification (Property value forms, Projection to RDF and round-trip). The `lintSchemas` group is checked against meta/oold-pattern-lint.schema.json; the `tests` group projects each value form to RDF (expectRdf, dataset isomorphism).",
-    "description": "the pattern lint rejects a literal term coerced to xsd:string, accepts a plain literal term",
+    "description": "the pattern lint rejects a literal term coerced to a natively-JSON-encoded datatype (xsd:string, xsd:boolean, xsd:integer, xsd:double, xsd:float), accepts a plain literal term",
     "lintSchemas": [
       {
         "description": "a plain literal term (no @type) round-trips - lint passes",
@@ -49,6 +49,74 @@
             }
           }
         }
+      },
+      {
+        "description": "@type: xsd:integer is never selected on the way back either (fromRDF with native types returns an untyped native number) - lint fails",
+        "valid": false,
+        "schema": {
+          "@context": {
+            "schema": "http://schema.org/",
+            "xsd": "http://www.w3.org/2001/XMLSchema#",
+            "userInteractionCount": { "@id": "schema:userInteractionCount", "@type": "xsd:integer" }
+          }
+        }
+      },
+      {
+        "description": "@type: xsd:boolean and xsd:double are rejected for the same reason (native JSON encodings)",
+        "valid": false,
+        "schema": {
+          "@context": {
+            "schema": "http://schema.org/",
+            "xsd": "http://www.w3.org/2001/XMLSchema#",
+            "isAccessibleForFree": { "@id": "schema:isAccessibleForFree", "@type": "xsd:boolean" },
+            "longitude": { "@id": "schema:longitude", "@type": "xsd:double" }
+          }
+        }
+      }
+    ]
+  },
+  {
+    "feature": "native literals: plain terms (no @type coercion) round-trip boolean and numeric JSON values, deriving the RDF datatype from the native JSON type",
+    "$comment": "The complement of the lint above: numbers and booleans MUST be mapped by plain terms. JSON-LD projects them to xsd:integer/xsd:double/xsd:boolean literals from the native JSON type alone, and reconstruction (fromRDF with native types) returns untyped native values, which only a plain term compacts back to its key.",
+    "schema": {
+      "$schema": "https://oo-ld.org/latest/meta/oold-meta-schema.json",
+      "x-oold-instance-rdf-type": ["schema:InteractionCounter"],
+      "@context": {
+        "schema": "http://schema.org/",
+        "id": "@id",
+        "type": "@type",
+        "userInteractionCount": { "@id": "schema:userInteractionCount" },
+        "longitude": { "@id": "schema:longitude" },
+        "isAccessibleForFree": { "@id": "schema:isAccessibleForFree" }
+      },
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "type": { "type": ["string", "array"] },
+        "userInteractionCount": { "type": "integer" },
+        "longitude": { "type": "number" },
+        "isAccessibleForFree": { "type": "boolean" }
+      }
+    },
+    "tests": [
+      {
+        "description": "an integer projects to an xsd:integer literal from the native JSON type",
+        "data": { "id": "https://example.org/counter", "type": "schema:InteractionCounter", "userInteractionCount": 5 },
+        "valid": true,
+        "expectRdf": "<https://example.org/counter> <http://schema.org/userInteractionCount> \"5\"^^<http://www.w3.org/2001/XMLSchema#integer> .\n<https://example.org/counter> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://schema.org/InteractionCounter> .\n",
+        "roundtrip": true
+      },
+      {
+        "description": "a fractional number projects to xsd:double and reconstructs as a native number",
+        "data": { "id": "https://example.org/counter", "type": "schema:InteractionCounter", "longitude": 13.4 },
+        "valid": true,
+        "roundtrip": true
+      },
+      {
+        "description": "a boolean projects to xsd:boolean and reconstructs as a native boolean",
+        "data": { "id": "https://example.org/counter", "type": "schema:InteractionCounter", "isAccessibleForFree": true },
+        "valid": true,
+        "roundtrip": true
       }
     ]
   },
