@@ -69,10 +69,6 @@ const validateAsOOLD = ajv.compile(meta); // also validates the meta-schema agai
 // SHOULD-level round-trip pattern lint over a schema's @context (no @type: xsd:string, ...).
 const validatePatternLint = ajv.compile(patternLint);
 
-// json-schema-faker respects declared string formats (it emits a valid uri/iri/email/...),
-// so generated instances are validated with formats on, matching the committed instances.
-const jsfGen = createGenerator({ alwaysFakeOptionals: true, useExamplesValue: true, useDefaultValue: true, maxItems: 1, maxLength: 40 });
-
 // Compile a dereferenced example schema into a plain instance-validator. The custom $schema
 // (the OO-LD meta URL) is dropped so ajv uses the 2020-12 dialect; x-oold-* keywords are
 // unknown to ajv and ignored (strict:false), which is the intended validator/UI split.
@@ -91,13 +87,37 @@ const derefCache = {};
 // counting it would cut inherited property constraints (turning them permissive) on any
 // schema a few subclass levels deep.
 //
-// The cut is not {}: an empty schema lets the faker emit null / [] / junk-typed values,
-// which JSON-LD drops or mis-keys, producing false RT-LOSSY/RT-ERROR reports. But it must
-// stay permissive for validation: the same (shared) node can be reached intact via another
-// path, so a typed cut would reject legitimate values. `default` does both - it constrains
-// nothing, while the faker (useDefaultValue) emits the harmless marker string instead of
-// random junk, so samples stay lossless and reconstruction re-validates.
-const CUT_SCHEMA = { default: "x-oold-cut" };
+// The cut must stay permissive for validation (a typed cut would reject legitimate values at a
+// node shared with an intact path). It carries only a custom `format`, which two properties
+// exploit:
+//  - ajv (strict:false, validateFormats:true) has no assertion for an unknown format and the
+//    node declares no `type`, so it accepts any value - the required permissiveness.
+//  - json-schema-faker treats a `format` node as a string and, via the `formats` option below,
+//    emits a deterministic marker string for it. This matters because for a *typeless* node
+//    the faker instead picks a random type, so at a permissive cut it would emit booleans /
+//    numbers as often as strings - and a non-string under an `@type:"@id"` term becomes an RDF
+//    literal that cannot compact back under that term, a false round-trip loss. Forcing a
+//    string is safe: it round-trips under any term (an IRI reference under @id, a literal under
+//    a plain term). A unique per-call counter keeps distinct @id-coerced cuts from collapsing
+//    into one RDF node. (The `formats` option is the supported custom-format hook in this faker
+//    version - the top-level registerFormat()/define() do not apply to createGenerator; the
+//    version is pinned so this documented behavior is stable.)
+const CUT_SCHEMA = { format: "x-oold-cut" };
+let cutCounter = 0;
+// Custom faker format generators. `x-oold-cut` renders the cut marker (see above). The others
+// cover formats this faker version has no built-in generator for (its built-ins are date-time,
+// email, uri, hostname, ipv4/ipv6, uuid, json-pointer) - without them the faker emits a plain
+// random string that fails the corresponding ajv format assertion, a false satisfiability
+// failure. Each value is a canonical, ajv-accepted lexical form.
+const jsfGen = createGenerator({
+  alwaysFakeOptionals: true, useExamplesValue: true, useDefaultValue: true, maxItems: 1, maxLength: 40,
+  formats: {
+    "x-oold-cut": () => `https://oo-ld.test/cut/${cutCounter++}`,
+    duration: () => "P1DT2H",
+    date: () => "2020-01-02",
+    time: () => "03:04:05Z",
+  },
+});
 // JSON Schema keywords whose value (or whose members' values) describes a nested instance
 // level; descending into them consumes depth budget. Everything else (composition, $defs,
 // annotations, @context) is depth-neutral.
@@ -416,8 +436,7 @@ const genSamples = {};
 for (const f of schemaFiles) {
   try {
     const schema = await dereffed(f);
-    let sample = jsfGen.generate(schema);
-    if (sample && typeof sample.then === "function") sample = await sample;
+    const sample = await jsfGen.generate(schema);
     uniquifyIds(sample);
     genSamples[f] = sample;
     const validate = compileValidator(schema);
@@ -502,8 +521,7 @@ for (const f of schemaFiles) {
   for (const v of variants) {
     variantChecks++;
     try {
-      let sample = jsfGen.generate(v.schema);
-      if (sample && typeof sample.then === "function") sample = await sample;
+      const sample = await jsfGen.generate(v.schema);
       uniquifyIds(sample);
       if (!validate(sample)) { bad(`VARIANT    ${f} ${v.label}: generated instance rejected: ` + JSON.stringify(validate.errors)); continue; }
       const { lost, restored } = await roundtrip(schema, sample, BASE + f);
