@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://oo-ld.org/dev/meta/oold-pattern-lint.schema.json",
   "title": "OO-LD round-trip pattern lint",
-  "description": "SHOULD-level constraints on a schema's @context that keep instances round-trip-safe, checkable by JSON Schema alone. This is distinct from oold-meta-schema.json, which asserts MUST-level well-formedness. It currently enforces that no term coerces a literal to xsd:string: xsd:string is RDF's default datatype and is elided from plain literals, so a term declaring @type: xsd:string is never selected when the value is compacted back from RDF and the round-trip is lossy (see the specification, Property value forms). CURIEs are matched in their conventional xsd: form and as the full XSD IRI; a term that coerces to xsd:string through a non-standard prefix mapping is beyond what a single JSON Schema can resolve and is left to tooling.",
+  "description": "SHOULD-level constraints on a schema's @context that keep instances round-trip-safe, checkable by JSON Schema alone. This is distinct from oold-meta-schema.json, which asserts MUST-level well-formedness. It currently enforces that no term coerces a literal to a datatype JSON encodes natively (xsd:string, xsd:boolean, xsd:integer, xsd:double, xsd:float): xsd:string is RDF's default datatype and is elided from plain literals, and the round-trip contract reconstructs boolean/numeric literals as native JSON values (fromRDF with native types), so in both cases the value carries no @type and a term declaring one is never selected when the value is compacted back from RDF - the property returns under its full IRI and the round-trip is lossy (see the specification, Property value forms). JSON-LD derives the correct RDF datatype from the native JSON type, so these coercions are also redundant. Datatypes without a native JSON encoding (xsd:date, xsd:dateTime, ...) keep their @type through the round-trip and coerce fine. CURIEs are matched in their conventional xsd: form and as the full XSD IRI; a term that coerces through a non-standard prefix mapping is beyond what a single JSON Schema can resolve and is left to tooling.",
   "type": "object",
   "properties": {
     "@context": { "$ref": "#/$defs/context" }
@@ -34,13 +34,19 @@
     "termDefinition": {
       "type": "object",
       "properties": {
-        "@type": { "$ref": "#/$defs/notXsdString" },
+        "@type": { "$ref": "#/$defs/notNativeJsonDatatype" },
         "@context": { "$ref": "#/$defs/context" }
       }
     },
-    "notXsdString": {
+    "notNativeJsonDatatype": {
       "not": {
-        "enum": ["xsd:string", "http://www.w3.org/2001/XMLSchema#string"]
+        "enum": [
+          "xsd:string", "http://www.w3.org/2001/XMLSchema#string",
+          "xsd:boolean", "http://www.w3.org/2001/XMLSchema#boolean",
+          "xsd:integer", "http://www.w3.org/2001/XMLSchema#integer",
+          "xsd:double", "http://www.w3.org/2001/XMLSchema#double",
+          "xsd:float", "http://www.w3.org/2001/XMLSchema#float"
+        ]
       }
     }
   }
