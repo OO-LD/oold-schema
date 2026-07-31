@@ -216,7 +216,7 @@ different contexts.
 }
 ```
 
-See the [UI annotations section of the spec](../spec/index.html#ui-generation) for the
+See the [UI annotations section of the spec](../spec/#ui-generation) for the
 normative `x-oold-ui-*` definitions and the overlay format.
 
 ## Common pitfalls

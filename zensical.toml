@@ -36,7 +36,7 @@ nav = [
         { "From legacy OSW" = "migration/from-legacy-osw.md" },
         { "Legacy keyword inventory" = "migration/legacy-keyword-inventory.md" },
     ]},
-    { "Specification" = "spec/index.html" },
+    { "Specification" = "spec/" },
 ]
 
 [project.theme]
