@@ -44,6 +44,13 @@ const meta = JSON.parse(readFileSync(join(root, "meta", "oold-meta-schema.json")
 const baseMeta = JSON.parse(readFileSync(join(root, "meta", "oold-meta-schema-base.json"), "utf8"));
 const uiMeta = JSON.parse(readFileSync(join(root, "meta", "oold-ui-meta-schema.json"), "utf8"));
 const patternLint = JSON.parse(readFileSync(join(root, "meta", "oold-pattern-lint.schema.json"), "utf8"));
+// Rule catalog (meta/oold-rules.json), generated from the spec prose by scripts/extract_rules.py.
+// Optional: a checkout from before the catalog existed still validates, just without rule coverage.
+const ruleCatalog = (() => {
+  try { return JSON.parse(readFileSync(join(root, "meta", "oold-rules.json"), "utf8")).rules || []; }
+  catch { return []; }
+})();
+const rulesById = new Map(ruleCatalog.map((r) => [r.id, r]));
 const schemaFiles = readdirSync(exDir).filter((f) => f.endsWith(".schema.json"));
 const instanceFiles = readdirSync(exDir).filter((f) => f.endsWith(".instance.json"));
 
@@ -566,12 +573,19 @@ const complianceDir = join(exDir, "compliance");
 const complianceFiles = (() => { try { return readdirSync(complianceDir).filter((f) => f.endsWith(".json")); } catch { return []; } })();
 const RDF_BASE = "https://oo-ld.test/";
 const coveredKeywords = new Set();
+// Rule ids cited by the fixtures, so the suite can be cross-checked against the catalog the
+// same way keyword coverage is cross-checked against the meta-schemas.
+const coveredRules = new Set();
+const citedRules = [];
 
 if (complianceFiles.length) console.log("\nCompliance suite (deterministic, per feature):");
 for (const file of complianceFiles) {
   const groups = JSON.parse(readFileSync(join(complianceDir, file), "utf8"));
   for (const group of groups) {
     const label = group.feature || group.description || file;
+    for (const ref of [group.rule, ...(group.schemas || group.lintSchemas || group.tests || []).map((c) => c.rule)]) {
+      if (ref) { coveredRules.add(ref); citedRules.push({ ref, where: `${file} :: ${label}` }); }
+    }
     if (Array.isArray(group.schemas)) {
       // vocab well-formedness: each candidate schema is checked against the OO-LD meta-schema
       for (const c of group.schemas) {
@@ -660,6 +674,23 @@ if (complianceFiles.length) {
   const uncovered = definedKeywords.filter((k) => !coveredKeywords.has(k));
   if (!uncovered.length) ok(`all ${definedKeywords.length} x-oold-* / x-oold-ui-* keywords are covered`);
   else bad(`UNCOVERED  ${uncovered.length} keyword(s) defined in the meta-schemas but not tested: ${uncovered.join(", ")}`);
+}
+
+// Rule coverage: which normative statements the fixtures actually exercise. A dangling reference
+// is an error - it means a fixture cites an id that was renamed or never existed, which is exactly
+// what stable ids are supposed to prevent. A checkable rule with no fixture is reported as a
+// warning rather than a failure: it is the coverage gap this catalog exists to make visible, and
+// failing on it today would only block the build on requirements nobody has written a case for.
+if (complianceFiles.length && ruleCatalog.length) {
+  console.log("\nRule coverage (compliance fixtures vs meta/oold-rules.json):");
+  const dangling = citedRules.filter(({ ref }) => !rulesById.has(ref));
+  for (const { ref, where } of dangling) bad(`UNKNOWN-RULE ${where}: cites ${ref}, which is not in the rule catalog`);
+
+  const checkable = ruleCatalog.filter((r) => r.checkable && r.applies_to === "document" && !r.deprecated);
+  const missing = checkable.filter((r) => !coveredRules.has(r.id));
+  if (!dangling.length) ok(`${coveredRules.size} rule(s) cited by fixtures, all resolving in the catalog`);
+  if (missing.length) warn(`${missing.length}/${checkable.length} checkable rule(s) have no fixture: ${missing.map((r) => r.id).join(", ")}`);
+  else ok(`all ${checkable.length} checkable rules are exercised by a fixture`);
 }
 
 console.log(`\n${total - failures}/${total} checks passed${warnings ? `, ${warnings} warning(s)` : ""}`);

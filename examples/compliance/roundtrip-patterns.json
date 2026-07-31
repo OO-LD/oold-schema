@@ -107,7 +107,8 @@
           }
         }
       }
-    ]
+    ],
+    "rule": "OOLD-RT-001"
   },
   {
     "feature": "native literals: plain terms (no @type coercion) round-trip boolean and numeric JSON values, deriving the RDF datatype from the native JSON type",
@@ -186,7 +187,8 @@
         "valid": true,
         "roundtrip": true
       }
-    ]
+    ],
+    "rule": "OOLD-RT-001"
   },
   {
     "feature": "value-form: one plain `address` term projects a literal, a reference, and an embedded object to distinct RDF shapes",
@@ -285,7 +287,8 @@
         "valid": true,
         "expectRdf": "_:b0 <http://schema.org/postalCode> \"10115\" .\n_:b0 <http://schema.org/streetAddress> \"Mainstreet 1\" .\n_:b0 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://schema.org/PostalAddress> .\n<https://example.org/acme> <http://schema.org/address> _:b0 .\n"
       }
-    ]
+    ],
+    "rule": "OOLD-INS-011"
   },
   {
     "feature": "separate-keys: a canonical @type:@id `address` term (reference or embedded object) plus a plain `address_text` companion (literal), all projecting to schema:address",
@@ -377,7 +380,8 @@
         "valid": true,
         "expectRdf": "_:b0 <http://schema.org/postalCode> \"10115\" .\n_:b0 <http://schema.org/streetAddress> \"Mainstreet 1\" .\n_:b0 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://schema.org/PostalAddress> .\n<https://example.org/acme> <http://schema.org/address> _:b0 .\n"
       }
-    ]
+    ],
+    "rule": "OOLD-INS-009"
   },
   {
     "feature": "language-tagged text: an @language term projects a string to a language-tagged literal",
@@ -559,6 +563,7 @@
         "valid": true,
         "roundtrip": true
       }
-    ]
+    ],
+    "rule": "OOLD-RT-002"
   }
 ]
