@@ -8,7 +8,7 @@ The core idea is that an [=OO-LD schema=] is always both a valid JSON Schema and
 
 There is an asymmetry between how schemas and instances are consumed:
 
-- An [=OO-LD schema=] is consumed as a JSON-LD [=remote context=] (referenced by its URL from an instance's `@context`), never as a JSON-LD document. OO-LD schema documents MUST NOT be interpreted as JSON-LD documents, because that would apply the schema's own `@context` to the schema itself and produce incorrect triples.
+:rule[OOLD-SCH-001]{applies=implementation level="MUST NOT" summary="An OO-LD schema document must not be interpreted as a JSON-LD document."}- An [=OO-LD schema=] is consumed as a JSON-LD [=remote context=] (referenced by its URL from an instance's `@context`), never as a JSON-LD document. OO-LD schema documents MUST NOT be interpreted as JSON-LD documents, because that would apply the schema's own `@context` to the schema itself and produce incorrect triples.
 - An [=OO-LD instance=] *is* a valid JSON-LD document and is processed as such.
 
 This asymmetry is what lets a single document serve both as a JSON Schema `$ref` target and as a JSON-LD remote `@context` for the same resource. Concretely: an instance is processed directly as a JSON-LD document (e.g. `jsonld.toRDF(instance)`), which loads the schema as a remote context via the instance's `@context`; a schema is only ever referenced as that context and MUST NOT itself be expanded as a document.

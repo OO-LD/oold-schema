@@ -32,17 +32,17 @@ An OO-LD-aware tool determines an instance's schema in the following order:
 2. otherwise, the URL given under `@context`, if the referenced document declares itself to be an OO-LD schema;
 3. otherwise, an inline `@type` (see below) - but only when at least one of the type IRIs resolves to an OO-LD schema.
 
-An implementation MAY additionally maintain a registry mapping `rdf:type` IRIs to OO-LD schemas to resolve case 3, but such a registry MUST NOT be assumed to exist on the consuming side - so exports must be self-sufficient (see below).
+:rule[OOLD-INS-004]{applies=implementation level="MUST NOT" summary="A consuming side must not be assumed to hold an rdf:type-to-schema registry; exports are self-sufficient."}An implementation MAY additionally maintain a registry mapping `rdf:type` IRIs to OO-LD schemas to resolve case 3, but such a registry MUST NOT be assumed to exist on the consuming side - so exports must be self-sufficient (see below).
 
-Because an instance carries `$schema` and `@context` as ordinary members, an OO-LD schema that closes its objects with `additionalProperties: false` or `unevaluatedProperties: false` MUST permit these two members, or conforming instances would fail validation.
+:rule[OOLD-INS-005]{applies=document level=MUST summary="A schema closing its objects must still permit the $schema and @context members."}Because an instance carries `$schema` and `@context` as ordinary members, an OO-LD schema that closes its objects with `additionalProperties: false` or `unevaluatedProperties: false` MUST permit these two members, or conforming instances would fail validation.
 
-`@context` already provides a JSON-LD-native link to the schema (resolution case 2 above), so `$schema` is kept primarily for compatibility with the widespread editor and CI convention, not as a second authoritative mechanism. JSON Schema deliberately does not standardize `$schema` on instances, partly over a self-validation concern: a consumer SHOULD NOT blindly trust the schema an instance declares for itself (a crafted instance could point at a permissive schema) and remains responsible for validating against a schema it trusts.
+:rule[OOLD-INS-006]{applies=implementation level="SHOULD NOT" summary="A consumer should not blindly trust the schema an instance declares for itself."}`@context` already provides a JSON-LD-native link to the schema (resolution case 2 above), so `$schema` is kept primarily for compatibility with the widespread editor and CI convention, not as a second authoritative mechanism. JSON Schema deliberately does not standardize `$schema` on instances, partly over a self-validation concern: a consumer SHOULD NOT blindly trust the schema an instance declares for itself (a crafted instance could point at a permissive schema) and remains responsible for validating against a schema it trusts.
 
 ### Identity (`@id`) {#identity}
 
 An instance that represents an identifiable entity is identified by an `@id` - the IRI of that entity. This is the JSON-LD node identifier, distinct from `$schema` / `@context` (which identify the schema) and from the schema's own `$id` / `x-oold-uuid`. Without an `@id` the entity is an anonymous blank node and cannot be referenced (for example as the target of an `x-oold-range` or `@reverse` relation).
 
-To keep instance keys variable-name-friendly, schemas SHOULD expose `@id` through an aliased `id` property (as with `type` -> `@type`):
+:rule[OOLD-INS-007]{applies=document level=SHOULD summary="Schemas should expose @id through an aliased id property."}To keep instance keys variable-name-friendly, schemas SHOULD expose `@id` through an aliased `id` property (as with `type` -> `@type`):
 
 :::example{title="Aliasing `@id` to `id`"}
 ```json
@@ -75,7 +75,7 @@ A schema declares the `rdf:type`(s) of its instances with the `x-oold-instance-r
 ```
 :::
 
-These types live in the schema, not in the instance data, so a JSON-LD-only processor - which sees only the instance and its `@context` - cannot derive them. Therefore, when OO-LD tooling **exports** an instance (to JSON-LD / RDF), it MUST materialize the declared `rdf:type`(s) as an `@type` on the instance, so that the type reaches RDF without access to the schema or to a type registry.
+:rule[OOLD-INS-008]{applies=implementation level=MUST summary="Tooling exporting an instance must materialize the schema-declared rdf:type(s) as @type."}These types live in the schema, not in the instance data, so a JSON-LD-only processor - which sees only the instance and its `@context` - cannot derive them. Therefore, when OO-LD tooling **exports** an instance (to JSON-LD / RDF), it MUST materialize the declared `rdf:type`(s) as an `@type` on the instance, so that the type reaches RDF without access to the schema or to a type registry.
 
 A materialized `@type` is an ordinary JSON-LD `@type`: its IRIs resolve through the `@context` like any term, so a class name declared as a context term (`"QuantityValue": "qudt:QuantityValue"`) is aliased on export, carries [term synonyms](#synonyms), and drives [frame](#framing) construction. `x-oold-instance-rdf-type` and an inline `type` are thus two ways to reach the same `@type`: the former lets an application keep the type in the schema alone (no `@type` duplicated on every instance) and inject it on export, the latter carries it in self-describing data. Whether a type is subject to profile aliasing follows ordinary JSON-LD `@type` semantics: a value written as a **term** (a plain string such as `"QuantityValue"`) resolves through the `@context` and so is aliased per profile if that term carries synonyms, exactly as an inline `type` term is, whereas a value written as a full IRI or CURIE (`"qudt:QuantityValue"`, `"http://qudt.org/..."`) is emitted verbatim and not aliased. This holds for a materialized `x-oold-instance-rdf-type` and an inline `type` alike - the author selects term form for a profile-aliasable type, IRI form for a fixed one. Multiplicity and aliasing are orthogonal: `x-oold-instance-rdf-type` *co-types* - it lists every `rdf:type` an instance asserts at once (e.g. `qudt:QuantityValue` and `schema:QuantitativeValue` together) - while `x-oold-context` on a type term supplies the *synonyms* of a single type, one chosen per profile; a co-typed type may itself carry synonyms, so the two compose.
 
@@ -131,11 +131,11 @@ Embedded object:
 ```
 :::
 
-A single `@context` term cannot interpret a bare string as **both** a literal and an IRI: `@type: "@id"` coerces every string value to an IRI (so free text becomes an - often invalid, then dropped - IRI), while a plain term keeps every string a literal. A property whose range is references only therefore uses `@type: "@id"` and MAY be written as a bare IRI string; a property whose range includes free text MUST NOT use `@type: "@id"`.
+:rule[OOLD-INS-009]{applies=document level="MUST NOT" summary="A property whose range includes free text must not use @type @id."}A single `@context` term cannot interpret a bare string as **both** a literal and an IRI: `@type: "@id"` coerces every string value to an IRI (so free text becomes an - often invalid, then dropped - IRI), while a plain term keeps every string a literal. A property whose range is references only therefore uses `@type: "@id"` and MAY be written as a bare IRI string; a property whose range includes free text MUST NOT use `@type: "@id"`.
 
-For a property whose range mixes free text with references and/or embedded objects (for example `Text | PostalAddress | Place`), two patterns keep the instance round-trippable (see [](#round-trip)); a model ecosystem SHOULD adopt one of them consistently:
+:rule[OOLD-INS-010]{applies=advisory level=SHOULD summary="A model ecosystem should adopt one of the two ambiguous-range patterns consistently."}For a property whose range mixes free text with references and/or embedded objects (for example `Text | PostalAddress | Place`), two patterns keep the instance round-trippable (see [](#round-trip)); a model ecosystem SHOULD adopt one of them consistently:
 
-1. **Value-form** - a single plain term (no `@type: "@id"`); the value shape alone disambiguates: a bare scalar is a literal, `{ "id": ... }` is a reference, a typed object is embedded. References are written as objects, and the term MUST NOT carry `@type`.
+:rule[OOLD-INS-011]{applies=document level="MUST NOT" summary="Under the value-form pattern a reference is written as an object and its term must not carry @type."}1. **Value-form** - a single plain term (no `@type: "@id"`); the value shape alone disambiguates: a bare scalar is a literal, `{ "id": ... }` is a reference, a typed object is embedded. References are written as objects, and the term MUST NOT carry `@type`.
 2. **Separate keys** - a canonical term `p` with `@type: "@id"` (a bare IRI string reference, plus embedded objects via a scoped `@context`) and a companion `p_text` that is a plain term for the literal.
 
 :::example{title="The two patterns for an ambiguous `address` term"}

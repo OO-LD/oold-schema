@@ -191,9 +191,23 @@ def extract_file(filename: str, problems: list[str]) -> list[dict]:
             paragraph = "\n".join(lines[start : end + 1])
             text = clean_text(RULE.sub("", paragraph))
 
-            level_match = RFC2119.search(RULE.sub("", line)) or RFC2119.search(paragraph)
-            if not level_match:
-                problems.append(f"{where}: {rule_id} marks a paragraph with no RFC 2119 keyword")
+            # `level` is normally the first RFC 2119 keyword after the marker. A paragraph that
+            # chains several requirements needs `level=` so the id names the intended one rather
+            # than whichever keyword happens to come first; such paragraphs are candidates for an
+            # editorial split into separate statements.
+            level = attrs.get("level")
+            if level:
+                if not RFC2119.fullmatch(level):
+                    problems.append(f"{where}: {rule_id} has level={level!r}, which is not an RFC 2119 keyword")
+                    continue
+            else:
+                level_match = RFC2119.search(RULE.sub("", line)) or RFC2119.search(paragraph)
+                if not level_match:
+                    problems.append(f"{where}: {rule_id} marks a paragraph with no RFC 2119 keyword")
+                    continue
+                level = level_match.group(1)
+            if level not in paragraph:
+                problems.append(f"{where}: {rule_id} declares level={level!r}, absent from the marked prose")
                 continue
 
             # `checkable` defaults to true only for document rules: an implementation rule needs a
@@ -204,7 +218,7 @@ def extract_file(filename: str, problems: list[str]) -> list[dict]:
             record = {
                 "id": rule_id,
                 "area": area,
-                "level": level_match.group(1),
+                "level": level,
                 "applies_to": applies,
                 "section": section,
                 "summary": attrs.get("summary") or first_sentence(text),
