@@ -40,6 +40,11 @@ HEADING = re.compile(r"^(#{2,6})\s+(.*?)\s*$")
 ATTRS = re.compile(r"\s*\{([^}]*)\}\s*$")
 DFN = re.compile(r':dfn\[([^\]]*)\]\{lt="([^"]*)"\}')
 CONTAINER = re.compile(r'^:::(example|note)\{([^}]*)\}[ \t]*\n(.*?)\n:::[ \t]*$', re.S | re.M)
+# Marks a normative statement with its stable rule id, e.g.
+#   :rule[OOLD-RT-002]{applies=document}
+# The id is authored, never derived from position - see meta/RULES.md. Rendered as a
+# linkable badge so a report can deep-link straight to the requirement it cites.
+RULE = re.compile(r':rule\[([A-Za-z0-9-]+)\]\{([^}]*)\}[ \t]*')
 
 _md = mistune.create_markdown(escape=False, plugins=["table"])
 
@@ -48,9 +53,19 @@ def md_to_html(text):
     return _md(text).strip()
 
 
+def rule_badge(match):
+    """Render a :rule[...] marker as an anchored, linkable badge."""
+    rule_id = match.group(1)
+    return (
+        f'<a class="rule-id" id="rule-{rule_id}" href="#rule-{rule_id}" '
+        f'title="Normative rule {rule_id}">{rule_id}</a> '
+    )
+
+
 def md_inline(text):
     """Render inline Markdown (headings, <dd> text); strip the wrapping <p>."""
     text = DFN.sub(r'<dfn data-lt="\2">\1</dfn>', text)
+    text = RULE.sub(rule_badge, text)
     html = md_to_html(text)
     if html.startswith("<p>") and html.endswith("</p>"):
         html = html[3:-4]
@@ -99,6 +114,8 @@ def render_body(text, informative):
 
     text = CONTAINER.sub(stash, text)
     text = DFN.sub(r'<dfn data-lt="\2">\1</dfn>', text)
+    # Before wrap_rfc2119, so a rule id containing no keyword is never touched by it.
+    text = RULE.sub(rule_badge, text)
     if not informative:
         text = wrap_rfc2119(text)
     html = md_to_html(text)
@@ -178,6 +195,10 @@ TAB_ASSETS = """  <style>
     .ex-tab { border: 0; background: none; padding: .3em .8em; cursor: pointer; font: inherit; color: #555; border-bottom: 2px solid transparent; }
     .ex-tab[aria-selected="true"] { color: #005a9c; border-bottom-color: #005a9c; font-weight: 600; }
     .ex-panel[hidden] { display: none; }
+    .rule-id { font-family: monospace; font-size: .82em; color: #555; background: #f2f4f7;
+               border: 1px solid #dde1e6; border-radius: 3px; padding: .05em .4em;
+               text-decoration: none; white-space: nowrap; vertical-align: .1em; }
+    .rule-id:hover, .rule-id:target { color: #005a9c; border-color: #005a9c; background: #eef4fa; }
   </style>
   <script>
     // Toggle the JSON / YAML example tabs (event delegation; runs regardless of ReSpec).
