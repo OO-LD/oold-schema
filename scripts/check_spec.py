@@ -5,8 +5,10 @@ Catches broken cross-references, unknown term refs, and unresolved bibliography
 refs that would otherwise only surface when ReSpec renders in a browser. Fast,
 no browser required. Run after render_spec.py.
 """
+import json
 import os
 import re
+import subprocess
 import sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -81,9 +83,65 @@ if missing:
 if extra:
     errors.append("unexpected section ids: " + ", ".join(extra) + " (no matching {#id} in spec/sections/*.md or config)")
 
+# 5. Rule catalog: every :rule[...] anchor is present in the rendered HTML, and the catalog is
+#    append-only with respect to the last release. A rule id is cited in reviews and reports, so
+#    renaming or dropping one silently breaks references that already exist in the wild.
+RULES_FILE = os.path.join(ROOT, "meta", "oold-rules.json")
+rules = []
+if os.path.exists(RULES_FILE):
+    with open(RULES_FILE, encoding="utf-8") as handle:
+        rules = json.load(handle).get("rules", [])
+
+for rule in rules:
+    if f'id="rule-{rule["id"]}"' not in html:
+        errors.append(f"rule {rule['id']} has no anchor in the rendered spec (stale docs/spec/index.html?)")
+
+
+def released_rules():
+    """The catalog as of the most recent release tag, or None before one shipped it.
+
+    Comparing against the *tag* rather than the working tree is deliberate: ids may still be
+    reshuffled freely until a release ships a catalog, and within a cycle several commits may add
+    rules without tripping over each other.
+    """
+    try:
+        tag = subprocess.check_output(  # noqa: S603,S607 - fixed argv, repo-local
+            ["git", "describe", "--tags", "--abbrev=0"], cwd=ROOT, stderr=subprocess.DEVNULL, text=True
+        ).strip()
+        blob = subprocess.check_output(  # noqa: S603,S607
+            ["git", "show", f"{tag}:meta/oold-rules.json"], cwd=ROOT, stderr=subprocess.DEVNULL, text=True
+        )
+    except Exception:
+        return None, None
+    return tag, {r["id"]: r for r in json.loads(blob).get("rules", [])}
+
+
+released_tag, released = released_rules()
+if released:
+    current = {r["id"]: r for r in rules}
+    for rule_id, before in released.items():
+        now = current.get(rule_id)
+        if now is None:
+            errors.append(
+                f"rule {rule_id} was released in {released_tag} but is gone. Ids are permanent: "
+                "deprecate it (deprecated=yes) instead of deleting it."
+            )
+            continue
+        for field in ("area", "level", "applies_to"):
+            if now[field] != before[field]:
+                errors.append(
+                    f"rule {rule_id} changed {field} from {before[field]!r} to {now[field]!r} "
+                    f"since {released_tag}. Mint a new id and deprecate this one instead."
+                )
+        if before.get("deprecated") and not now.get("deprecated"):
+            errors.append(f"rule {rule_id} was deprecated in {released_tag} and must stay deprecated")
+
 if errors:
     print("spec check FAILED:", file=sys.stderr)
     for e in errors:
         print("  - " + e, file=sys.stderr)
     sys.exit(1)
-print(f"spec check OK ({len(section_ids)} sections, {len(aliases)} term aliases)")
+rule_note = f", {len(rules)} rules" if rules else ""
+if rules and not released:
+    rule_note += " (no released catalog to compare against yet)"
+print(f"spec check OK ({len(section_ids)} sections, {len(aliases)} term aliases{rule_note})")

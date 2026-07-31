@@ -22,7 +22,9 @@ validate: ## Validate example schemas + instances (meta-schema, formats, JSON-LD
 	@"$(NODE)" scripts/validate.mjs
 
 .PHONY: spec
-spec: ## Regenerate docs/spec/index.html from spec/sections + meta/*.json (via uv)
+spec: ## Regenerate docs/spec/index.html + meta/oold-rules.json from spec/sections (via uv)
+	@echo "🚀 Extracting the rule catalog from spec/"
+	@uv run scripts/extract_rules.py
 	@echo "🚀 Rendering the ReSpec spec from spec/"
 	@uv run scripts/render_spec.py
 
