@@ -62,8 +62,12 @@ Reading: the dominant paradigm is *compile-from-a-source-language* (LinkML, SPDX
 | [Semantic Treehouse](https://www.semantic-treehouse.nl/) | TNO vocabulary-hub platform for dataspaces. Hosts and collaboratively maintains vocabularies (OWL, SHACL and, more recently, JSON Schema) rather than defining a serialization; a registry counterpart to OO-LD schemas. |
 | [WoT JSON Schema in RDF](https://www.w3.org/2019/wot/json-schema) | W3C note expressing JSON Schema as RDF and attaching a JSON-LD context to instances via `jsonld:context`. The closest standards precedent for annotating JSON Schema in place. |
 
-### Data Overview
+### Serializations and neighbouring formats
 
-| Name                                                                      | Description                     |
-| ------------------------------------------------------------------------- | ------------------------------- |
-| [BIG-MAP](https://github.com/BIG-MAP) | Battery-related linked data and ontologies (Battery Interface Genome - Materials Acceleration Platform) |
+OO-LD interoperates with several JSON-LD serialization and data-definition formats. They operate on the serialization / wire layer, or on the structural layer that OO-LD fills with JSON Schema:
+
+| Format | What it is | Relation to OO-LD |
+| --- | --- | --- |
+| [YAML-LD](https://w3c.github.io/yaml-ld/) | A YAML serialization of JSON-LD (W3C CG) | OO-LD is serialization-agnostic; its YAML form is the JSON-compatible subset, which coincides with YAML-LD's Basic profile (lossless round-trip to JSON-LD and back). OO-LD adds no YAML-specific features. |
+| [CBOR-LD](https://w3c.github.io/cbor-ld/) | A binary (CBOR) encoding of JSON-LD (experimental) | Complementary transport, not a schema. An OO-LD instance is JSON-LD and can be CBOR-LD-encoded; its `@context` is the term dictionary the encoder's semantic compression uses. Its codecs/registries are oriented to Verifiable Credentials; see [Large and bulk data](use-cases.md#large-and-bulk-data) for the technical-data angle. |
+| [CDDL (RFC 8610)](https://www.rfc-editor.org/rfc/rfc8610.html) | A structural data-definition language for CBOR and JSON | The IETF counterpart to JSON Schema: structural only (no linked-data layer) and without JSON-Pointer / `$ref` referencing ([RFC 6901](https://www.rfc-editor.org/rfc/rfc6901.html)), offering generics and sockets/plugs instead. A CDDL rule can describe the shape of OO-LD instances; OO-LD uses JSON Schema plus JSON-LD to add the semantics CDDL does not model. |
