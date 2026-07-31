@@ -10,7 +10,7 @@ OO-LD targets [[JSON-LD11]].
 
 OO-LD composition relies on JSON-LD 1.1 features, in particular scoped contexts: a `$ref` within a `type: object` property is reflected as a property-scoped `@context` (see [](#composition)). Such features are unavailable to a processor running in the `json-ld-1.0` processing mode.
 
-Generated OO-LD contexts SHOULD therefore declare `"@version": 1.1` (the JSON number `1.1`, not the string `"1.1"`). Modern processors default to the 1.1 processing mode, so this is a guard rather than a strict requirement: it prevents a JSON-LD 1.0 processor from silently mis-processing a 1.1 document ([[JSON-LD11]] §4.1.1). Because the first encountered `@version` entry determines the processing mode, it is sufficient to declare `"@version": 1.1` once in the base context of a composition (for example a root `Thing` schema).
+:rule[OOLD-EXT-001]{applies=document level=SHOULD summary="A generated context should declare @version 1.1 as a JSON number."}Generated OO-LD contexts SHOULD therefore declare `"@version": 1.1` (the JSON number `1.1`, not the string `"1.1"`). Modern processors default to the 1.1 processing mode, so this is a guard rather than a strict requirement: it prevents a JSON-LD 1.0 processor from silently mis-processing a 1.1 document ([[JSON-LD11]] §4.1.1). Because the first encountered `@version` entry determines the processing mode, it is sufficient to declare `"@version": 1.1` once in the base context of a composition (for example a root `Thing` schema).
 
 #### Term mappings and synonyms (`x-oold-context`) {#synonyms}
 
@@ -182,9 +182,9 @@ Framing is not the only option for this transformation. When the source data liv
 
 ### JSON Schema {#jsonschema-extensions}
 
-OO-LD targets [[JSONSCHEMA]] (2020-12) as its normative dialect. An OO-LD schema SHOULD declare the OO-LD dialect meta-schema (which extends 2020-12) as its `$schema`, e.g. `"$schema": "https://oo-ld.org/latest/meta/oold-meta-schema.json"` - pinning a specific version (e.g. `.../0.4.0/meta/oold-meta-schema.json`) for reproducibility. Declaring the plain 2020-12 meta-schema (`https://json-schema.org/draft/2020-12/schema`) remains valid for tools that only understand standard JSON Schema.
+:rule[OOLD-EXT-002]{applies=document level=SHOULD summary="A schema should declare the OO-LD dialect meta-schema as its $schema."}OO-LD targets [[JSONSCHEMA]] (2020-12) as its normative dialect. An OO-LD schema SHOULD declare the OO-LD dialect meta-schema (which extends 2020-12) as its `$schema`, e.g. `"$schema": "https://oo-ld.org/latest/meta/oold-meta-schema.json"` - pinning a specific version (e.g. `.../0.4.0/meta/oold-meta-schema.json`) for reproducibility. Declaring the plain 2020-12 meta-schema (`https://json-schema.org/draft/2020-12/schema`) remains valid for tools that only understand standard JSON Schema.
 
-2020-12 is REQUIRED, not merely preferred: OO-LD's composition places `$ref` alongside sibling keywords (e.g. a property carrying `type`, `x-oold-range` and `@context`, or `allOf: [{$ref: ...}]` next to `properties`). Keywords adjacent to `$ref` are only evaluated from JSON Schema 2019-09 onward; in Draft 4 and Draft 7 they are ignored ([[JSONSCHEMA]] §8.2.3.1). Keywords such as `const` (used throughout this document) are likewise only available from draft-06 onward. Migration from the earlier Draft-4-style notation: rename `definitions` to `$defs`, `id` to `$id`, and use the numeric form of `exclusiveMinimum`/`exclusiveMaximum` instead of the boolean form.
+:rule[OOLD-EXT-003]{applies=document level=REQUIRED summary="JSON Schema 2020-12 is required as the dialect, because composition places $ref alongside sibling keywords."}2020-12 is REQUIRED, not merely preferred: OO-LD's composition places `$ref` alongside sibling keywords (e.g. a property carrying `type`, `x-oold-range` and `@context`, or `allOf: [{$ref: ...}]` next to `properties`). Keywords adjacent to `$ref` are only evaluated from JSON Schema 2019-09 onward; in Draft 4 and Draft 7 they are ignored ([[JSONSCHEMA]] §8.2.3.1). Keywords such as `const` (used throughout this document) are likewise only available from draft-06 onward. Migration from the earlier Draft-4-style notation: rename `definitions` to `$defs`, `id` to `$id`, and use the numeric form of `exclusiveMinimum`/`exclusiveMaximum` instead of the boolean form.
 
 #### Multilanguage support {#multilanguage}
 
@@ -192,7 +192,7 @@ There are two distinct localization concerns: translating a schema's own annotat
 
 ##### Localizing schema annotations {#localizing-schema-annotations}
 
-The JSON Schema annotation keywords `title` and `description` carry a single, default human-readable string used by tooling (for example for UI generation). To provide localized variants, OO-LD adds the keywords `x-oold-multilang-title` and `x-oold-multilang-description`. Their value MUST be an object whose keys are [BCP 47](https://www.rfc-editor.org/info/bcp47) language tags (e.g. `en`, `de`, `en-GB`) and whose values are the translated strings. A schema SHOULD still provide a default `title` / `description`; a consumer that has no entry for the requested language falls back to that default. These keywords localize the schema's *own* labels and are not interpreted as JSON-LD.
+:rule[OOLD-EXT-004]{applies=document level=MUST summary="x-oold-multilang-title/description must map BCP 47 language tags to translated strings."}The JSON Schema annotation keywords `title` and `description` carry a single, default human-readable string used by tooling (for example for UI generation). To provide localized variants, OO-LD adds the keywords `x-oold-multilang-title` and `x-oold-multilang-description`. Their value MUST be an object whose keys are [BCP 47](https://www.rfc-editor.org/info/bcp47) language tags (e.g. `en`, `de`, `en-GB`) and whose values are the translated strings. A schema SHOULD still provide a default `title` / `description`; a consumer that has no entry for the requested language falls back to that default. These keywords localize the schema's *own* labels and are not interpreted as JSON-LD.
 
 :::example{title="Localized schema annotations"}
 ```json
@@ -295,7 +295,7 @@ JSON Schema itself supports linked data only in the form of a subobject; referen
 2. An **array of IRIs**, expressing a union of allowed target schemas, e.g. `["Organization.schema.json", "Person.schema.json"]`.
 
 3. An **OO-LD subschema**, the most expressive form. Unions (`anyOf` / `oneOf`),
-intersections (`allOf`) and inline constraints can be combined to describe an anonymous subclass. References to other schemas inside `x-oold-range` MUST use `x-oold-ref`, never `$ref` (see below). The single-IRI form (1) is a shorthand for `{ "allOf": [ { "x-oold-ref": "Organization.schema.json" } ] }`:
+:rule[OOLD-EXT-005]{applies=document level=MUST summary="References inside x-oold-range must use x-oold-ref, never $ref."}intersections (`allOf`) and inline constraints can be combined to describe an anonymous subclass. References to other schemas inside `x-oold-range` MUST use `x-oold-ref`, never `$ref` (see below). The single-IRI form (1) is a shorthand for `{ "allOf": [ { "x-oold-ref": "Organization.schema.json" } ] }`:
 
 :::example{title="Range as a subschema (Organization located in Germany)"}
 ```json
@@ -321,12 +321,12 @@ An `x-oold-range` value is a *reference*: the property holds the target's IRI, a
 
 ##### Lexical form of the reference {#range-reference-form}
 
-The value of an IRI-valued property is a JSON string. Its role as a reference comes from the `@context` (`"@type": "@id"`) and its class from `x-oold-range`. Its *lexical* form SHOULD be constrained with an IRI/URI-family `format` so that malformed values are rejected; the choices, from most to least permissive:
+:rule[OOLD-EXT-006]{applies=document level=SHOULD summary="An IRI-valued property should constrain its lexical form with an IRI/URI-family format."}The value of an IRI-valued property is a JSON string. Its role as a reference comes from the `@context` (`"@type": "@id"`) and its class from `x-oold-range`. Its *lexical* form SHOULD be constrained with an IRI/URI-family `format` so that malformed values are rejected; the choices, from most to least permissive:
 
 - **Any IRI reference** - `"format": "iri-reference"`. By [[RFC3987]] this accepts absolute IRIs, compact IRIs (`ex:alice`, `schema:Person`) and context-relative references alike - the forms OO-LD instances routinely use - so it is the **RECOMMENDED** default. It also accepts a bare term such as `alice`, expanded against the context's `@base` / `@vocab`.
 - **Absolute IRIs only** - `"format": "iri"`. A compact IRI is itself a valid absolute IRI (scheme `ex`, path `alice`), so `iri` accepts `ex:alice`; choose it to additionally forbid relative references.
 - **Stricter, ASCII only** - `"format": "uri"` or `"uri-reference"`, where values are known not to use internationalized (non-ASCII) IRIs.
-- **Compact form specifically** - a `"pattern"` such as `"^[A-Za-z_][\\w.-]*:(?!//)\\S*$"`, which accepts `ex:alice` and `schema:Person` while rejecting `http://…`; the prefix MUST be defined in the `@context`.
+:rule[OOLD-EXT-007]{applies=document level=MUST summary="A compact-IRI prefix used by a property must be defined in the @context."}- **Compact form specifically** - a `"pattern"` such as `"^[A-Za-z_][\\w.-]*:(?!//)\\S*$"`, which accepts `ex:alice` and `schema:Person` while rejecting `http://…`; the prefix MUST be defined in the `@context`.
 
 ##### Value-term aliases (`@vocab`) {#value-term-aliases}
 
@@ -425,7 +425,7 @@ The vendor keywords are documented by their respective projects: jedison's `x-je
 
 An OO-LD schema carries its semantics in the top-level `@context` and, for the RDF type of instances, in `x-oold-instance-rdf-type`. How those reach a consumer depends only on which keywords the consumer tolerates. The native form is preferred; the alternatives below are mechanically generated from it, so the OO-LD document remains the single source and every form yields the same RDF.
 
-- A consumer that accepts arbitrary JSON Schema keywords SHOULD receive the native form unchanged. This covers plain JSON Schema 2020-12 validators, OpenAPI 3.1, and - because they place no restriction on `@context` - Model Context Protocol tool schemas (`inputSchema` / `outputSchema`) as well as LLM tool-use and structured-output APIs, which carry the context through and can use it as grounding.
+:rule[OOLD-EXT-008]{applies=implementation level=SHOULD summary="A consumer accepting arbitrary JSON Schema keywords should receive the native form unchanged."}- A consumer that accepts arbitrary JSON Schema keywords SHOULD receive the native form unchanged. This covers plain JSON Schema 2020-12 validators, OpenAPI 3.1, and - because they place no restriction on `@context` - Model Context Protocol tool schemas (`inputSchema` / `outputSchema`) as well as LLM tool-use and structured-output APIs, which carry the context through and can use it as grounding.
 - For OpenAPI 3.0, which rejects unprefixed keywords in a Schema Object (and typically bundles several classes with no document root to host one `@context`), the context and type SHOULD be delivered per class as `x-jsonld-context` and `x-jsonld-type` following [REST API Linked Data Keywords](https://datatracker.ietf.org/doc/html/draft-polli-restapi-ld-keywords-08): `@context` maps to `x-jsonld-context` and `x-oold-instance-rdf-type` to `x-jsonld-type`. That draft requires references inside these keywords not to be dereferenced automatically, consistent with the `x-oold-ref` rule (see [](#why-x-oold-ref)). The mapping is reversible, so such an export can be read back into an OO-LD schema.
 - For a strict structured-output subset that rejects unknown keywords entirely, the relevant IRIs MAY instead be folded into the `title` / `description` annotations the model also reads. Such a subset typically also constrains the JSON Schema itself (closed objects, all-required properties, limited composition), so the delivery step may apply a small structural transform - for example flattening an `allOf` inheritance chain - in addition to folding the IRIs; the semantics still originate in the single OO-LD source.
 
