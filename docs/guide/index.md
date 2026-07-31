@@ -1,6 +1,6 @@
 # Guide
 
-This guide is a non-normative walk-through of OO-LD Schema. It follows the same orientation as the [JSON-LD specification](https://www.w3.org/TR/json-ld/): each concept is introduced with a short explanation and worked examples. For the exact, normative rules - and the RFC 2119 keywords - always refer to the [Specification](../spec/index.html).
+This guide is a non-normative walk-through of OO-LD Schema. It follows the same orientation as the [JSON-LD specification](https://www.w3.org/TR/json-ld/): each concept is introduced with a short explanation and worked examples. For the exact, normative rules - and the RFC 2119 keywords - always refer to the [Specification](../spec/).
 
 ## Contents
 
