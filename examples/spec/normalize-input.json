@@ -5,7 +5,7 @@
       "type": "schema:Person",
       "name": "Person1",
       "works_for": "demo:organizationA",
-      "works_for*": "demo:organizationB"
+      "works_for_alt": "demo:organizationB"
     },
     { "id": "demo:organizationA", "type": "schema:Organization" },
     { "id": "demo:organizationB", "type": "schema:Organization" },
