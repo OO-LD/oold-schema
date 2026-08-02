@@ -1242,7 +1242,7 @@
 <p>You already model data as Python dataclasses or <a href="https://docs.pydantic.dev/">pydantic</a> models. OO-LD round-trips with them, so the schema and the code stay in sync:</p>
 <ul>
 <li><strong>Schema to code</strong>: generate pydantic models from an OO-LD schema with <a href="https://github.com/koxudaxi/datamodel-code-generator">datamodel-code-generator</a>; the <code>@context</code> and <code>x-oold-*</code> keywords ride along in <code>json_schema_extra</code>.</li>
-<li><strong>Code to schema</strong>: annotate a model's <code>model_config</code> with <code>@context</code> / <code>x-oold-iri</code> and emit OO-LD via pydantic's <code>model_json_schema()</code>.</li>
+<li><strong>Code to schema</strong>: annotate a model's <code>model_config</code> with <code>@context</code> / <code>x-sssom</code> and emit OO-LD via pydantic's <code>model_json_schema()</code>.</li>
 </ul>
 <p>Keep property names identifier-safe (<code>^[A-Za-z_][A-Za-z0-9_]*$</code>) and put the semantics in <code>@context</code> (alias <code>name</code> to <code>schema:name</code>), so you never need an IRI as a Python attribute name.</p>
 <h2 id="1-plain-pydantic">1. Plain pydantic<a class="headerlink" href="#1-plain-pydantic" title="Permanent link">&para;</a></h2>
@@ -1251,11 +1251,11 @@
 <span class="k">class</span><span class="w"> </span><span class="nc">Person</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
     <span class="n">model_config</span> <span class="o">=</span> <span class="n">ConfigDict</span><span class="p">(</span><span class="n">json_schema_extra</span><span class="o">=</span><span class="p">{</span>
         <span class="s2">&quot;@context&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;schema&quot;</span><span class="p">:</span> <span class="s2">&quot;https://schema.org/&quot;</span><span class="p">,</span> <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;schema:name&quot;</span><span class="p">},</span>
-        <span class="s2">&quot;x-oold-iri&quot;</span><span class="p">:</span> <span class="s2">&quot;schema:Person&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;x-sssom&quot;</span><span class="p">:</span> <span class="p">{</span> <span class="s2">&quot;schema:Person&quot;</span><span class="p">:</span> <span class="p">{</span> <span class="s2">&quot;predicate_id&quot;</span><span class="p">:</span> <span class="s2">&quot;skos:exactMatch&quot;</span> <span class="p">}</span> <span class="p">},</span>
     <span class="p">})</span>
     <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
 </code></pre></div>
-<p><code>model_json_schema()</code> emits a JSON Schema carrying that <code>@context</code> and <code>x-oold-iri</code> - a valid OO-LD schema, with no dependency beyond pydantic.</p>
+<p><code>model_json_schema()</code> emits a JSON Schema carrying that <code>@context</code> and <code>x-sssom</code> - a valid OO-LD schema, with no dependency beyond pydantic.</p>
 <h2 id="2-switch-to-oold-pythons-linkedbasemodel">2. Switch to oold-python's <code>LinkedBaseModel</code><a class="headerlink" href="#2-switch-to-oold-pythons-linkedbasemodel" title="Permanent link">&para;</a></h2>
 <p>The same model, with the base class swapped, becomes OO-LD-aware at runtime - resolving linked references by IRI, carrying <code>@id</code> identity, and serialising to JSON-LD:</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">ConfigDict</span>
@@ -1264,7 +1264,7 @@
 <span class="k">class</span><span class="w"> </span><span class="nc">Person</span><span class="p">(</span><span class="n">LinkedBaseModel</span><span class="p">):</span>
     <span class="n">model_config</span> <span class="o">=</span> <span class="n">ConfigDict</span><span class="p">(</span><span class="n">json_schema_extra</span><span class="o">=</span><span class="p">{</span>
         <span class="s2">&quot;@context&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;schema&quot;</span><span class="p">:</span> <span class="s2">&quot;https://schema.org/&quot;</span><span class="p">,</span> <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;schema:name&quot;</span><span class="p">},</span>
-        <span class="s2">&quot;x-oold-iri&quot;</span><span class="p">:</span> <span class="s2">&quot;schema:Person&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;x-sssom&quot;</span><span class="p">:</span> <span class="p">{</span> <span class="s2">&quot;schema:Person&quot;</span><span class="p">:</span> <span class="p">{</span> <span class="s2">&quot;predicate_id&quot;</span><span class="p">:</span> <span class="s2">&quot;skos:exactMatch&quot;</span> <span class="p">}</span> <span class="p">},</span>
     <span class="p">})</span>
     <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
 </code></pre></div>

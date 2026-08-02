@@ -1315,7 +1315,7 @@
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
 <span class="w">  </span><span class="nt">&quot;$schema&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;https://oo-ld.org/latest/meta/oold-meta-schema.json&quot;</span><span class="p">,</span>
 <span class="w">  </span><span class="nt">&quot;$id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;RdfPerson.schema.json&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;x-oold-iri&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;schema:Person&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;x-sssom&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;schema:Person&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;predicate_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;skos:exactMatch&quot;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">},</span>
 <span class="w">  </span><span class="nt">&quot;@context&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;@id&quot;</span><span class="p">,</span>
 <span class="w">    </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;@type&quot;</span><span class="p">,</span>
@@ -1336,7 +1336,9 @@
 <div class="tabbed-block">
 <div class="highlight"><pre><span></span><code><span class="nt">$schema</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://oo-ld.org/latest/meta/oold-meta-schema.json</span>
 <span class="nt">$id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">RdfPerson.schema.json</span>
-<span class="nt">x-oold-iri</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">schema:Person</span>
+<span class="nt">x-sssom</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">schema:Person</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">predicate_id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">skos:exactMatch</span>
 <span class="s">&#39;@context&#39;</span><span class="p p-Indicator">:</span>
 <span class="w">  </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;@id&#39;</span>
 <span class="w">  </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;@type&#39;</span>

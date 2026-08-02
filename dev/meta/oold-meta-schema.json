@@ -80,9 +80,28 @@
       "type": "string",
       "format": "uri-reference"
     },
-    "x-oold-iri": {
-      "description": "Ontology IRI (or compact IRI) denoting the class described by this schema.",
-      "type": "string"
+    "x-sssom": {
+      "description": "Schema-level ontology correspondences: an SSSOM mapping set whose subject is this schema, keyed by the object IRI of a resolvable resource, each value carrying SSSOM slots (predicate_id default skos:exactMatch, mapping_set_id, ...). The schema-level counterpart of the per-term x-sssom used inside x-oold-context; it describes the schema itself, not its instances. See the 'Ontology correspondence' section.",
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "predicate_id": {
+            "type": "string",
+            "default": "skos:exactMatch",
+            "examples": ["skos:exactMatch", "skos:closeMatch"]
+          },
+          "mapping_set_id": {
+            "oneOf": [
+              { "type": "string", "format": "iri-reference" },
+              { "type": "array", "items": { "type": "string", "format": "iri-reference" } }
+            ]
+          }
+        }
+      },
+      "examples": [
+        { "https://schema.org/Person": { "predicate_id": "skos:exactMatch" } }
+      ]
     },
     "x-oold-instance-rdf-type": {
       "description": "The rdf:type(s) carried by instances of this schema, as a list of IRIs (e.g. [\"schema:Person\"]). OO-LD tooling materializes these as @type when exporting an instance to JSON-LD / RDF.",

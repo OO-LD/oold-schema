@@ -1,7 +1,7 @@
 {
   "$schema": "https://oo-ld.org/dev/meta/oold-meta-schema.json",
   "$id": "RdfPerson.schema.json",
-  "x-oold-iri": "schema:Person",
+  "x-sssom": { "schema:Person": { "predicate_id": "skos:exactMatch" } },
   "@context": {
     "id": "@id",
     "type": "@type",
