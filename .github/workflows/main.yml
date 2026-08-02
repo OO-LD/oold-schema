@@ -88,5 +88,14 @@ jobs:
           # --alias-type=copy so /latest/ is a real directory (its schema JSON is
           # fetchable; a redirect alias would 404 for machine schema references).
           MIKE="uvx --with pyyaml==6.0.2 --from $MIKE_SPEC mike"
-          $MIKE deploy --push --alias-type=copy --update-aliases "$ver" latest
-          $MIKE set-default --push latest
+          case "$ver" in
+            *-*)
+              # Pre-release (semver has a hyphen, e.g. 1.0.0-rc.1): publish the versioned
+              # docs only. Do NOT move `latest` or the site default - those track the most
+              # recent STABLE release, so /latest/ never serves a release candidate.
+              $MIKE deploy --push "$ver" ;;
+            *)
+              # Stable release: publish and repoint `latest` + the site default.
+              $MIKE deploy --push --alias-type=copy --update-aliases "$ver" latest
+              $MIKE set-default --push latest ;;
+          esac
