@@ -2,7 +2,7 @@
 
 Coming from an ontology (OWL) or shape constraints (SHACL), OO-LD is not a replacement - it is the object-shaped, JSON-native layer that *points at* your ontology and carries just enough constraint for validation and UI or code generation:
 
-- `x-oold-iri` names the OWL/RDFS class the schema realizes.
+- a schema-level `x-sssom` maps the schema to the OWL/RDFS class it corresponds to.
 - `@context` maps each property to its predicate IRI (and marks references with `"@type": "@id"`).
 - `x-oold-range` constrains the target class of a relation (the SHACL `sh:class` / object-property range case) - an IRI, a list of IRIs, or an inline subschema.
 
@@ -22,7 +22,7 @@ schema:Organization a owl:Class .
    sh:property [ sh:path schema:employee ; sh:class schema:Person ] .
 ```
 
-The same as an OO-LD schema - `x-oold-iri` is the class, the `@context` maps the relation to its predicate and marks it a reference, and `x-oold-range` carries the `sh:class` target:
+The same as an OO-LD schema - a schema-level `x-sssom` records the class correspondence, the `@context` maps the relation to its predicate and marks it a reference, and `x-oold-range` carries the `sh:class` target:
 
 {{ inline_file('examples/OwlOrganization.schema.json') }}
 
@@ -35,5 +35,5 @@ That covers the common object-modelling subset; OO-LD does not aim to express th
 
 ## Next steps
 
-- [Extensions](../guide/extensions.md) - `x-oold-iri`, `x-oold-range`, and reverse properties.
+- [Extensions](../guide/extensions.md) - `x-sssom`, `x-oold-range`, and reverse properties.
 - [From RDF, in particular JSON-LD](from-rdf.md) - the RDF and JSON-LD data chain.

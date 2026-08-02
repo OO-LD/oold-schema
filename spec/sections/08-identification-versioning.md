@@ -23,27 +23,29 @@ It is recommended to use the UUID also in the `$id`:
 ```
 :::
 
-### Ontology class IRI (`x-oold-iri`) {#ontology-class-iri}
+### Ontology correspondence (schema-level `x-sssom`) {#ontology-mapping}
 
-`x-oold-iri` declares the IRI of the ontology class that this schema realizes - the RDF/OWL class from an external vocabulary that gives the schema its semantic grounding. It is distinct from two related IRIs:
+A schema states which external ontology resources it corresponds to with a top-level `x-sssom` block - the [term-synonym](#synonyms) mapping row lifted to the schema level. Its subject is the schema itself; it is an object keyed by the **object IRI** of a resolvable resource (an RDF/OWL class, a controlled-vocabulary term, another schema), each value carrying the SSSOM slots: `predicate_id` (default `skos:exactMatch`; `skos:closeMatch` for a looser correspondence), `mapping_set_id`, and the rest of the open bag. It is an annotation **about the schema itself** and is not stamped onto instances. It is distinct from:
 
 - `$id` - the URL of the schema document (where to fetch it). A schema document is a retrievable artifact, not an OWL class.
-- `x-oold-instance-rdf-type` - the `rdf:type`s that instances carry on export (see [](#semantic-type)). These are stamped onto instance data; `x-oold-iri` describes the schema itself.
+- `x-oold-instance-rdf-type` - the `rdf:type`s that instances carry on export (see [](#semantic-type)). These are stamped onto instance data; `x-sssom` describes the schema, not the data.
 
-:::example{title="Distinguishing document URL, ontology class, and instance type"}
+:::example{title="Distinguishing document URL, ontology correspondence, and instance type"}
 ```json
 {
   "$id": "https://example.org/my-package/1.0.0/Person.schema.json",
-  "x-oold-iri": "https://schema.org/Person",
+  "x-sssom": {
+    "https://schema.org/Person": { "predicate_id": "skos:exactMatch" }
+  },
   "x-oold-instance-rdf-type": ["schema:Person"],
   "title": "Person"
 }
 ```
 :::
 
-In this example, the schema document is fetched from the `$id` URL, it realizes the ontology class `schema:Person`, and instances exported to RDF carry `@type: schema:Person`. The most common case is that `x-oold-iri` and the entries in `x-oold-instance-rdf-type` resolve to the same IRI, but they may differ - for example when a schema models a more specific subclass inline while still emitting a broader `rdf:type` on instances.
+Here the schema document is fetched from the `$id` URL, it is declared an exact match for `schema:Person`, and instances exported to RDF carry `@type: schema:Person`. Commonly a schema's exact match and the entries in `x-oold-instance-rdf-type` resolve to the same IRI, but they may differ - a schema may model a more specific subclass inline while emitting a broader `rdf:type`, or exact-match one class while close-matching a related one in another vocabulary. Because this is the same mapping machinery as term synonyms, the schema-level mappings carry the same `predicate_id` semantics, `mapping_set_id` selection and SSSOM round-trip (see [](#synonyms)).
 
-OO-LD-aware tooling uses `x-oold-iri` to anchor the schema in an ontology graph, independently of where the schema document is hosted - for example to resolve super-classes, look up ontology annotations, or generate SHACL shapes.
+OO-LD-aware tooling uses these correspondences to anchor the schema in an ontology graph, independently of where the schema document is hosted - for example to resolve super-classes, look up ontology annotations, or generate SHACL shapes.
 
 ### Versioning {#versioning}
 

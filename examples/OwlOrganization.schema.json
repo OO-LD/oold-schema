@@ -1,7 +1,7 @@
 {
   "$schema": "https://oo-ld.org/latest/meta/oold-meta-schema.json",
   "$id": "OwlOrganization.schema.json",
-  "x-oold-iri": "schema:Organization",
+  "x-sssom": { "schema:Organization": { "predicate_id": "skos:exactMatch" } },
   "@context": {
     "id": "@id",
     "type": "@type",
