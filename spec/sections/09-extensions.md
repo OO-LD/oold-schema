@@ -315,6 +315,8 @@ intersections (`allOf`) and inline constraints can be combined to describe an an
 
 A range subschema MAY also carry additional annotations (e.g. `title`, `description` or further `x-oold-*` keywords) to support tooling - for example a human-readable label for an autocomplete dropdown, or hints used when generating a SHACL shape.
 
+An `x-oold-range` value is a *reference*: the property holds the target's IRI, and an OO-LD-aware loader MAY dereference that IRI to obtain the target document itself, so a large or shared object can live in a separate document and be pulled in on demand (*data bundling*). A dereferenced target MUST validate against the property's declared range. This holds whether the reference is written as a bare IRI string or as a `{ "@id": … }` object; generic tooling leaves it unresolved, exactly as it leaves `x-oold-ref` (see [](#why-x-oold-ref)).
+
 ##### Lexical form of the reference {#range-reference-form}
 
 The value of an IRI-valued property is a JSON string. Its role as a reference comes from the `@context` (`"@type": "@id"`) and its class from `x-oold-range`. Its *lexical* form SHOULD be constrained with an IRI/URI-family `format` so that malformed values are rejected; the choices, from most to least permissive:
@@ -323,6 +325,12 @@ The value of an IRI-valued property is a JSON string. Its role as a reference co
 - **Absolute IRIs only** - `"format": "iri"`. A compact IRI is itself a valid absolute IRI (scheme `ex`, path `alice`), so `iri` accepts `ex:alice`; choose it to additionally forbid relative references.
 - **Stricter, ASCII only** - `"format": "uri"` or `"uri-reference"`, where values are known not to use internationalized (non-ASCII) IRIs.
 - **Compact form specifically** - a `"pattern"` such as `"^[A-Za-z_][\\w.-]*:(?!//)\\S*$"`, which accepts `ex:alice` and `schema:Person` while rejecting `http://…`; the prefix MUST be defined in the `@context`.
+
+##### Value-term aliases (`@vocab`) {#value-term-aliases}
+
+The [synonym machinery](#synonyms) keys `x-oold-context` by *term*, so it reaches property and class terms but not IRIs that appear as instance *values* - for example the unit IRIs a quantity property points at, where two widely used unit vocabularies name the same unit differently: QUDT `http://qudt.org/vocab/unit/SEC` and the [Ontology of units of Measure](https://github.com/HajoRijgersberg/OM) `http://www.ontology-of-units-of-measure.org/resource/om-2/second`. Coercing the property with `"@type": "@vocab"` (rather than `"@type": "@id"`) closes the gap: a string value is then resolved against the active context's terms before the base IRI, so declaring the unit as a value term (`"second": "http://qudt.org/vocab/unit/SEC"`) lets an instance write the readable `"second"` while the same `x-oold-context` synonyms and profile selection alias it (`"x-oold-context": { "second": { "om:second": { … } } }`); full IRIs remain valid values. Individual mappings round-trip through SSSOM like any other.
+
+Because `@vocab` expands an unmatched string against the vocabulary - concatenating it onto the default vocabulary base when one is set (minting a new IRI), or leaving it a relative IRI when none is - a typo silently becomes a stray IRI rather than an error. A property coerced `"@type": "@vocab"` therefore SHOULD constrain its values with an `enum` of the value terms (optionally named with `x-enum-varnames`) or with `x-oold-range`, so only intended individuals are accepted. The value terms SHOULD also be kept from colliding with JSON-LD keyword aliases (`id`, `type`) or other context terms, since a value term shares the context's global term namespace - a term added for a value would otherwise also rewrite a property or keyword of the same name. Confining the value terms to the property's own scoped `@context` keeps them out of that shared namespace, since they then resolve only for that property's values; naming them with opaque identifiers such as UUIDs avoids the clash where readability is not required.
 
 ##### Why `x-oold-ref` and not `$ref` {#why-x-oold-ref}
 
