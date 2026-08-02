@@ -12,54 +12,9 @@ OO-LD composition relies on JSON-LD 1.1 features, in particular scoped contexts:
 
 Generated OO-LD contexts SHOULD therefore declare `"@version": 1.1` (the JSON number `1.1`, not the string `"1.1"`). Modern processors default to the 1.1 processing mode, so this is a guard rather than a strict requirement: it prevents a JSON-LD 1.0 processor from silently mis-processing a 1.1 document ([[JSON-LD11]] §4.1.1). Because the first encountered `@version` entry determines the processing mode, it is sufficient to declare `"@version": 1.1` once in the base context of a composition (for example a root `Thing` schema).
 
-#### Multi-Mapping {#multi-mapping}
-
-JSON-LD allows only a single keyword-IRI mapping (or more precisely, ignores all but the last mapping). There is currently no way to express that a property has two IRIs (e.g. `"label": {"@id": ["schema:name", "skos:prefLabel"]}`, see [json-ld/json-ld.org#160](https://github.com/json-ld/json-ld.org/issues/160)). As a lightweight inline workaround, an additional context notation is provided: `<property>*(*)` pointing to additional `@id` mappings, to document alternative options or drive custom RDF generation. For the general case - more than two mappings per term, mappings a subclass can add or drop, and mappings that round-trip to a mapping set - use the structured [`x-oold-context`](#synonyms) notation below.
-
-:::example{title="Documenting alternative mappings"}
-```json
-{
-    "@context": [
-        {
-            "@version": 1.1,
-            "skos": "https://www.w3.org/TR/skos-reference/",
-            "schema": "https://schema.org/",
-            "label": "skos:prefLabel",
-            "label*": "schema:name",
-            "label**": "..."
-        }
-    ],
-    "label": "test"
-}
-```
-
-Default JSON-LD processing interprets only the preferred mapping:
-```ttl
-_:b0 <skos:prefLabel> "test" .
-```
-
-An OO-LD-aware converter MAY also produce redundant triples for interoperability:
-```ttl
-_:b0 <skos:prefLabel> "test" .
-_:b0 <schema:name> "test" .
-```
-:::
-
-The notation can also drive data transformation and normalization. For example, a dataset in which persons and organizations report their relations in a syntactically non-interoperable way can be normalized into a consistent unified dataset (see [OO-LD/oold-schema#11](https://github.com/OO-LD/oold-schema/issues/11)).
-
-:::example{title="Normalizing a syntactically non-interoperable dataset"}
-Input - the same relation is reported in three different ways: a forward `works_for`, a distinct forward `works_for*`, and a backward `employees`:
-
-{{ inline_file('examples/spec/normalize-input.json') }}
-
-Normalized - a single, consistent representation:
-
-{{ inline_file('examples/spec/normalize-output.json') }}
-:::
-
 #### Term mappings and synonyms (`x-oold-context`) {#synonyms}
 
-The `*` notation above documents at most a small, fixed set of alternative `@id`s inline and carries no metadata about each mapping. For the general case OO-LD adds the schema-level keyword `x-oold-context`: an object keyed by term, where each term holds a dict keyed by the **synonym IRI**.
+A JSON-LD `@context` binds each term to a single IRI; a term given several `@id`s keeps only the last. Real vocabularies overlap, so one structural term routinely corresponds to several ontology IRIs - a consensus mapping plus community alternatives. OO-LD expresses these with the schema-level keyword `x-oold-context`: an object keyed by **term**, where each term holds a dict keyed by the **synonym IRI**, and each synonym is a promotable JSON-LD term-definition fragment carrying optional mapping metadata. A *term* here is any context term - most often a property, but equally a class (through the type term, see [](#semantic-type)) or an individual (a value term under `@vocab` coercion, see [](#range-of-properties)) - so the same machinery aliases properties, classes and individuals alike.
 
 In the minimal case a term simply lists alternative IRIs, each with an empty value (`{}`):
 
@@ -96,18 +51,19 @@ Each value is itself a JSON-LD term-definition fragment (`@type`, `@container`, 
 ```
 :::
 
-Each entry is one mapping:
+Each entry is one mapping: the **key** is the synonym IRI (the SSSOM `object_id`), the **value** is a promotable JSON-LD term-definition fragment (`@type`, `@container`, ...) plus an optional `x-sssom` block, and the `subject_id` is implicit - the term's primary `@context` IRI.
 
-- the **key** is the synonym IRI (the SSSOM `object_id`);
-- the **value** is a JSON-LD term-definition fragment (`@type`, `@container`, ...) that is promotable as-is, plus an optional `x-sssom` block;
-- `x-sssom` is strippable metadata: `predicate_id` (default `skos:exactMatch`), optional `confidence` and `mapping_justification`. The `subject_id` is implicit (the term's primary `@context` IRI) and the `object_id` is the key.
+**Processing contract.** A conforming OO-LD mapping processor reads exactly four things from each entry: the **synonym IRI** (the key), the promotable **term-definition fragment**, and two `x-sssom` slots - **`predicate_id`** and **`mapping_set_id`**. Everything else an entry carries (the rest of `x-sssom`, any further fragment keys) is preserved but not interpreted. Those two slots, over the SKOS predicate vocabulary, are the whole stable contract an implementation depends on.
 
-This satisfies what the `*` notation cannot:
+`predicate_id` is a [SKOS](https://www.w3.org/TR/skos-reference/) mapping predicate - `skos:exactMatch` (the default when the slot is absent), `skos:closeMatch`, `skos:broadMatch`, `skos:narrowMatch` or `skos:relatedMatch` - relating the term's primary IRI (subject) to the synonym IRI (object); it decides which entries denote equivalence. It is written as a full IRI or a CURIE and compared **by expansion to an absolute IRI**, the same rule the synonym keys follow, so `skos:exactMatch` and `http://www.w3.org/2004/02/skos/core#exactMatch` are one predicate. Because these values come from that fixed set, a processor treats `skos:` as bound to `http://www.w3.org/2004/02/skos/core#` for interpreting `predicate_id` even when the `@context` does not declare the prefix, so the contract holds without the author adding it; a bare local name (`exactMatch`) is not a valid `predicate_id`.
 
-- **More than two mappings** - the dict holds any number of synonym IRIs.
-- **Ontology family** - prefix-driven: the family is the IRI namespace (`schema:`, `bfo:`, `emmo:`), so RDF export can prioritize a preferred namespace without an explicit tag.
-- **Override under composition** - the dict is keyed by IRI and resolved by the [merge and override model](#merge-and-override-model): most-derived-wins, with `null` removing an inherited mapping. Keys are compared as expanded IRIs, so the compact (`skos:prefLabel`) and full (`http://www.w3.org/2004/02/skos/core#prefLabel`) forms of one IRI are a single key and override correctly across mixed notations.
-- **SSSOM interoperability** - each entry is one [SSSOM](https://github.com/mapping-commons/sssom) mapping row (`subject_id` / `object_id` / `predicate_id` / `confidence` / `mapping_justification`), so a mapping set round-trips to and from `x-oold-context`.
+`mapping_set_id` names the mapping set(s) an entry belongs to, for profile-based selection. SSSOM defines `mapping_set_id` at the set level; OO-LD records it inline on the entry, and an entry MAY belong to several sets (a mapping can appear in more than one), so its value is one `iri-reference` or an array of them, compared by expansion as `predicate_id` is.
+
+**Selection.** To promote `x-oold-context` into a real `@context`, a preprocessor selects one synonym per term for a **target profile**, writes `{ "@id": <synonym IRI>, ...fragment without x-sssom }` as that term's definition, and drops the `x-sssom` blocks, so standard JSON-LD tools then run on a clean context. A profile is expressed either as an ordered list of IRI **namespaces** (ontology-family priority - `schema:` before `bfo:` before `emmo:`) or as one or more **`mapping_set_id`s** (a set may span namespaces, e.g. a PMDco profile of `pmd:` plus reused `obo:` terms). A term with no synonym matching the target keeps its default `@context` IRI: selection never borrows another profile's synonym.
+
+**Co-emission.** Selection yields one IRI per term; for interoperability a converter MAY additionally co-emit the instance value under other synonyms' IRIs. By default it co-emits only `skos:exactMatch` entries - the value genuinely holds under an equivalent property. Entries whose `predicate_id` is `skos:closeMatch`/`broadMatch`/`narrowMatch`/`relatedMatch` SHOULD NOT be co-emitted unless a consumer explicitly requests it: such a triple asserts a broader, narrower or merely related relation, not that the value holds under the synonym property, so the requester takes responsibility for that reading.
+
+**Override under composition.** The dict is keyed by IRI and resolved by the [merge and override model](#merge-and-override-model): most-derived-wins, with `null` removing an inherited mapping. Keys - and `predicate_id` / `mapping_set_id` values - are compared as expanded IRIs, so the compact (`skos:prefLabel`) and full (`http://www.w3.org/2004/02/skos/core#prefLabel`) forms of one IRI are a single key and override correctly across mixed notations.
 
 :::example{title="A subclass dropping an inherited mapping"}
 ```json
@@ -119,7 +75,19 @@ This satisfies what the `*` notation cannot:
 ```
 :::
 
-To promote to `@context`, an OO-LD preprocessor picks the prioritized synonym (by namespace), then `{ "@id": <key>, ...value without x-sssom }` becomes the term's definition in the real `@context`; the `x-sssom` blocks are dropped, so standard JSON-LD tools then run on a clean context.
+**SSSOM round-trip.** Each entry is one [SSSOM](https://w3id.org/sssom/) mapping row: `subject_id` implicit, `object_id` the synonym IRI, and `predicate_id` / `mapping_set_id` / `confidence` / `mapping_justification` / `object_source*` / ... the SSSOM slots defined by the SSSOM LinkML schema at `https://w3id.org/sssom/`. Entries sharing a `mapping_set_id` reconstitute one SSSOM mapping set; the propagatable `object_source` / `object_source_version` slots pin each mapping to the ontology version it was validated against and, like the rest of the context, propagate from a parent schema's declaration to inherited mappings under [composition](#composition). SSSOM is the RECOMMENDED carrier for this metadata, not a normative dependency: OO-LD fixes only the SKOS meaning of `predicate_id` and the selection role of `mapping_set_id`, and the remaining slots ride along untouched, so SSSOM may evolve without affecting OO-LD. A bare SKOS predicate with no metadata, or a richer carrier (statement-level RDF-star, PROV for provenance), serves equally where SSSOM is not wanted.
+
+Conversely, several context terms mapping to **one** IRI normalize syntactically non-interoperable input keys onto a single predicate - the complement of one term carrying several IRIs. Combined with `@reverse` and [framing](#framing), this turns a dataset whose records report the same relation in different ways into a consistent unified graph.
+
+:::example{title="Normalizing a syntactically non-interoperable dataset"}
+Input - the same relation is reported in three ways: two forward keys (`works_for`, `works_for_alt`) mapping to one predicate, and a backward `employees` mapped with `@reverse`:
+
+{{ inline_file('examples/spec/normalize-input.json') }}
+
+Normalized - a single, consistent representation:
+
+{{ inline_file('examples/spec/normalize-output.json') }}
+:::
 
 #### Framing {#framing}
 
