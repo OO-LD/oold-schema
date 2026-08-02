@@ -220,7 +220,7 @@
 <p>This allows to specify well-defined patterns in a directed graph and enables tools relying on a hierarchical object structure to produce data for and consume data from such a graph.</p></section><section id="interoperability"><h4>Interoperability</h4><p>OO-LD schema documents allow to specify all information that is needed to automatically transform data between semantically equivalent but syntactically different notations.</p></section></section><section id="positioning" class="informative"><h3>Positioning</h3><p>Data modelling is commonly described in three layers: a conceptual layer (RDFS, OWL), a logical layer (SHACL, ShEx) and a physical layer (JSON Schema, XML Schema). Keeping these layers consistent when they are authored separately is a recurring problem. OO-LD is a physical-layer artefact that carries enough conceptual annotation - its JSON-LD <code>@context</code> together with keywords such as <code>x-oold-range</code> (see <a href="#extensions"></a>) - to generate the logical layer (SHACL shapes) and the conceptual layer (OWL) from the same source, so the layers cannot drift apart.</p>
 <p>OO-LD does not aim to replace established modelling frameworks. Frameworks such as <a href="https://linkml.io/">LinkML</a>, <a href="https://spdx.github.io/spdx-spec/">SPDX 3.0</a> and <a href="https://www.spruceid.dev/treeldr/treeldr-overview">TreeLDR</a> compile a bespoke source into JSON Schema and a separate JSON-LD context; OO-LD instead annotates JSON Schema in place and offers generated bridges to the forms other ecosystems expect. A consumer that cannot accept a top-level <code>@context</code> - OpenAPI 3.0, an MCP tool definition, or a strict LLM structured-output subset - is served a generated form (<code>x-jsonld-context</code> / <code>x-jsonld-type</code>, or annotations folded into <code>title</code> / <code>description</code>; see <a href="#extensions"></a>) rather than a hand-maintained parallel document, so the single OO-LD source stays authoritative. This positions OO-LD as an interlingua in the physical layer, not as another isolated syntax.</p>
 <p>To keep that role honest, OO-LD aligns with existing standards rather than competing with them: it treats SHACL (validation, UI generation) and OWL (the conceptual layer) as generation <em>targets</em>, and introduces an <code>x-oold-*</code> keyword only where no established standard covers the need. Its relationship with a framework like <a href="https://linkml.io/">LinkML</a> is bidirectional - LinkML can itself generate OO-LD - and therefore complementary rather than exclusive.</p></section><section id="structure-first" class="informative"><h3>Structure first, semantics deferred</h3><p>A JSON Schema keyword names a property with a local string; an RDF predicate is a global IRI. RDF-based schema languages such as SHACL therefore require every participating term to be a committed, globally named IRI before data can be expressed or validated as a graph: RDF has no notion of a field whose meaning is not yet decided. This is not a question of how many vocabularies are involved - SHACL validates across many vocabularies at once - but of <em>when</em> the commitment must be made. In domains where a shared vocabulary is missing, contested, or still emerging, that eager, per-term commitment is a barrier to starting.</p>
-<p>OO-LD inverts the order. Because it is JSON Schema first, a term exists as a plain structural property with no semantics attached; an author MAY leave it unmapped, map it to a single IRI, or map it to several concurrent IRIs (see <a href="#multi-mapping"></a> and <a href="#synonyms"></a>). An unmapped term produces no triples under JSON-LD expansion; to prevent such terms from being dropped silently, an author MAY declare <code>@vocab</code> in the <code>@context</code>, which maps every otherwise-unmapped term to a default (local) namespace so it still round-trips to RDF under a provisional IRI until a curated mapping is assigned. Any data can be serialized as JSON and therefore described by a schema, so the structural model - validation, forms, code generation, transport - is always available, and semantics can be added later, incrementally, one term at a time. The floor on this deferral is identity, not zero: graph-shaped data still needs identifiers for its links (carried by IRI-valued properties and <a href="#range-of-properties"></a>), but the vocabulary and meaning of each field can be deferred without blocking any of the structural uses. This is the boundary to RDF/SHACL: they cannot withhold semantic commitment, OO-LD can.</p></section></section>
+<p>OO-LD inverts the order. Because it is JSON Schema first, a term exists as a plain structural property with no semantics attached; an author MAY leave it unmapped, map it to a single IRI, or map it to several concurrent IRIs (see <a href="#synonyms"></a>). An unmapped term produces no triples under JSON-LD expansion; to prevent such terms from being dropped silently, an author MAY declare <code>@vocab</code> in the <code>@context</code>, which maps every otherwise-unmapped term to a default (local) namespace so it still round-trips to RDF under a provisional IRI until a curated mapping is assigned. Any data can be serialized as JSON and therefore described by a schema, so the structural model - validation, forms, code generation, transport - is always available, and semantics can be added later, incrementally, one term at a time. The floor on this deferral is identity, not zero: graph-shaped data still needs identifiers for its links (carried by IRI-valued properties and <a href="#range-of-properties"></a>), but the vocabulary and meaning of each field can be deferred without blocking any of the structural uses. This is the boundary to RDF/SHACL: they cannot withhold semantic commitment, OO-LD can.</p></section></section>
 
 <section id="conformance"><h2>Conformance</h2><p>As well as sections marked as non-normative, all authoring guidelines, diagrams, examples, and notes in this specification are non-normative. Everything else in this specification is normative.</p>
 <p>The key words <em class="rfc2119">MUST</em>, <em class="rfc2119">MUST NOT</em>, <em class="rfc2119">REQUIRED</em>, <em class="rfc2119">SHALL</em>, <em class="rfc2119">SHALL NOT</em>, <em class="rfc2119">SHOULD</em>, <em class="rfc2119">SHOULD NOT</em>, <em class="rfc2119">RECOMMENDED</em>, <em class="rfc2119">MAY</em>, and <em class="rfc2119">OPTIONAL</em> in this document are to be interpreted as described in [[!RFC2119]].</p><section id="notation"><h3>Notation</h3><p>The normative data model of OO-LD is the JSON data model shared by [[JSONSCHEMA]] and [[JSON-LD11]]. JSON ([[RFC8259]]) is the canonical serialization: a conforming OO-LD schema or instance <em class="rfc2119">MUST</em> be interchangeable as JSON, and the canonical form used for identity and integrity (for example content-hashing a versioned schema) is its JSON Canonicalization Scheme ([[RFC8785]]) serialization.</p>
@@ -745,30 +745,47 @@ different parent properties. The mapping is attached to the parent property's te
 <p>Upgrade APIs <em class="rfc2119">MAY</em> provide automated data migration between schema (package) versions, e.g. <code>https://example.org/upgrade/my-package/1.0.0...2.0.0</code>.</p></section></section>
 
 <section id="extensions"><h2>Standard Extensions</h2><p>On top of plain JSON Schema and JSON-LD, OO-LD defines a small set of extensions. This section covers the JSON-LD extensions and the JSON Schema extensions in turn.</p><section id="jsonld-extensions"><h3>JSON-LD</h3><p>OO-LD targets [[JSON-LD11]].</p><section id="processing-mode"><h4>Processing mode (<code>@version</code>)</h4><p>OO-LD composition relies on JSON-LD 1.1 features, in particular scoped contexts: a <code>$ref</code> within a <code>type: object</code> property is reflected as a property-scoped <code>@context</code> (see <a href="#composition"></a>). Such features are unavailable to a processor running in the <code>json-ld-1.0</code> processing mode.</p>
-<p>Generated OO-LD contexts <em class="rfc2119">SHOULD</em> therefore declare <code>&quot;@version&quot;: 1.1</code> (the JSON number <code>1.1</code>, not the string <code>&quot;1.1&quot;</code>). Modern processors default to the 1.1 processing mode, so this is a guard rather than a strict requirement: it prevents a JSON-LD 1.0 processor from silently mis-processing a 1.1 document ([[JSON-LD11]] §4.1.1). Because the first encountered <code>@version</code> entry determines the processing mode, it is sufficient to declare <code>&quot;@version&quot;: 1.1</code> once in the base context of a composition (for example a root <code>Thing</code> schema).</p></section><section id="multi-mapping"><h4>Multi-Mapping</h4><p>JSON-LD allows only a single keyword-IRI mapping (or more precisely, ignores all but the last mapping). There is currently no way to express that a property has two IRIs (e.g. <code>&quot;label&quot;: {&quot;@id&quot;: [&quot;schema:name&quot;, &quot;skos:prefLabel&quot;]}</code>, see <a href="https://github.com/json-ld/json-ld.org/issues/160">json-ld/json-ld.org#160</a>). As a lightweight inline workaround, an additional context notation is provided: <code>&lt;property&gt;*(*)</code> pointing to additional <code>@id</code> mappings, to document alternative options or drive custom RDF generation. For the general case - more than two mappings per term, mappings a subclass can add or drop, and mappings that round-trip to a mapping set - use the structured <a href="#synonyms"><code>x-oold-context</code></a> notation below.</p>
-<aside class="example" title="Documenting alternative mappings"><pre><code class="language-json">{
-    &quot;@context&quot;: [
-        {
-            &quot;@version&quot;: 1.1,
-            &quot;skos&quot;: &quot;https://www.w3.org/TR/skos-reference/&quot;,
-            &quot;schema&quot;: &quot;https://schema.org/&quot;,
-            &quot;label&quot;: &quot;skos:prefLabel&quot;,
-            &quot;label*&quot;: &quot;schema:name&quot;,
-            &quot;label**&quot;: &quot;...&quot;
-        }
-    ],
-    &quot;label&quot;: &quot;test&quot;
+<p>Generated OO-LD contexts <em class="rfc2119">SHOULD</em> therefore declare <code>&quot;@version&quot;: 1.1</code> (the JSON number <code>1.1</code>, not the string <code>&quot;1.1&quot;</code>). Modern processors default to the 1.1 processing mode, so this is a guard rather than a strict requirement: it prevents a JSON-LD 1.0 processor from silently mis-processing a 1.1 document ([[JSON-LD11]] §4.1.1). Because the first encountered <code>@version</code> entry determines the processing mode, it is sufficient to declare <code>&quot;@version&quot;: 1.1</code> once in the base context of a composition (for example a root <code>Thing</code> schema).</p></section><section id="synonyms"><h4>Term mappings and synonyms (<code>x-oold-context</code>)</h4><p>A JSON-LD <code>@context</code> binds each term to a single IRI; a term given several <code>@id</code>s keeps only the last. Real vocabularies overlap, so one structural term routinely corresponds to several ontology IRIs - a consensus mapping plus community alternatives. OO-LD expresses these with the schema-level keyword <code>x-oold-context</code>: an object keyed by <strong>term</strong>, where each term holds a dict keyed by the <strong>synonym IRI</strong>, and each synonym is a promotable JSON-LD term-definition fragment carrying optional mapping metadata. A <em>term</em> here is any context term - most often a property, but equally a class (through the type term, see <a href="#semantic-type"></a>) or an individual (a value term under <code>@vocab</code> coercion, see <a href="#range-of-properties"></a>) - so the same machinery aliases properties, classes and individuals alike.</p>
+<p>In the minimal case a term simply lists alternative IRIs, each with an empty value (<code>{}</code>):</p>
+<aside class="example" title="Minimal case - a term with alias IRIs"><pre><code class="language-json">{
+  &quot;@context&quot;: { &quot;description&quot;: &quot;schema:description&quot; },
+  &quot;x-oold-context&quot;: {
+    &quot;description&quot;: {
+      &quot;rdfs:comment&quot;: {},
+      &quot;skos:definition&quot;: {}
+    }
+  }
 }
-</code></pre>
-<p>Default JSON-LD processing interprets only the preferred mapping:</p>
-<pre><code class="language-ttl">_:b0 &lt;skos:prefLabel&gt; &quot;test&quot; .
-</code></pre>
-<p>An OO-LD-aware converter MAY also produce redundant triples for interoperability:</p>
-<pre><code class="language-ttl">_:b0 &lt;skos:prefLabel&gt; &quot;test&quot; .
-_:b0 &lt;schema:name&gt; &quot;test&quot; .
 </code></pre></aside>
-<p>The notation can also drive data transformation and normalization. For example, a dataset in which persons and organizations report their relations in a syntactically non-interoperable way can be normalized into a consistent unified dataset (see <a href="https://github.com/OO-LD/oold-schema/issues/11">OO-LD/oold-schema#11</a>).</p>
-<aside class="example" title="Normalizing a syntactically non-interoperable dataset"><p>Input - the same relation is reported in three different ways: a forward <code>works_for</code>, a distinct forward <code>works_for*</code>, and a backward <code>employees</code>:</p>
+<p>Here <code>description</code> (primarily <code>schema:description</code>) also maps to <code>rdfs:comment</code> and <code>skos:definition</code>. Each bare synonym IRI defaults to <code>predicate_id: skos:exactMatch</code> and inherits the primary term's coercion on promotion.</p>
+<p>Each value is itself a JSON-LD term-definition fragment (<code>@type</code>, <code>@container</code>, ...) that is promotable verbatim into <code>@context</code>, optionally carrying a strippable <code>x-sssom</code> block with mapping metadata:</p>
+<aside class="example" title="With coercion and SSSOM metadata"><pre><code class="language-json">{
+  &quot;@context&quot;: { &quot;name&quot;: &quot;schema:name&quot; },
+  &quot;x-oold-context&quot;: {
+    &quot;name&quot;: {
+      &quot;schema:name&quot;: { &quot;x-sssom&quot;: { &quot;predicate_id&quot;: &quot;skos:exactMatch&quot;, &quot;confidence&quot;: 1.0 } },
+      &quot;skos:prefLabel&quot;: { &quot;x-sssom&quot;: { &quot;predicate_id&quot;: &quot;skos:exactMatch&quot;, &quot;confidence&quot;: 0.95 } },
+      &quot;schema:alternateName&quot;: { &quot;@container&quot;: &quot;@set&quot;, &quot;x-sssom&quot;: { &quot;predicate_id&quot;: &quot;skos:closeMatch&quot; } }
+    }
+  }
+}
+</code></pre></aside>
+<p>Each entry is one mapping: the <strong>key</strong> is the synonym IRI (the SSSOM <code>object_id</code>), the <strong>value</strong> is a promotable JSON-LD term-definition fragment (<code>@type</code>, <code>@container</code>, ...) plus an optional <code>x-sssom</code> block, and the <code>subject_id</code> is implicit - the term's primary <code>@context</code> IRI.</p>
+<p><strong>Processing contract.</strong> A conforming OO-LD mapping processor reads exactly four things from each entry: the <strong>synonym IRI</strong> (the key), the promotable <strong>term-definition fragment</strong>, and two <code>x-sssom</code> slots - <strong><code>predicate_id</code></strong> and <strong><code>mapping_set_id</code></strong>. Everything else an entry carries (the rest of <code>x-sssom</code>, any further fragment keys) is preserved but not interpreted. Those two slots, over the SKOS predicate vocabulary, are the whole stable contract an implementation depends on.</p>
+<p><code>predicate_id</code> is a <a href="https://www.w3.org/TR/skos-reference/">SKOS</a> mapping predicate - <code>skos:exactMatch</code> (the default when the slot is absent), <code>skos:closeMatch</code>, <code>skos:broadMatch</code>, <code>skos:narrowMatch</code> or <code>skos:relatedMatch</code> - relating the term's primary IRI (subject) to the synonym IRI (object); it decides which entries denote equivalence. It is written as a full IRI or a CURIE and compared <strong>by expansion to an absolute IRI</strong>, the same rule the synonym keys follow, so <code>skos:exactMatch</code> and <code>http://www.w3.org/2004/02/skos/core#exactMatch</code> are one predicate. Because these values come from that fixed set, a processor treats <code>skos:</code> as bound to <code>http://www.w3.org/2004/02/skos/core#</code> for interpreting <code>predicate_id</code> even when the <code>@context</code> does not declare the prefix, so the contract holds without the author adding it; a bare local name (<code>exactMatch</code>) is not a valid <code>predicate_id</code>.</p>
+<p><code>mapping_set_id</code> names the mapping set(s) an entry belongs to, for profile-based selection. SSSOM defines <code>mapping_set_id</code> at the set level; OO-LD records it inline on the entry, and an entry <em class="rfc2119">MAY</em> belong to several sets (a mapping can appear in more than one), so its value is one <code>iri-reference</code> or an array of them, compared by expansion as <code>predicate_id</code> is.</p>
+<p><strong>Selection.</strong> To promote <code>x-oold-context</code> into a real <code>@context</code>, a preprocessor selects one synonym per term for a <strong>target profile</strong>, writes <code>{ &quot;@id&quot;: &lt;synonym IRI&gt;, ...fragment without x-sssom }</code> as that term's definition, and drops the <code>x-sssom</code> blocks, so standard JSON-LD tools then run on a clean context. A profile is expressed either as an ordered list of IRI <strong>namespaces</strong> (ontology-family priority - <code>schema:</code> before <code>bfo:</code> before <code>emmo:</code>) or as one or more <strong><code>mapping_set_id</code>s</strong> (a set may span namespaces, e.g. a PMDco profile of <code>pmd:</code> plus reused <code>obo:</code> terms). A term with no synonym matching the target keeps its default <code>@context</code> IRI: selection never borrows another profile's synonym.</p>
+<p><strong>Co-emission.</strong> Selection yields one IRI per term; for interoperability a converter <em class="rfc2119">MAY</em> additionally co-emit the instance value under other synonyms' IRIs. By default it co-emits only <code>skos:exactMatch</code> entries - the value genuinely holds under an equivalent property. Entries whose <code>predicate_id</code> is <code>skos:closeMatch</code>/<code>broadMatch</code>/<code>narrowMatch</code>/<code>relatedMatch</code> <em class="rfc2119">SHOULD NOT</em> be co-emitted unless a consumer explicitly requests it: such a triple asserts a broader, narrower or merely related relation, not that the value holds under the synonym property, so the requester takes responsibility for that reading.</p>
+<p><strong>Override under composition.</strong> The dict is keyed by IRI and resolved by the <a href="#merge-and-override-model">merge and override model</a>: most-derived-wins, with <code>null</code> removing an inherited mapping. Keys - and <code>predicate_id</code> / <code>mapping_set_id</code> values - are compared as expanded IRIs, so the compact (<code>skos:prefLabel</code>) and full (<code>http://www.w3.org/2004/02/skos/core#prefLabel</code>) forms of one IRI are a single key and override correctly across mixed notations.</p>
+<aside class="example" title="A subclass dropping an inherited mapping"><pre><code class="language-json">{
+  &quot;x-oold-context&quot;: {
+    &quot;description&quot;: { &quot;rdfs:comment&quot;: null }
+  }
+}
+</code></pre></aside>
+<p><strong>SSSOM round-trip.</strong> Each entry is one <a href="https://w3id.org/sssom/">SSSOM</a> mapping row: <code>subject_id</code> implicit, <code>object_id</code> the synonym IRI, and <code>predicate_id</code> / <code>mapping_set_id</code> / <code>confidence</code> / <code>mapping_justification</code> / <code>object_source*</code> / ... the SSSOM slots defined by the SSSOM LinkML schema at <code>https://w3id.org/sssom/</code>. Entries sharing a <code>mapping_set_id</code> reconstitute one SSSOM mapping set; the propagatable <code>object_source</code> / <code>object_source_version</code> slots pin each mapping to the ontology version it was validated against and, like the rest of the context, propagate from a parent schema's declaration to inherited mappings under <a href="#composition">composition</a>. SSSOM is the <em class="rfc2119">RECOMMENDED</em> carrier for this metadata, not a normative dependency: OO-LD fixes only the SKOS meaning of <code>predicate_id</code> and the selection role of <code>mapping_set_id</code>, and the remaining slots ride along untouched, so SSSOM may evolve without affecting OO-LD. A bare SKOS predicate with no metadata, or a richer carrier (statement-level RDF-star, PROV for provenance), serves equally where SSSOM is not wanted.</p>
+<p>Conversely, several context terms mapping to <strong>one</strong> IRI normalize syntactically non-interoperable input keys onto a single predicate - the complement of one term carrying several IRIs. Combined with <code>@reverse</code> and <a href="#framing">framing</a>, this turns a dataset whose records report the same relation in different ways into a consistent unified graph.</p>
+<aside class="example" title="Normalizing a syntactically non-interoperable dataset"><p>Input - the same relation is reported in three ways: two forward keys (<code>works_for</code>, <code>works_for_alt</code>) mapping to one predicate, and a backward <code>employees</code> mapped with <code>@reverse</code>:</p>
 <div class="ex-tabs">
 <div class="ex-tablist" role="tablist"><button class="ex-tab" role="tab" aria-selected="true" data-panel="ex6j">JSON</button><button class="ex-tab" role="tab" aria-selected="false" data-panel="ex6y">View as YAML</button></div>
 
@@ -781,7 +798,7 @@ _:b0 &lt;schema:name&gt; &quot;test&quot; .
       &quot;type&quot;: &quot;schema:Person&quot;,
       &quot;name&quot;: &quot;Person1&quot;,
       &quot;works_for&quot;: &quot;demo:organizationA&quot;,
-      &quot;works_for*&quot;: &quot;demo:organizationB&quot;
+      &quot;works_for_alt&quot;: &quot;demo:organizationB&quot;
     },
     { &quot;id&quot;: &quot;demo:organizationA&quot;, &quot;type&quot;: &quot;schema:Organization&quot; },
     { &quot;id&quot;: &quot;demo:organizationB&quot;, &quot;type&quot;: &quot;schema:Organization&quot; },
@@ -802,7 +819,7 @@ _:b0 &lt;schema:name&gt; &quot;test&quot; .
   type: schema:Person
   name: Person1
   works_for: demo:organizationA
-  works_for*: demo:organizationB
+  works_for_alt: demo:organizationB
 - id: demo:organizationA
   type: schema:Organization
 - id: demo:organizationB
@@ -861,51 +878,7 @@ _:b0 &lt;schema:name&gt; &quot;test&quot; .
 </code></pre>
 </div>
 
-</div></aside></section><section id="synonyms"><h4>Term mappings and synonyms (<code>x-oold-context</code>)</h4><p>The <code>*</code> notation above documents at most a small, fixed set of alternative <code>@id</code>s inline and carries no metadata about each mapping. For the general case OO-LD adds the schema-level keyword <code>x-oold-context</code>: an object keyed by term, where each term holds a dict keyed by the <strong>synonym IRI</strong>.</p>
-<p>In the minimal case a term simply lists alternative IRIs, each with an empty value (<code>{}</code>):</p>
-<aside class="example" title="Minimal case - a term with alias IRIs"><pre><code class="language-json">{
-  &quot;@context&quot;: { &quot;description&quot;: &quot;schema:description&quot; },
-  &quot;x-oold-context&quot;: {
-    &quot;description&quot;: {
-      &quot;rdfs:comment&quot;: {},
-      &quot;skos:definition&quot;: {}
-    }
-  }
-}
-</code></pre></aside>
-<p>Here <code>description</code> (primarily <code>schema:description</code>) also maps to <code>rdfs:comment</code> and <code>skos:definition</code>. Each bare synonym IRI defaults to <code>predicate_id: skos:exactMatch</code> and inherits the primary term's coercion on promotion.</p>
-<p>Each value is itself a JSON-LD term-definition fragment (<code>@type</code>, <code>@container</code>, ...) that is promotable verbatim into <code>@context</code>, optionally carrying a strippable <code>x-sssom</code> block with mapping metadata:</p>
-<aside class="example" title="With coercion and SSSOM metadata"><pre><code class="language-json">{
-  &quot;@context&quot;: { &quot;name&quot;: &quot;schema:name&quot; },
-  &quot;x-oold-context&quot;: {
-    &quot;name&quot;: {
-      &quot;schema:name&quot;: { &quot;x-sssom&quot;: { &quot;predicate_id&quot;: &quot;skos:exactMatch&quot;, &quot;confidence&quot;: 1.0 } },
-      &quot;skos:prefLabel&quot;: { &quot;x-sssom&quot;: { &quot;predicate_id&quot;: &quot;skos:exactMatch&quot;, &quot;confidence&quot;: 0.95 } },
-      &quot;schema:alternateName&quot;: { &quot;@container&quot;: &quot;@set&quot;, &quot;x-sssom&quot;: { &quot;predicate_id&quot;: &quot;skos:closeMatch&quot; } }
-    }
-  }
-}
-</code></pre></aside>
-<p>Each entry is one mapping:</p>
-<ul>
-<li>the <strong>key</strong> is the synonym IRI (the SSSOM <code>object_id</code>);</li>
-<li>the <strong>value</strong> is a JSON-LD term-definition fragment (<code>@type</code>, <code>@container</code>, ...) that is promotable as-is, plus an optional <code>x-sssom</code> block;</li>
-<li><code>x-sssom</code> is strippable metadata: <code>predicate_id</code> (default <code>skos:exactMatch</code>), optional <code>confidence</code> and <code>mapping_justification</code>. The <code>subject_id</code> is implicit (the term's primary <code>@context</code> IRI) and the <code>object_id</code> is the key.</li>
-</ul>
-<p>This satisfies what the <code>*</code> notation cannot:</p>
-<ul>
-<li><strong>More than two mappings</strong> - the dict holds any number of synonym IRIs.</li>
-<li><strong>Ontology family</strong> - prefix-driven: the family is the IRI namespace (<code>schema:</code>, <code>bfo:</code>, <code>emmo:</code>), so RDF export can prioritize a preferred namespace without an explicit tag.</li>
-<li><strong>Override under composition</strong> - the dict is keyed by IRI and resolved by the <a href="#merge-and-override-model">merge and override model</a>: most-derived-wins, with <code>null</code> removing an inherited mapping. Keys are compared as expanded IRIs, so the compact (<code>skos:prefLabel</code>) and full (<code>http://www.w3.org/2004/02/skos/core#prefLabel</code>) forms of one IRI are a single key and override correctly across mixed notations.</li>
-<li><strong>SSSOM interoperability</strong> - each entry is one <a href="https://github.com/mapping-commons/sssom">SSSOM</a> mapping row (<code>subject_id</code> / <code>object_id</code> / <code>predicate_id</code> / <code>confidence</code> / <code>mapping_justification</code>), so a mapping set round-trips to and from <code>x-oold-context</code>.</li>
-</ul>
-<aside class="example" title="A subclass dropping an inherited mapping"><pre><code class="language-json">{
-  &quot;x-oold-context&quot;: {
-    &quot;description&quot;: { &quot;rdfs:comment&quot;: null }
-  }
-}
-</code></pre></aside>
-<p>To promote to <code>@context</code>, an OO-LD preprocessor picks the prioritized synonym (by namespace), then <code>{ &quot;@id&quot;: &lt;key&gt;, ...value without x-sssom }</code> becomes the term's definition in the real <code>@context</code>; the <code>x-sssom</code> blocks are dropped, so standard JSON-LD tools then run on a clean context.</p></section><section id="framing"><h4>Framing</h4><p><a href="https://www.w3.org/TR/json-ld11-framing/">JSON-LD 1.1 Framing</a> reshapes a flat or arbitrarily-structured RDF graph into a specific tree layout described by a <em>frame</em>. An OO-LD schema already describes exactly such a tree - its <code>properties</code> give the nesting, its <code>@context</code> gives the term IRIs, a type constant (<code>x-oold-instance-rdf-type</code>, or a <code>const</code> on the <code>type</code> property) gives the node type, and <a href="#range-of-properties"><code>x-oold-range</code></a> gives the type of embedded or referenced objects - so an OO-LD-aware tool <em class="rfc2119">MAY</em> auto-construct a frame from the schema. Framing an instance graph with that frame produces a JSON document shaped like the schema, which then validates against the same schema.</p>
+</div></aside></section><section id="framing"><h4>Framing</h4><p><a href="https://www.w3.org/TR/json-ld11-framing/">JSON-LD 1.1 Framing</a> reshapes a flat or arbitrarily-structured RDF graph into a specific tree layout described by a <em>frame</em>. An OO-LD schema already describes exactly such a tree - its <code>properties</code> give the nesting, its <code>@context</code> gives the term IRIs, a type constant (<code>x-oold-instance-rdf-type</code>, or a <code>const</code> on the <code>type</code> property) gives the node type, and <a href="#range-of-properties"><code>x-oold-range</code></a> gives the type of embedded or referenced objects - so an OO-LD-aware tool <em class="rfc2119">MAY</em> auto-construct a frame from the schema. Framing an instance graph with that frame produces a JSON document shaped like the schema, which then validates against the same schema.</p>
 <p>This makes an OO-LD schema bidirectional: its <code>@context</code> drives expansion (JSON to RDF), and the frame derived from its structure drives framing (RDF back to the schema's JSON tree). The derivation is mechanical: the schema's class type becomes the frame <code>@type</code>; an inlined object property becomes a nested subframe that embeds the referenced node; a reference-valued property (including one whose term is mapped with JSON-LD <code>@reverse</code>) becomes a subframe with <code>@embed: @never</code> so its targets stay IRIs, in line with the inline-versus-reference choice <code>x-oold-range</code> already records; and <code>@explicit</code> / <code>@requireAll</code> / <code>@default</code> follow from <code>additionalProperties</code> and <code>required</code>. The frame's <code>@context</code> is the composition of the referenced schemas' contexts.</p>
 <aside class="example" title="RDF to OO-LD schema to frame to instance"><p>An input RDF graph (Turtle) - an organization with an address, and two persons who work for it:</p>
 <pre><code class="language-turtle">@prefix schema: &lt;http://schema.org/&gt; .
@@ -1591,7 +1564,7 @@ actions:
 <tbody>
 <tr>
   <td><code>x-oold-context</code></td>
-  <td>Extended term mappings (synonyms): an object keyed by term, each holding a dict keyed by synonym IRI whose value is a JSON-LD term-definition fragment plus an optional strippable x-sssom block. Supports more than two mappings per term, override under composition (most-derived-wins; null removes), prefix-driven ontology-family prioritization, and SSSOM round-trip. Promoted into @context by OO-LD-aware tooling; see the 'Term mappings and synonyms' section.</td>
+  <td>Extended term mappings (synonyms): an object keyed by term (a property, class, or value term), each holding a dict keyed by synonym IRI whose value is a JSON-LD term-definition fragment plus an optional strippable x-sssom block. OO-LD tooling reads only two x-sssom slots - predicate_id (a SKOS mapping predicate) and mapping_set_id (for profile-based selection); all other slots ride along and round-trip to SSSOM. Supports override under composition (most-derived-wins; null removes) and namespace/mapping-set selection. Promoted into @context by OO-LD-aware tooling; see the 'Term mappings and synonyms' section.</td>
 </tr>
 <tr>
   <td><code>x-oold-uuid</code></td>

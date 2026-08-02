@@ -1127,7 +1127,7 @@
 <p><strong>JSON-LD side</strong></p>
 <ul>
 <li><strong>Processing mode (<code>@version</code>)</strong> - OO-LD relies on JSON-LD 1.1 features (scoped contexts), so contexts should declare <code>"@version": 1.1</code>.</li>
-<li><strong>Multi-Mapping / synonyms</strong> - a <code>&lt;property&gt;*</code> shorthand documents alternative IRI mappings inline; <code>x-oold-context</code> is the structured form (more than two mappings, override under composition, ontology-family prioritization, SSSOM round-trip).</li>
+<li><strong>Term mappings / synonyms</strong> - <code>x-oold-context</code> maps a term to alternative ontology IRIs, each with optional SSSOM metadata; supports profile-based selection (by namespace or mapping set), override under composition, and SSSOM round-trip.</li>
 </ul>
 <p><strong>JSON Schema side</strong></p>
 <ul>
