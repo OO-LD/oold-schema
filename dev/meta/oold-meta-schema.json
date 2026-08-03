@@ -3,7 +3,14 @@
   "$id": "https://oo-ld.org/dev/meta/oold-meta-schema.json",
   "$dynamicAnchor": "meta",
   "title": "OO-LD dialect meta-schema",
-  "$comment": "The $id uses the versioned hosting at oo-ld.org/ (the source keeps the /latest/ placeholder; each released copy is stamped per release). The OO-LD vocabulary is declared optional (false) so that generic JSON-Schema 2020-12 validators still process OO-LD schemas. The UI keyword definitions are included via the oold-ui-meta-schema #keywords anchor so a schema carrying x-oold-ui-* annotations validates in one pass.",
+  "$comment": "The $id uses the versioned hosting at oo-ld.org/ (the source keeps the /latest/ placeholder; each released copy is stamped per release). The OO-LD vocabulary is declared optional (false) so that generic JSON-Schema 2020-12 validators still process OO-LD schemas. The UI keyword definitions are included via the oold-ui-meta-schema #keywords anchor so a schema carrying x-oold-ui-* annotations validates in one pass. The @context below is the OO-LD meta-level prefix set against which x-oold-context / x-sssom CURIEs (synonym keys, predicate_id, mapping_set_id) are expanded by OO-LD processors; it is not an instance context.",
+  "@context": {
+    "skos": "http://www.w3.org/2004/02/skos/core#",
+    "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+    "owl": "http://www.w3.org/2002/07/owl#",
+    "xsd": "http://www.w3.org/2001/XMLSchema#",
+    "sssom": "https://w3id.org/sssom/"
+  },
   "$vocabulary": {
     "https://json-schema.org/draft/2020-12/vocab/core": true,
     "https://json-schema.org/draft/2020-12/vocab/applicator": true,
