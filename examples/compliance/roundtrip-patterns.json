@@ -1,7 +1,7 @@
 [
   {
     "$comment": "Round-trip-safe projection of an ambiguous property range (literal | reference | embedded object), using the address = Text | PostalAddress | Place example from the specification (Property value forms, Projection to RDF and round-trip). The `lintSchemas` group is checked against meta/oold-pattern-lint.schema.json; the `tests` group projects each value form to RDF (expectRdf, dataset isomorphism).",
-    "description": "the pattern lint rejects a literal term coerced to a natively-JSON-encoded datatype (xsd:string, xsd:boolean, xsd:integer, xsd:double, xsd:float), accepts a plain literal term",
+    "description": "the pattern lint rejects a literal term coerced to a default-projection datatype (xsd:string, xsd:boolean, xsd:integer, xsd:double), accepts a plain literal term and non-default datatypes (xsd:date, xsd:float)",
     "lintSchemas": [
       {
         "description": "a plain literal term (no @type) round-trips - lint passes",
@@ -21,6 +21,17 @@
             "schema": "http://schema.org/",
             "xsd": "http://www.w3.org/2001/XMLSchema#",
             "founded": { "@id": "schema:foundingDate", "@type": "xsd:date" }
+          }
+        }
+      },
+      {
+        "description": "xsd:float is not a default projection (JSON numbers project to xsd:double), so it coerces and round-trips - lint passes",
+        "valid": true,
+        "schema": {
+          "@context": {
+            "schema": "http://schema.org/",
+            "xsd": "http://www.w3.org/2001/XMLSchema#",
+            "weight": { "@id": "schema:weight", "@type": "xsd:float" }
           }
         }
       },
