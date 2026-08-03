@@ -33,7 +33,7 @@ An OO-LD document is always a valid JSON document. This ensures that all the sta
 
 An OO-LD instance document is always a valid JSON-LD document. This ensures that all the standard JSON-LD libraries work seamlessly with OO-LD instance documents.
 
-An OO-LD schema document is always both a valid JSON Schema document and JSON-LD remote context. This ensures that all the standard JSON Schema and JSON-LD libraries work seamlessly with OO-LD schema documents.
+An OO-LD schema document is always both a valid JSON Schema document and a JSON-LD remote context, so standard JSON Schema validators and JSON-LD processors work with it directly. One caveat: JSON Schema 2020-12 treats unknown keywords as annotations, but a validator that defaults to a strict mode (for example Ajv) rejects them, so it is run in non-strict mode or with the `x-oold-*` keywords registered.
 
 #### Expressiveness
 

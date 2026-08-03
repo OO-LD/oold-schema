@@ -48,7 +48,7 @@ class Person(BaseModel):
             "x-sssom": { "schema:Person": {} },  # ontology correspondence (exactMatch)
         }
     )
-    type: Optional[str] = "schema:Person"
+    type: Optional[List[str]] = ["schema:Person"]
     name: Optional[str] = None
     """First and Last name"""
 ```
