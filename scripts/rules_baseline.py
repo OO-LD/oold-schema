@@ -86,7 +86,8 @@ def write_baseline(accepted: dict[str, str], deprecated: set[str]) -> None:
         # per-rule diffs to a single line each.
         payload["$deprecated"] = sorted(deprecated)
     payload.update({k: accepted[k] for k in sorted(accepted)})
-    with open(BASELINE, "w", encoding="utf-8") as handle:
+    # newline="\n" so the committed baseline is byte-identical on every platform.
+    with open(BASELINE, "w", encoding="utf-8", newline="\n") as handle:
         json.dump(payload, handle, indent=2)
         handle.write("\n")
 
