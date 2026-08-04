@@ -1,0 +1,10 @@
+# The meta-schemas and the generated rule catalogue are consumed byte-for-byte: downstream
+# implementations vendor them per release and record a sha256 of their contents. With
+# `core.autocrlf=true` - the Windows default - git rewrites line endings on checkout, so a
+# checkout on one platform would hand a vendoring tool different bytes than on another, and the
+# recorded digest would hold only where it was computed. `eol=lf` pins the working-tree form.
+meta/*.json  text eol=lf
+
+# Same reasoning for the compliance fixtures: they are copied verbatim into downstream test
+# suites, which compare them against upstream.
+examples/compliance/*.json  text eol=lf
