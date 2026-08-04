@@ -46,21 +46,45 @@ COMMENT = (
 
 RULE_ID = re.compile(r"^OOLD-([A-Z]+)-(\d{3})$")
 
+#: Where a downstream implementer learns how to turn a rule into a check. Printed whenever the
+#: catalogue gains or retires a rule, because that is the moment the work becomes visible and the
+#: moment it is cheapest to record.
+TRANSLATION_GUIDE = (
+    "https://github.com/OO-LD/oold-python/blob/main/CONTRIBUTING.md#translating-a-specification-rule"
+)
+
+#: What each kind of rule implies for the Python validator.
+DOWNSTREAM = {
+    ("document", True): "needs a check in oold-python before the validator can enforce it",
+    ("document", False): "binds documents but is not mechanically decidable; no check expected",
+    ("implementation", True): "needs a library conformance test; a validator cannot see it",
+    ("implementation", False): "needs a library conformance test; a validator cannot see it",
+    ("advisory", True): "guidance only; nothing to implement",
+    ("advisory", False): "guidance only; nothing to implement",
+}
+
 
 def load_catalog() -> dict[str, dict]:
     with open(CATALOG, encoding="utf-8") as handle:
         return {r["id"]: r for r in json.load(handle)["rules"]}
 
 
-def load_baseline() -> dict[str, str] | None:
+def load_baseline() -> tuple[dict[str, str], set[str]] | None:
+    """Accepted hashes by id, plus the ids already known to be deprecated."""
     if not os.path.exists(BASELINE):
         return None
     with open(BASELINE, encoding="utf-8") as handle:
-        return {k: v for k, v in json.load(handle).items() if not k.startswith("$")}
+        raw = json.load(handle)
+    accepted = {k: v for k, v in raw.items() if not k.startswith("$")}
+    return accepted, set(raw.get("$deprecated", []))
 
 
-def write_baseline(accepted: dict[str, str]) -> None:
-    payload = {"$comment": COMMENT}
+def write_baseline(accepted: dict[str, str], deprecated: set[str]) -> None:
+    payload: dict = {"$comment": COMMENT}
+    if deprecated:
+        # A list rather than a flag per rule: retirement is rare, and one extra line keeps the
+        # per-rule diffs to a single line each.
+        payload["$deprecated"] = sorted(deprecated)
     payload.update({k: accepted[k] for k in sorted(accepted)})
     with open(BASELINE, "w", encoding="utf-8") as handle:
         json.dump(payload, handle, indent=2)
@@ -131,56 +155,114 @@ def describe_missing(rid: str, was: str) -> list[str]:
     ]
 
 
+def describe_new(rule: dict) -> list[str]:
+    """A new rule, and what it implies for the Python validator."""
+    kind = (rule.get("applies_to"), bool(rule.get("checkable")))
+    scope = f"{rule.get('applies_to')}" + (", checkable" if rule.get("checkable") else "")
+    return [
+        f"    {rule['id']}  {rule.get('level')}  ({scope})",
+        f"        {rule.get('summary')}",
+        f"        #{rule.get('section')}   ({rule.get('source')})",
+        f"        -> {DOWNSTREAM.get(kind, 'no downstream action recorded')}",
+    ]
+
+
+def describe_retired(rule: dict) -> list[str]:
+    return [
+        f"    {rule['id']}  now deprecated"
+        + (f", superseded by {', '.join(rule['superseded_by'])}" if rule.get("superseded_by") else ""),
+        f"        {rule.get('summary')}",
+        "        -> oold-python should stop enforcing it for this version onward;",
+        "           its check will skip once the new catalogue is vendored",
+    ]
+
+
+def report_downstream(new: list[dict], retired: list[dict]) -> None:
+    """Announce catalogue changes that create work in the Python validator.
+
+    Recorded automatically rather than blocking: a new id cannot be a renamed rule, and a
+    retirement is a deliberate act already. But neither should pass in silence, because both
+    mean the downstream implementation is now behind the specification, and this is the moment
+    that is cheapest to notice.
+    """
+    if not new and not retired:
+        return
+    print("")
+    if new:
+        print(f"  {len(new)} new rule(s) recorded:")
+        print("")
+        for rule in new:
+            for line in describe_new(rule):
+                print(line)
+            print("")
+    if retired:
+        print(f"  {len(retired)} rule(s) newly deprecated:")
+        print("")
+        for rule in retired:
+            for line in describe_retired(rule):
+                print(line)
+            print("")
+    print(f"  How to turn a rule into a check: {TRANSLATION_GUIDE}")
+    print("  The standing gap is reported by `oold rules list --unchecked` in oold-python.")
+
+
 def check() -> int:
     catalog = load_catalog()
-    baseline = load_baseline()
+    loaded = load_baseline()
 
-    if baseline is None:
-        write_baseline({rid: r["text_sha256"] for rid, r in catalog.items()})
+    if loaded is None:
+        write_baseline(
+            {rid: r["text_sha256"] for rid, r in catalog.items()},
+            {rid for rid, r in catalog.items() if r.get("deprecated")},
+        )
         print(f"rule baseline created with {len(catalog)} rule(s) -> meta/rules-baseline.json")
         print("  (first run: the current catalogue is taken as accepted)")
         return 0
 
+    baseline, was_deprecated = loaded
     changed = [
         (rid, baseline[rid]) for rid, r in catalog.items()
         if rid in baseline and r["text_sha256"] != baseline[rid]
     ]
     missing = [(rid, digest) for rid, digest in baseline.items() if rid not in catalog]
-    added = [rid for rid in catalog if rid not in baseline]
+    added = [catalog[rid] for rid in catalog if rid not in baseline]
+    now_deprecated = {rid for rid, r in catalog.items() if r.get("deprecated")}
+    retired = [catalog[rid] for rid in sorted(now_deprecated - was_deprecated) if rid in baseline]
+    revived = sorted(was_deprecated - now_deprecated)
 
-    if not changed and not missing:
-        if added:
-            write_baseline({rid: r["text_sha256"] for rid, r in catalog.items()})
-            names = ", ".join(sorted(added))
-            print(f"rule baseline OK ({len(catalog)} rules; recorded {len(added)} new id(s): {names})")
-            print("  a new id needs no acceptance - it cannot be a renamed rule")
-        else:
-            print(f"rule baseline OK ({len(catalog)} rules, all matching the accepted text)")
-        return 0
-
-    print("rule baseline check FAILED", file=sys.stderr)
-    print("", file=sys.stderr)
-    for rid, was in changed:
-        for line in describe_changed(catalog[rid], was, catalog):
-            print(line, file=sys.stderr)
+    if changed or missing or revived:
+        print("rule baseline check FAILED", file=sys.stderr)
         print("", file=sys.stderr)
-    for rid, was in missing:
-        for line in describe_missing(rid, was):
-            print(line, file=sys.stderr)
-        print("", file=sys.stderr)
+        for rid, was in changed:
+            for line in describe_changed(catalog[rid], was, catalog):
+                print(line, file=sys.stderr)
+            print("", file=sys.stderr)
+        for rid, was in missing:
+            for line in describe_missing(rid, was):
+                print(line, file=sys.stderr)
+            print("", file=sys.stderr)
+        for rid in revived:
+            print(f"  {rid}  was deprecated and is not any more", file=sys.stderr)
+            print("      A retired id stays retired: reports already cite it. Mint a new id for", file=sys.stderr)
+            print("      the reinstated requirement instead.", file=sys.stderr)
+            print("", file=sys.stderr)
+        parts = [f"{len(changed)} changed"] if changed else []
+        parts += [f"{len(missing)} missing"] if missing else []
+        parts += [f"{len(revived)} un-deprecated"] if revived else []
+        print(f"  {', '.join(parts)}. Nothing was accepted; the baseline is unchanged.", file=sys.stderr)
+        return 1
 
-    summary = []
-    if changed:
-        summary.append(f"{len(changed)} changed")
-    if missing:
-        summary.append(f"{len(missing)} missing")
-    print(f"  {', '.join(summary)}. Nothing was accepted; the baseline is unchanged.", file=sys.stderr)
-    return 1
+    if added or retired:
+        write_baseline({rid: r["text_sha256"] for rid, r in catalog.items()}, now_deprecated)
+    print(f"rule baseline OK ({len(catalog)} rules, all matching the accepted text)")
+    report_downstream(added, retired)
+    return 0
 
 
 def accept(ids: list[str]) -> int:
     catalog = load_catalog()
-    baseline = load_baseline() or {}
+    loaded = load_baseline()
+    baseline, was_deprecated = loaded if loaded else ({}, set())
     wanted = [rid.upper() for rid in ids]
 
     problems = []
@@ -191,20 +273,21 @@ def accept(ids: list[str]) -> int:
             problems.append(f"  {rid} is already accepted - nothing changed about it")
     if problems:
         print("cannot accept:", file=sys.stderr)
-        print("\n".join(problems), file=sys.stderr)
+        for problem in problems:
+            print(problem, file=sys.stderr)
         return 1
 
     for rid in wanted:
         was = baseline.get(rid)
         baseline[rid] = catalog[rid]["text_sha256"]
-        verb = "recorded" if was is None else "re-accepted"
-        print(f"  {verb} {rid}  {short(baseline[rid])}")
+        print(f"  {'recorded' if was is None else 're-accepted'} {rid}  {short(baseline[rid])}")
 
     # Carry every other current rule forward, so the baseline stays a complete picture.
     for rid, rule in catalog.items():
         baseline.setdefault(rid, rule["text_sha256"])
-    write_baseline(baseline)
-    print(f"\nmeta/rules-baseline.json updated ({len(wanted)} accepted). Stage it with the spec change.")
+    write_baseline(baseline, {rid for rid, r in catalog.items() if r.get("deprecated")})
+    print("")
+    print(f"meta/rules-baseline.json updated ({len(wanted)} accepted). Stage it with the spec change.")
     return 0
 
 
