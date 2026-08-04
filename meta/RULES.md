@@ -69,9 +69,11 @@ stop.
 
 | Situation | What happens |
 |---|---|
-| A new id appears | Recorded automatically. A new id cannot be a renamed rule, so there is nothing to decide |
+| A new id appears | Recorded automatically, and **reported**: a new rule usually means new work in oold-python |
 | A rule's text changed | **Stops.** Only a human can tell a typo fix from a different requirement |
 | An id vanished | **Stops.** Usually accidental: a rebase can take the sentence and drop the marker with it, without a conflict |
+| A rule is deprecated | Recorded and **reported**: downstream should stop enforcing it. Tracked separately because `deprecated=yes` leaves the text, and therefore the hash, unchanged |
+| A deprecated rule is un-deprecated | **Stops.** A retired id stays retired; reports already cite it. Mint a new id instead |
 
 Accepting is deliberate and per-id:
 
@@ -84,6 +86,12 @@ accidental meaning-change through alongside a typo, which is the thing this guar
 
 The pull request then shows one changed line in `rules-baseline.json` per accepted rule, which is
 the reviewable claim: *this rule was reworded, not redefined*.
+
+Adding or retiring a rule does not block, but it is never silent. Both print what the change
+implies for the Python validator, and link to
+[how to turn a rule into a check](https://github.com/OO-LD/oold-python/blob/main/CONTRIBUTING.md#translating-a-specification-rule).
+The one-off report says the work exists; the standing gap is tracked downstream by
+`oold rules list --unchecked`.
 
 Two hooks run it (`pre-commit install`): `rules-extract` regenerates the catalogue and fails if it
 changed, so a stale catalogue cannot be committed; `rules-baseline` then applies the table above.
