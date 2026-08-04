@@ -282,7 +282,9 @@ def main() -> int:
         },
         "rules": rules,
     }
-    with open(OUT, "w", encoding="utf-8") as handle:
+    # newline="\n": the catalogue is committed and its bytes are checksummed downstream, so it
+    # must not depend on the platform that generated it.
+    with open(OUT, "w", encoding="utf-8", newline="\n") as handle:
         json.dump(payload, handle, indent=2, ensure_ascii=False)
         handle.write("\n")
 
