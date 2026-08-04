@@ -1,4 +1,7 @@
 #!/usr/bin/env python3
+# /// script
+# requires-python = ">=3.10"
+# ///
 """Generate meta/oold-rules.json from the :rule[...] markers in spec/sections/*.md.
 
 The specification prose is the single source of truth. A normative statement is marked with an

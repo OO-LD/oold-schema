@@ -1,0 +1,29 @@
+# Two hooks guarding the rule catalogue. Both are local, so contributors need only pre-commit
+# itself plus the uv environment the Makefile already uses.
+#
+# The order matters. `rules-extract` regenerates meta/oold-rules.json from the prose and fails if
+# it changed, so a stale catalogue can never be committed. `rules-baseline` then compares that
+# fresh catalogue against meta/rules-baseline.json, the state a human last accepted, and stops on
+# the two things nothing else notices: a rule id that has vanished, and a rule whose text moved.
+#
+#   pre-commit install
+repos:
+  - repo: local
+    hooks:
+      - id: rules-extract
+        name: regenerate the rule catalogue from the spec prose
+        entry: uv run scripts/extract_rules.py
+        language: system
+        pass_filenames: false
+        files: ^(spec/sections/.*\.md|scripts/extract_rules\.py)$
+        # Fails when the catalogue it writes differs from what is staged, so the author has to
+        # look at the diff and stage it deliberately.
+        require_serial: true
+
+      - id: rules-baseline
+        name: check the catalogue against the accepted baseline
+        entry: uv run scripts/rules_baseline.py check
+        language: system
+        pass_filenames: false
+        files: ^(spec/sections/.*\.md|meta/oold-rules\.json|meta/rules-baseline\.json)$
+        require_serial: true
