@@ -1,0 +1,221 @@
+#!/usr/bin/env python3
+# /// script
+# requires-python = ">=3.10"
+# ///
+"""Guard the rule catalogue against silent loss and unreviewed rewording.
+
+`meta/oold-rules.json` is generated from the prose, so it always reflects the spec as it is now.
+`meta/rules-baseline.json` records the state a human last *accepted*. Comparing the two turns
+two otherwise invisible events into a stop:
+
+* a rule id disappears - a marker deleted, or dropped by a clean-side rewrite during a rebase,
+  which is exactly how OOLD-EXT-009 was lost once already;
+* a rule's text changes - which may be a typo fix or may be a different requirement wearing the
+  same id, and no checker can tell those apart.
+
+A *new* id needs no ceremony: it cannot be a disguised meaning-change, so it is recorded
+automatically. Accepting a changed rule is deliberate and per-id::
+
+    make rules-accept IDS="OOLD-RT-002"
+
+Accept-all is intentionally not offered. One keystroke that blesses every difference would wave
+through an accidental meaning-change alongside a typo, which is the whole thing this guards.
+
+Usage:
+    rules_baseline.py check
+    rules_baseline.py accept OOLD-RT-002 [OOLD-EXT-006 ...]
+"""
+
+from __future__ import annotations
+
+import json
+import os
+import re
+import sys
+
+HERE = os.path.dirname(os.path.abspath(__file__))
+ROOT = os.path.dirname(HERE)
+CATALOG = os.path.join(ROOT, "meta", "oold-rules.json")
+BASELINE = os.path.join(ROOT, "meta", "rules-baseline.json")
+
+COMMENT = (
+    "Rule text last accepted by a human, keyed by rule id. Generated? No - updated only by "
+    "`make rules-accept IDS=...`, which is the recorded act of deciding that a changed rule was "
+    "reworded rather than redefined. See meta/RULES.md."
+)
+
+RULE_ID = re.compile(r"^OOLD-([A-Z]+)-(\d{3})$")
+
+
+def load_catalog() -> dict[str, dict]:
+    with open(CATALOG, encoding="utf-8") as handle:
+        return {r["id"]: r for r in json.load(handle)["rules"]}
+
+
+def load_baseline() -> dict[str, str] | None:
+    if not os.path.exists(BASELINE):
+        return None
+    with open(BASELINE, encoding="utf-8") as handle:
+        return {k: v for k, v in json.load(handle).items() if not k.startswith("$")}
+
+
+def write_baseline(accepted: dict[str, str]) -> None:
+    payload = {"$comment": COMMENT}
+    payload.update({k: accepted[k] for k in sorted(accepted)})
+    with open(BASELINE, "w", encoding="utf-8") as handle:
+        json.dump(payload, handle, indent=2)
+        handle.write("\n")
+
+
+def next_free_id(catalog: dict[str, dict], area: str) -> str:
+    """The next unused number in an area, so a hint can name a concrete id."""
+    used = {
+        int(m.group(2))
+        for rule_id in catalog
+        if (m := RULE_ID.match(rule_id)) and m.group(1) == area
+    }
+    candidate = 1
+    while candidate in used:
+        candidate += 1
+    return f"OOLD-{area}-{candidate:03d}"
+
+
+def short(digest: str) -> str:
+    return digest[:12] + "..."
+
+
+def describe_changed(rule: dict, was: str, catalog: dict[str, dict]) -> list[str]:
+    """The two things that could have happened, and the exact command for each."""
+    rid = rule["id"]
+    area = RULE_ID.match(rid).group(1)
+    replacement = next_free_id(catalog, area)
+    return [
+        f"  {rid}  text changed since it was last accepted",
+        f"      section   #{rule.get('section')}   ({rule.get('source')})",
+        f"      accepted  {short(was)}",
+        f"      now       {short(rule['text_sha256'])}",
+        "",
+        "      Decide which of these happened:",
+        "",
+        "      (a) The wording changed but the requirement did not - a typo, a clarification,",
+        "          a reference added. The id stays. Record that you checked:",
+        f"              make rules-accept IDS=\"{rid}\"",
+        "",
+        "      (b) The requirement itself changed, so it is a different rule now. Ids are",
+        "          permanent and never reused, so retire this one and mint a replacement.",
+        "          In the prose, mark the existing rule deprecated:",
+        f'              :rule[{rid}]{{... deprecated=yes superseded_by={replacement}}}',
+        "          and add the new requirement beside it:",
+        f'              :rule[{replacement}]{{applies=document level="MUST" summary="..."}}',
+        "          then regenerate and accept both:",
+        f"              make spec && make rules-accept IDS=\"{rid} {replacement}\"",
+    ]
+
+
+def describe_missing(rid: str, was: str) -> list[str]:
+    return [
+        f"  {rid}  in the baseline but absent from the catalogue",
+        f"      accepted  {short(was)}",
+        "",
+        "      Its :rule[...] marker is no longer in the prose. This is usually accidental:",
+        "      a rebase or a rewrite can take the sentence and drop the marker with it,",
+        "      without any conflict.",
+        "",
+        "      (a) If the requirement still exists, put the marker back on it.",
+        "",
+        "      (b) If the requirement was removed on purpose, do not delete the id - keep the",
+        "          marker and retire it, so anyone holding a report that cites it can still",
+        "          resolve it:",
+        f'              :rule[{rid}]{{... deprecated=yes}}',
+        f"          then: make spec && make rules-accept IDS=\"{rid}\"",
+    ]
+
+
+def check() -> int:
+    catalog = load_catalog()
+    baseline = load_baseline()
+
+    if baseline is None:
+        write_baseline({rid: r["text_sha256"] for rid, r in catalog.items()})
+        print(f"rule baseline created with {len(catalog)} rule(s) -> meta/rules-baseline.json")
+        print("  (first run: the current catalogue is taken as accepted)")
+        return 0
+
+    changed = [
+        (rid, baseline[rid]) for rid, r in catalog.items()
+        if rid in baseline and r["text_sha256"] != baseline[rid]
+    ]
+    missing = [(rid, digest) for rid, digest in baseline.items() if rid not in catalog]
+    added = [rid for rid in catalog if rid not in baseline]
+
+    if not changed and not missing:
+        if added:
+            write_baseline({rid: r["text_sha256"] for rid, r in catalog.items()})
+            names = ", ".join(sorted(added))
+            print(f"rule baseline OK ({len(catalog)} rules; recorded {len(added)} new id(s): {names})")
+            print("  a new id needs no acceptance - it cannot be a renamed rule")
+        else:
+            print(f"rule baseline OK ({len(catalog)} rules, all matching the accepted text)")
+        return 0
+
+    print("rule baseline check FAILED", file=sys.stderr)
+    print("", file=sys.stderr)
+    for rid, was in changed:
+        for line in describe_changed(catalog[rid], was, catalog):
+            print(line, file=sys.stderr)
+        print("", file=sys.stderr)
+    for rid, was in missing:
+        for line in describe_missing(rid, was):
+            print(line, file=sys.stderr)
+        print("", file=sys.stderr)
+
+    summary = []
+    if changed:
+        summary.append(f"{len(changed)} changed")
+    if missing:
+        summary.append(f"{len(missing)} missing")
+    print(f"  {', '.join(summary)}. Nothing was accepted; the baseline is unchanged.", file=sys.stderr)
+    return 1
+
+
+def accept(ids: list[str]) -> int:
+    catalog = load_catalog()
+    baseline = load_baseline() or {}
+    wanted = [rid.upper() for rid in ids]
+
+    problems = []
+    for rid in wanted:
+        if rid not in catalog:
+            problems.append(f"  {rid} is not in the catalogue (run `make spec` first, or check the id)")
+        elif baseline.get(rid) == catalog[rid]["text_sha256"]:
+            problems.append(f"  {rid} is already accepted - nothing changed about it")
+    if problems:
+        print("cannot accept:", file=sys.stderr)
+        print("\n".join(problems), file=sys.stderr)
+        return 1
+
+    for rid in wanted:
+        was = baseline.get(rid)
+        baseline[rid] = catalog[rid]["text_sha256"]
+        verb = "recorded" if was is None else "re-accepted"
+        print(f"  {verb} {rid}  {short(baseline[rid])}")
+
+    # Carry every other current rule forward, so the baseline stays a complete picture.
+    for rid, rule in catalog.items():
+        baseline.setdefault(rid, rule["text_sha256"])
+    write_baseline(baseline)
+    print(f"\nmeta/rules-baseline.json updated ({len(wanted)} accepted). Stage it with the spec change.")
+    return 0
+
+
+def main(argv: list[str]) -> int:
+    if len(argv) >= 2 and argv[1] == "check":
+        return check()
+    if len(argv) >= 3 and argv[1] == "accept":
+        return accept(argv[2:])
+    print(__doc__.strip().split("Usage:")[-1].strip(), file=sys.stderr)
+    return 2
+
+
+if __name__ == "__main__":
+    sys.exit(main(sys.argv))

@@ -28,6 +28,15 @@ spec: ## Regenerate docs/spec/index.html + meta/oold-rules.json from spec/sectio
 	@echo "🚀 Rendering the ReSpec spec from spec/"
 	@uv run scripts/render_spec.py
 
+.PHONY: rules
+rules: ## Check the rule catalogue against the accepted baseline
+	@uv run scripts/rules_baseline.py check
+
+.PHONY: rules-accept
+rules-accept: ## Accept reworded rule(s): make rules-accept IDS="OOLD-RT-002 OOLD-EXT-006"
+	@test -n "$(IDS)" || { echo 'usage: make rules-accept IDS="OOLD-RT-002 [...]"' >&2; exit 2; }
+	@uv run scripts/rules_baseline.py accept $(IDS)
+
 .PHONY: stage-schemas
 stage-schemas: ## Copy meta/ + examples/ into docs/ so the build serves them (versioned per release)
 	@mkdir -p docs/meta docs/schemas
@@ -45,6 +54,7 @@ preview: spec stage-schemas ## Regenerate the spec, then serve the docs with liv
 .PHONY: check
 check: validate spec stage-schemas ## Validate schemas, lint the regenerated spec, and build the site
 	@uv run scripts/check_spec.py
+	@uv run scripts/rules_baseline.py check
 	@$(ZENSICAL) build --clean
 
 .PHONY: clean

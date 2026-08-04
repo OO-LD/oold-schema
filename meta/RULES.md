@@ -60,6 +60,35 @@ tag. It fails when a released id disappears, changes `area`/`level`/`applies_to`
 deprecated. Comparing against the tag rather than the working tree means ids can still be
 reshuffled freely until a release ships a catalog.
 
+## The baseline, and what forces a decision
+
+`oold-rules.json` is generated, so it always shows the spec as it is now.
+`rules-baseline.json` records the state a human last *accepted*: one line per rule id, holding
+the sha256 of the text that was accepted. Comparing the two is what turns a silent event into a
+stop.
+
+| Situation | What happens |
+|---|---|
+| A new id appears | Recorded automatically. A new id cannot be a renamed rule, so there is nothing to decide |
+| A rule's text changed | **Stops.** Only a human can tell a typo fix from a different requirement |
+| An id vanished | **Stops.** Usually accidental: a rebase can take the sentence and drop the marker with it, without a conflict |
+
+Accepting is deliberate and per-id:
+
+```bash
+make rules-accept IDS="OOLD-RT-002"
+```
+
+There is intentionally no accept-all. One keystroke that blesses every difference would wave an
+accidental meaning-change through alongside a typo, which is the thing this guards against.
+
+The pull request then shows one changed line in `rules-baseline.json` per accepted rule, which is
+the reviewable claim: *this rule was reworded, not redefined*.
+
+Two hooks run it (`pre-commit install`): `rules-extract` regenerates the catalogue and fails if it
+changed, so a stale catalogue cannot be committed; `rules-baseline` then applies the table above.
+`make check` runs the same guard, so CI catches it even without the hooks.
+
 **What tooling cannot enforce.** No checker distinguishes a typo fix from a change of meaning. Each
 record carries `text_sha256`, and because the catalog is committed, any rewording shows up as a
 visible hash diff in review. Judging whether the meaning changed enough to need a new id is a
