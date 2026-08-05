@@ -75,12 +75,11 @@ CLEAN = [
 
 
 def spec_version() -> str:
-    """The release a newly minted rule belongs to.
+    """The release a *newly minted* rule belongs to: the most recent tag.
 
-    Same source as the ReSpec subtitle (`render_spec.py:_git_version`): the most recent tag, so
-    `since` records a real release rather than a hand-maintained constant. Note this is the tag
-    the rule was *generated* under; once a release ships the catalog, `since` for existing rules
-    is fixed by the append-only guard in check_spec.py and cannot drift.
+    Same source as the ReSpec subtitle (`render_spec.py:_git_version`), so `since` records a real
+    release rather than a hand-maintained constant. This value applies only to ids the catalogue
+    has not seen before; see :func:`recorded_since`.
     """
     try:
         out = subprocess.check_output(  # noqa: S603,S607 - fixed argv, repo-local
@@ -89,6 +88,26 @@ def spec_version() -> str:
         return out.lstrip("v") or "draft"
     except Exception:
         return "draft"
+
+
+def recorded_since() -> dict[str, str]:
+    """`since` as the committed catalogue already records it, keyed by rule id.
+
+    `since` means "the release this rule first appeared in", so it must survive regeneration. It
+    is not derivable from the prose, which says nothing about when a sentence was written, and it
+    cannot be taken from the current tag either: doing so rewrote the field for *every* rule on
+    any run made after a new tag, silently turning a historical record into "whenever the
+    generator last ran". Carrying the existing value forward is what makes it a record at all.
+
+    A rule absent here is genuinely new and takes :func:`spec_version`. If the catalogue is
+    missing or unreadable every rule looks new, which the CI drift check catches as a whole-file
+    diff rather than letting it pass quietly.
+    """
+    try:
+        with open(OUT, encoding="utf-8") as handle:
+            return {r["id"]: r["since"] for r in json.load(handle)["rules"] if r.get("since")}
+    except (OSError, ValueError, KeyError):
+        return {}
 
 
 def parse_attrs(raw: str) -> dict[str, str]:
@@ -228,7 +247,9 @@ def extract_file(filename: str, problems: list[str]) -> list[dict]:
                 "text": text,
                 "text_sha256": hashlib.sha256(text.encode("utf-8")).hexdigest(),
                 "checkable": checkable,
-                "since": attrs.get("since", VERSION),
+                # Authored value wins; otherwise keep what the catalogue already recorded, and
+                # only fall back to the current tag for an id nobody has seen before.
+                "since": attrs.get("since") or SINCE.get(rule_id, VERSION),
                 "deprecated": attrs.get("deprecated", "no").lower() in ("yes", "true", "1"),
                 "source": where,
             }
@@ -246,8 +267,9 @@ def first_sentence(text: str, limit: int = 160) -> str:
 
 
 def main() -> int:
-    global VERSION
+    global VERSION, SINCE
     VERSION = spec_version()
+    SINCE = recorded_since()
     problems: list[str] = []
     rules: list[dict] = []
     for entry in cfg.SECTIONS:
