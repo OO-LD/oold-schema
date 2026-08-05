@@ -65,6 +65,18 @@ make check      # validate + spec lint + site build (what CI runs)
 
 The docs and the spec renderer run on Python via [uv](https://docs.astral.sh/uv/) - no local Python setup required; the schema validator runs on Node (`make install` once).
 
+If you edit the specification prose, install the git hooks once:
+
+```bash
+uvx pre-commit install
+```
+
+They regenerate [`meta/oold-rules.json`](meta/oold-rules.json) from the `:rule[...]` markers and
+check it against [`meta/rules-baseline.json`](meta/rules-baseline.json), so a rule cannot be
+silently lost or reworded into a different requirement under the same id. CI runs the same two
+checks, so a missing hook is caught rather than relied upon - but the hook tells you at commit
+time instead of after a push.
+
 ## Getting involved
 
 Questions, ideas and design discussion are welcome - for now all in the issue tracker (one searchable place while the community is small):
