@@ -103,14 +103,18 @@ link = "https://github.com/OO-LD/oold-schema"
 # silently switched off - that is how `!!! note` callouts ended up rendering as
 # literal text before "admonition" was restored.
 #
-# The entries below are Zensical 0.0.46's defaults reproduced verbatim, so the
-# effective set is visible in one file. Treat them as upstream values: re-check
-# them against DEFAULT_MARKDOWN_EXTENSIONS whenever ZENSICAL_VERSION changes in
-# the Makefile, and put anything this project actually chooses in the
+# The entries below reproduce Zensical 0.0.46's defaults, so the effective set
+# is visible in one file. Treat them as upstream values: re-check them against
+# DEFAULT_MARKDOWN_EXTENSIONS whenever ZENSICAL_VERSION changes in the
+# Makefile, and put anything this project actually chooses in the
 # project-specific block that follows.
 #
-# Two defaults are customized here and so live in that block instead of this
-# one: pymdownx.superfences (mermaid fence) and toc (permalink).
+# Two exceptions to "verbatim", both called out where they occur:
+#   - pymdownx.superfences and toc are customized, so they live in the
+#     project-specific block below rather than here (TOML forbids defining the
+#     same table twice).
+#   - pymdownx.smartsymbols is a default this project deliberately turns off;
+#     it stays here, commented out, with the reasoning next to it.
 # ===========================================================================
 
 [project.markdown_extensions.abbr]
@@ -126,8 +130,16 @@ link = "https://github.com/OO-LD/oold-schema"
 [project.markdown_extensions.pymdownx.keys]
 [project.markdown_extensions.pymdownx.magiclink]
 [project.markdown_extensions.pymdownx.mark]
-[project.markdown_extensions.pymdownx.smartsymbols]
 [project.markdown_extensions.pymdownx.tilde]
+
+# Deliberately left disabled, though Zensical enables it by default:
+# pymdownx.smartsymbols silently rewrites (c), (r), (tm), +/-, -->, <--, =/=
+# and fractions such as 1/2 wherever they appear in prose. On a specification
+# site those sequences are real content rather than typographic shorthand - it
+# already turned the "(c)" of an (a)/(b)/(c) enumeration in use-cases.md into a
+# copyright sign - and because the substitution happens silently the damage is
+# easy to miss in review. The prettier glyphs are not worth that risk here.
+# [project.markdown_extensions.pymdownx.smartsymbols]
 
 [project.markdown_extensions.pymdownx.arithmatex]
 generic = true
