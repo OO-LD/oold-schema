@@ -46,11 +46,17 @@ const uiMeta = JSON.parse(readFileSync(join(root, "meta", "oold-ui-meta-schema.j
 const patternLint = JSON.parse(readFileSync(join(root, "meta", "oold-pattern-lint.schema.json"), "utf8"));
 // Rule catalog (meta/oold-rules.json), generated from the spec prose by scripts/extract_rules.py.
 // Optional: a checkout from before the catalog existed still validates, just without rule coverage.
-const ruleCatalog = (() => {
-  try { return JSON.parse(readFileSync(join(root, "meta", "oold-rules.json"), "utf8")).rules || []; }
-  catch { return []; }
+const ruleCatalogDoc = (() => {
+  try { return JSON.parse(readFileSync(join(root, "meta", "oold-rules.json"), "utf8")); }
+  catch { return null; }
 })();
+const ruleCatalog = (ruleCatalogDoc && ruleCatalogDoc.rules) || [];
 const rulesById = new Map(ruleCatalog.map((r) => [r.id, r]));
+// The schema describing the catalog, optional for the same reason the catalog is.
+const ruleCatalogSchema = (() => {
+  try { return JSON.parse(readFileSync(join(root, "meta", "oold-rules.schema.json"), "utf8")); }
+  catch { return null; }
+})();
 const schemaFiles = readdirSync(exDir).filter((f) => f.endsWith(".schema.json"));
 const instanceFiles = readdirSync(exDir).filter((f) => f.endsWith(".instance.json"));
 
@@ -391,6 +397,18 @@ let warnings = 0;
 const ok = (m) => { total++; console.log(`OK         ${m}`); };
 const bad = (m) => { total++; failures++; console.error(m); };
 const warn = (m) => { warnings++; console.warn(`WARN       ${m}`); };
+
+// The catalog is data every downstream validator reads to decide what this specification
+// requires and how hard a violation lands. A truncated or malformed copy does not announce
+// itself: it just looks like a specification with fewer rules, and the checks that would have
+// enforced them stand down quietly. Checking it against its own schema is what makes that loud.
+if (ruleCatalogDoc && ruleCatalogSchema) {
+  console.log("Rule catalog (meta/oold-rules.json vs its schema):");
+  const validateCatalog = ajv.compile(ruleCatalogSchema);
+  if (validateCatalog(ruleCatalogDoc)) ok(`oold-rules.json (${ruleCatalog.length} rules)`);
+  else bad("INVALID    oold-rules.json: " + JSON.stringify(validateCatalog.errors));
+  console.log("");
+}
 
 console.log("Schemas (meta-schema + $ref composition):");
 for (const f of schemaFiles) {

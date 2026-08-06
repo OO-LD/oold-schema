@@ -1,0 +1,165 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://oo-ld.org/latest/meta/oold-rules.schema.json",
+  "title": "OO-LD rule catalog",
+  "$comment": "Describes meta/oold-rules.json, which scripts/extract_rules.py generates from the :rule[...] markers in spec/sections/*.md. The catalog is data that downstream validators read to decide which requirements exist and how hard a violation lands, so a truncated or malformed copy does not fail loudly on its own: it just looks like a specification with fewer rules. This schema is what turns that into an error.",
+  "type": "object",
+  "required": [
+    "spec_version",
+    "rules"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "format": "iri-reference",
+      "description": "This document's schema. Released copies stamp their version in place of `latest`."
+    },
+    "$comment": {
+      "type": "string"
+    },
+    "spec_version": {
+      "$ref": "#/$defs/version",
+      "description": "The specification release this catalog was generated from. Moves with every tag, unlike a rule's `since`."
+    },
+    "areas": {
+      "type": "object",
+      "description": "Area code to human-readable scope. Every rule's `area` is one of these keys.",
+      "propertyNames": {
+        "$ref": "#/$defs/area"
+      },
+      "additionalProperties": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "applies_to": {
+      "type": "object",
+      "description": "Binding to what enforcing it would take. Every rule's `applies_to` is one of these keys.",
+      "propertyNames": {
+        "$ref": "#/$defs/binding"
+      },
+      "additionalProperties": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "rules": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/rule"
+      }
+    }
+  },
+  "$defs": {
+    "area": {
+      "enum": [
+        "CNF",
+        "SCH",
+        "CMP",
+        "INS",
+        "RT",
+        "VER",
+        "EXT"
+      ]
+    },
+    "binding": {
+      "enum": [
+        "document",
+        "implementation",
+        "advisory"
+      ]
+    },
+    "version": {
+      "type": "string",
+      "minLength": 1
+    },
+    "rule": {
+      "type": "object",
+      "required": [
+        "id",
+        "area",
+        "level",
+        "applies_to",
+        "section",
+        "summary",
+        "text",
+        "text_sha256",
+        "checkable",
+        "since",
+        "deprecated",
+        "source"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^OOLD-(CNF|SCH|CMP|INS|RT|VER|EXT)-[0-9]{3}$",
+          "description": "Permanent and never reused. Downstream checks cite it, so the pattern is asserted rather than assumed; see meta/RULES.md."
+        },
+        "area": {
+          "$ref": "#/$defs/area"
+        },
+        "level": {
+          "enum": [
+            "MUST",
+            "MUST NOT",
+            "SHALL",
+            "SHALL NOT",
+            "SHOULD",
+            "SHOULD NOT",
+            "REQUIRED",
+            "RECOMMENDED"
+          ],
+          "description": "The RFC 2119 keyword in the marked prose. A validator reads this to decide whether a violation fails or warns, and never hardcodes it."
+        },
+        "applies_to": {
+          "$ref": "#/$defs/binding"
+        },
+        "section": {
+          "type": "string",
+          "minLength": 1
+        },
+        "summary": {
+          "type": "string",
+          "minLength": 1
+        },
+        "text": {
+          "type": "string",
+          "minLength": 1,
+          "description": "The normative prose itself, cleaned of markup."
+        },
+        "text_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$",
+          "description": "sha256 of `text`. meta/rules-baseline.json compares against this to catch a rule whose meaning changed under an unchanged id, so its shape is asserted here."
+        },
+        "checkable": {
+          "type": "boolean",
+          "description": "Whether the requirement is decidable by inspecting a document. Defaults to true for `document` rules only."
+        },
+        "since": {
+          "$ref": "#/$defs/version",
+          "description": "The release that first stated this rule. Carried forward once recorded; only an unseen id takes the current tag."
+        },
+        "deprecated": {
+          "type": "boolean"
+        },
+        "superseded_by": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "pattern": "^OOLD-(CNF|SCH|CMP|INS|RT|VER|EXT)-[0-9]{3}$"
+          },
+          "description": "Present only on a deprecated rule, naming what replaced it."
+        },
+        "source": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Where the marker sits, as `<section file>:<line>`. Regenerated on every run, so it is provenance rather than a stable reference."
+        }
+      }
+    }
+  }
+}

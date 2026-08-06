@@ -290,6 +290,10 @@ def main() -> int:
 
     rules.sort(key=lambda r: (r["area"], r["id"]))
     payload = {
+        # The catalogue is data other tools read to decide what the specification requires, so it
+        # names the schema that describes it. Released copies stamp their version in place of
+        # `latest`, the same convention the meta-schemas follow.
+        "$schema": "https://oo-ld.org/latest/meta/oold-rules.schema.json",
         "$comment": (
             "Catalog of the normative statements in the OO-LD specification, generated from the "
             ":rule[...] markers in spec/sections/*.md by scripts/extract_rules.py. Do not edit by "
