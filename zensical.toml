@@ -92,19 +92,70 @@ toggle.name = "Switch to system preference"
 icon = "fontawesome/brands/github"
 link = "https://github.com/OO-LD/oold-schema"
 
-[project.markdown_extensions.attr_list]
+# ===========================================================================
+# BEGIN Zensical defaults - restated, not project choices
+#
+# Zensical enables a set of Markdown extensions out of the box, but a project
+# that declares ANY markdown_extensions REPLACES that set instead of extending
+# it: zensical/config.py reads them via
+#     config.get("markdown_extensions", DEFAULT_MARKDOWN_EXTENSIONS)
+# which is a fallback, not a merge. Every default left out here is therefore
+# silently switched off - that is how `!!! note` callouts ended up rendering as
+# literal text before "admonition" was restored.
+#
+# The entries below are Zensical 0.0.46's defaults reproduced verbatim, so the
+# effective set is visible in one file. Treat them as upstream values: re-check
+# them against DEFAULT_MARKDOWN_EXTENSIONS whenever ZENSICAL_VERSION changes in
+# the Makefile, and put anything this project actually chooses in the
+# project-specific block that follows.
+#
+# Two defaults are customized here and so live in that block instead of this
+# one: pymdownx.superfences (mermaid fence) and toc (permalink).
+# ===========================================================================
 
+[project.markdown_extensions.abbr]
+[project.markdown_extensions.admonition]
+[project.markdown_extensions.attr_list]
+[project.markdown_extensions.def_list]
+[project.markdown_extensions.footnotes]
 [project.markdown_extensions.md_in_html]
+[project.markdown_extensions.pymdownx.betterem]
+[project.markdown_extensions.pymdownx.caret]
+[project.markdown_extensions.pymdownx.details]
+[project.markdown_extensions.pymdownx.inlinehilite]
+[project.markdown_extensions.pymdownx.keys]
+[project.markdown_extensions.pymdownx.magiclink]
+[project.markdown_extensions.pymdownx.mark]
+[project.markdown_extensions.pymdownx.smartsymbols]
+[project.markdown_extensions.pymdownx.tilde]
+
+[project.markdown_extensions.pymdownx.arithmatex]
+generic = true
 
 [project.markdown_extensions.pymdownx.emoji]
 emoji_generator = "zensical.extensions.emoji.to_svg"
 emoji_index = "zensical.extensions.emoji.twemoji"
 
-# Jinja2 macros (see macros.py) let the guide reuse the same resources as the
-# spec - example schemas, the keyword vocabulary, etc. - so they have one source.
-[project.markdown_extensions.zensical.extensions.macros]
-module_name = "macros"
+[project.markdown_extensions.pymdownx.highlight]
+anchor_linenums = true
+line_spans = "__span"
+pygments_lang_class = true
 
+[project.markdown_extensions.pymdownx.tabbed]
+alternate_style = true
+combine_header_slug = true
+
+[project.markdown_extensions.pymdownx.tasklist]
+custom_checkbox = true
+
+# ===========================================================================
+# END Zensical defaults
+# ===========================================================================
+
+# Project-specific extensions and overrides of the defaults above.
+
+# Overrides the default superfences config, which declares the same mermaid
+# fence but leaves "format" implicit.
 [project.markdown_extensions.pymdownx.superfences]
 
 [[project.markdown_extensions.pymdownx.superfences.custom_fences]]
@@ -112,12 +163,13 @@ name = "mermaid"
 class = "mermaid"
 format = "pymdownx.superfences.fence_code_format"
 
-[project.markdown_extensions.pymdownx.tabbed]
-alternate_style = true
+# Jinja2 macros (see macros.py) let the guide reuse the same resources as the
+# spec - example schemas, the keyword vocabulary, etc. - so they have one source.
+[project.markdown_extensions.zensical.extensions.macros]
+module_name = "macros"
 
-[project.markdown_extensions.pymdownx.arithmatex]
-generic = true
-
+# Zensical defaults this to permalink = true as well; kept here because the
+# docs depend on the anchor links rather than merely inheriting them.
 [project.markdown_extensions.toc]
 permalink = true
 
