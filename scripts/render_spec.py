@@ -20,6 +20,7 @@ import os
 import re
 import subprocess
 import sys
+from html import escape as escape_html
 
 import mistune
 from jinja2 import Environment
@@ -31,20 +32,22 @@ for path in (ROOT, HERE):
         sys.path.insert(0, path)
 import macros  # noqa: E402  - repo-root shared macros
 import spec_config as cfg  # noqa: E402
+from rule_ids import MARKER as RULE  # noqa: E402
 
 SECTIONS_DIR = os.path.join(ROOT, "spec", "sections")
 OUT = os.path.join(ROOT, "docs", "spec", "index.html")
+RULES_FILE = os.path.join(ROOT, "meta", "oold-rules.json")
 
 RFC2119 = re.compile(r"\b(MUST NOT|MUST|SHALL NOT|SHALL|SHOULD NOT|SHOULD|REQUIRED|RECOMMENDED|MAY|OPTIONAL)\b")
 HEADING = re.compile(r"^(#{2,6})\s+(.*?)\s*$")
 ATTRS = re.compile(r"\s*\{([^}]*)\}\s*$")
 DFN = re.compile(r':dfn\[([^\]]*)\]\{lt="([^"]*)"\}')
 CONTAINER = re.compile(r'^:::(example|note)\{([^}]*)\}[ \t]*\n(.*?)\n:::[ \t]*$', re.S | re.M)
-# Marks a normative statement with its stable rule id, e.g.
-#   :rule[OOLD-RT-002]{applies=document}
-# The id is authored, never derived from position - see meta/RULES.md. Rendered as a
-# linkable badge so a report can deep-link straight to the requirement it cites.
-RULE = re.compile(r':rule\[([A-Za-z0-9-]+)\]\{([^}]*)\}[ \t]*')
+# Nearest-preceding block-level opening tag a rule marker can be hoisted onto. Matches
+# paragraph_bounds() in extract_rules.py: a bullet yields <li>, ordinary prose yields <p>,
+# a paragraph nested in a list item yields the inner (more precise) <p>.
+BLOCK_OPEN = re.compile(r"<(p|li|td|th|dd|blockquote|h[1-6])(\s[^>]*)?>")
+RULE_TOKEN = re.compile(r"@@RULE(\d+)@@")
 
 _md = mistune.create_markdown(escape=False, plugins=["table"])
 
@@ -53,23 +56,107 @@ def md_to_html(text):
     return _md(text).strip()
 
 
-def rule_badge(match):
-    """Render a :rule[...] marker as an anchored, linkable badge."""
-    rule_id = match.group(1)
+def _load_rule_summaries():
+    """id -> summary from the generated catalog, or {} if it is absent or unparseable.
+
+    `make spec` regenerates meta/oold-rules.json immediately before this script runs, so it
+    is fresh. But a checkout predating the catalog - or a manual `render_spec.py` run - still
+    has to render, so a missing/broken file degrades to no summaries rather than a crash.
+    """
+    try:
+        with open(RULES_FILE, encoding="utf-8") as handle:
+            catalog = json.load(handle)
+        return {r["id"]: r["summary"] for r in catalog.get("rules", []) if r.get("id") and r.get("summary")}
+    except (OSError, ValueError, KeyError):
+        return {}
+
+
+RULE_SUMMARIES = _load_rule_summaries()
+
+
+def _stash_rule(match, rules):
+    """Record a :rule[...] marker's id + attrs and return a placeholder text token.
+
+    A plain text token, not an HTML comment: a marker at the start of a line would otherwise
+    be parsed by mistune as a block-level HTML block, silently dropping the paragraph around
+    it. `rules` is per render_body()/md_inline() call (like `blocks` in render_body), so a
+    :::note body rendered by a recursive render_body call hoists its own tokens before its
+    HTML is spliced back into the caller.
+    """
+    rules.append((match.group(1), match.group(2)))
+    return f"@@RULE{len(rules) - 1}@@"
+
+
+def rule_mark(rule_id, attrs):
+    """The faint, hoverable/focusable mark a :rule[...] token becomes.
+
+    Unlike the old always-visible chip, the id itself is not printed inline; it is reachable
+    via the title, the aria-label and the #fragment. The tooltip summary comes from the
+    generated catalog first (kept in sync with the CLI), then the marker's own `summary=`
+    attribute, then the bare id - so this never depends on the catalog existing.
+    """
+    summary = RULE_SUMMARIES.get(rule_id)
+    if summary is None:
+        m = re.search(r'summary\s*=\s*"([^"]*)"', attrs)
+        summary = m.group(1) if m else None
+    title = f"{rule_id} - {summary}" if summary else rule_id
     return (
-        f'<a class="rule-id" id="rule-{rule_id}" href="#rule-{rule_id}" '
-        f'title="Normative rule {rule_id}">{rule_id}</a> '
+        f'<a class="rule-mark" href="#{rule_id}" title="{escape_html(title, quote=True)}" '
+        f'aria-label="{escape_html(f"Normative rule {rule_id}", quote=True)}">&#9432;</a>'
     )
+
+
+def hoist_rule_ids(html, rules):
+    """Move each @@RULE{n}@@ token onto the nearest preceding block-level opening tag.
+
+    The anchor moves from the mark itself onto the enclosing element, so a deep link scrolls
+    to the requirement rather than to a chip mid-sentence. Two cases fall back to wrapping the
+    mark in its own <span id="..."> instead of touching a block tag: no preceding block tag at
+    all (md_inline strips its wrapping <p>, so a marker in a heading or <dd> has nothing to
+    attach to), and a block that already claimed an id (two rules in one paragraph or list
+    item - an element can only have one id). Both are detected the same way: the candidate
+    tag's own text already contains `id="`, whether that is from an earlier iteration of this
+    loop or, in principle, from the source.
+    """
+    if not rules:
+        return html
+    while True:
+        token = RULE_TOKEN.search(html)
+        if token is None:
+            return html
+        rule_id, attrs = rules[int(token.group(1))]
+        mark = rule_mark(rule_id, attrs)
+
+        block = None
+        for candidate in BLOCK_OPEN.finditer(html, 0, token.start()):
+            block = candidate  # last match before the token is the nearest preceding one
+
+        if block is None or 'id="' in block.group(0):
+            span = f'<span id="{rule_id}" class="has-rule">{mark}</span> '
+            html = html[: token.start()] + span + html[token.end() :]
+            continue
+
+        tag_name, tag_attrs = block.group(1), block.group(2) or ""
+        class_match = re.search(r'\bclass="([^"]*)"', tag_attrs)
+        if class_match:
+            tag_attrs = (
+                tag_attrs[: class_match.start(1)] + f"{class_match.group(1)} has-rule" + tag_attrs[class_match.end(1) :]
+            )
+        else:
+            tag_attrs += ' class="has-rule"'
+        new_tag = f'<{tag_name} id="{rule_id}"{tag_attrs}>'
+        html = html[: block.start()] + new_tag + html[block.end() : token.start()] + mark + " " + html[token.end() :]
 
 
 def md_inline(text):
     """Render inline Markdown (headings, <dd> text); strip the wrapping <p>."""
     text = DFN.sub(r'<dfn data-lt="\2">\1</dfn>', text)
-    text = RULE.sub(rule_badge, text)
+    rules = []
+    text = RULE.sub(lambda m: _stash_rule(m, rules), text)
     html = md_to_html(text)
     if html.startswith("<p>") and html.endswith("</p>"):
         html = html[3:-4]
-    return html
+    return hoist_rule_ids(html, rules)
 
 
 def expand(text):
@@ -100,6 +187,7 @@ def wrap_rfc2119(text):
 def render_body(text, informative):
     """Render a section body: :::example/:::note blocks, :dfn, RFC2119, Markdown."""
     blocks = []
+    rules = []
 
     def stash(match):
         kind, attrs, inner = match.group(1), match.group(2), match.group(3)
@@ -115,10 +203,15 @@ def render_body(text, informative):
     text = CONTAINER.sub(stash, text)
     text = DFN.sub(r'<dfn data-lt="\2">\1</dfn>', text)
     # Before wrap_rfc2119, so a rule id containing no keyword is never touched by it.
-    text = RULE.sub(rule_badge, text)
+    text = RULE.sub(lambda m: _stash_rule(m, rules), text)
     if not informative:
         text = wrap_rfc2119(text)
     html = md_to_html(text)
+    # Hoist rule ids onto their enclosing block before expanding @@BLOCK{n}@@: a :::note body
+    # was rendered by a recursive render_body call above and already hoisted its own tokens
+    # with its own `rules` list, so its spliced-in HTML holds none left over. Hoisting after
+    # the splice would let the inner and outer token indices collide.
+    html = hoist_rule_ids(html, rules)
     html = re.sub(r"<p>@@BLOCK(\d+)@@</p>", lambda m: blocks[int(m.group(1))], html)
     html = re.sub(r"@@BLOCK(\d+)@@", lambda m: blocks[int(m.group(1))], html)
     return html
@@ -195,10 +288,9 @@ TAB_ASSETS = """  <style>
     .ex-tab { border: 0; background: none; padding: .3em .8em; cursor: pointer; font: inherit; color: #555; border-bottom: 2px solid transparent; }
     .ex-tab[aria-selected="true"] { color: #005a9c; border-bottom-color: #005a9c; font-weight: 600; }
     .ex-panel[hidden] { display: none; }
-    .rule-id { font-family: monospace; font-size: .82em; color: #555; background: #f2f4f7;
-               border: 1px solid #dde1e6; border-radius: 3px; padding: .05em .4em;
-               text-decoration: none; white-space: nowrap; vertical-align: .1em; }
-    .rule-id:hover, .rule-id:target { color: #005a9c; border-color: #005a9c; background: #eef4fa; }
+    .rule-mark { color: #b0b6bd; text-decoration: none; font-size: .85em; padding: 0 .25em; }
+    .rule-mark:hover, .rule-mark:focus { color: #005a9c; }
+    .has-rule:target { background: #fffbdd; scroll-margin-top: 3rem; }
   </style>
   <script>
     // Toggle the JSON / YAML example tabs (event delegation; runs regardless of ReSpec).

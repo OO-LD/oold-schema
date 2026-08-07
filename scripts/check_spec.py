@@ -93,7 +93,7 @@ if os.path.exists(RULES_FILE):
         rules = json.load(handle).get("rules", [])
 
 for rule in rules:
-    if f'id="rule-{rule["id"]}"' not in html:
+    if f'id="{rule["id"]}"' not in html:
         errors.append(f"rule {rule['id']} has no anchor in the rendered spec (stale docs/spec/index.html?)")
 
 

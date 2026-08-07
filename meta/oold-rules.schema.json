@@ -94,8 +94,8 @@
       "properties": {
         "id": {
           "type": "string",
-          "pattern": "^OOLD-(CNF|SCH|CMP|INS|RT|VER|EXT)-[0-9]{3}$",
-          "description": "Permanent and never reused. Downstream checks cite it, so the pattern is asserted rather than assumed; see meta/RULES.md."
+          "pattern": "^OOLD-(CNF|SCH|CMP|INS|RT|VER|EXT)-[0-9a-f]{4}$",
+          "description": "Permanent and never reused. The suffix is a minted hex value, not a sequential number, so a deprecated rule leaves no visible gap. Downstream checks cite the id, so the pattern is asserted rather than assumed; see meta/RULES.md."
         },
         "area": {
           "$ref": "#/$defs/area"
@@ -150,7 +150,7 @@
           "minItems": 1,
           "items": {
             "type": "string",
-            "pattern": "^OOLD-(CNF|SCH|CMP|INS|RT|VER|EXT)-[0-9]{3}$"
+            "pattern": "^OOLD-(CNF|SCH|CMP|INS|RT|VER|EXT)-[0-9a-f]{4}$"
           },
           "description": "Present only on a deprecated rule, naming what replaced it."
         },

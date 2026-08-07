@@ -2,7 +2,7 @@
 
 ### Identification {#identification}
 
-:rule[OOLD-VER-001]{applies=document level=MUST summary="A schema must have a $id serving as its global unique identifier."}OO-LD schemas MUST have a `$id` ([[JSONSCHEMA]] §8.2.1) which works as a global and unique identifier of the schema. The value of `$id` MAY be an absolute URI (details below). The schema SHOULD be resolvable via this URI. The schema SHOULD have an annotation `x-oold-uuid` with a UUID value.
+:rule[OOLD-VER-3b96]{applies=document level=MUST summary="A schema must have a $id serving as its global unique identifier."}OO-LD schemas MUST have a `$id` ([[JSONSCHEMA]] §8.2.1) which works as a global and unique identifier of the schema. The value of `$id` MAY be an absolute URI (details below). The schema SHOULD be resolvable via this URI. The schema SHOULD have an annotation `x-oold-uuid` with a UUID value.
 
 This obligation applies to a schema *document*, not to every subschema: a fragment inside `properties`, `$defs` or [`x-oold-range`](#range-of-properties) legitimately has no `$id` of its own. The dialect meta-schema enforces exactly that distinction and so checks the requirement itself - see [](#meta-schema).
 
@@ -48,7 +48,7 @@ OO-LD-aware tooling uses these correspondences to anchor the schema in an ontolo
 
 ### Versioning {#versioning}
 
-:rule[OOLD-VER-002]{applies=document level=SHOULD summary="A schema version should be stated with x-oold-version."}The schema version SHOULD be indicated by `x-oold-version`; a prior version MAY be indicated with `x-oold-prior-version`:
+:rule[OOLD-VER-3662]{applies=document level=SHOULD summary="A schema version should be stated with x-oold-version."}The schema version SHOULD be indicated by `x-oold-version`; a prior version MAY be indicated with `x-oold-prior-version`:
 
 :::example{title="Version annotations"}
 ```json
@@ -62,7 +62,7 @@ OO-LD-aware tooling uses these correspondences to anchor the schema in an ontolo
 ```
 :::
 
-:rule[OOLD-VER-003]{applies=document level=SHOULD summary="The schema version should be part of the schema location URL."}The version SHOULD be part of the schema's location:
+:rule[OOLD-VER-534a]{applies=document level=SHOULD summary="The schema version should be part of the schema location URL."}The version SHOULD be part of the schema's location:
 
 - For **single-schema** versioning, the version SHOULD be appended after the schema name, e.g. `https://example.org/b5203131-7321-46bb-8a11-acb3d1015840.schema.json/1.1.0`.
 - For **schema-package** versioning (recommended), the version of the package SHOULD be prepended before the schema's ID, e.g. `https://example.org/my-package/2.0.0/b5203131-7321-46bb-8a11-acb3d1015840.schema.json`.

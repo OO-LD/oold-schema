@@ -7,7 +7,7 @@
 The specification prose is the single source of truth. A normative statement is marked with an
 authored, immutable identifier::
 
-    :rule[OOLD-RT-002]{applies=document}Because the reconstruction MUST re-validate, a property
+    :rule[OOLD-RT-08f2]{applies=document}Because the reconstruction MUST re-validate, a property
     that is *strictly* an array MUST declare `@container`.
 
 and this script turns every such marker into a catalog record. `text` is extracted verbatim, never
@@ -36,26 +36,15 @@ OUT = os.path.join(ROOT, "meta", "oold-rules.json")
 
 sys.path.insert(0, HERE)
 import spec_config as cfg  # noqa: E402
-
-#: Area prefixes, and what each covers. A rule's area is frozen when the id is minted: if the
-#: prose later moves to another section the id does not change, only `section` does.
-AREAS = {
-    "CNF": "Serialization and conformance",
-    "SCH": "Schema well-formedness and the meta-schema",
-    "CMP": "Composition, merge and override",
-    "INS": "Instances: $schema, identity, semantic type, value forms",
-    "RT": "Projection to RDF and round-trip safety",
-    "VER": "Identification and versioning",
-    "EXT": "Standard extensions (JSON-LD and JSON Schema)",
-}
+from rule_ids import AREAS, LEGACY_ID, PLACEHOLDER  # noqa: E402
+from rule_ids import MARKER as RULE  # noqa: E402
+from rule_ids import RULE_ID  # noqa: E402
 
 #: Who a requirement binds. This decides what is able to enforce it: `document` rules are
 #: checkable by validating a schema or instance, `implementation` rules constrain a library and
 #: need a conformance suite, `advisory` ones are guidance that nothing verifies.
 APPLIES = ("document", "implementation", "advisory")
 
-RULE = re.compile(r":rule\[([A-Za-z0-9-]+)\]\{([^}]*)\}[ \t]*")
-RULE_ID = re.compile(r"^OOLD-([A-Z]+)-(\d{3})$")
 HEADING = re.compile(r"^\s*#{2,6}\s+.*\{[^}]*#([A-Za-z0-9_-]+)[^}]*\}\s*$")
 ATTR = re.compile(r'(\w+)\s*=\s*(?:"([^"]*)"|(\S+))')
 RFC2119 = re.compile(r"\b(MUST NOT|MUST|SHALL NOT|SHALL|SHOULD NOT|SHOULD|REQUIRED|RECOMMENDED)\b")
@@ -197,7 +186,15 @@ def extract_file(filename: str, problems: list[str]) -> list[dict]:
 
             shape = RULE_ID.match(rule_id)
             if not shape:
-                problems.append(f"{where}: {rule_id!r} is not of the form OOLD-<AREA>-<NNN>")
+                if PLACEHOLDER.match(rule_id):
+                    problems.append(f"{where}: {rule_id} is still a placeholder. Fix: run `make rules-mint`")
+                elif LEGACY_ID.match(rule_id):
+                    problems.append(
+                        f"{where}: {rule_id} uses the retired sequential shape. "
+                        "Fix: run `uv run scripts/mint_rule_ids.py --migrate`"
+                    )
+                else:
+                    problems.append(f"{where}: {rule_id!r} is not of the form OOLD-<AREA>-<4 hex chars>")
                 continue
             area = shape.group(1)
             if area not in AREAS:
