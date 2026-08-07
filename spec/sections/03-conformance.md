@@ -6,7 +6,7 @@ The key words MUST, MUST NOT, REQUIRED, SHALL, SHALL NOT, SHOULD, SHOULD NOT, RE
 
 ### Notation {#notation}
 
-:rule[OOLD-CNF-001]{applies=document checkable=no level=MUST summary="A conforming schema or instance must be interchangeable as JSON, canonicalized per RFC 8785."}The normative data model of OO-LD is the JSON data model shared by [[JSONSCHEMA]] and [[JSON-LD11]]. JSON ([[RFC8259]]) is the canonical serialization: a conforming OO-LD schema or instance MUST be interchangeable as JSON, and the canonical form used for identity and integrity (for example content-hashing a versioned schema) is its JSON Canonicalization Scheme ([[RFC8785]]) serialization.
+:rule[OOLD-CNF-1120]{applies=document checkable=no level=MUST summary="A conforming schema or instance must be interchangeable as JSON, canonicalized per RFC 8785."}The normative data model of OO-LD is the JSON data model shared by [[JSONSCHEMA]] and [[JSON-LD11]]. JSON ([[RFC8259]]) is the canonical serialization: a conforming OO-LD schema or instance MUST be interchangeable as JSON, and the canonical form used for identity and integrity (for example content-hashing a versioned schema) is its JSON Canonicalization Scheme ([[RFC8785]]) serialization.
 
 A document MAY additionally be authored or served as YAML, provided it stays within the JSON-compatible subset of [YAML 1.2](https://yaml.org/spec/1.2.2/): no tags, anchors, aliases, or merge keys; a single document; and no implicit typing beyond what JSON expresses. Within this subset - the same profile adopted by [YAML-LD](https://github.com/w3c/yaml-ld) - a YAML document maps one-to-one onto the JSON data model and converts to the canonical JSON without loss. YAML outside this subset is NOT a conforming OO-LD serialization.
 

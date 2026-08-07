@@ -9,28 +9,27 @@
 two otherwise invisible events into a stop:
 
 * a rule id disappears - a marker deleted, or dropped by a clean-side rewrite during a rebase,
-  which is exactly how OOLD-EXT-009 was lost once already;
+  which is exactly how OOLD-EXT-436a was lost once already;
 * a rule's text changes - which may be a typo fix or may be a different requirement wearing the
   same id, and no checker can tell those apart.
 
 A *new* id needs no ceremony: it cannot be a disguised meaning-change, so it is recorded
 automatically. Accepting a changed rule is deliberate and per-id::
 
-    make rules-accept IDS="OOLD-RT-002"
+    make rules-accept IDS="OOLD-RT-08f2"
 
 Accept-all is intentionally not offered. One keystroke that blesses every difference would wave
 through an accidental meaning-change alongside a typo, which is the whole thing this guards.
 
 Usage:
     rules_baseline.py check
-    rules_baseline.py accept OOLD-RT-002 [OOLD-EXT-006 ...]
+    rules_baseline.py accept OOLD-RT-08f2 [OOLD-EXT-6ea3 ...]
 """
 
 from __future__ import annotations
 
 import json
 import os
-import re
 import sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -38,13 +37,14 @@ ROOT = os.path.dirname(HERE)
 CATALOG = os.path.join(ROOT, "meta", "oold-rules.json")
 BASELINE = os.path.join(ROOT, "meta", "rules-baseline.json")
 
+sys.path.insert(0, HERE)
+from rule_ids import RULE_ID  # noqa: E402
+
 COMMENT = (
     "Rule text last accepted by a human, keyed by rule id. Generated? No - updated only by "
     "`make rules-accept IDS=...`, which is the recorded act of deciding that a changed rule was "
     "reworded rather than redefined. See meta/RULES.md."
 )
-
-RULE_ID = re.compile(r"^OOLD-([A-Z]+)-(\d{3})$")
 
 #: Where a downstream implementer learns how to turn a rule into a check. Printed whenever the
 #: catalogue gains or retires a rule, because that is the moment the work becomes visible and the
@@ -92,28 +92,14 @@ def write_baseline(accepted: dict[str, str], deprecated: set[str]) -> None:
         handle.write("\n")
 
 
-def next_free_id(catalog: dict[str, dict], area: str) -> str:
-    """The next unused number in an area, so a hint can name a concrete id."""
-    used = {
-        int(m.group(2))
-        for rule_id in catalog
-        if (m := RULE_ID.match(rule_id)) and m.group(1) == area
-    }
-    candidate = 1
-    while candidate in used:
-        candidate += 1
-    return f"OOLD-{area}-{candidate:03d}"
-
-
 def short(digest: str) -> str:
     return digest[:12] + "..."
 
 
-def describe_changed(rule: dict, was: str, catalog: dict[str, dict]) -> list[str]:
+def describe_changed(rule: dict, was: str) -> list[str]:
     """The two things that could have happened, and the exact command for each."""
     rid = rule["id"]
     area = RULE_ID.match(rid).group(1)
-    replacement = next_free_id(catalog, area)
     return [
         f"  {rid}  text changed since it was last accepted",
         f"      section   #{rule.get('section')}   ({rule.get('source')})",
@@ -128,12 +114,17 @@ def describe_changed(rule: dict, was: str, catalog: dict[str, dict]) -> list[str
         "",
         "      (b) The requirement itself changed, so it is a different rule now. Ids are",
         "          permanent and never reused, so retire this one and mint a replacement.",
-        "          In the prose, mark the existing rule deprecated:",
-        f'              :rule[{rid}]{{... deprecated=yes superseded_by={replacement}}}',
-        "          and add the new requirement beside it:",
-        f'              :rule[{replacement}]{{applies=document level="MUST" summary="..."}}',
+        "          Mint before deprecating: the replacement's id is what the old rule has to",
+        "          point at, and only the mint knows it. Add the new requirement beside the",
+        "          old one with a placeholder id:",
+        f'              :rule[OOLD-{area}-?]{{applies=document level="MUST" summary="..."}}',
+        "          then mint it, which prints the id it chose:",
+        "              make rules-mint",
+        "          mark the old rule deprecated, naming that id:",
+        f'              :rule[{rid}]{{... deprecated=yes superseded_by=<the minted id>}}',
         "          then regenerate and accept both:",
-        f"              make spec && make rules-accept IDS=\"{rid} {replacement}\"",
+        "              make spec",
+        f"              make rules-accept IDS=\"{rid} <the minted id>\"",
     ]
 
 
@@ -235,7 +226,7 @@ def check() -> int:
         print("rule baseline check FAILED", file=sys.stderr)
         print("", file=sys.stderr)
         for rid, was in changed:
-            for line in describe_changed(catalog[rid], was, catalog):
+            for line in describe_changed(catalog[rid], was):
                 print(line, file=sys.stderr)
             print("", file=sys.stderr)
         for rid, was in missing:

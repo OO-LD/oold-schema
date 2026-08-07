@@ -27,6 +27,7 @@ nav = [
     { "Mappings" = "mappings.md" },
     { "Tooling" = "tooling.md" },
     { "Reference" = "reference.md" },
+    { "Rule catalogue" = "rules.md" },
     { "Migration" = [
         { "Overview" = "migration/index.md" },
         { "From JSON Schema" = "migration/from-json-schema.md" },

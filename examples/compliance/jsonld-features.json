@@ -18,7 +18,7 @@
         "expectRdf": "<https://example.org/alice> <http://schema.org/affiliation> <https://example.org/uni> .\n<https://example.org/alice> <http://schema.org/name> \"Alice\" .\n<https://example.org/alice> <http://schema.org/worksFor> <https://example.org/acme> .\n"
       }
     ],
-    "rule": "OOLD-CMP-002"
+    "rule": "OOLD-CMP-e4a3"
   },
   {
     "feature": "composition: a property $ref pulls in the referenced schema's @context as a property-scoped context (Organization.address -> Address)",
@@ -40,6 +40,6 @@
         "expectRdf": "<https://example.org/acme> <http://schema.org/address> _:b0 .\n<https://example.org/acme> <http://schema.org/name> \"ACME\" .\n_:b0 <http://schema.org/addressCountry> \"DE\" .\n_:b0 <http://schema.org/streetAddress> \"Main St 1\" .\n"
       }
     ],
-    "rule": "OOLD-CMP-001"
+    "rule": "OOLD-CMP-b926"
   }
 ]

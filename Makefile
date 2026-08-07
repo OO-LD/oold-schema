@@ -27,15 +27,21 @@ spec: ## Regenerate docs/spec/index.html + meta/oold-rules.json from spec/sectio
 	@uv run scripts/extract_rules.py
 	@echo "🚀 Rendering the ReSpec spec from spec/"
 	@uv run scripts/render_spec.py
+	@echo "🚀 Rendering the rule catalogue page from meta/oold-rules.json"
+	@uv run scripts/render_rules_page.py
 
 .PHONY: rules
 rules: ## Check the rule catalogue against the accepted baseline
 	@uv run scripts/rules_baseline.py check
 
 .PHONY: rules-accept
-rules-accept: ## Accept reworded rule(s): make rules-accept IDS="OOLD-RT-002 OOLD-EXT-006"
-	@test -n "$(IDS)" || { echo 'usage: make rules-accept IDS="OOLD-RT-002 [...]"' >&2; exit 2; }
+rules-accept: ## Accept reworded rule(s): make rules-accept IDS="OOLD-RT-08f2 OOLD-EXT-6ea3"
+	@test -n "$(IDS)" || { echo 'usage: make rules-accept IDS="OOLD-RT-08f2 [...]"' >&2; exit 2; }
 	@uv run scripts/rules_baseline.py accept $(IDS)
+
+.PHONY: rules-mint
+rules-mint: ## Fill :rule[OOLD-XX-?] placeholders with freshly minted ids
+	@uv run scripts/mint_rule_ids.py $(ARGS)
 
 .PHONY: stage-schemas
 stage-schemas: ## Copy meta/ + examples/ into docs/ so the build serves them (versioned per release)

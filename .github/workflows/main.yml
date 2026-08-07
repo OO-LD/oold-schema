@@ -44,8 +44,10 @@ jobs:
         run: uv run scripts/extract_rules.py
       - name: Check the rule baseline
         run: uv run scripts/rules_baseline.py check
-      - name: Check the catalog and baseline are up to date
-        run: git diff --exit-code meta/oold-rules.json meta/rules-baseline.json
+      - name: Render the rule catalogue page
+        run: uv run scripts/render_rules_page.py
+      - name: Check the catalog, baseline and rule catalogue page are up to date
+        run: git diff --exit-code meta/oold-rules.json meta/rules-baseline.json docs/rules.md
 
   # Publish the versioned docs + schemas to the `gh-pages` branch with mike (the
   # zensical fork). GitHub Pages must serve from `gh-pages`

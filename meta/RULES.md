@@ -10,9 +10,12 @@ The file is **generated** by `scripts/extract_rules.py` from the `:rule[...]` ma
 ## Marking a rule
 
 ```markdown
-:rule[OOLD-RT-002]{applies=document summary="A strictly array-typed property must declare @container."}Because
+:rule[OOLD-RT-08f2]{applies=document summary="A strictly array-typed property must declare @container."}Because
 the reconstruction MUST re-validate, a property that is *strictly* an array MUST declare `@container`.
 ```
+
+A new rule is written with a `?` in place of the suffix and minted before it is committed; see
+[Ids are permanent](#ids-are-permanent-and-the-suffix-means-nothing).
 
 | Attribute | Meaning |
 |---|---|
@@ -28,25 +31,45 @@ the reconstruction MUST re-validate, a property that is *strictly* an array MUST
 catalog cannot drift from the specification. `text` is the containing paragraph, or the containing
 list item when the rule is a bullet.
 
-## Ids are permanent
+## Ids are permanent, and the suffix means nothing
 
 A code that can change is worse than no code, because people cite it in reviews, changelogs and
 suppression comments.
 
-**Ids are authored, never computed.** The number lives in the marker. `extract_rules.py` reads and
-validates it but never assigns one: numbering by document position would renumber every following
-rule the first time someone inserts a paragraph.
+An id is `OOLD-<AREA>-<4 hex characters>`. The suffix is minted at random and is unique across the
+whole catalog, not merely within its area. It is deliberately meaningless: a sequential number
+would imply an order the catalog does not have, and the first deprecation would tear a visible
+hole in it. `OOLD-RT-002` sitting next to `OOLD-RT-004` reads as a rule missing from the page
+rather than one retired from the specification.
+
+**An author never picks a suffix**, because there is nothing to pick. Write a `?` and let the tool
+fill it in:
+
+```markdown
+:rule[OOLD-RT-?]{applies=document summary="..."}A property that is *strictly* an array MUST ...
+```
+
+```bash
+make rules-mint     # prints OOLD-RT-? -> OOLD-RT-08f2, and rewrites the marker in place
+```
+
+`extract_rules.py` refuses to run while a placeholder is unfilled and names the fix, so a marker
+cannot reach the catalog without an id. Minting is append-only: an id that already has a suffix is
+never touched, so running `make rules-mint` again is always safe. The pool it draws from is every
+id the catalog, the baseline and the prose have ever held, so a retired id can never come back
+under a new meaning.
 
 Two consequences:
 
-- **Id order does not follow document order.** A new rule takes the next free number in its area
-  wherever it is inserted, so `OOLD-RT-007` may appear above `OOLD-RT-003` in the rendered spec.
+- **Id order carries no information.** The suffix is not a counter, so nothing can be inferred from
+  one id sorting above another, and no id is ever "missing". Navigate the specification by section
+  and the catalog by the rule catalogue page.
 - **The area prefix is frozen at birth.** If a requirement later moves under a different heading it
   keeps its id; only the generated `section` field changes.
 
 | Change to the spec | What happens to the id |
 |---|---|
-| New requirement | Next free number in the area |
+| New requirement | A `?` placeholder, filled by `make rules-mint` |
 | Requirement dropped | `deprecated=yes`. Never deleted, never reused |
 | Requirement moves section | Unchanged |
 | Reworded, same meaning | Unchanged; `text` and `text_sha256` update |
@@ -78,7 +101,7 @@ stop.
 Accepting is deliberate and per-id:
 
 ```bash
-make rules-accept IDS="OOLD-RT-002"
+make rules-accept IDS="OOLD-RT-08f2"
 ```
 
 There is intentionally no accept-all. One keystroke that blesses every difference would wave an
