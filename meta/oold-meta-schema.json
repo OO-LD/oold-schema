@@ -1,9 +1,8 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://oo-ld.org/latest/meta/oold-meta-schema.json",
-  "$dynamicAnchor": "meta",
   "title": "OO-LD dialect meta-schema",
-  "$comment": "The $id uses the versioned hosting at oo-ld.org/ (the source keeps the /latest/ placeholder; each released copy is stamped per release). The OO-LD vocabulary is declared optional (false) so that generic JSON-Schema 2020-12 validators still process OO-LD schemas. The UI keyword definitions are included via the oold-ui-meta-schema #keywords anchor so a schema carrying x-oold-ui-* annotations validates in one pass. The @context below is the OO-LD meta-level prefix set against which x-oold-context / x-sssom CURIEs (synonym keys, predicate_id, mapping_set_id) are expanded by OO-LD processors; it is not an instance context.",
+  "$comment": "The $id uses the versioned hosting at oo-ld.org/ (the source keeps the /latest/ placeholder; each released copy is stamped per release). The OO-LD vocabulary is declared optional (false) so that generic JSON-Schema 2020-12 validators still process OO-LD schemas. Two-tier structure: this resource is what a schema's $schema points at, so it carries the DOCUMENT-level obligations (required: $id). The dialect body lives in oold-meta-schema-base.json, which holds $dynamicAnchor: \"meta\"; nested subschemas recurse into the base via the standard $dynamicRef and are therefore NOT required to carry $id - a fragment inside properties or $defs legitimately has none. The UI keyword definitions are included via the oold-ui-meta-schema #keywords anchor so a schema carrying x-oold-ui-* annotations validates in one pass. The @context below is the OO-LD meta-level prefix set against which x-oold-context / x-sssom CURIEs (synonym keys, predicate_id, mapping_set_id) are expanded by OO-LD processors; it is not an instance context.",
   "@context": {
     "skos": "http://www.w3.org/2004/02/skos/core#",
     "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
@@ -21,140 +20,8 @@
     "https://json-schema.org/draft/2020-12/vocab/content": true,
     "https://oo-ld.org/latest/vocab/oold": false
   },
-  "allOf": [
-    { "$ref": "https://json-schema.org/draft/2020-12/schema" },
-    { "$ref": "https://oo-ld.org/latest/meta/oold-ui-meta-schema.json#keywords" }
-  ],
-  "properties": {
-    "@context": {
-      "description": "JSON-LD context for instances of this schema. The schema is consumed as a remote JSON-LD context; this entry is ignored by JSON-Schema validators."
-    },
-    "x-oold-context": {
-      "description": "Extended term mappings (synonyms): an object keyed by term (a property, class, or value term), each holding a dict keyed by synonym IRI whose value is a JSON-LD term-definition fragment plus an optional strippable x-sssom block. OO-LD tooling reads only two x-sssom slots - predicate_id (a SKOS mapping predicate) and mapping_set_id (for profile-based selection); all other slots ride along and round-trip to SSSOM. Supports override under composition (most-derived-wins; null removes) and namespace/mapping-set selection. Promoted into @context by OO-LD-aware tooling; see the 'Term mappings and synonyms' section.",
-      "type": "object",
-      "additionalProperties": {
-        "type": "object",
-        "additionalProperties": {
-          "type": ["object", "null"],
-          "description": "A JSON-LD term-definition fragment (@id, @type, @container, ...), promotable verbatim into @context, plus an optional x-sssom block. null removes an inherited mapping under composition.",
-          "properties": {
-            "x-sssom": {
-              "type": "object",
-              "description": "SSSOM mapping metadata (https://w3id.org/sssom/). OO-LD interprets predicate_id and mapping_set_id; all other SSSOM slots are preserved verbatim and round-trip to a SSSOM mapping set.",
-              "properties": {
-                "predicate_id": {
-                  "description": "SKOS mapping predicate from the term's primary IRI (subject) to this synonym IRI (object); default skos:exactMatch when absent. Compared by expansion to an absolute IRI. Only exactMatch entries are co-emitted by default.",
-                  "type": "string",
-                  "default": "skos:exactMatch",
-                  "examples": ["skos:exactMatch", "skos:closeMatch", "skos:broadMatch", "skos:narrowMatch", "skos:relatedMatch"]
-                },
-                "mapping_set_id": {
-                  "description": "The SSSOM mapping set(s) this entry belongs to, for profile-based selection. SSSOM defines mapping_set_id at set level; OO-LD records it inline per entry and an entry MAY belong to several sets.",
-                  "oneOf": [
-                    { "type": "string", "format": "iri-reference" },
-                    { "type": "array", "items": { "type": "string", "format": "iri-reference" } }
-                  ]
-                }
-              }
-            }
-          }
-        }
-      },
-      "examples": [
-        { "name": { "skos:prefLabel": { "x-sssom": { "predicate_id": "skos:exactMatch", "confidence": 0.95 } } } }
-      ]
-    },
-    "x-oold-uuid": {
-      "description": "Stable UUID identifying this schema across versions and locations.",
-      "type": "string",
-      "format": "uuid"
-    },
-    "x-oold-version": {
-      "description": "Semantic version of this schema.",
-      "type": "string"
-    },
-    "x-oold-prior-version": {
-      "description": "Identifier or version of the immediately preceding schema version.",
-      "type": "string"
-    },
-    "x-oold-backward-compatible-with": {
-      "description": "URI of a prior schema version this schema is backward-compatible with.",
-      "type": "string",
-      "format": "uri-reference"
-    },
-    "x-oold-incompatible-with": {
-      "description": "URI of a prior schema version this schema is NOT compatible with.",
-      "type": "string",
-      "format": "uri-reference"
-    },
-    "x-sssom": {
-      "description": "Schema-level ontology correspondences: an SSSOM mapping set whose subject is this schema, keyed by the object IRI of a resolvable resource, each value carrying SSSOM slots (predicate_id default skos:exactMatch, mapping_set_id, ...). The schema-level counterpart of the per-term x-sssom used inside x-oold-context; it describes the schema itself, not its instances. See the 'Ontology correspondence' section.",
-      "type": "object",
-      "additionalProperties": {
-        "type": "object",
-        "properties": {
-          "predicate_id": {
-            "type": "string",
-            "default": "skos:exactMatch",
-            "examples": ["skos:exactMatch", "skos:closeMatch"]
-          },
-          "mapping_set_id": {
-            "oneOf": [
-              { "type": "string", "format": "iri-reference" },
-              { "type": "array", "items": { "type": "string", "format": "iri-reference" } }
-            ]
-          }
-        }
-      },
-      "examples": [
-        { "https://schema.org/Person": { "predicate_id": "skos:exactMatch" } }
-      ]
-    },
-    "x-oold-instance-rdf-type": {
-      "description": "The rdf:type(s) carried by instances of this schema, as a list of IRIs (e.g. [\"schema:Person\"]). OO-LD tooling materializes these as @type when exporting an instance to JSON-LD / RDF.",
-      "type": "array",
-      "items": { "type": "string" }
-    },
-    "x-oold-ref": {
-      "description": "Reference to another OO-LD schema. Use x-oold-ref (not the standard $ref) for references that appear inside OO-LD custom keywords such as x-oold-range: there a plain $ref would be eagerly - and, for cyclic schema graphs, dangerously - dereferenced by generic JSON-Schema bundlers (the behaviour is undefined per Core section 9.4.2). Keep using the standard $ref for ordinary schema composition (allOf, properties, $defs), which bundlers are expected to resolve. x-oold-ref is resolved only by OO-LD-aware tools, lazily and with cycle handling.",
-      "type": "string",
-      "format": "uri-reference"
-    },
-    "x-oold-range": {
-      "description": "Type constraint on the target of an IRI-valued property: an IRI string, an array of IRIs, or an OO-LD subschema (using x-oold-ref for references). See the 'Range of properties' section.",
-      "anyOf": [
-        { "type": "string" },
-        { "type": "array", "items": { "type": "string" } },
-        {
-          "type": "object",
-          "$comment": "OO-LD subschema form; references inside it use x-oold-ref. The reverse-property keywords (x-oold-reverse-*) are intentionally not validated within a range subschema for now."
-        }
-      ]
-    },
-    "x-oold-multilang-title": {
-      "description": "Language map of translated `title` values keyed by BCP-47 language code.",
-      "type": "object",
-      "additionalProperties": { "type": "string" }
-    },
-    "x-oold-multilang-description": {
-      "description": "Language map of translated `description` values keyed by BCP-47 language code.",
-      "type": "object",
-      "additionalProperties": { "type": "string" }
-    },
-    "x-oold-reverse-properties": {
-      "description": "Properties stored on the related object but editable from this side, mapped via JSON-LD @reverse.",
-      "type": "object"
-    },
-    "x-oold-reverse-required": {
-      "description": "Names of reverse properties that are required.",
-      "type": "array",
-      "items": { "type": "string" }
-    },
-    "x-oold-reverse-default-properties": {
-      "description": "Deprecated. Names of reverse properties shown by default in generated user interfaces. Like the object-level defaultProperties array this is extend-only under composition; prefer a per-reverse-property x-oold-ui-default-property boolean, which is overridable.",
-      "deprecated": true,
-      "type": "array",
-      "items": { "type": "string" }
-    }
-  }
+  "$ref": "https://oo-ld.org/latest/meta/oold-meta-schema-base.json",
+  "required": [
+    "$id"
+  ]
 }

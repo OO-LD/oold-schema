@@ -38,6 +38,10 @@ const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 const targetArg = process.argv[2];
 const exDir = targetArg ? resolve(process.cwd(), targetArg) : join(root, "examples");
 const meta = JSON.parse(readFileSync(join(root, "meta", "oold-meta-schema.json"), "utf8"));
+// The dialect body, carrying $dynamicAnchor "meta": the root meta-schema $refs it and adds the
+// document-level obligations (required: $id), while nested subschemas recurse into the base via
+// $dynamicRef and so are not required to carry $id.
+const baseMeta = JSON.parse(readFileSync(join(root, "meta", "oold-meta-schema-base.json"), "utf8"));
 const uiMeta = JSON.parse(readFileSync(join(root, "meta", "oold-ui-meta-schema.json"), "utf8"));
 const patternLint = JSON.parse(readFileSync(join(root, "meta", "oold-pattern-lint.schema.json"), "utf8"));
 const schemaFiles = readdirSync(exDir).filter((f) => f.endsWith(".schema.json"));
@@ -65,6 +69,7 @@ addFormats(ajv);
 addFormats2019(ajv);
 fixIriFormats(ajv);
 ajv.addSchema(uiMeta); // so the core meta-schema can $ref the UI keyword definitions
+ajv.addSchema(baseMeta); // the dialect body the root meta-schema $refs
 const validateAsOOLD = ajv.compile(meta); // also validates the meta-schema against 2020-12
 // SHOULD-level round-trip pattern lint over a schema's @context (no @type: xsd:string, ...).
 const validatePatternLint = ajv.compile(patternLint);
@@ -625,7 +630,7 @@ for (const file of complianceFiles) {
 if (complianceFiles.length) {
   console.log("\nVocab coverage (meta-schema keywords vs oold-vocab.json):");
   const definedKeywords = [
-    ...Object.keys(meta.properties).filter((k) => k.startsWith("x-oold-")),
+    ...Object.keys(baseMeta.properties).filter((k) => k.startsWith("x-oold-")),
     ...Object.keys(uiMeta.$defs.keywords.properties),
   ];
   const uncovered = definedKeywords.filter((k) => !coveredKeywords.has(k));
