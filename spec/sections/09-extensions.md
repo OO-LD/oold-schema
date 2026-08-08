@@ -34,7 +34,7 @@ In the minimal case a term simply lists alternative IRIs, each with an empty val
 
 Here `description` (primarily `schema:description`) also maps to `rdfs:comment` and `skos:definition`. Each bare synonym IRI defaults to `predicate_id: skos:exactMatch` and inherits the primary term's coercion on promotion.
 
-Each value is itself a JSON-LD term-definition fragment (`@type`, `@container`, ...) that is promotable verbatim into `@context`, optionally carrying a strippable `x-sssom` block with mapping metadata:
+Each value is itself a JSON-LD term-definition fragment (`@type`, `@container`, ...) that is promotable verbatim into `@context`, optionally carrying a strippable `x-oold-sssom` block with mapping metadata:
 
 :::example{title="With coercion and SSSOM metadata"}
 ```json
@@ -42,24 +42,24 @@ Each value is itself a JSON-LD term-definition fragment (`@type`, `@container`, 
   "@context": { "name": "schema:name" },
   "x-oold-context": {
     "name": {
-      "schema:name": { "x-sssom": { "predicate_id": "skos:exactMatch", "confidence": 1.0 } },
-      "skos:prefLabel": { "x-sssom": { "predicate_id": "skos:exactMatch", "confidence": 0.95 } },
-      "schema:alternateName": { "@container": "@set", "x-sssom": { "predicate_id": "skos:closeMatch" } }
+      "schema:name": { "x-oold-sssom": { "predicate_id": "skos:exactMatch", "confidence": 1.0 } },
+      "skos:prefLabel": { "x-oold-sssom": { "predicate_id": "skos:exactMatch", "confidence": 0.95 } },
+      "schema:alternateName": { "@container": "@set", "x-oold-sssom": { "predicate_id": "skos:closeMatch" } }
     }
   }
 }
 ```
 :::
 
-Each entry is one mapping: the **key** is the synonym IRI (the SSSOM `object_id`), the **value** is a promotable JSON-LD term-definition fragment (`@type`, `@container`, ...) plus an optional `x-sssom` block, and the `subject_id` is implicit - the term's primary `@context` IRI.
+Each entry is one mapping: the **key** is the synonym IRI (the SSSOM `object_id`), the **value** is a promotable JSON-LD term-definition fragment (`@type`, `@container`, ...) plus an optional `x-oold-sssom` block, and the `subject_id` is implicit - the term's primary `@context` IRI.
 
-**Processing contract.** A conforming OO-LD mapping processor reads exactly four things from each entry: the **synonym IRI** (the key), the promotable **term-definition fragment**, and two `x-sssom` slots - **`predicate_id`** and **`mapping_set_id`**. Everything else an entry carries (the rest of `x-sssom`, any further fragment keys) is preserved but not interpreted. Those two slots, over the SKOS predicate vocabulary, are the whole stable contract an implementation depends on.
+**Processing contract.** A conforming OO-LD mapping processor reads exactly four things from each entry: the **synonym IRI** (the key), the promotable **term-definition fragment**, and two `x-oold-sssom` slots - **`predicate_id`** and **`mapping_set_id`**. Everything else an entry carries (the rest of `x-oold-sssom`, any further fragment keys) is preserved but not interpreted. Those two slots, over the SKOS predicate vocabulary, are the whole stable contract an implementation depends on.
 
 `predicate_id` is a [SKOS](https://www.w3.org/TR/skos-reference/) mapping predicate - `skos:exactMatch` (the default when the slot is absent), `skos:closeMatch`, `skos:broadMatch`, `skos:narrowMatch` or `skos:relatedMatch` - relating the term's primary IRI (subject) to the synonym IRI (object); it decides which entries denote equivalence. It is written as a full IRI or a CURIE and compared **by expansion to an absolute IRI**, the same rule the synonym keys follow, so `skos:exactMatch` and `http://www.w3.org/2004/02/skos/core#exactMatch` are one predicate. `x-oold-context` is a *schema*-level keyword consumed by OO-LD processors (it is promoted into a clean `@context` before any generic JSON-LD processor runs), so its CURIEs - the synonym keys and the `predicate_id` / `mapping_set_id` values alike - are expanded not against the instance `@context` but against a fixed **well-known prefix set the meta-schema defines** (`skos`, `rdfs`, `owl`, `xsd`, `sssom`), reached through the schema's `$schema`. The contract therefore holds without the author redeclaring those prefixes in the data context; a bare local name (`exactMatch`) is not a valid `predicate_id`.
 
 `mapping_set_id` names the mapping set(s) an entry belongs to, for profile-based selection. SSSOM defines `mapping_set_id` at the set level; OO-LD records it inline on the entry, and an entry MAY belong to several sets (a mapping can appear in more than one), so its value is one `iri-reference` or an array of them, compared by expansion as `predicate_id` is.
 
-**Selection.** To promote `x-oold-context` into a real `@context`, a preprocessor selects one synonym per term for a **target profile**, writes `{ "@id": <synonym IRI>, ...fragment without x-sssom }` as that term's definition, and drops the `x-sssom` blocks, so standard JSON-LD tools then run on a clean context. A profile is expressed either as an ordered list of IRI **namespaces** (ontology-family priority - `schema:` before `bfo:` before `emmo:`) or as one or more **`mapping_set_id`s** (a set may span namespaces, e.g. a PMDco profile of `pmd:` plus reused `obo:` terms). A term with no synonym matching the target keeps its default `@context` IRI: selection never borrows another profile's synonym.
+**Selection.** To promote `x-oold-context` into a real `@context`, a preprocessor selects one synonym per term for a **target profile**, writes `{ "@id": <synonym IRI>, ...fragment without x-oold-sssom }` as that term's definition, and drops the `x-oold-sssom` blocks, so standard JSON-LD tools then run on a clean context. A profile is expressed either as an ordered list of IRI **namespaces** (ontology-family priority - `schema:` before `bfo:` before `emmo:`) or as one or more **`mapping_set_id`s** (a set may span namespaces, e.g. a PMDco profile of `pmd:` plus reused `obo:` terms). A term with no synonym matching the target keeps its default `@context` IRI: selection never borrows another profile's synonym.
 
 **Co-emission.** Selection yields one IRI per term; for interoperability a converter MAY additionally co-emit the instance value under other synonyms' IRIs. This is a pragmatic interoperability aid, not a logical entailment: `skos:exactMatch` records that two terms are interchangeable across a wide range of applications, but it is *not* `owl:equivalentProperty` / `owl:equivalentClass` and licenses no reasoner inference - which is exactly why the mapping predicates are SKOS (reasoner-safe) rather than OWL. By default a converter co-emits only `skos:exactMatch` entries; entries whose `predicate_id` is `skos:closeMatch`/`broadMatch`/`narrowMatch`/`relatedMatch` SHOULD NOT be co-emitted unless a consumer explicitly requests it, since such a triple asserts a broader, narrower or merely related relation, not that the value holds under the synonym property, so the requester takes responsibility for that reading.
 
