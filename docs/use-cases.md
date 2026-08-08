@@ -14,7 +14,7 @@ In general, we want to keep keywords in 'instance' JSON-documents (=> property n
     "name": "schema:name",
     "type": "@type"
   },
-  "x-sssom": { "schema:Person": { "predicate_id": "skos:exactMatch" } },
+  "x-oold-sssom": { "schema:Person": { "predicate_id": "skos:exactMatch" } },
   "title": "Person",
   "type": "object",
   "properties": {
@@ -45,7 +45,7 @@ class Person(BaseModel):
                 "name": "schema:name",
                 "type": "@type"
             },
-            "x-sssom": { "schema:Person": {} },  # ontology correspondence (exactMatch)
+            "x-oold-sssom": { "schema:Person": {} },  # ontology correspondence (exactMatch)
         }
     )
     type: Optional[List[str]] = ["schema:Person"]
