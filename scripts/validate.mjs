@@ -366,7 +366,7 @@ function collectKeywords(node, set) {
   if (Array.isArray(node)) { for (const x of node) collectKeywords(x, set); return; }
   if (node && typeof node === "object") {
     for (const [k, v] of Object.entries(node)) {
-      if (k.startsWith("x-oold-") || k.startsWith("x-enum-")) set.add(k);
+      if (k.startsWith("x-oold-") || k.startsWith("x-enum-") || k === "x-oold-sssom" || k === "@context") set.add(k);
       collectKeywords(v, set);
     }
   }
@@ -630,7 +630,8 @@ for (const file of complianceFiles) {
 if (complianceFiles.length) {
   console.log("\nVocab coverage (meta-schema keywords vs oold-vocab.json):");
   const definedKeywords = [
-    ...Object.keys(baseMeta.properties).filter((k) => k.startsWith("x-oold-")),
+    // @context and x-oold-sssom keep an external standard's name, so they are not x-oold-prefixed.
+    ...Object.keys(baseMeta.properties).filter((k) => k.startsWith("x-oold-") || k === "x-oold-sssom" || k === "@context"),
     ...Object.keys(uiMeta.$defs.keywords.properties),
   ];
   const uncovered = definedKeywords.filter((k) => !coveredKeywords.has(k));

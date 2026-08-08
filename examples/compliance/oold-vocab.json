@@ -9,12 +9,16 @@
         "schema": {
           "$schema": "https://oo-ld.org/latest/meta/oold-meta-schema.json",
           "$id": "https://oo-ld.test/compliance/vocab-0-0.schema.json",
+          "@context": {
+            "schema": "http://schema.org/",
+            "name": "schema:name"
+          },
           "x-oold-uuid": "b5203131-7321-46bb-8a11-acb3d1015840",
           "x-oold-version": "1.0.0",
           "x-oold-prior-version": "0.9.0",
           "x-oold-backward-compatible-with": "0.9.0/Person.schema.json",
           "x-oold-incompatible-with": "0.8.0/Person.schema.json",
-          "x-sssom": {
+          "x-oold-sssom": {
             "schema:Person": {
               "predicate_id": "skos:exactMatch"
             }
@@ -148,12 +152,12 @@
         }
       },
       {
-        "description": "x-sssom not an object",
+        "description": "x-oold-sssom not an object",
         "valid": false,
         "schema": {
           "$schema": "https://oo-ld.org/latest/meta/oold-meta-schema.json",
           "$id": "https://oo-ld.test/compliance/vocab-1-5.schema.json",
-          "x-sssom": 1
+          "x-oold-sssom": 1
         }
       },
       {
