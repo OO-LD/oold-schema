@@ -14,7 +14,13 @@
   ],
   "properties": {
     "@context": {
-      "description": "JSON-LD context for instances of this schema. The schema is consumed as a remote JSON-LD context; this entry is ignored by JSON-Schema validators."
+      "description": "JSON-LD context for instances of this schema. The schema is consumed as a remote JSON-LD context; this entry is ignored by JSON-Schema validators. Only the outer shape is checked here - a context definition is a map, an IRI reference to a remote context, an array combining either, or null (JSON-LD 1.1, Context Definitions). Whether the term definitions inside are well-formed is decided by a JSON-LD processor, not by JSON Schema.",
+      "anyOf": [
+        { "type": "object" },
+        { "type": "string", "format": "iri-reference" },
+        { "type": "array", "items": { "anyOf": [{ "type": "object" }, { "type": "string", "format": "iri-reference" }, { "type": "null" }] } },
+        { "type": "null" }
+      ]
     },
     "x-oold-context": {
       "description": "Extended term mappings (synonyms): an object keyed by term (a property, class, or value term), each holding a dict keyed by synonym IRI whose value is a JSON-LD term-definition fragment plus an optional strippable x-oold-sssom block. OO-LD tooling reads only two x-oold-sssom slots - predicate_id (a SKOS mapping predicate) and mapping_set_id (for profile-based selection); all other slots ride along and round-trip to SSSOM. Supports override under composition (most-derived-wins; null removes) and namespace/mapping-set selection. Promoted into @context by OO-LD-aware tooling; see the 'Term mappings and synonyms' section.",
