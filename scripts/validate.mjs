@@ -38,6 +38,10 @@ const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 const targetArg = process.argv[2];
 const exDir = targetArg ? resolve(process.cwd(), targetArg) : join(root, "examples");
 const meta = JSON.parse(readFileSync(join(root, "meta", "oold-meta-schema.json"), "utf8"));
+// The dialect body, carrying $dynamicAnchor "meta": the root meta-schema $refs it and adds the
+// document-level obligations (required: $id), while nested subschemas recurse into the base via
+// $dynamicRef and so are not required to carry $id.
+const baseMeta = JSON.parse(readFileSync(join(root, "meta", "oold-meta-schema-base.json"), "utf8"));
 const uiMeta = JSON.parse(readFileSync(join(root, "meta", "oold-ui-meta-schema.json"), "utf8"));
 const patternLint = JSON.parse(readFileSync(join(root, "meta", "oold-pattern-lint.schema.json"), "utf8"));
 const schemaFiles = readdirSync(exDir).filter((f) => f.endsWith(".schema.json"));
@@ -65,6 +69,7 @@ addFormats(ajv);
 addFormats2019(ajv);
 fixIriFormats(ajv);
 ajv.addSchema(uiMeta); // so the core meta-schema can $ref the UI keyword definitions
+ajv.addSchema(baseMeta); // the dialect body the root meta-schema $refs
 const validateAsOOLD = ajv.compile(meta); // also validates the meta-schema against 2020-12
 // SHOULD-level round-trip pattern lint over a schema's @context (no @type: xsd:string, ...).
 const validatePatternLint = ajv.compile(patternLint);
@@ -153,7 +158,9 @@ function boundSchema(root, maxDepth = 6) {
   }
   // Pass 2: copy, cutting cycles (path-local) and nodes whose best depth exceeds the budget.
   const memo = new Map();
-  const walk = (node, path) => {
+  // Keywords whose value is a map of *names* to schemas (not a schema itself).
+  const MAP_KEYWORDS = new Set([...INSTANCE_MAP_KEYWORDS, "$defs", "definitions", "dependentSchemas"]);
+  const walk = (node, path, inMap) => {
     if (node === null || typeof node !== "object") return node;
     if (path.has(node)) return cut();      // cycle: node references itself or an ancestor
     if (memo.has(node)) return memo.get(node); // shared node already bounded: reuse (keep DAG)
@@ -164,9 +171,13 @@ function boundSchema(root, maxDepth = 6) {
     if (Array.isArray(node)) node.forEach((x, i) => (out[i] = walk(x, path)));
     else for (const [k, v] of Object.entries(node)) {
       // Drop identity keys: dereferencing inlines a $ref'd leaf under many properties, each
-      // keeping its $id, which makes ajv see one $id resolving to several schemas.
-      if (k === "$id" || k === "$schema") continue;
-      out[k] = walk(v, path);
+      // keeping its $id, which makes ajv see one $id resolving to several schemas. Only where
+      // they are schema *keywords*: inside a property map their names are instance member
+      // names, and a schema may legitimately declare members called `$schema` or `$id`
+      // (an exported instance carries both), which must survive into the validation view.
+      if (!inMap && (k === "$id" || k === "$schema")) continue;
+      // Entries of a property map are always schemas, so the flag only ever applies one level.
+      out[k] = walk(v, path, !inMap && MAP_KEYWORDS.has(k));
     }
     path.delete(node);
     return out;
@@ -361,7 +372,7 @@ function collectKeywords(node, set) {
   if (Array.isArray(node)) { for (const x of node) collectKeywords(x, set); return; }
   if (node && typeof node === "object") {
     for (const [k, v] of Object.entries(node)) {
-      if (k.startsWith("x-oold-") || k.startsWith("x-enum-")) set.add(k);
+      if (k.startsWith("x-oold-") || k.startsWith("x-enum-") || k === "x-oold-sssom" || k === "@context") set.add(k);
       collectKeywords(v, set);
     }
   }
@@ -442,6 +453,23 @@ for (const f of schemaFiles) {
     const validate = compileValidator(schema);
     if (validate(sample)) ok(`${f}`);
     else bad(`GEN-INVALID ${f}: ` + JSON.stringify(validate.errors) + ` sample=${JSON.stringify(sample)}`);
+    // An exported instance carries `@context` and `$schema` as ordinary members, so a schema
+    // that closes its objects (additionalProperties/unevaluatedProperties false) must PERMIT
+    // them or no conforming export validates (see the spec, Referencing the schema with
+    // $schema). It need not *declare* them: an open schema permits them implicitly, and an
+    // instance held inside an application may omit both. Probing the compiled schema with the
+    // two members added is what distinguishes the two closing keywords correctly under
+    // composition, where a static check cannot.
+    if (sample && typeof sample === "object" && !Array.isArray(sample)) {
+      // Probe each member on its own: a validator reporting only its first error would
+      // otherwise hide the second.
+      const blocked = ["@context", "$schema"].filter((k) => {
+        if (k in sample) return false;
+        return !validate({ ...sample, [k]: BASE + f }) &&
+          (validate.errors || []).some((e) => (e.params?.additionalProperty || e.params?.unevaluatedProperty) === k);
+      });
+      if (blocked.length) bad(`CLOSED     ${f}: closes its objects but does not permit ${blocked.join(" / ")} - an exported instance carries ${blocked.length > 1 ? "them" : "it"} and would fail validation`);
+    }
   } catch (e) { bad(`GEN-ERROR  ${f}: ${e.message}`); }
 }
 
@@ -625,7 +653,8 @@ for (const file of complianceFiles) {
 if (complianceFiles.length) {
   console.log("\nVocab coverage (meta-schema keywords vs oold-vocab.json):");
   const definedKeywords = [
-    ...Object.keys(meta.properties).filter((k) => k.startsWith("x-oold-")),
+    // @context and x-oold-sssom keep an external standard's name, so they are not x-oold-prefixed.
+    ...Object.keys(baseMeta.properties).filter((k) => k.startsWith("x-oold-") || k === "x-oold-sssom" || k === "@context"),
     ...Object.keys(uiMeta.$defs.keywords.properties),
   ];
   const uncovered = definedKeywords.filter((k) => !coveredKeywords.has(k));

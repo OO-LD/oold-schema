@@ -79,14 +79,14 @@ These types live in the schema, not in the instance data, so a JSON-LD-only proc
 
 A materialized `@type` is an ordinary JSON-LD `@type`: its IRIs resolve through the `@context` like any term, so a class name declared as a context term (`"QuantityValue": "qudt:QuantityValue"`) is aliased on export, carries [term synonyms](#synonyms), and drives [frame](#framing) construction. `x-oold-instance-rdf-type` and an inline `type` are thus two ways to reach the same `@type`: the former lets an application keep the type in the schema alone (no `@type` duplicated on every instance) and inject it on export, the latter carries it in self-describing data. Whether a type is subject to profile aliasing follows ordinary JSON-LD `@type` semantics: a value written as a **term** (a plain string such as `"QuantityValue"`) resolves through the `@context` and so is aliased per profile if that term carries synonyms, exactly as an inline `type` term is, whereas a value written as a full IRI or CURIE (`"qudt:QuantityValue"`, `"http://qudt.org/..."`) is emitted verbatim and not aliased. This holds for a materialized `x-oold-instance-rdf-type` and an inline `type` alike - the author selects term form for a profile-aliasable type, IRI form for a fixed one. Multiplicity and aliasing are orthogonal: `x-oold-instance-rdf-type` *co-types* - it lists every `rdf:type` an instance asserts at once (e.g. `qudt:QuantityValue` and `schema:QuantitativeValue` together) - while `x-oold-context` on a type term supplies the *synonyms* of a single type, one chosen per profile; a co-typed type may itself carry synonyms, so the two compose.
 
-Alternatively, an instance MAY carry the type inline as a `type` property (self-describing data). The schema maps the `type` term to the JSON-LD keyword `@type` with a simple alias and gives it a `default`; the value MAY be a single IRI or a list of IRIs, and this property named `type` is distinct from the JSON Schema `type` keyword. No `@type: @id` coercion is needed because JSON-LD already interprets `@type` values as IRIs:
+Alternatively, an instance MAY carry the type inline as a `type` property (self-describing data). The schema maps the `type` term to the JSON-LD keyword `@type` and gives it a `default`. Because `type` is modeled as a strict array here, its term also declares `@container: "@set"` - like any strict-array property (see [](#round-trip)) - so a single `@type` value returns from RDF as a one-element array and re-validates, rather than compacting to a scalar. No `@type: @id` coercion is needed because JSON-LD already interprets `@type` values as IRIs; the property named `type` is distinct from the JSON Schema `type` keyword, and its value MAY be a single IRI or a list of IRIs:
 
 :::example{title="Carrying the type inline"}
 ```json
 {
   "@context": {
     "schema": "http://schema.org/",
-    "type": "@type"
+    "type": { "@id": "@type", "@container": "@set" }
   },
   "type": "object",
   "properties": {

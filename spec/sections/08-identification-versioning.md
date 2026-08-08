@@ -4,6 +4,8 @@
 
 OO-LD schemas MUST have a `$id` ([[JSONSCHEMA]] §8.2.1) which works as a global and unique identifier of the schema. The value of `$id` MAY be an absolute URI (details below). The schema SHOULD be resolvable via this URI. The schema SHOULD have an annotation `x-oold-uuid` with a UUID value.
 
+This obligation applies to a schema *document*, not to every subschema: a fragment inside `properties`, `$defs` or [`x-oold-range`](#range-of-properties) legitimately has no `$id` of its own. The dialect meta-schema enforces exactly that distinction and so checks the requirement itself - see [](#meta-schema).
+
 :::example{title="A schema `$id` and its `x-oold-uuid`"}
 ```json
 {
@@ -23,15 +25,15 @@ It is recommended to use the UUID also in the `$id`:
 ```
 :::
 
-### Ontology correspondence (schema-level `x-sssom`) {#ontology-mapping}
+### Ontology correspondence (schema-level `x-oold-sssom`) {#ontology-mapping}
 
-A schema states which external ontology resources it corresponds to with a top-level `x-sssom` block - the [term-synonym](#synonyms) mapping row lifted to the schema level. Its subject is the schema itself, identified by its `$id`: in OO-LD the schema document at that URL *is* the class definition, so `$id` serves as the mapping's `subject_id`. It is an object keyed by the **object IRI** of a resolvable resource (an RDF/OWL class, a controlled-vocabulary term, another schema), each value carrying the SSSOM slots: `predicate_id` (default `skos:exactMatch`; `skos:closeMatch` for a looser correspondence), `mapping_set_id`, and the rest of the open bag. Because these are SKOS mapping predicates the correspondence is non-logical and reasoner-safe: `skos:exactMatch` asserts interchangeability, not the logical `owl:equivalentClass` (a schema that wants the reasoner-affecting claim uses `owl:equivalentClass` explicitly as the `predicate_id`). It is an annotation **about the schema itself** and is not stamped onto instances - distinct from `x-oold-instance-rdf-type`, the `rdf:type`s instances carry on export (see [](#semantic-type)), which *are* stamped onto instance data.
+A schema states which external ontology resources it corresponds to with a top-level `x-oold-sssom` block - the [term-synonym](#synonyms) mapping row lifted to the schema level. Its subject is the schema itself, identified by its `$id`: in OO-LD the schema document at that URL *is* the class definition, so `$id` serves as the mapping's `subject_id`. It is an object keyed by the **object IRI** of a resolvable resource (an RDF/OWL class, a controlled-vocabulary term, another schema), each value carrying the SSSOM slots: `predicate_id` (default `skos:exactMatch`; `skos:closeMatch` for a looser correspondence), `mapping_set_id`, and the rest of the open bag. Because these are SKOS mapping predicates the correspondence is non-logical and reasoner-safe: `skos:exactMatch` asserts interchangeability, not the logical `owl:equivalentClass` (a schema that wants the reasoner-affecting claim uses `owl:equivalentClass` explicitly as the `predicate_id`). It is an annotation **about the schema itself** and is not stamped onto instances - distinct from `x-oold-instance-rdf-type`, the `rdf:type`s instances carry on export (see [](#semantic-type)), which *are* stamped onto instance data.
 
 :::example{title="Distinguishing document URL, ontology correspondence, and instance type"}
 ```json
 {
   "$id": "https://example.org/my-package/1.0.0/Person.schema.json",
-  "x-sssom": {
+  "x-oold-sssom": {
     "https://schema.org/Person": { "predicate_id": "skos:exactMatch" }
   },
   "x-oold-instance-rdf-type": ["schema:Person"],

@@ -109,7 +109,11 @@ def example(name, lang="json"):
 
 
 def _rows(properties, prefix):
-    """(keyword, description) rows for properties whose name starts with prefix."""
+    """(keyword, description) rows for properties whose name starts with prefix.
+
+    `prefix` may be a tuple, so dialect entries that keep an external standard's
+    name (`@context`, `x-oold-sssom`) are listed alongside the `x-oold-*` ones.
+    """
     rows = []
     for name, defn in (properties or {}).items():
         if name.startswith(prefix):
@@ -159,7 +163,7 @@ def vocabulary():
         if not fname.endswith(".json"):
             continue
         with open(os.path.join(meta_dir, fname), encoding="utf-8") as fh:
-            rows += _rows(json.load(fh).get("properties"), "x-oold-")
+            rows += _rows(json.load(fh).get("properties"), ("x-oold-", "x-oold-sssom", "@context"))
     return _keyword_table(rows)
 
 
