@@ -92,8 +92,24 @@ if os.path.exists(RULES_FILE):
     with open(RULES_FILE, encoding="utf-8") as handle:
         rules = json.load(handle).get("rules", [])
 
+#: The anchor has to sit on the statement itself, not on something inside it, so that following
+#: a cited link lands on the requirement and `:target` can highlight it. render_spec.py falls back
+#: to wrapping the mark in a <span> when it finds no block to claim - which still satisfies a
+#: plain "is the id present" test while quietly reintroducing the inline anchor this replaced.
+BLOCK_TAGS = "p|li|td|th|dd|blockquote|h[1-6]"
+
 for rule in rules:
-    if f'id="{rule["id"]}"' not in html:
+    anchored = re.search(rf'<(?:{BLOCK_TAGS})\b[^>]*\bid="{re.escape(rule["id"])}"', html)
+    if anchored:
+        continue
+    if f'id="{rule["id"]}"' in html:
+        errors.append(
+            f"rule {rule['id']} is anchored on an inline element, not on the statement it marks. "
+            "render_spec.py could not find a block to claim, so the deep link will not land on "
+            "the requirement. Check whether two rules share one paragraph, or the marker sits in "
+            "a heading"
+        )
+    else:
         errors.append(f"rule {rule['id']} has no anchor in the rendered spec (stale docs/spec/index.html?)")
 
 

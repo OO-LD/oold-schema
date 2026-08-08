@@ -50,23 +50,31 @@ AREAS = {
 }
 
 
+def suffixes(ids: set[str]) -> set[str]:
+    """The bare 4-character part of every well-formed id in `ids`."""
+    return {match.group(2) for rule_id in ids if (match := RULE_ID.match(rule_id))}
+
+
 def mint(reserved: set[str], area: str, rng: random.Random) -> str:
     """A free id in `area`, added to `reserved` so one run cannot mint a duplicate.
 
-    Uniqueness is catalogue-wide rather than per area, which is what lets the bare suffix
-    identify a rule on its own.
+    The *suffix* is what has to be unique, catalogue-wide rather than per area, because that is
+    what lets the bare suffix identify a rule on its own. Comparing whole ids instead would let
+    OOLD-CMP-1120 and OOLD-CNF-1120 coexist and quietly break that promise.
     """
     if area not in AREAS:
         raise ValueError(f"unknown area {area!r} (known: {', '.join(AREAS)})")
+    taken = suffixes(reserved)
     space = 16**4
     for _ in range(space):
-        candidate = f"OOLD-{area}-{rng.randrange(space):04x}"
-        if candidate not in reserved:
+        suffix = f"{rng.randrange(space):04x}"
+        if suffix not in taken:
+            candidate = f"OOLD-{area}-{suffix}"
             reserved.add(candidate)
             return candidate
-    # Theoretical: 65536 suffixes against the tens of rules any area actually has. Raising
-    # rather than looping forever is what a genuinely exhausted area deserves.
-    raise RuntimeError(f"area {area!r} is exhausted: all {space} suffixes are taken")
+    # Theoretical: 65536 suffixes against the tens of rules a specification actually has.
+    # Raising rather than looping forever is what a genuinely exhausted space deserves.
+    raise RuntimeError(f"cannot mint in {area!r}: all {space} suffixes are already taken")
 
 
 def reserved_ids(root: str) -> set[str]:

@@ -100,9 +100,12 @@ def rule_mark(rule_id, attrs):
         m = re.search(r'summary\s*=\s*"([^"]*)"', attrs)
         summary = m.group(1) if m else None
     title = f"{rule_id} - {summary}" if summary else rule_id
+    # The aria-label overrides the title as the accessible name, so it carries the summary too.
+    # Labelling the mark "Normative rule <id>" alone handed assistive tech strictly less than a
+    # sighted reader gets from hovering it.
     return (
         f'<a class="rule-mark" href="#{rule_id}" title="{escape_html(title, quote=True)}" '
-        f'aria-label="{escape_html(f"Normative rule {rule_id}", quote=True)}">&#9432;</a>'
+        f'aria-label="{escape_html(f"Normative rule {title}", quote=True)}">&#9432;</a>'
     )
 
 
@@ -288,7 +291,10 @@ TAB_ASSETS = """  <style>
     .ex-tab { border: 0; background: none; padding: .3em .8em; cursor: pointer; font: inherit; color: #555; border-bottom: 2px solid transparent; }
     .ex-tab[aria-selected="true"] { color: #005a9c; border-bottom-color: #005a9c; font-weight: 600; }
     .ex-panel[hidden] { display: none; }
-    .rule-mark { color: #b0b6bd; text-decoration: none; font-size: .85em; padding: 0 .25em; }
+    /* #8a9199 is about 3.2:1 on white, clearing the 3:1 WCAG threshold for a UI affordance.
+       The earlier #b0b6bd sat near 2.2:1: subtle enough to be undiscoverable, which defeats
+       the point of showing a mark at all rather than revealing the id on hover. */
+    .rule-mark { color: #8a9199; text-decoration: none; font-size: .85em; padding: 0 .25em; }
     .rule-mark:hover, .rule-mark:focus { color: #005a9c; }
     .has-rule:target { background: #fffbdd; scroll-margin-top: 3rem; }
   </style>

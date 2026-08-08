@@ -1,10 +1,11 @@
-# Two hooks guarding the rule catalogue. Both are local, so contributors need only pre-commit
+# Three hooks guarding the rule catalogue. All are local, so contributors need only pre-commit
 # itself plus the uv environment the Makefile already uses.
 #
 # The order matters. `rules-extract` regenerates meta/oold-rules.json from the prose and fails if
 # it changed, so a stale catalogue can never be committed. `rules-baseline` then compares that
 # fresh catalogue against meta/rules-baseline.json, the state a human last accepted, and stops on
 # the two things nothing else notices: a rule id that has vanished, and a rule whose text moved.
+# `rules-page` finally regenerates docs/rules.md from the catalogue.
 #
 #   pre-commit install
 repos:
@@ -26,4 +27,14 @@ repos:
         language: system
         pass_filenames: false
         files: ^(spec/sections/.*\.md|meta/oold-rules\.json|meta/rules-baseline\.json)$
+        require_serial: true
+
+      - id: rules-page
+        name: regenerate the rule catalogue page
+        entry: uv run scripts/render_rules_page.py
+        language: system
+        pass_filenames: false
+        files: ^(meta/oold-rules\.json|scripts/render_rules_page\.py)$
+        # docs/rules.md is committed and CI fails on drift, exactly like the catalogue. Without
+        # this hook it is the one generated artifact a contributor can only discover stale in CI.
         require_serial: true
