@@ -279,6 +279,20 @@ def main() -> int:
             problems.append(f"{rule['source']}: duplicate rule id {rule['id']} (also at {seen[rule['id']]})")
         seen[rule["id"]] = rule["source"]
 
+    # The suffix has to be unique on its own, not merely in combination with an area, since that
+    # is what lets a bare suffix identify a rule. `mint()` will not issue a colliding one, but an
+    # id can also arrive by hand or through a bad merge, so the catalogue asserts it rather than
+    # trusting the tool that usually produces it.
+    by_suffix: dict[str, str] = {}
+    for rule in rules:
+        suffix = rule["id"].rsplit("-", 1)[1]
+        if suffix in by_suffix:
+            problems.append(
+                f"{rule['source']}: {rule['id']} reuses the suffix {suffix!r}, already taken by "
+                f"{by_suffix[suffix]}. Suffixes are unique across the whole catalogue"
+            )
+        by_suffix[suffix] = rule["id"]
+
     if problems:
         print("rule extraction FAILED:", file=sys.stderr)
         for problem in problems:

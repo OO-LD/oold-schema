@@ -251,11 +251,21 @@ def check() -> int:
     return 0
 
 
+def resolve(rid: str, catalog: dict[str, dict]) -> str:
+    """Match an id typed in any case against the catalogue, or hand it back unchanged.
+
+    An id mixes cases: the area is upper, the minted suffix is lower. The blanket `.upper()`
+    this replaced turned OOLD-RT-08f2 into OOLD-RT-08F2 and then reported it as not in the
+    catalogue, which broke `make rules-accept` for every id containing a-f.
+    """
+    return {key.casefold(): key for key in catalog}.get(rid.casefold(), rid)
+
+
 def accept(ids: list[str]) -> int:
     catalog = load_catalog()
     loaded = load_baseline()
     baseline, was_deprecated = loaded if loaded else ({}, set())
-    wanted = [rid.upper() for rid in ids]
+    wanted = [resolve(rid, catalog) for rid in ids]
 
     problems = []
     for rid in wanted:
