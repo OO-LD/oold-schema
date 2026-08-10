@@ -39,10 +39,11 @@ import spec_config as cfg  # noqa: E402
 from rule_ids import AREAS, LEGACY_ID, PLACEHOLDER  # noqa: E402
 from rule_ids import MARKER as RULE  # noqa: E402
 from rule_ids import RULE_ID  # noqa: E402
+from rule_scope import sentence_end  # noqa: E402
 
 #: Who a requirement binds. This decides what is able to enforce it: `document` rules are
-#: checkable by validating a schema or instance, `implementation` rules constrain a library and
-#: need a conformance suite, `advisory` ones are guidance that nothing verifies.
+#: machine-checkable by validating a schema or instance, `implementation` rules constrain a
+#: library and need a conformance suite, `advisory` ones are guidance that nothing verifies.
 APPLIES = ("document", "implementation", "advisory")
 
 HEADING = re.compile(r"^\s*#{2,6}\s+.*\{[^}]*#([A-Za-z0-9_-]+)[^}]*\}\s*$")
@@ -113,11 +114,13 @@ def clean_text(text: str) -> str:
 def paragraph_bounds(lines: list[str], index: int) -> tuple[int, int]:
     """The prose block containing line `index`.
 
-    Block granularity is deliberate: it is unambiguous to extract, whereas splitting prose into
-    sentences breaks on abbreviations and on periods inside code spans.
+    This feeds `context`: the surrounding prose a rule's sentence was stated in, kept for
+    display. It is not what gets hashed - see rule_scope.sentence_end for the narrower `text`,
+    and for why sentence-level extraction is safe despite the hazards block granularity used to
+    dodge (abbreviations, periods inside code spans).
 
     A list item is its own block. Several of the round-trip requirements are bullets in one list,
-    and treating the list as a single paragraph would give every one of them the same `text`
+    and treating the list as a single paragraph would give every one of them the same `context`
     covering all the others.
     """
     if LIST_ITEM.match(lines[index]):
@@ -207,32 +210,50 @@ def extract_file(filename: str, problems: list[str]) -> list[dict]:
                 continue
 
             start, end = paragraph_bounds(lines, number)
-            paragraph = "\n".join(lines[start : end + 1])
-            text = clean_text(RULE.sub("", paragraph))
+            context = clean_text(RULE.sub("", "\n".join(lines[start : end + 1])))
 
-            # `level` is normally the first RFC 2119 keyword after the marker. A paragraph that
-            # chains several requirements needs `level=` so the id names the intended one rather
-            # than whichever keyword happens to come first; such paragraphs are candidates for an
-            # editorial split into separate statements.
+            # A sentence never spans a line break in the marked prose (confirmed across every
+            # current marker; see rule_scope), so the boundary search only needs the marker's own
+            # source line, not the whole block.
+            stop = sentence_end(line, match.end())
+            text = clean_text(RULE.sub("", line[match.end() : stop]))
+
+            # The marked *sentence* - not the paragraph around it - has to carry the requirement's
+            # own keyword, or the id names something other than what it is attached to. Checked
+            # unconditionally, even when `level=` is authored: an explicit level does not prove
+            # the sentence itself states a requirement, only the prose does.
+            if not RFC2119.search(text):
+                problems.append(
+                    f"{where}: {rule_id} marks a sentence with no RFC 2119 keyword: {text!r} - move "
+                    "the marker to the start of the sentence that states the requirement."
+                )
+                continue
+
+            # `level` is normally the first RFC 2119 keyword in the marked sentence. A sentence
+            # that chains several requirements needs `level=` so the id names the intended one
+            # rather than whichever keyword happens to come first; such sentences are candidates
+            # for an editorial split into separate statements.
             level = attrs.get("level")
             if level:
                 if not RFC2119.fullmatch(level):
                     problems.append(f"{where}: {rule_id} has level={level!r}, which is not an RFC 2119 keyword")
                     continue
             else:
-                level_match = RFC2119.search(RULE.sub("", line)) or RFC2119.search(paragraph)
-                if not level_match:
-                    problems.append(f"{where}: {rule_id} marks a paragraph with no RFC 2119 keyword")
-                    continue
-                level = level_match.group(1)
-            if level not in paragraph:
+                level = RFC2119.search(text).group(1)
+            if level not in context:
                 problems.append(f"{where}: {rule_id} declares level={level!r}, absent from the marked prose")
                 continue
 
-            # `checkable` defaults to true only for document rules: an implementation rule needs a
-            # library conformance suite and advisory text needs nothing at all.
-            default_checkable = "yes" if applies == "document" else "no"
-            checkable = attrs.get("checkable", default_checkable).lower() in ("yes", "true", "1")
+            # `machine_checkable` defaults to true only for document rules: an implementation rule
+            # needs a library conformance suite and advisory text needs nothing at all. It records
+            # that the requirement is mechanically decidable by inspecting a document - whether
+            # any given validator actually enforces it is a separate, downstream fact.
+            default_machine_checkable = "yes" if applies == "document" else "no"
+            machine_checkable = attrs.get("machine_checkable", default_machine_checkable).lower() in (
+                "yes",
+                "true",
+                "1",
+            )
 
             record = {
                 "id": rule_id,
@@ -243,7 +264,8 @@ def extract_file(filename: str, problems: list[str]) -> list[dict]:
                 "summary": attrs.get("summary") or first_sentence(text),
                 "text": text,
                 "text_sha256": hashlib.sha256(text.encode("utf-8")).hexdigest(),
-                "checkable": checkable,
+                "context": context,
+                "machine_checkable": machine_checkable,
                 # Authored value wins; otherwise keep what the catalogue already recorded, and
                 # only fall back to the current tag for an id nobody has seen before.
                 "since": attrs.get("since") or SINCE.get(rule_id, VERSION),
@@ -325,8 +347,8 @@ def main() -> int:
         json.dump(payload, handle, indent=2, ensure_ascii=False)
         handle.write("\n")
 
-    checkable = sum(1 for r in rules if r["checkable"])
-    print(f"rules extracted: {len(rules)} ({checkable} checkable) -> meta/oold-rules.json")
+    machine_checkable = sum(1 for r in rules if r["machine_checkable"])
+    print(f"rules extracted: {len(rules)} ({machine_checkable} machine-checkable) -> meta/oold-rules.json")
     return 0
 
 

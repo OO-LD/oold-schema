@@ -40,7 +40,10 @@ SHOULD NOT or REQUIRED) from the [OO-LD specification](spec/). Validators cite t
 output, so a report that says a document fails `OOLD-RT-08f2` should let you find exactly what that
 means - this page is where that lookup lands. Ids are permanent and never reused: a rule that is
 retired stays on this page, marked deprecated, so an id from an old report still resolves to
-something."""
+something. Machine-checkable means a validator could decide the rule by inspecting a document; it
+does not mean the OO-LD validator actually does. Whether it does is reported by
+`oold rules list --unchecked` in the [oold-python](https://github.com/OO-LD/oold-python) repository,
+not here."""
 
 
 #: A cross-reference to another part of the specification, as it survives into a rule's `text`.
@@ -107,7 +110,7 @@ def render_rule(rule: dict) -> str:
 
     lines.append(f"- **Level:** {rule['level']}")
     lines.append(f"- **Applies to:** {rule['applies_to']}")
-    lines.append(f"- **Checkable:** {'yes' if rule.get('checkable') else 'no'}")
+    lines.append(f"- **Machine-checkable:** {'yes' if rule.get('machine_checkable') else 'no'}")
     lines.append(f"- **Since:** {rule['since']}")
     lines.append("")
 
@@ -116,6 +119,10 @@ def render_rule(rule: dict) -> str:
 
     lines.append(link_to_spec(rule["text"]))
     lines.append("")
+
+    if rule.get("context") and rule["context"] != rule["text"]:
+        lines.append("> **In context:** " + link_to_spec(rule["context"]))
+        lines.append("")
 
     lines.append(
         f"See [this rule in the specification](spec/#{rule['id']}) (section: {rule['section']})."

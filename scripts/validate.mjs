@@ -696,19 +696,19 @@ if (complianceFiles.length) {
 
 // Rule coverage: which normative statements the fixtures actually exercise. A dangling reference
 // is an error - it means a fixture cites an id that was renamed or never existed, which is exactly
-// what stable ids are supposed to prevent. A checkable rule with no fixture is reported as a
-// warning rather than a failure: it is the coverage gap this catalog exists to make visible, and
+// what stable ids are supposed to prevent. A machine-checkable rule with no fixture is reported as
+// a warning rather than a failure: it is the coverage gap this catalog exists to make visible, and
 // failing on it today would only block the build on requirements nobody has written a case for.
 if (complianceFiles.length && ruleCatalog.length) {
   console.log("\nRule coverage (compliance fixtures vs meta/oold-rules.json):");
   const dangling = citedRules.filter(({ ref }) => !rulesById.has(ref));
   for (const { ref, where } of dangling) bad(`UNKNOWN-RULE ${where}: cites ${ref}, which is not in the rule catalog`);
 
-  const checkable = ruleCatalog.filter((r) => r.checkable && r.applies_to === "document" && !r.deprecated);
-  const missing = checkable.filter((r) => !coveredRules.has(r.id));
+  const machineCheckable = ruleCatalog.filter((r) => r.machine_checkable && r.applies_to === "document" && !r.deprecated);
+  const missing = machineCheckable.filter((r) => !coveredRules.has(r.id));
   if (!dangling.length) ok(`${coveredRules.size} rule(s) cited by fixtures, all resolving in the catalog`);
-  if (missing.length) warn(`${missing.length}/${checkable.length} checkable rule(s) have no fixture: ${missing.map((r) => r.id).join(", ")}`);
-  else ok(`all ${checkable.length} checkable rules are exercised by a fixture`);
+  if (missing.length) warn(`${missing.length}/${machineCheckable.length} machine-checkable rule(s) have no fixture: ${missing.map((r) => r.id).join(", ")}`);
+  else ok(`all ${machineCheckable.length} machine-checkable rules are exercised by a fixture`);
 }
 
 console.log(`\n${total - failures}/${total} checks passed${warnings ? `, ${warnings} warning(s)` : ""}`);

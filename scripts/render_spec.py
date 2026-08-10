@@ -33,6 +33,7 @@ for path in (ROOT, HERE):
 import macros  # noqa: E402  - repo-root shared macros
 import spec_config as cfg  # noqa: E402
 from rule_ids import MARKER as RULE  # noqa: E402
+from rule_scope import sentence_end  # noqa: E402
 
 SECTIONS_DIR = os.path.join(ROOT, "spec", "sections")
 OUT = os.path.join(ROOT, "docs", "spec", "index.html")
@@ -43,11 +44,10 @@ HEADING = re.compile(r"^(#{2,6})\s+(.*?)\s*$")
 ATTRS = re.compile(r"\s*\{([^}]*)\}\s*$")
 DFN = re.compile(r':dfn\[([^\]]*)\]\{lt="([^"]*)"\}')
 CONTAINER = re.compile(r'^:::(example|note)\{([^}]*)\}[ \t]*\n(.*?)\n:::[ \t]*$', re.S | re.M)
-# Nearest-preceding block-level opening tag a rule marker can be hoisted onto. Matches
-# paragraph_bounds() in extract_rules.py: a bullet yields <li>, ordinary prose yields <p>,
-# a paragraph nested in a list item yields the inner (more precise) <p>.
-BLOCK_OPEN = re.compile(r"<(p|li|td|th|dd|blockquote|h[1-6])(\s[^>]*)?>")
-RULE_TOKEN = re.compile(r"@@RULE(\d+)@@")
+# Paired text tokens marking a rule's sentence, mirroring @@BLOCK{n}@@ below: the real <span>
+# is substituted in only after md_to_html has run - see expand_rule_spans for why.
+RULE_OPEN = re.compile(r"@@RULEOPEN(\d+)@@")
+RULE_CLOSE = re.compile(r"@@RULECLOSE(\d+)@@")
 
 _md = mistune.create_markdown(escape=False, plugins=["table"])
 
@@ -74,25 +74,50 @@ def _load_rule_summaries():
 RULE_SUMMARIES = _load_rule_summaries()
 
 
-def _stash_rule(match, rules):
-    """Record a :rule[...] marker's id + attrs and return a placeholder text token.
+def _mark_rules(text, rules):
+    """Replace each :rule[...] marker in `text` with a pair of placeholder tokens spanning the
+    sentence it marks: @@RULEOPEN{n}@@ where the marker sat, @@RULECLOSE{n}@@ at the sentence's
+    end. Plain text tokens, not HTML - see RULE_OPEN/RULE_CLOSE above for why the real <span>
+    is substituted later, not here.
 
-    A plain text token, not an HTML comment: a marker at the start of a line would otherwise
-    be parsed by mistune as a block-level HTML block, silently dropping the paragraph around
-    it. `rules` is per render_body()/md_inline() call (like `blocks` in render_body), so a
-    :::note body rendered by a recursive render_body call hoists its own tokens before its
-    HTML is spliced back into the caller.
+    A marked sentence never spans a line break (confirmed across the whole marked corpus - see
+    rule_scope), and sentence_end() itself assumes a single line, so markers are found and
+    closed per source line rather than against the whole (possibly multi-line) `text` this is
+    called with. `rules` is per render_body()/md_inline() call (like `blocks` in render_body),
+    so a :::note body rendered by a recursive render_body call expands its own tokens before
+    its HTML is spliced back into the caller.
     """
-    rules.append((match.group(1), match.group(2)))
-    return f"@@RULE{len(rules) - 1}@@"
+    if not RULE.search(text):
+        return text
+    lines = text.split("\n")
+    for i, line in enumerate(lines):
+        matches = list(RULE.finditer(line))
+        if not matches:
+            continue
+        out, cursor = [], 0
+        for match in matches:
+            stop = sentence_end(line, match.end())
+            rules.append((match.group(1), match.group(2)))
+            idx = len(rules) - 1
+            out.append(line[cursor : match.start()])
+            out.append(f"@@RULEOPEN{idx}@@")
+            out.append(line[match.end() : stop])
+            out.append(f"@@RULECLOSE{idx}@@")
+            cursor = stop
+        out.append(line[cursor:])
+        lines[i] = "".join(out)
+    return "\n".join(lines)
 
 
-def rule_mark(rule_id, attrs):
-    """The faint, hoverable/focusable mark a :rule[...] token becomes.
+def rule_span_open(rule_id, attrs):
+    """The opening <span> tag for a marked sentence; paired with a literal `</span>` wherever
+    expand_rule_spans finds that rule's RULE_CLOSE token.
 
-    Unlike the old always-visible chip, the id itself is not printed inline; it is reachable
-    via the title, the aria-label and the #fragment. The tooltip summary comes from the
-    generated catalog first (kept in sync with the CLI), then the marker's own `summary=`
+    `tabindex="0" role="link"` makes the sentence keyboard-reachable and identifies it to
+    assistive tech as link-like, even though it cannot literally be an <a> - a rule sentence
+    can contain real links (cross-references, external refs), and an <a> cannot nest inside
+    another <a>; see the click/keydown handlers in TAB_ASSETS. The tooltip summary comes from
+    the generated catalog first (kept in sync with the CLI), then the marker's own `summary=`
     attribute, then the bare id - so this never depends on the catalog existing.
     """
     summary = RULE_SUMMARIES.get(rule_id)
@@ -100,66 +125,37 @@ def rule_mark(rule_id, attrs):
         m = re.search(r'summary\s*=\s*"([^"]*)"', attrs)
         summary = m.group(1) if m else None
     title = f"{rule_id} - {summary}" if summary else rule_id
-    # The aria-label overrides the title as the accessible name, so it carries the summary too.
-    # Labelling the mark "Normative rule <id>" alone handed assistive tech strictly less than a
-    # sighted reader gets from hovering it.
     return (
-        f'<a class="rule-mark" href="#{rule_id}" title="{escape_html(title, quote=True)}" '
-        f'aria-label="{escape_html(f"Normative rule {title}", quote=True)}">&#9432;</a>'
+        f'<span class="rule" id="{rule_id}" tabindex="0" role="link" '
+        f'title="{escape_html(title, quote=True)}">'
     )
 
 
-def hoist_rule_ids(html, rules):
-    """Move each @@RULE{n}@@ token onto the nearest preceding block-level opening tag.
+def expand_rule_spans(html, rules):
+    """Substitute RULE_OPEN/RULE_CLOSE tokens for the real <span>/</span>.
 
-    The anchor moves from the mark itself onto the enclosing element, so a deep link scrolls
-    to the requirement rather than to a chip mid-sentence. Two cases fall back to wrapping the
-    mark in its own <span id="..."> instead of touching a block tag: no preceding block tag at
-    all (md_inline strips its wrapping <p>, so a marker in a heading or <dd> has nothing to
-    attach to), and a block that already claimed an id (two rules in one paragraph or list
-    item - an element can only have one id). Both are detected the same way: the candidate
-    tag's own text already contains `id="`, whether that is from an earlier iteration of this
-    loop or, in principle, from the source.
+    Done after md_to_html (and, in render_body, after wrap_rfc2119) for two reasons: a raw
+    <span> sitting at the start of a line would otherwise be parsed by mistune as a block-level
+    HTML block, silently dropping the paragraph around it; and a summary containing an RFC 2119
+    keyword would otherwise pass through wrap_rfc2119, which would inject
+    <em class="rfc2119"> inside the title attribute. No summary does today, but that is luck,
+    not design.
     """
     if not rules:
         return html
-    while True:
-        token = RULE_TOKEN.search(html)
-        if token is None:
-            return html
-        rule_id, attrs = rules[int(token.group(1))]
-        mark = rule_mark(rule_id, attrs)
-
-        block = None
-        for candidate in BLOCK_OPEN.finditer(html, 0, token.start()):
-            block = candidate  # last match before the token is the nearest preceding one
-
-        if block is None or 'id="' in block.group(0):
-            span = f'<span id="{rule_id}" class="has-rule">{mark}</span> '
-            html = html[: token.start()] + span + html[token.end() :]
-            continue
-
-        tag_name, tag_attrs = block.group(1), block.group(2) or ""
-        class_match = re.search(r'\bclass="([^"]*)"', tag_attrs)
-        if class_match:
-            tag_attrs = (
-                tag_attrs[: class_match.start(1)] + f"{class_match.group(1)} has-rule" + tag_attrs[class_match.end(1) :]
-            )
-        else:
-            tag_attrs += ' class="has-rule"'
-        new_tag = f'<{tag_name} id="{rule_id}"{tag_attrs}>'
-        html = html[: block.start()] + new_tag + html[block.end() : token.start()] + mark + " " + html[token.end() :]
+    html = RULE_OPEN.sub(lambda m: rule_span_open(*rules[int(m.group(1))]), html)
+    return RULE_CLOSE.sub("</span>", html)
 
 
 def md_inline(text):
     """Render inline Markdown (headings, <dd> text); strip the wrapping <p>."""
     text = DFN.sub(r'<dfn data-lt="\2">\1</dfn>', text)
     rules = []
-    text = RULE.sub(lambda m: _stash_rule(m, rules), text)
+    text = _mark_rules(text, rules)
     html = md_to_html(text)
     if html.startswith("<p>") and html.endswith("</p>"):
         html = html[3:-4]
-    return hoist_rule_ids(html, rules)
+    return expand_rule_spans(html, rules)
 
 
 def expand(text):
@@ -205,16 +201,18 @@ def render_body(text, informative):
 
     text = CONTAINER.sub(stash, text)
     text = DFN.sub(r'<dfn data-lt="\2">\1</dfn>', text)
-    # Before wrap_rfc2119, so a rule id containing no keyword is never touched by it.
-    text = RULE.sub(lambda m: _stash_rule(m, rules), text)
+    # Before wrap_rfc2119: a rule id/attrs must never be touched by it, and sentence_end() has
+    # to see the original markdown line, not one with <em class="rfc2119"> already spliced in,
+    # which would shift the offsets it searches.
+    text = _mark_rules(text, rules)
     if not informative:
         text = wrap_rfc2119(text)
     html = md_to_html(text)
-    # Hoist rule ids onto their enclosing block before expanding @@BLOCK{n}@@: a :::note body
-    # was rendered by a recursive render_body call above and already hoisted its own tokens
-    # with its own `rules` list, so its spliced-in HTML holds none left over. Hoisting after
-    # the splice would let the inner and outer token indices collide.
-    html = hoist_rule_ids(html, rules)
+    # Expand rule tokens into spans before expanding @@BLOCK{n}@@: a :::note body was rendered
+    # by a recursive render_body call above and already expanded its own tokens with its own
+    # `rules` list, so its spliced-in HTML holds none left over. Expanding after the splice
+    # would let the inner and outer token indices collide.
+    html = expand_rule_spans(html, rules)
     html = re.sub(r"<p>@@BLOCK(\d+)@@</p>", lambda m: blocks[int(m.group(1))], html)
     html = re.sub(r"@@BLOCK(\d+)@@", lambda m: blocks[int(m.group(1))], html)
     return html
@@ -291,12 +289,13 @@ TAB_ASSETS = """  <style>
     .ex-tab { border: 0; background: none; padding: .3em .8em; cursor: pointer; font: inherit; color: #555; border-bottom: 2px solid transparent; }
     .ex-tab[aria-selected="true"] { color: #005a9c; border-bottom-color: #005a9c; font-weight: 600; }
     .ex-panel[hidden] { display: none; }
-    /* #8a9199 is about 3.2:1 on white, clearing the 3:1 WCAG threshold for a UI affordance.
-       The earlier #b0b6bd sat near 2.2:1: subtle enough to be undiscoverable, which defeats
-       the point of showing a mark at all rather than revealing the id on hover. */
-    .rule-mark { color: #8a9199; text-decoration: none; font-size: .85em; padding: 0 .25em; }
-    .rule-mark:hover, .rule-mark:focus { color: #005a9c; }
-    .has-rule:target { background: #fffbdd; scroll-margin-top: 3rem; }
+    /* The specification text must look exactly as it does today when idle: no underline,
+       colour, background or font change. The affordance appears only on hover, on keyboard
+       focus, and when the sentence is the current #fragment. */
+    .rule { cursor: pointer; }
+    .rule:hover { background: #eef4fa; }
+    .rule:focus-visible { outline: 2px solid #005a9c; outline-offset: 2px; }
+    .rule:target { background: #fffbdd; scroll-margin-top: 3rem; }
   </style>
   <script>
     // Toggle the JSON / YAML example tabs (event delegation; runs regardless of ReSpec).
@@ -310,6 +309,23 @@ TAB_ASSETS = """  <style>
       group.querySelectorAll(".ex-panel").forEach(function (p) {
         p.hidden = (p.id !== tab.dataset.panel);
       });
+    });
+    // Deep-link a marked rule sentence. It cannot be wrapped in an <a> - a rule sentence can
+    // contain real links (cross-references, external refs) and an <a> cannot nest inside
+    // another <a> - so a click (or Enter/Space while it has keyboard focus, since it carries
+    // tabindex="0") sets the URL fragment instead.
+    document.addEventListener("click", function (event) {
+      var rule = event.target.closest(".rule");
+      if (!rule) return;
+      if (event.target.closest("a")) return;  // a real link inside the sentence wins
+      location.hash = rule.id;
+    });
+    document.addEventListener("keydown", function (event) {
+      if (event.key !== "Enter" && event.key !== " ") return;
+      var rule = event.target.closest(".rule");
+      if (!rule) return;
+      event.preventDefault();
+      location.hash = rule.id;
     });
   </script>"""
 

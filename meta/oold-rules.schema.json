@@ -85,7 +85,7 @@
         "summary",
         "text",
         "text_sha256",
-        "checkable",
+        "machine_checkable",
         "since",
         "deprecated",
         "source"
@@ -134,9 +134,14 @@
           "pattern": "^[0-9a-f]{64}$",
           "description": "sha256 of `text`. meta/rules-baseline.json compares against this to catch a rule whose meaning changed under an unchanged id, so its shape is asserted here."
         },
-        "checkable": {
+        "context": {
+          "type": "string",
+          "minLength": 1,
+          "description": "The containing block `text` was taken from, for display. May equal `text` when the rule's sentence is the whole block. Not hashed, and not part of the baseline comparison."
+        },
+        "machine_checkable": {
           "type": "boolean",
-          "description": "Whether the requirement is decidable by inspecting a document. Defaults to true for `document` rules only."
+          "description": "Whether the requirement is mechanically decidable by inspecting a document. Defaults to true for `document` rules only. This says nothing about whether any given validator actually enforces it - that is a separate, downstream fact."
         },
         "since": {
           "$ref": "#/$defs/version",

@@ -19,17 +19,41 @@ A new rule is written with a `?` in place of the suffix and minted before it is 
 
 | Attribute | Meaning |
 |---|---|
-| `applies` | `document` (checkable by validating a schema/instance), `implementation` (constrains a library; needs a conformance suite), or `advisory`. Default `document` |
+| `applies` | `document` (decidable by validating a schema/instance), `implementation` (constrains a library; needs a conformance suite), or `advisory`. Default `document` |
 | `summary` | One short line for a CLI. Optional; the opening sentence is used when absent |
-| `checkable` | Override the default, which is true only for `document` rules |
+| `machine_checkable` | Override the default, which is true only for `document` rules |
 | `since` | Override the release; defaults to the current tag |
 | `deprecated` | `yes` to retire a rule. Its record stays in the catalog |
 | `superseded_by` | Comma-separated ids that replace a deprecated rule |
 | `in_note` | `yes` to allow a rule inside a `:::note`/`:::example`. See below |
 
-`level` (MUST / SHOULD / ...) and `text` are extracted from the prose, never authored, so the
-catalog cannot drift from the specification. `text` is the containing paragraph, or the containing
-list item when the rule is a bullet.
+`level` (MUST / SHOULD / ...), `text` and `context` are extracted from the prose, never authored,
+so the catalog cannot drift from the specification.
+
+### Put the marker on the sentence, not the paragraph
+
+**`text` is the one sentence the marker opens**, and `context` is the containing paragraph or list
+item around it, kept for display only. Only `text` is hashed into `text_sha256`, so rewording a
+neighbouring sentence no longer asks a human to re-accept a rule nobody touched.
+
+This makes the marker's position load-bearing. It must sit at the **start of the sentence that
+states the requirement**, not at the start of the paragraph leading up to it:
+
+```markdown
+The normative data model of OO-LD is the JSON data model shared by [[JSONSCHEMA]] and
+[[JSON-LD11]]. :rule[OOLD-CNF-1120]{...}JSON ([[RFC8259]]) is the canonical serialization: a
+conforming OO-LD schema or instance MUST be interchangeable as JSON.
+```
+
+Getting this wrong is not silent: extraction fails with *"marks a sentence with no RFC 2119
+keyword"* and names the file and line, because a sentence stating a requirement always contains
+one. The renderer wraps exactly the same span in a `<span class="rule" id="...">`, so the
+specification page and the catalog cannot disagree about where a rule begins and ends - both call
+`sentence_end()` in `scripts/rule_scope.py`.
+
+A sentence ends at `.`, `!` or `?` followed by whitespace and a capital letter. Periods inside a
+code span, in `e.g.`/`i.e.`, in an ellipsis, in a version number, and in a list item's numeral are
+all handled and do not end one.
 
 ## Ids are permanent, and the suffix means nothing
 
