@@ -149,8 +149,8 @@ def describe_missing(rid: str, was: str) -> list[str]:
 
 def describe_new(rule: dict) -> list[str]:
     """A new rule, and what it implies for the Python validator."""
-    kind = (rule.get("applies_to"), bool(rule.get("checkable")))
-    scope = f"{rule.get('applies_to')}" + (", checkable" if rule.get("checkable") else "")
+    kind = (rule.get("applies_to"), bool(rule.get("machine_checkable")))
+    scope = f"{rule.get('applies_to')}" + (", machine-checkable" if rule.get("machine_checkable") else "")
     return [
         f"    {rule['id']}  {rule.get('level')}  ({scope})",
         f"        {rule.get('summary')}",

@@ -182,7 +182,7 @@ Framing is not the only option for this transformation. When the source data liv
 
 ### JSON Schema {#jsonschema-extensions}
 
-:rule[OOLD-EXT-5184]{applies=document level=SHOULD summary="A schema should declare the OO-LD dialect meta-schema as its $schema."}OO-LD targets [[JSONSCHEMA]] (2020-12) as its normative dialect. An OO-LD schema SHOULD declare the OO-LD dialect meta-schema (which extends 2020-12) as its `$schema`, e.g. `"$schema": "https://oo-ld.org/latest/meta/oold-meta-schema.json"` - pinning a specific version (e.g. `.../0.4.0/meta/oold-meta-schema.json`) for reproducibility. Declaring the plain 2020-12 meta-schema (`https://json-schema.org/draft/2020-12/schema`) remains valid for tools that only understand standard JSON Schema.
+OO-LD targets [[JSONSCHEMA]] (2020-12) as its normative dialect. :rule[OOLD-EXT-5184]{applies=document level=SHOULD summary="A schema should declare the OO-LD dialect meta-schema as its $schema."}An OO-LD schema SHOULD declare the OO-LD dialect meta-schema (which extends 2020-12) as its `$schema`, e.g. `"$schema": "https://oo-ld.org/latest/meta/oold-meta-schema.json"` - pinning a specific version (e.g. `.../0.4.0/meta/oold-meta-schema.json`) for reproducibility. Declaring the plain 2020-12 meta-schema (`https://json-schema.org/draft/2020-12/schema`) remains valid for tools that only understand standard JSON Schema.
 
 :rule[OOLD-EXT-af50]{applies=document level=REQUIRED summary="JSON Schema 2020-12 is required as the dialect, because composition places $ref alongside sibling keywords."}2020-12 is REQUIRED, not merely preferred: OO-LD's composition places `$ref` alongside sibling keywords (e.g. a property carrying `type`, `x-oold-range` and `@context`, or `allOf: [{$ref: ...}]` next to `properties`). Keywords adjacent to `$ref` are only evaluated from JSON Schema 2019-09 onward; in Draft 4 and Draft 7 they are ignored ([[JSONSCHEMA]] §8.2.3.1). Keywords such as `const` (used throughout this document) are likewise only available from draft-06 onward. Migration from the earlier Draft-4-style notation: rename `definitions` to `$defs`, `id` to `$id`, and use the numeric form of `exclusiveMinimum`/`exclusiveMaximum` instead of the boolean form.
 
@@ -192,7 +192,7 @@ There are two distinct localization concerns: translating a schema's own annotat
 
 ##### Localizing schema annotations {#localizing-schema-annotations}
 
-:rule[OOLD-EXT-ef09]{applies=document level=MUST summary="x-oold-multilang-title/description must map BCP 47 language tags to translated strings."}The JSON Schema annotation keywords `title` and `description` carry a single, default human-readable string used by tooling (for example for UI generation). To provide localized variants, OO-LD adds the keywords `x-oold-multilang-title` and `x-oold-multilang-description`. Their value MUST be an object whose keys are [BCP 47](https://www.rfc-editor.org/info/bcp47) language tags (e.g. `en`, `de`, `en-GB`) and whose values are the translated strings. A schema SHOULD still provide a default `title` / `description`; a consumer that has no entry for the requested language falls back to that default. These keywords localize the schema's *own* labels and are not interpreted as JSON-LD.
+The JSON Schema annotation keywords `title` and `description` carry a single, default human-readable string used by tooling (for example for UI generation). To provide localized variants, OO-LD adds the keywords `x-oold-multilang-title` and `x-oold-multilang-description`. :rule[OOLD-EXT-ef09]{applies=document level=MUST summary="x-oold-multilang-title/description must map BCP 47 language tags to translated strings."}Their value MUST be an object whose keys are [BCP 47](https://www.rfc-editor.org/info/bcp47) language tags (e.g. `en`, `de`, `en-GB`) and whose values are the translated strings. A schema SHOULD still provide a default `title` / `description`; a consumer that has no entry for the requested language falls back to that default. These keywords localize the schema's *own* labels and are not interpreted as JSON-LD.
 
 :::example{title="Localized schema annotations"}
 ```json
@@ -295,7 +295,7 @@ JSON Schema itself supports linked data only in the form of a subobject; referen
 2. An **array of IRIs**, expressing a union of allowed target schemas, e.g. `["Organization.schema.json", "Person.schema.json"]`.
 
 3. An **OO-LD subschema**, the most expressive form. Unions (`anyOf` / `oneOf`),
-:rule[OOLD-EXT-3fe9]{applies=document level=MUST summary="References inside x-oold-range must use x-oold-ref, never $ref."}intersections (`allOf`) and inline constraints can be combined to describe an anonymous subclass. References to other schemas inside `x-oold-range` MUST use `x-oold-ref`, never `$ref` (see below). The single-IRI form (1) is a shorthand for `{ "allOf": [ { "x-oold-ref": "Organization.schema.json" } ] }`:
+intersections (`allOf`) and inline constraints can be combined to describe an anonymous subclass. :rule[OOLD-EXT-3fe9]{applies=document level=MUST summary="References inside x-oold-range must use x-oold-ref, never $ref."}References to other schemas inside `x-oold-range` MUST use `x-oold-ref`, never `$ref` (see below). The single-IRI form (1) is a shorthand for `{ "allOf": [ { "x-oold-ref": "Organization.schema.json" } ] }`:
 
 :::example{title="Range as a subschema (Organization located in Germany)"}
 ```json
@@ -321,7 +321,7 @@ An `x-oold-range` value is a *reference*: the property holds the target's IRI, a
 
 ##### Lexical form of the reference {#range-reference-form}
 
-:rule[OOLD-EXT-6ea3]{applies=document level=SHOULD summary="An IRI-valued property should constrain its lexical form with an IRI/URI-family format."}The value of an IRI-valued property is a JSON string. Its role as a reference comes from the `@context` (`"@type": "@id"`) and its class from `x-oold-range`. Its *lexical* form SHOULD be constrained with an IRI/URI-family `format` so that malformed values are rejected; the choices, from most to least permissive:
+The value of an IRI-valued property is a JSON string. Its role as a reference comes from the `@context` (`"@type": "@id"`) and its class from `x-oold-range`. :rule[OOLD-EXT-6ea3]{applies=document level=SHOULD summary="An IRI-valued property should constrain its lexical form with an IRI/URI-family format."}Its *lexical* form SHOULD be constrained with an IRI/URI-family `format` so that malformed values are rejected; the choices, from most to least permissive:
 
 - **Any IRI reference** - `"format": "iri-reference"`. By [[RFC3987]] this accepts absolute IRIs, compact IRIs (`ex:alice`, `schema:Person`) and context-relative references alike - the forms OO-LD instances routinely use - so it is the **RECOMMENDED** default. It also accepts a bare term such as `alice`, expanded against the context's `@base` / `@vocab`.
 - **Absolute IRIs only** - `"format": "iri"`. A compact IRI is itself a valid absolute IRI (scheme `ex`, path `alice`), so `iri` accepts `ex:alice`; choose it to additionally forbid relative references.
