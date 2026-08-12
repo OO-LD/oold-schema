@@ -24,6 +24,7 @@ import json
 import os
 import re
 import sys
+from html import escape
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
@@ -40,10 +41,7 @@ SHOULD NOT or REQUIRED) from the [OO-LD specification](spec/). Validators cite t
 output, so a report that says a document fails `OOLD-RT-08f2` should let you find exactly what that
 means - this page is where that lookup lands. Ids are permanent and never reused: a rule that is
 retired stays on this page, marked deprecated, so an id from an old report still resolves to
-something. Machine-checkable means a validator could decide the rule by inspecting a document; it
-does not mean the OO-LD validator actually does. Whether it does is reported by
-`oold rules list --unchecked` in the [oold-python](https://github.com/OO-LD/oold-python) repository,
-not here."""
+something."""
 
 
 #: A cross-reference to another part of the specification, as it survives into a rule's `text`.
@@ -96,7 +94,72 @@ def load_catalog() -> dict:
     return catalog
 
 
-def render_rule(rule: dict) -> str:
+#: What each property on an entry means. Defined once and used twice: as the legend table at the
+#: top of the page, and as the tooltip on that property in every entry, so a reader forty rules
+#: down does not have to scroll back up to remember what "Machine-checkable" claims.
+PROPERTY_HELP = {
+    "Level": (
+        "The RFC 2119 keyword this requirement is stated with. A validator reports a MUST-level "
+        "finding as a failure and a SHOULD-level one as a warning, so the level decides severity "
+        "rather than the check that found it."
+    ),
+    "Applies to": (
+        "Who the requirement binds: a document, an implementation of OO-LD, or nobody in "
+        "particular. This decides what is even able to enforce it."
+    ),
+    "Machine-checkable": (
+        "Whether a validator could decide this rule by inspecting a document. It does not say the "
+        "OO-LD validator enforces it today - `oold rules list --unchecked` reports that."
+    ),
+    "Since": (
+        "The specification release this rule first appeared in. Ids are permanent and never "
+        "reused, so this does not change once recorded."
+    ),
+}
+
+
+def plain(text: str) -> str:
+    """Markdown stripped back to what a `title` attribute can show.
+
+    A tooltip is plain text: backticks would appear as literal characters, so the same sentence
+    that reads as code in the legend table has to lose them here.
+    """
+    return text.replace("`", "")
+
+
+def labelled(name: str, value: str, value_help: str = "") -> str:
+    """One property bullet, with its explanation on hover."""
+    tip = escape(plain(PROPERTY_HELP[name]), quote=True)
+    shown = f'<span title="{escape(plain(value_help), quote=True)}">{value}</span>' if value_help else value
+    return f'- <strong title="{tip}">{name}:</strong> {shown}'
+
+
+def render_legend(applies_to: dict[str, str]) -> str:
+    """The same explanations as a table, once, at the top.
+
+    `applies_to` comes from the catalogue rather than being restated here, so the page cannot
+    disagree with the data it renders.
+    """
+    kinds = "; ".join(f"`{kind}` - {desc[0].lower() + desc[1:]}" for kind, desc in applies_to.items())
+    rows = [
+        "## How to read an entry",
+        "",
+        "Every rule below lists the same four properties. Hovering over a property name in an entry",
+        "repeats the explanation, so you do not have to come back here.",
+        "",
+        "| Property | Meaning |",
+        "| --- | --- |",
+    ]
+    for name, help_text in PROPERTY_HELP.items():
+        meaning = help_text
+        if name == "Applies to":
+            meaning = f"{help_text} {kinds}."
+        rows.append(f"| **{name}** | {meaning} |")
+    rows.append("")
+    return "\n".join(rows)
+
+
+def render_rule(rule: dict, applies_to: dict[str, str]) -> str:
     lines = [f"### {rule['id']}", ""]
 
     if rule.get("deprecated"):
@@ -108,10 +171,11 @@ def render_rule(rule: dict) -> str:
         lines.append(note)
         lines.append("")
 
-    lines.append(f"- **Level:** {rule['level']}")
-    lines.append(f"- **Applies to:** {rule['applies_to']}")
-    lines.append(f"- **Machine-checkable:** {'yes' if rule.get('machine_checkable') else 'no'}")
-    lines.append(f"- **Since:** {rule['since']}")
+    kind = rule["applies_to"]
+    lines.append(labelled("Level", rule["level"]))
+    lines.append(labelled("Applies to", kind, applies_to.get(kind, "")))
+    lines.append(labelled("Machine-checkable", "yes" if rule.get("machine_checkable") else "no"))
+    lines.append(labelled("Since", rule["since"]))
     lines.append("")
 
     lines.append(link_to_spec(rule["summary"]))
@@ -131,10 +195,10 @@ def render_rule(rule: dict) -> str:
     return "\n".join(lines)
 
 
-def render_area(code: str, description: str, rules: list[dict]) -> str:
+def render_area(code: str, description: str, rules: list[dict], applies_to: dict[str, str]) -> str:
     parts = [f"## {code} - {description}", ""]
     for rule in sorted(rules, key=lambda r: r["id"]):
-        parts.append(render_rule(rule))
+        parts.append(render_rule(rule, applies_to))
     return "\n".join(parts)
 
 
@@ -147,11 +211,13 @@ def build() -> None:
     for rule in rules:
         by_area.setdefault(rule["area"], []).append(rule)
 
-    sections = [BANNER, "", "# Rule catalogue", "", LEAD, ""]
+    applies_to: dict[str, str] = catalog.get("applies_to", {})
+
+    sections = [BANNER, "", "# Rule catalogue", "", LEAD, "", render_legend(applies_to)]
     for code, description in areas.items():
         if not by_area.get(code):
             continue
-        sections.append(render_area(code, description, by_area[code]))
+        sections.append(render_area(code, description, by_area[code], applies_to))
 
     text = "\n".join(sections)
     text = text.rstrip("\n") + "\n"
