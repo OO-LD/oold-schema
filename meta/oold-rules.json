@@ -33,6 +33,36 @@
       "source": "06-composition.md:49"
     },
     {
+      "id": "OOLD-CMP-5266",
+      "area": "CMP",
+      "level": "SHOULD",
+      "applies_to": "document",
+      "section": "composition",
+      "summary": "An embedded object property should be reflected as that property's scoped JSON-LD context.",
+      "text": "An embedded object reached under an object-valued property - one whose value is an object, directly (`type: object`) or as the `items` of an array (`type: array`), whether inlined or brought in by `$ref` - SHOULD be reflected as that property's scoped JSON-LD context, so its terms resolve only under that property and cannot conflict with a same-named term elsewhere.",
+      "text_sha256": "62cca7366f12688f2708768b351e60662cb4704c3039f2c7f9243446ec9d21a6",
+      "context": "It MUST NOT be required to further process an OO-LD schema document in order to interpret it as a JSON-LD context. This implies that all occurrences of `$ref` in the schema are reflected in the JSON-LD context. An embedded object reached under an object-valued property - one whose value is an object, directly (`type: object`) or as the `items` of an array (`type: array`), whether inlined or brought in by `$ref` - SHOULD be reflected as that property's scoped JSON-LD context, so its terms resolve only under that property and cannot conflict with a same-named term elsewhere. That scoped context MAY reference the embedded schema remotely (by URL) or carry its terms inline. Where the embed graph is cyclic - a value type whose scoped context transitively references itself through remote schema files - JSON-LD processors cannot resolve the recursive remote contexts (see [](#round-trip)); breaking the cycle requires migrating the remote reference to a local (inline) context - inlining the term definitions so there is no remote hop to recurse - which MAY be flattened onto the root context as a shared vocabulary. Moving the remote reference to the root does not break the cycle; only replacing it with local definitions does. A `$ref` at the root level of the OO-LD schema is listed at the root of the JSON-LD context. (A scalar reference - a property whose value is an IRI string, not an embedded object - carries its target type in [`x-oold-range`](#range-of-properties), not a `$ref`, and so contributes no scoped context.) In case of multiple `$ref` within `allOf` the corresponding remote contexts are merged into an array-valued `@context` (see [](#merging-remote-contexts)). For `oneOf` / `anyOf` this requires care to avoid conflicts. At any time the importing OO-LD schema MAY define its own or override the imported JSON-LD context.",
+      "machine_checkable": true,
+      "since": "1.0.0-rc.1",
+      "deprecated": false,
+      "source": "06-composition.md:5"
+    },
+    {
+      "id": "OOLD-CMP-53bf",
+      "area": "CMP",
+      "level": "SHOULD",
+      "applies_to": "document",
+      "section": "merging-remote-contexts",
+      "summary": "A schema's JSON Schema and JSON-LD base URIs should be aligned so a relative reference resolves the same under both.",
+      "text": "Relative references resolve against the schema's `$id` (the JSON Schema base URI) and, on the JSON-LD side, against `@base` / the retrieval URL; these base URIs SHOULD be aligned so a relative reference resolves to the same absolute URL under both.",
+      "text_sha256": "47730120a068a22fa8d75d91b9797166ad500f332b8b84e06f82476d15296511",
+      "context": "Independent references and base URIs. A JSON Schema `$ref` and a JSON-LD `@context` entry are independent references: they MAY point to the same document (the typical OO-LD case, where one document is both a schema and a context) or to different documents - for example a plain JSON Schema referenced via `$ref` together with a separate remote `@context` that supplies the semantics. Relative references resolve against the schema's `$id` (the JSON Schema base URI) and, on the JSON-LD side, against `@base` / the retrieval URL; these base URIs SHOULD be aligned so a relative reference resolves to the same absolute URL under both. `$id` MUST NOT contain a non-empty fragment (JSONSCHEMA §8.2.1).",
+      "machine_checkable": true,
+      "since": "1.0.0-rc.1",
+      "deprecated": false,
+      "source": "06-composition.md:74"
+    },
+    {
       "id": "OOLD-CMP-a05a",
       "area": "CMP",
       "level": "MUST",
@@ -228,6 +258,21 @@
       "source": "09-extensions.md:187"
     },
     {
+      "id": "OOLD-EXT-dd76",
+      "area": "EXT",
+      "level": "SHOULD",
+      "applies_to": "document",
+      "section": "localizing-schema-annotations",
+      "summary": "A schema using multilingual annotations should still provide a default title and description.",
+      "text": "A schema SHOULD still provide a default `title` / `description`; a consumer that has no entry for the requested language falls back to that default.",
+      "text_sha256": "bbbf0172cbf0c77fbe39625c8df206a570aa41f405c9e9a213152154d1e4486d",
+      "context": "The JSON Schema annotation keywords `title` and `description` carry a single, default human-readable string used by tooling (for example for UI generation). To provide localized variants, OO-LD adds the keywords `x-oold-multilang-title` and `x-oold-multilang-description`. Their value MUST be an object whose keys are [BCP 47](https://www.rfc-editor.org/info/bcp47) language tags (e.g. `en`, `de`, `en-GB`) and whose values are the translated strings. A schema SHOULD still provide a default `title` / `description`; a consumer that has no entry for the requested language falls back to that default. These keywords localize the schema's own labels and are not interpreted as JSON-LD.",
+      "machine_checkable": true,
+      "since": "1.0.0-rc.1",
+      "deprecated": false,
+      "source": "09-extensions.md:195"
+    },
+    {
       "id": "OOLD-EXT-ddda",
       "area": "EXT",
       "level": "SHOULD",
@@ -393,6 +438,21 @@
       "source": "07-schema-instances.md:37"
     },
     {
+      "id": "OOLD-INS-cd80",
+      "area": "INS",
+      "level": "SHOULD",
+      "applies_to": "document",
+      "section": "identity",
+      "summary": "An instance @id should be resolvable, and is recommended to be minted from an autogenerated UUID.",
+      "text": "The `@id` SHOULD be resolvable, and it is RECOMMENDED to mint it from an autogenerated UUID - mirroring the schema's `x-oold-uuid` - e.g. `https://example.org/a1b2c3d4-1234-...`.",
+      "text_sha256": "c6075abdc17f9bb557fca8e7cc0d67b4ebc4af17797cb1ce28c4b6f8035cc89f",
+      "context": "An implementation MAY use a non-IRI identifier internally, but when it exports an identifiable entity (to JSON-LD / RDF) it MUST assign an `@id` (or the aliased `id`). The `@id` SHOULD be resolvable, and it is RECOMMENDED to mint it from an autogenerated UUID - mirroring the schema's `x-oold-uuid` - e.g. `https://example.org/a1b2c3d4-1234-...`.",
+      "machine_checkable": false,
+      "since": "1.0.0-rc.1",
+      "deprecated": false,
+      "source": "07-schema-instances.md:62"
+    },
+    {
       "id": "OOLD-INS-da1a",
       "area": "INS",
       "level": "SHOULD",
@@ -483,6 +543,21 @@
       "source": "05-basic-concepts.md:11"
     },
     {
+      "id": "OOLD-VER-2e63",
+      "area": "VER",
+      "level": "SHOULD",
+      "applies_to": "document",
+      "section": "identification",
+      "summary": "A schema should be resolvable via its $id.",
+      "text": "The schema SHOULD be resolvable via this URI.",
+      "text_sha256": "fd7f4ef994bb7fea2782f7c30ee8f8c2a3f9b8161c61ced1f2f038a64f106c2c",
+      "context": "OO-LD schemas MUST have a `$id` (JSONSCHEMA §8.2.1) which works as a global and unique identifier of the schema. The value of `$id` MAY be an absolute URI (details below). The schema SHOULD be resolvable via this URI. The schema SHOULD have an annotation `x-oold-uuid` with a UUID value.",
+      "machine_checkable": false,
+      "since": "1.0.0-rc.1",
+      "deprecated": false,
+      "source": "08-identification-versioning.md:5"
+    },
+    {
       "id": "OOLD-VER-3662",
       "area": "VER",
       "level": "SHOULD",
@@ -526,6 +601,21 @@
       "since": "1.0.0-rc.1",
       "deprecated": false,
       "source": "08-identification-versioning.md:63"
+    },
+    {
+      "id": "OOLD-VER-edb9",
+      "area": "VER",
+      "level": "SHOULD",
+      "applies_to": "document",
+      "section": "identification",
+      "summary": "A schema should carry an x-oold-uuid annotation holding a UUID value.",
+      "text": "The schema SHOULD have an annotation `x-oold-uuid` with a UUID value.",
+      "text_sha256": "0d1901b754364d33a17411f33fe61ba98d469d1df7389adab8f0a44c9276f355",
+      "context": "OO-LD schemas MUST have a `$id` (JSONSCHEMA §8.2.1) which works as a global and unique identifier of the schema. The value of `$id` MAY be an absolute URI (details below). The schema SHOULD be resolvable via this URI. The schema SHOULD have an annotation `x-oold-uuid` with a UUID value.",
+      "machine_checkable": true,
+      "since": "1.0.0-rc.1",
+      "deprecated": false,
+      "source": "08-identification-versioning.md:5"
     }
   ]
 }
