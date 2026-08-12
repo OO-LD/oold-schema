@@ -7,19 +7,28 @@ SHOULD NOT or REQUIRED) from the [OO-LD specification](spec/). Validators cite t
 output, so a report that says a document fails `OOLD-RT-08f2` should let you find exactly what that
 means - this page is where that lookup lands. Ids are permanent and never reused: a rule that is
 retired stays on this page, marked deprecated, so an id from an old report still resolves to
-something. Machine-checkable means a validator could decide the rule by inspecting a document; it
-does not mean the OO-LD validator actually does. Whether it does is reported by
-`oold rules list --unchecked` in the [oold-python](https://github.com/OO-LD/oold-python) repository,
-not here.
+something.
+
+## How to read an entry
+
+Every rule below lists the same four properties. Hovering over a property name in an entry
+repeats the explanation, so you do not have to come back here.
+
+| Property | Meaning |
+| --- | --- |
+| **Level** | The RFC 2119 keyword this requirement is stated with. A validator reports a MUST-level finding as a failure and a SHOULD-level one as a warning, so the level decides severity rather than the check that found it. |
+| **Applies to** | Who the requirement binds: a document, an implementation of OO-LD, or nobody in particular. This decides what is even able to enforce it. `document` - checkable by validating a schema or instance document; `implementation` - constrains an OO-LD implementation; needs a library conformance suite; `advisory` - guidance; nothing verifies it automatically. |
+| **Machine-checkable** | Whether a validator could decide this rule by inspecting a document. It does not say the OO-LD validator enforces it today - `oold rules list --unchecked` reports that. |
+| **Since** | The specification release this rule first appeared in. Ids are permanent and never reused, so this does not change once recorded. |
 
 ## CNF - Serialization and conformance
 
 ### OOLD-CNF-1120
 
-- **Level:** MUST
-- **Applies to:** document
-- **Machine-checkable:** no
-- **Since:** 1.0.0-rc.1
+- <strong title="The RFC 2119 keyword this requirement is stated with. A validator reports a MUST-level finding as a failure and a SHOULD-level one as a warning, so the level decides severity rather than the check that found it.">Level:</strong> MUST
+- <strong title="Who the requirement binds: a document, an implementation of OO-LD, or nobody in particular. This decides what is even able to enforce it.">Applies to:</strong> <span title="Checkable by validating a schema or instance document">document</span>
+- <strong title="Whether a validator could decide this rule by inspecting a document. It does not say the OO-LD validator enforces it today - oold rules list --unchecked reports that.">Machine-checkable:</strong> no
+- <strong title="The specification release this rule first appeared in. Ids are permanent and never reused, so this does not change once recorded.">Since:</strong> 1.0.0-rc.1
 
 A conforming schema or instance must be interchangeable as JSON, canonicalized per RFC 8785.
 
@@ -33,10 +42,10 @@ See [this rule in the specification](spec/#OOLD-CNF-1120) (section: notation).
 
 ### OOLD-SCH-a9ee
 
-- **Level:** MUST NOT
-- **Applies to:** implementation
-- **Machine-checkable:** no
-- **Since:** 1.0.0-rc.1
+- <strong title="The RFC 2119 keyword this requirement is stated with. A validator reports a MUST-level finding as a failure and a SHOULD-level one as a warning, so the level decides severity rather than the check that found it.">Level:</strong> MUST NOT
+- <strong title="Who the requirement binds: a document, an implementation of OO-LD, or nobody in particular. This decides what is even able to enforce it.">Applies to:</strong> <span title="Constrains an OO-LD implementation; needs a library conformance suite">implementation</span>
+- <strong title="Whether a validator could decide this rule by inspecting a document. It does not say the OO-LD validator enforces it today - oold rules list --unchecked reports that.">Machine-checkable:</strong> no
+- <strong title="The specification release this rule first appeared in. Ids are permanent and never reused, so this does not change once recorded.">Since:</strong> 1.0.0-rc.1
 
 An OO-LD schema document must not be interpreted as a JSON-LD document.
 
@@ -50,10 +59,10 @@ See [this rule in the specification](spec/#OOLD-SCH-a9ee) (section: basic-concep
 
 ### OOLD-CMP-1d7e
 
-- **Level:** MUST NOT
-- **Applies to:** document
-- **Machine-checkable:** yes
-- **Since:** 1.0.0-rc.1
+- <strong title="The RFC 2119 keyword this requirement is stated with. A validator reports a MUST-level finding as a failure and a SHOULD-level one as a warning, so the level decides severity rather than the check that found it.">Level:</strong> MUST NOT
+- <strong title="Who the requirement binds: a document, an implementation of OO-LD, or nobody in particular. This decides what is even able to enforce it.">Applies to:</strong> <span title="Checkable by validating a schema or instance document">document</span>
+- <strong title="Whether a validator could decide this rule by inspecting a document. It does not say the OO-LD validator enforces it today - oold rules list --unchecked reports that.">Machine-checkable:</strong> yes
+- <strong title="The specification release this rule first appeared in. Ids are permanent and never reused, so this does not change once recorded.">Since:</strong> 1.0.0-rc.1
 
 Reflected oneOf/anyOf branch contexts must not map the same keyword to different IRIs at the root.
 
@@ -65,10 +74,10 @@ See [this rule in the specification](spec/#OOLD-CMP-1d7e) (section: merging-remo
 
 ### OOLD-CMP-5266
 
-- **Level:** SHOULD
-- **Applies to:** document
-- **Machine-checkable:** yes
-- **Since:** 1.0.0-rc.1
+- <strong title="The RFC 2119 keyword this requirement is stated with. A validator reports a MUST-level finding as a failure and a SHOULD-level one as a warning, so the level decides severity rather than the check that found it.">Level:</strong> SHOULD
+- <strong title="Who the requirement binds: a document, an implementation of OO-LD, or nobody in particular. This decides what is even able to enforce it.">Applies to:</strong> <span title="Checkable by validating a schema or instance document">document</span>
+- <strong title="Whether a validator could decide this rule by inspecting a document. It does not say the OO-LD validator enforces it today - oold rules list --unchecked reports that.">Machine-checkable:</strong> yes
+- <strong title="The specification release this rule first appeared in. Ids are permanent and never reused, so this does not change once recorded.">Since:</strong> 1.0.0-rc.1
 
 An embedded object property should be reflected as that property's scoped JSON-LD context.
 
@@ -80,10 +89,10 @@ See [this rule in the specification](spec/#OOLD-CMP-5266) (section: composition)
 
 ### OOLD-CMP-53bf
 
-- **Level:** SHOULD
-- **Applies to:** document
-- **Machine-checkable:** yes
-- **Since:** 1.0.0-rc.1
+- <strong title="The RFC 2119 keyword this requirement is stated with. A validator reports a MUST-level finding as a failure and a SHOULD-level one as a warning, so the level decides severity rather than the check that found it.">Level:</strong> SHOULD
+- <strong title="Who the requirement binds: a document, an implementation of OO-LD, or nobody in particular. This decides what is even able to enforce it.">Applies to:</strong> <span title="Checkable by validating a schema or instance document">document</span>
+- <strong title="Whether a validator could decide this rule by inspecting a document. It does not say the OO-LD validator enforces it today - oold rules list --unchecked reports that.">Machine-checkable:</strong> yes
+- <strong title="The specification release this rule first appeared in. Ids are permanent and never reused, so this does not change once recorded.">Since:</strong> 1.0.0-rc.1
 
 A schema's JSON Schema and JSON-LD base URIs should be aligned so a relative reference resolves the same under both.
 
@@ -95,10 +104,10 @@ See [this rule in the specification](spec/#OOLD-CMP-53bf) (section: merging-remo
 
 ### OOLD-CMP-a05a
 
-- **Level:** MUST
-- **Applies to:** document
-- **Machine-checkable:** yes
-- **Since:** 1.0.0-rc.1
+- <strong title="The RFC 2119 keyword this requirement is stated with. A validator reports a MUST-level finding as a failure and a SHOULD-level one as a warning, so the level decides severity rather than the check that found it.">Level:</strong> MUST
+- <strong title="Who the requirement binds: a document, an implementation of OO-LD, or nobody in particular. This decides what is even able to enforce it.">Applies to:</strong> <span title="Checkable by validating a schema or instance document">document</span>
+- <strong title="Whether a validator could decide this rule by inspecting a document. It does not say the OO-LD validator enforces it today - oold rules list --unchecked reports that.">Machine-checkable:</strong> yes
+- <strong title="The specification release this rule first appeared in. Ids are permanent and never reused, so this does not change once recorded.">Since:</strong> 1.0.0-rc.1
 
 A scoped context that must apply only to the immediate node sets @propagate false; contexts in one array share it.
 
@@ -110,10 +119,10 @@ See [this rule in the specification](spec/#OOLD-CMP-a05a) (section: merging-remo
 
 ### OOLD-CMP-b926
 
-- **Level:** MUST NOT
-- **Applies to:** document
-- **Machine-checkable:** yes
-- **Since:** 1.0.0-rc.1
+- <strong title="The RFC 2119 keyword this requirement is stated with. A validator reports a MUST-level finding as a failure and a SHOULD-level one as a warning, so the level decides severity rather than the check that found it.">Level:</strong> MUST NOT
+- <strong title="Who the requirement binds: a document, an implementation of OO-LD, or nobody in particular. This decides what is even able to enforce it.">Applies to:</strong> <span title="Checkable by validating a schema or instance document">document</span>
+- <strong title="Whether a validator could decide this rule by inspecting a document. It does not say the OO-LD validator enforces it today - oold rules list --unchecked reports that.">Machine-checkable:</strong> yes
+- <strong title="The specification release this rule first appeared in. Ids are permanent and never reused, so this does not change once recorded.">Since:</strong> 1.0.0-rc.1
 
 A schema must be usable as a JSON-LD context with no further processing, so every $ref is reflected in the @context.
 
@@ -125,10 +134,10 @@ See [this rule in the specification](spec/#OOLD-CMP-b926) (section: composition)
 
 ### OOLD-CMP-dd2b
 
-- **Level:** MUST NOT
-- **Applies to:** document
-- **Machine-checkable:** yes
-- **Since:** 1.0.0-rc.1
+- <strong title="The RFC 2119 keyword this requirement is stated with. A validator reports a MUST-level finding as a failure and a SHOULD-level one as a warning, so the level decides severity rather than the check that found it.">Level:</strong> MUST NOT
+- <strong title="Who the requirement binds: a document, an implementation of OO-LD, or nobody in particular. This decides what is even able to enforce it.">Applies to:</strong> <span title="Checkable by validating a schema or instance document">document</span>
+- <strong title="Whether a validator could decide this rule by inspecting a document. It does not say the OO-LD validator enforces it today - oold rules list --unchecked reports that.">Machine-checkable:</strong> yes
+- <strong title="The specification release this rule first appeared in. Ids are permanent and never reused, so this does not change once recorded.">Since:</strong> 1.0.0-rc.1
 
 A schema $id must not contain a non-empty fragment.
 
@@ -140,10 +149,10 @@ See [this rule in the specification](spec/#OOLD-CMP-dd2b) (section: merging-remo
 
 ### OOLD-CMP-e4a3
 
-- **Level:** MUST
-- **Applies to:** document
-- **Machine-checkable:** yes
-- **Since:** 1.0.0-rc.1
+- <strong title="The RFC 2119 keyword this requirement is stated with. A validator reports a MUST-level finding as a failure and a SHOULD-level one as a warning, so the level decides severity rather than the check that found it.">Level:</strong> MUST
+- <strong title="Who the requirement binds: a document, an implementation of OO-LD, or nobody in particular. This decides what is even able to enforce it.">Applies to:</strong> <span title="Checkable by validating a schema or instance document">document</span>
+- <strong title="Whether a validator could decide this rule by inspecting a document. It does not say the OO-LD validator enforces it today - oold rules list --unchecked reports that.">Machine-checkable:</strong> yes
+- <strong title="The specification release this rule first appeared in. Ids are permanent and never reused, so this does not change once recorded.">Since:</strong> 1.0.0-rc.1
 
 A schema with multiple $refs must list their remote contexts as an array, in allOf order.
 
@@ -155,10 +164,10 @@ See [this rule in the specification](spec/#OOLD-CMP-e4a3) (section: merging-remo
 
 ### OOLD-CMP-f3c7
 
-- **Level:** MUST NOT
-- **Applies to:** document
-- **Machine-checkable:** yes
-- **Since:** 1.0.0-rc.1
+- <strong title="The RFC 2119 keyword this requirement is stated with. A validator reports a MUST-level finding as a failure and a SHOULD-level one as a warning, so the level decides severity rather than the check that found it.">Level:</strong> MUST NOT
+- <strong title="Who the requirement binds: a document, an implementation of OO-LD, or nobody in particular. This decides what is even able to enforce it.">Applies to:</strong> <span title="Checkable by validating a schema or instance document">document</span>
+- <strong title="Whether a validator could decide this rule by inspecting a document. It does not say the OO-LD validator enforces it today - oold rules list --unchecked reports that.">Machine-checkable:</strong> yes
+- <strong title="The specification release this rule first appeared in. Ids are permanent and never reused, so this does not change once recorded.">Since:</strong> 1.0.0-rc.1
 
 Composition is narrow-only: a derived schema may restrict a constraint but must not relax it.
 
@@ -172,10 +181,10 @@ See [this rule in the specification](spec/#OOLD-CMP-f3c7) (section: merge-and-ov
 
 ### OOLD-INS-1d33
 
-- **Level:** MUST
-- **Applies to:** implementation
-- **Machine-checkable:** no
-- **Since:** 1.0.0-rc.1
+- <strong title="The RFC 2119 keyword this requirement is stated with. A validator reports a MUST-level finding as a failure and a SHOULD-level one as a warning, so the level decides severity rather than the check that found it.">Level:</strong> MUST
+- <strong title="Who the requirement binds: a document, an implementation of OO-LD, or nobody in particular. This decides what is even able to enforce it.">Applies to:</strong> <span title="Constrains an OO-LD implementation; needs a library conformance suite">implementation</span>
+- <strong title="Whether a validator could decide this rule by inspecting a document. It does not say the OO-LD validator enforces it today - oold rules list --unchecked reports that.">Machine-checkable:</strong> no
+- <strong title="The specification release this rule first appeared in. Ids are permanent and never reused, so this does not change once recorded.">Since:</strong> 1.0.0-rc.1
 
 An exported identifiable entity must carry an IRI.
 
@@ -187,10 +196,10 @@ See [this rule in the specification](spec/#OOLD-INS-1d33) (section: identity).
 
 ### OOLD-INS-1df7
 
-- **Level:** MUST NOT
-- **Applies to:** document
-- **Machine-checkable:** yes
-- **Since:** 1.0.0-rc.1
+- <strong title="The RFC 2119 keyword this requirement is stated with. A validator reports a MUST-level finding as a failure and a SHOULD-level one as a warning, so the level decides severity rather than the check that found it.">Level:</strong> MUST NOT
+- <strong title="Who the requirement binds: a document, an implementation of OO-LD, or nobody in particular. This decides what is even able to enforce it.">Applies to:</strong> <span title="Checkable by validating a schema or instance document">document</span>
+- <strong title="Whether a validator could decide this rule by inspecting a document. It does not say the OO-LD validator enforces it today - oold rules list --unchecked reports that.">Machine-checkable:</strong> yes
+- <strong title="The specification release this rule first appeared in. Ids are permanent and never reused, so this does not change once recorded.">Since:</strong> 1.0.0-rc.1
 
 Under the value-form pattern a reference is written as an object and its term must not carry @type.
 
@@ -202,10 +211,10 @@ See [this rule in the specification](spec/#OOLD-INS-1df7) (section: value-forms)
 
 ### OOLD-INS-27aa
 
-- **Level:** SHOULD NOT
-- **Applies to:** implementation
-- **Machine-checkable:** no
-- **Since:** 1.0.0-rc.1
+- <strong title="The RFC 2119 keyword this requirement is stated with. A validator reports a MUST-level finding as a failure and a SHOULD-level one as a warning, so the level decides severity rather than the check that found it.">Level:</strong> SHOULD NOT
+- <strong title="Who the requirement binds: a document, an implementation of OO-LD, or nobody in particular. This decides what is even able to enforce it.">Applies to:</strong> <span title="Constrains an OO-LD implementation; needs a library conformance suite">implementation</span>
+- <strong title="Whether a validator could decide this rule by inspecting a document. It does not say the OO-LD validator enforces it today - oold rules list --unchecked reports that.">Machine-checkable:</strong> no
+- <strong title="The specification release this rule first appeared in. Ids are permanent and never reused, so this does not change once recorded.">Since:</strong> 1.0.0-rc.1
 
 A consumer should not blindly trust the schema an instance declares for itself.
 
@@ -217,10 +226,10 @@ See [this rule in the specification](spec/#OOLD-INS-27aa) (section: referencing-
 
 ### OOLD-INS-2b3f
 
-- **Level:** SHOULD
-- **Applies to:** document
-- **Machine-checkable:** yes
-- **Since:** 1.0.0-rc.1
+- <strong title="The RFC 2119 keyword this requirement is stated with. A validator reports a MUST-level finding as a failure and a SHOULD-level one as a warning, so the level decides severity rather than the check that found it.">Level:</strong> SHOULD
+- <strong title="Who the requirement binds: a document, an implementation of OO-LD, or nobody in particular. This decides what is even able to enforce it.">Applies to:</strong> <span title="Checkable by validating a schema or instance document">document</span>
+- <strong title="Whether a validator could decide this rule by inspecting a document. It does not say the OO-LD validator enforces it today - oold rules list --unchecked reports that.">Machine-checkable:</strong> yes
+- <strong title="The specification release this rule first appeared in. Ids are permanent and never reused, so this does not change once recorded.">Since:</strong> 1.0.0-rc.1
 
 Schemas should expose @id through an aliased id property.
 
@@ -230,10 +239,10 @@ See [this rule in the specification](spec/#OOLD-INS-2b3f) (section: identity).
 
 ### OOLD-INS-2e5d
 
-- **Level:** MUST NOT
-- **Applies to:** document
-- **Machine-checkable:** yes
-- **Since:** 1.0.0-rc.1
+- <strong title="The RFC 2119 keyword this requirement is stated with. A validator reports a MUST-level finding as a failure and a SHOULD-level one as a warning, so the level decides severity rather than the check that found it.">Level:</strong> MUST NOT
+- <strong title="Who the requirement binds: a document, an implementation of OO-LD, or nobody in particular. This decides what is even able to enforce it.">Applies to:</strong> <span title="Checkable by validating a schema or instance document">document</span>
+- <strong title="Whether a validator could decide this rule by inspecting a document. It does not say the OO-LD validator enforces it today - oold rules list --unchecked reports that.">Machine-checkable:</strong> yes
+- <strong title="The specification release this rule first appeared in. Ids are permanent and never reused, so this does not change once recorded.">Since:</strong> 1.0.0-rc.1
 
 A property whose range includes free text must not use @type @id.
 
@@ -245,10 +254,10 @@ See [this rule in the specification](spec/#OOLD-INS-2e5d) (section: value-forms)
 
 ### OOLD-INS-4b5c
 
-- **Level:** MUST
-- **Applies to:** document
-- **Machine-checkable:** yes
-- **Since:** 1.0.0-rc.1
+- <strong title="The RFC 2119 keyword this requirement is stated with. A validator reports a MUST-level finding as a failure and a SHOULD-level one as a warning, so the level decides severity rather than the check that found it.">Level:</strong> MUST
+- <strong title="Who the requirement binds: a document, an implementation of OO-LD, or nobody in particular. This decides what is even able to enforce it.">Applies to:</strong> <span title="Checkable by validating a schema or instance document">document</span>
+- <strong title="Whether a validator could decide this rule by inspecting a document. It does not say the OO-LD validator enforces it today - oold rules list --unchecked reports that.">Machine-checkable:</strong> yes
+- <strong title="The specification release this rule first appeared in. Ids are permanent and never reused, so this does not change once recorded.">Since:</strong> 1.0.0-rc.1
 
 An inline type must be consistent with the schema's x-oold-instance-rdf-type.
 
@@ -260,10 +269,10 @@ See [this rule in the specification](spec/#OOLD-INS-4b5c) (section: semantic-typ
 
 ### OOLD-INS-75c6
 
-- **Level:** MUST
-- **Applies to:** implementation
-- **Machine-checkable:** no
-- **Since:** 1.0.0-rc.1
+- <strong title="The RFC 2119 keyword this requirement is stated with. A validator reports a MUST-level finding as a failure and a SHOULD-level one as a warning, so the level decides severity rather than the check that found it.">Level:</strong> MUST
+- <strong title="Who the requirement binds: a document, an implementation of OO-LD, or nobody in particular. This decides what is even able to enforce it.">Applies to:</strong> <span title="Constrains an OO-LD implementation; needs a library conformance suite">implementation</span>
+- <strong title="Whether a validator could decide this rule by inspecting a document. It does not say the OO-LD validator enforces it today - oold rules list --unchecked reports that.">Machine-checkable:</strong> no
+- <strong title="The specification release this rule first appeared in. Ids are permanent and never reused, so this does not change once recorded.">Since:</strong> 1.0.0-rc.1
 
 Tooling exporting an instance must materialize the schema-declared rdf:type(s) as @type.
 
@@ -275,10 +284,10 @@ See [this rule in the specification](spec/#OOLD-INS-75c6) (section: semantic-typ
 
 ### OOLD-INS-9416
 
-- **Level:** SHOULD
-- **Applies to:** document
-- **Machine-checkable:** yes
-- **Since:** 1.0.0-rc.1
+- <strong title="The RFC 2119 keyword this requirement is stated with. A validator reports a MUST-level finding as a failure and a SHOULD-level one as a warning, so the level decides severity rather than the check that found it.">Level:</strong> SHOULD
+- <strong title="Who the requirement binds: a document, an implementation of OO-LD, or nobody in particular. This decides what is even able to enforce it.">Applies to:</strong> <span title="Checkable by validating a schema or instance document">document</span>
+- <strong title="Whether a validator could decide this rule by inspecting a document. It does not say the OO-LD validator enforces it today - oold rules list --unchecked reports that.">Machine-checkable:</strong> yes
+- <strong title="The specification release this rule first appeared in. Ids are permanent and never reused, so this does not change once recorded.">Since:</strong> 1.0.0-rc.1
 
 Instances should reference a versioned schema URL.
 
@@ -288,10 +297,10 @@ See [this rule in the specification](spec/#OOLD-INS-9416) (section: schema-insta
 
 ### OOLD-INS-ba9e
 
-- **Level:** MUST
-- **Applies to:** document
-- **Machine-checkable:** yes
-- **Since:** 1.0.0-rc.1
+- <strong title="The RFC 2119 keyword this requirement is stated with. A validator reports a MUST-level finding as a failure and a SHOULD-level one as a warning, so the level decides severity rather than the check that found it.">Level:</strong> MUST
+- <strong title="Who the requirement binds: a document, an implementation of OO-LD, or nobody in particular. This decides what is even able to enforce it.">Applies to:</strong> <span title="Checkable by validating a schema or instance document">document</span>
+- <strong title="Whether a validator could decide this rule by inspecting a document. It does not say the OO-LD validator enforces it today - oold rules list --unchecked reports that.">Machine-checkable:</strong> yes
+- <strong title="The specification release this rule first appeared in. Ids are permanent and never reused, so this does not change once recorded.">Since:</strong> 1.0.0-rc.1
 
 A schema closing its objects must still permit the $schema and @context members.
 
@@ -301,10 +310,10 @@ See [this rule in the specification](spec/#OOLD-INS-ba9e) (section: referencing-
 
 ### OOLD-INS-cd80
 
-- **Level:** SHOULD
-- **Applies to:** document
-- **Machine-checkable:** no
-- **Since:** 1.0.0-rc.1
+- <strong title="The RFC 2119 keyword this requirement is stated with. A validator reports a MUST-level finding as a failure and a SHOULD-level one as a warning, so the level decides severity rather than the check that found it.">Level:</strong> SHOULD
+- <strong title="Who the requirement binds: a document, an implementation of OO-LD, or nobody in particular. This decides what is even able to enforce it.">Applies to:</strong> <span title="Checkable by validating a schema or instance document">document</span>
+- <strong title="Whether a validator could decide this rule by inspecting a document. It does not say the OO-LD validator enforces it today - oold rules list --unchecked reports that.">Machine-checkable:</strong> no
+- <strong title="The specification release this rule first appeared in. Ids are permanent and never reused, so this does not change once recorded.">Since:</strong> 1.0.0-rc.1
 
 An instance @id should be resolvable, and is recommended to be minted from an autogenerated UUID.
 
@@ -316,10 +325,10 @@ See [this rule in the specification](spec/#OOLD-INS-cd80) (section: identity).
 
 ### OOLD-INS-da1a
 
-- **Level:** SHOULD
-- **Applies to:** advisory
-- **Machine-checkable:** no
-- **Since:** 1.0.0-rc.1
+- <strong title="The RFC 2119 keyword this requirement is stated with. A validator reports a MUST-level finding as a failure and a SHOULD-level one as a warning, so the level decides severity rather than the check that found it.">Level:</strong> SHOULD
+- <strong title="Who the requirement binds: a document, an implementation of OO-LD, or nobody in particular. This decides what is even able to enforce it.">Applies to:</strong> <span title="Guidance; nothing verifies it automatically">advisory</span>
+- <strong title="Whether a validator could decide this rule by inspecting a document. It does not say the OO-LD validator enforces it today - oold rules list --unchecked reports that.">Machine-checkable:</strong> no
+- <strong title="The specification release this rule first appeared in. Ids are permanent and never reused, so this does not change once recorded.">Since:</strong> 1.0.0-rc.1
 
 A model ecosystem should adopt one of the two ambiguous-range patterns consistently.
 
@@ -329,10 +338,10 @@ See [this rule in the specification](spec/#OOLD-INS-da1a) (section: value-forms)
 
 ### OOLD-INS-f010
 
-- **Level:** MUST NOT
-- **Applies to:** implementation
-- **Machine-checkable:** no
-- **Since:** 1.0.0-rc.1
+- <strong title="The RFC 2119 keyword this requirement is stated with. A validator reports a MUST-level finding as a failure and a SHOULD-level one as a warning, so the level decides severity rather than the check that found it.">Level:</strong> MUST NOT
+- <strong title="Who the requirement binds: a document, an implementation of OO-LD, or nobody in particular. This decides what is even able to enforce it.">Applies to:</strong> <span title="Constrains an OO-LD implementation; needs a library conformance suite">implementation</span>
+- <strong title="Whether a validator could decide this rule by inspecting a document. It does not say the OO-LD validator enforces it today - oold rules list --unchecked reports that.">Machine-checkable:</strong> no
+- <strong title="The specification release this rule first appeared in. Ids are permanent and never reused, so this does not change once recorded.">Since:</strong> 1.0.0-rc.1
 
 A consuming side must not be assumed to hold an rdf:type-to-schema registry; exports are self-sufficient.
 
@@ -344,10 +353,10 @@ See [this rule in the specification](spec/#OOLD-INS-f010) (section: referencing-
 
 ### OOLD-RT-08f2
 
-- **Level:** MUST
-- **Applies to:** document
-- **Machine-checkable:** yes
-- **Since:** 1.0.0-rc.1
+- <strong title="The RFC 2119 keyword this requirement is stated with. A validator reports a MUST-level finding as a failure and a SHOULD-level one as a warning, so the level decides severity rather than the check that found it.">Level:</strong> MUST
+- <strong title="Who the requirement binds: a document, an implementation of OO-LD, or nobody in particular. This decides what is even able to enforce it.">Applies to:</strong> <span title="Checkable by validating a schema or instance document">document</span>
+- <strong title="Whether a validator could decide this rule by inspecting a document. It does not say the OO-LD validator enforces it today - oold rules list --unchecked reports that.">Machine-checkable:</strong> yes
+- <strong title="The specification release this rule first appeared in. Ids are permanent and never reused, so this does not change once recorded.">Since:</strong> 1.0.0-rc.1
 
 A strictly array-typed property must declare @container @set or @list.
 
@@ -359,10 +368,10 @@ See [this rule in the specification](spec/#OOLD-RT-08f2) (section: round-trip).
 
 ### OOLD-RT-d376
 
-- **Level:** SHOULD
-- **Applies to:** document
-- **Machine-checkable:** yes
-- **Since:** 1.0.0-rc.1
+- <strong title="The RFC 2119 keyword this requirement is stated with. A validator reports a MUST-level finding as a failure and a SHOULD-level one as a warning, so the level decides severity rather than the check that found it.">Level:</strong> SHOULD
+- <strong title="Who the requirement binds: a document, an implementation of OO-LD, or nobody in particular. This decides what is even able to enforce it.">Applies to:</strong> <span title="Checkable by validating a schema or instance document">document</span>
+- <strong title="Whether a validator could decide this rule by inspecting a document. It does not say the OO-LD validator enforces it today - oold rules list --unchecked reports that.">Machine-checkable:</strong> yes
+- <strong title="The specification release this rule first appeared in. Ids are permanent and never reused, so this does not change once recorded.">Since:</strong> 1.0.0-rc.1
 
 The embed graph formed by scoped @contexts should be acyclic.
 
@@ -374,10 +383,10 @@ See [this rule in the specification](spec/#OOLD-RT-d376) (section: round-trip).
 
 ### OOLD-RT-d9bd
 
-- **Level:** MUST NOT
-- **Applies to:** document
-- **Machine-checkable:** yes
-- **Since:** 1.0.0-rc.1
+- <strong title="The RFC 2119 keyword this requirement is stated with. A validator reports a MUST-level finding as a failure and a SHOULD-level one as a warning, so the level decides severity rather than the check that found it.">Level:</strong> MUST NOT
+- <strong title="Who the requirement binds: a document, an implementation of OO-LD, or nobody in particular. This decides what is even able to enforce it.">Applies to:</strong> <span title="Checkable by validating a schema or instance document">document</span>
+- <strong title="Whether a validator could decide this rule by inspecting a document. It does not say the OO-LD validator enforces it today - oold rules list --unchecked reports that.">Machine-checkable:</strong> yes
+- <strong title="The specification release this rule first appeared in. Ids are permanent and never reused, so this does not change once recorded.">Since:</strong> 1.0.0-rc.1
 
 A term must not coerce a literal to a datatype JSON-LD produces by default from a native JSON value (xsd:string, xsd:boolean, xsd:integer, xsd:double).
 
@@ -391,10 +400,10 @@ See [this rule in the specification](spec/#OOLD-RT-d9bd) (section: value-forms).
 
 ### OOLD-VER-2e63
 
-- **Level:** SHOULD
-- **Applies to:** document
-- **Machine-checkable:** no
-- **Since:** 1.0.0-rc.1
+- <strong title="The RFC 2119 keyword this requirement is stated with. A validator reports a MUST-level finding as a failure and a SHOULD-level one as a warning, so the level decides severity rather than the check that found it.">Level:</strong> SHOULD
+- <strong title="Who the requirement binds: a document, an implementation of OO-LD, or nobody in particular. This decides what is even able to enforce it.">Applies to:</strong> <span title="Checkable by validating a schema or instance document">document</span>
+- <strong title="Whether a validator could decide this rule by inspecting a document. It does not say the OO-LD validator enforces it today - oold rules list --unchecked reports that.">Machine-checkable:</strong> no
+- <strong title="The specification release this rule first appeared in. Ids are permanent and never reused, so this does not change once recorded.">Since:</strong> 1.0.0-rc.1
 
 A schema should be resolvable via its $id.
 
@@ -406,10 +415,10 @@ See [this rule in the specification](spec/#OOLD-VER-2e63) (section: identificati
 
 ### OOLD-VER-3662
 
-- **Level:** SHOULD
-- **Applies to:** document
-- **Machine-checkable:** yes
-- **Since:** 1.0.0-rc.1
+- <strong title="The RFC 2119 keyword this requirement is stated with. A validator reports a MUST-level finding as a failure and a SHOULD-level one as a warning, so the level decides severity rather than the check that found it.">Level:</strong> SHOULD
+- <strong title="Who the requirement binds: a document, an implementation of OO-LD, or nobody in particular. This decides what is even able to enforce it.">Applies to:</strong> <span title="Checkable by validating a schema or instance document">document</span>
+- <strong title="Whether a validator could decide this rule by inspecting a document. It does not say the OO-LD validator enforces it today - oold rules list --unchecked reports that.">Machine-checkable:</strong> yes
+- <strong title="The specification release this rule first appeared in. Ids are permanent and never reused, so this does not change once recorded.">Since:</strong> 1.0.0-rc.1
 
 A schema version should be stated with x-oold-version.
 
@@ -419,10 +428,10 @@ See [this rule in the specification](spec/#OOLD-VER-3662) (section: versioning).
 
 ### OOLD-VER-3b96
 
-- **Level:** MUST
-- **Applies to:** document
-- **Machine-checkable:** yes
-- **Since:** 1.0.0-rc.1
+- <strong title="The RFC 2119 keyword this requirement is stated with. A validator reports a MUST-level finding as a failure and a SHOULD-level one as a warning, so the level decides severity rather than the check that found it.">Level:</strong> MUST
+- <strong title="Who the requirement binds: a document, an implementation of OO-LD, or nobody in particular. This decides what is even able to enforce it.">Applies to:</strong> <span title="Checkable by validating a schema or instance document">document</span>
+- <strong title="Whether a validator could decide this rule by inspecting a document. It does not say the OO-LD validator enforces it today - oold rules list --unchecked reports that.">Machine-checkable:</strong> yes
+- <strong title="The specification release this rule first appeared in. Ids are permanent and never reused, so this does not change once recorded.">Since:</strong> 1.0.0-rc.1
 
 A schema must have a $id serving as its global unique identifier.
 
@@ -434,10 +443,10 @@ See [this rule in the specification](spec/#OOLD-VER-3b96) (section: identificati
 
 ### OOLD-VER-534a
 
-- **Level:** SHOULD
-- **Applies to:** document
-- **Machine-checkable:** yes
-- **Since:** 1.0.0-rc.1
+- <strong title="The RFC 2119 keyword this requirement is stated with. A validator reports a MUST-level finding as a failure and a SHOULD-level one as a warning, so the level decides severity rather than the check that found it.">Level:</strong> SHOULD
+- <strong title="Who the requirement binds: a document, an implementation of OO-LD, or nobody in particular. This decides what is even able to enforce it.">Applies to:</strong> <span title="Checkable by validating a schema or instance document">document</span>
+- <strong title="Whether a validator could decide this rule by inspecting a document. It does not say the OO-LD validator enforces it today - oold rules list --unchecked reports that.">Machine-checkable:</strong> yes
+- <strong title="The specification release this rule first appeared in. Ids are permanent and never reused, so this does not change once recorded.">Since:</strong> 1.0.0-rc.1
 
 The schema version should be part of the schema location URL.
 
@@ -447,10 +456,10 @@ See [this rule in the specification](spec/#OOLD-VER-534a) (section: versioning).
 
 ### OOLD-VER-edb9
 
-- **Level:** SHOULD
-- **Applies to:** document
-- **Machine-checkable:** yes
-- **Since:** 1.0.0-rc.1
+- <strong title="The RFC 2119 keyword this requirement is stated with. A validator reports a MUST-level finding as a failure and a SHOULD-level one as a warning, so the level decides severity rather than the check that found it.">Level:</strong> SHOULD
+- <strong title="Who the requirement binds: a document, an implementation of OO-LD, or nobody in particular. This decides what is even able to enforce it.">Applies to:</strong> <span title="Checkable by validating a schema or instance document">document</span>
+- <strong title="Whether a validator could decide this rule by inspecting a document. It does not say the OO-LD validator enforces it today - oold rules list --unchecked reports that.">Machine-checkable:</strong> yes
+- <strong title="The specification release this rule first appeared in. Ids are permanent and never reused, so this does not change once recorded.">Since:</strong> 1.0.0-rc.1
 
 A schema should carry an x-oold-uuid annotation holding a UUID value.
 
@@ -464,10 +473,10 @@ See [this rule in the specification](spec/#OOLD-VER-edb9) (section: identificati
 
 ### OOLD-EXT-2b61
 
-- **Level:** MUST
-- **Applies to:** document
-- **Machine-checkable:** yes
-- **Since:** 1.0.0-rc.1
+- <strong title="The RFC 2119 keyword this requirement is stated with. A validator reports a MUST-level finding as a failure and a SHOULD-level one as a warning, so the level decides severity rather than the check that found it.">Level:</strong> MUST
+- <strong title="Who the requirement binds: a document, an implementation of OO-LD, or nobody in particular. This decides what is even able to enforce it.">Applies to:</strong> <span title="Checkable by validating a schema or instance document">document</span>
+- <strong title="Whether a validator could decide this rule by inspecting a document. It does not say the OO-LD validator enforces it today - oold rules list --unchecked reports that.">Machine-checkable:</strong> yes
+- <strong title="The specification release this rule first appeared in. Ids are permanent and never reused, so this does not change once recorded.">Since:</strong> 1.0.0-rc.1
 
 A compact-IRI prefix used by a property must be defined in the @context.
 
@@ -479,10 +488,10 @@ See [this rule in the specification](spec/#OOLD-EXT-2b61) (section: range-refere
 
 ### OOLD-EXT-3fe9
 
-- **Level:** MUST
-- **Applies to:** document
-- **Machine-checkable:** yes
-- **Since:** 1.0.0-rc.1
+- <strong title="The RFC 2119 keyword this requirement is stated with. A validator reports a MUST-level finding as a failure and a SHOULD-level one as a warning, so the level decides severity rather than the check that found it.">Level:</strong> MUST
+- <strong title="Who the requirement binds: a document, an implementation of OO-LD, or nobody in particular. This decides what is even able to enforce it.">Applies to:</strong> <span title="Checkable by validating a schema or instance document">document</span>
+- <strong title="Whether a validator could decide this rule by inspecting a document. It does not say the OO-LD validator enforces it today - oold rules list --unchecked reports that.">Machine-checkable:</strong> yes
+- <strong title="The specification release this rule first appeared in. Ids are permanent and never reused, so this does not change once recorded.">Since:</strong> 1.0.0-rc.1
 
 References inside x-oold-range must use x-oold-ref, never $ref.
 
@@ -494,10 +503,10 @@ See [this rule in the specification](spec/#OOLD-EXT-3fe9) (section: range-of-pro
 
 ### OOLD-EXT-436a
 
-- **Level:** SHOULD
-- **Applies to:** implementation
-- **Machine-checkable:** no
-- **Since:** 1.0.0-rc.1
+- <strong title="The RFC 2119 keyword this requirement is stated with. A validator reports a MUST-level finding as a failure and a SHOULD-level one as a warning, so the level decides severity rather than the check that found it.">Level:</strong> SHOULD
+- <strong title="Who the requirement binds: a document, an implementation of OO-LD, or nobody in particular. This decides what is even able to enforce it.">Applies to:</strong> <span title="Constrains an OO-LD implementation; needs a library conformance suite">implementation</span>
+- <strong title="Whether a validator could decide this rule by inspecting a document. It does not say the OO-LD validator enforces it today - oold rules list --unchecked reports that.">Machine-checkable:</strong> no
+- <strong title="The specification release this rule first appeared in. Ids are permanent and never reused, so this does not change once recorded.">Since:</strong> 1.0.0-rc.1
 
 For OpenAPI 3.0, deliver the context and type per class as vendor extensions.
 
@@ -509,10 +518,10 @@ See [this rule in the specification](spec/#OOLD-EXT-436a) (section: semantic-del
 
 ### OOLD-EXT-5184
 
-- **Level:** SHOULD
-- **Applies to:** document
-- **Machine-checkable:** yes
-- **Since:** 1.0.0-rc.1
+- <strong title="The RFC 2119 keyword this requirement is stated with. A validator reports a MUST-level finding as a failure and a SHOULD-level one as a warning, so the level decides severity rather than the check that found it.">Level:</strong> SHOULD
+- <strong title="Who the requirement binds: a document, an implementation of OO-LD, or nobody in particular. This decides what is even able to enforce it.">Applies to:</strong> <span title="Checkable by validating a schema or instance document">document</span>
+- <strong title="Whether a validator could decide this rule by inspecting a document. It does not say the OO-LD validator enforces it today - oold rules list --unchecked reports that.">Machine-checkable:</strong> yes
+- <strong title="The specification release this rule first appeared in. Ids are permanent and never reused, so this does not change once recorded.">Since:</strong> 1.0.0-rc.1
 
 A schema should declare the OO-LD dialect meta-schema as its $schema.
 
@@ -524,10 +533,10 @@ See [this rule in the specification](spec/#OOLD-EXT-5184) (section: jsonschema-e
 
 ### OOLD-EXT-61aa
 
-- **Level:** SHOULD
-- **Applies to:** implementation
-- **Machine-checkable:** no
-- **Since:** 1.0.0-rc.1
+- <strong title="The RFC 2119 keyword this requirement is stated with. A validator reports a MUST-level finding as a failure and a SHOULD-level one as a warning, so the level decides severity rather than the check that found it.">Level:</strong> SHOULD
+- <strong title="Who the requirement binds: a document, an implementation of OO-LD, or nobody in particular. This decides what is even able to enforce it.">Applies to:</strong> <span title="Constrains an OO-LD implementation; needs a library conformance suite">implementation</span>
+- <strong title="Whether a validator could decide this rule by inspecting a document. It does not say the OO-LD validator enforces it today - oold rules list --unchecked reports that.">Machine-checkable:</strong> no
+- <strong title="The specification release this rule first appeared in. Ids are permanent and never reused, so this does not change once recorded.">Since:</strong> 1.0.0-rc.1
 
 A consumer accepting arbitrary JSON Schema keywords should receive the native form unchanged.
 
@@ -539,10 +548,10 @@ See [this rule in the specification](spec/#OOLD-EXT-61aa) (section: semantic-del
 
 ### OOLD-EXT-6ea3
 
-- **Level:** SHOULD
-- **Applies to:** document
-- **Machine-checkable:** yes
-- **Since:** 1.0.0-rc.1
+- <strong title="The RFC 2119 keyword this requirement is stated with. A validator reports a MUST-level finding as a failure and a SHOULD-level one as a warning, so the level decides severity rather than the check that found it.">Level:</strong> SHOULD
+- <strong title="Who the requirement binds: a document, an implementation of OO-LD, or nobody in particular. This decides what is even able to enforce it.">Applies to:</strong> <span title="Checkable by validating a schema or instance document">document</span>
+- <strong title="Whether a validator could decide this rule by inspecting a document. It does not say the OO-LD validator enforces it today - oold rules list --unchecked reports that.">Machine-checkable:</strong> yes
+- <strong title="The specification release this rule first appeared in. Ids are permanent and never reused, so this does not change once recorded.">Since:</strong> 1.0.0-rc.1
 
 An IRI-valued property should constrain its lexical form with an IRI/URI-family format.
 
@@ -554,10 +563,10 @@ See [this rule in the specification](spec/#OOLD-EXT-6ea3) (section: range-refere
 
 ### OOLD-EXT-af50
 
-- **Level:** REQUIRED
-- **Applies to:** document
-- **Machine-checkable:** yes
-- **Since:** 1.0.0-rc.1
+- <strong title="The RFC 2119 keyword this requirement is stated with. A validator reports a MUST-level finding as a failure and a SHOULD-level one as a warning, so the level decides severity rather than the check that found it.">Level:</strong> REQUIRED
+- <strong title="Who the requirement binds: a document, an implementation of OO-LD, or nobody in particular. This decides what is even able to enforce it.">Applies to:</strong> <span title="Checkable by validating a schema or instance document">document</span>
+- <strong title="Whether a validator could decide this rule by inspecting a document. It does not say the OO-LD validator enforces it today - oold rules list --unchecked reports that.">Machine-checkable:</strong> yes
+- <strong title="The specification release this rule first appeared in. Ids are permanent and never reused, so this does not change once recorded.">Since:</strong> 1.0.0-rc.1
 
 JSON Schema 2020-12 is required as the dialect, because composition places $ref alongside sibling keywords.
 
@@ -569,10 +578,10 @@ See [this rule in the specification](spec/#OOLD-EXT-af50) (section: jsonschema-e
 
 ### OOLD-EXT-dd76
 
-- **Level:** SHOULD
-- **Applies to:** document
-- **Machine-checkable:** yes
-- **Since:** 1.0.0-rc.1
+- <strong title="The RFC 2119 keyword this requirement is stated with. A validator reports a MUST-level finding as a failure and a SHOULD-level one as a warning, so the level decides severity rather than the check that found it.">Level:</strong> SHOULD
+- <strong title="Who the requirement binds: a document, an implementation of OO-LD, or nobody in particular. This decides what is even able to enforce it.">Applies to:</strong> <span title="Checkable by validating a schema or instance document">document</span>
+- <strong title="Whether a validator could decide this rule by inspecting a document. It does not say the OO-LD validator enforces it today - oold rules list --unchecked reports that.">Machine-checkable:</strong> yes
+- <strong title="The specification release this rule first appeared in. Ids are permanent and never reused, so this does not change once recorded.">Since:</strong> 1.0.0-rc.1
 
 A schema using multilingual annotations should still provide a default title and description.
 
@@ -584,10 +593,10 @@ See [this rule in the specification](spec/#OOLD-EXT-dd76) (section: localizing-s
 
 ### OOLD-EXT-ddda
 
-- **Level:** SHOULD
-- **Applies to:** document
-- **Machine-checkable:** yes
-- **Since:** 1.0.0-rc.1
+- <strong title="The RFC 2119 keyword this requirement is stated with. A validator reports a MUST-level finding as a failure and a SHOULD-level one as a warning, so the level decides severity rather than the check that found it.">Level:</strong> SHOULD
+- <strong title="Who the requirement binds: a document, an implementation of OO-LD, or nobody in particular. This decides what is even able to enforce it.">Applies to:</strong> <span title="Checkable by validating a schema or instance document">document</span>
+- <strong title="Whether a validator could decide this rule by inspecting a document. It does not say the OO-LD validator enforces it today - oold rules list --unchecked reports that.">Machine-checkable:</strong> yes
+- <strong title="The specification release this rule first appeared in. Ids are permanent and never reused, so this does not change once recorded.">Since:</strong> 1.0.0-rc.1
 
 A generated context should declare @version 1.1 as a JSON number.
 
@@ -599,10 +608,10 @@ See [this rule in the specification](spec/#OOLD-EXT-ddda) (section: processing-m
 
 ### OOLD-EXT-ef09
 
-- **Level:** MUST
-- **Applies to:** document
-- **Machine-checkable:** yes
-- **Since:** 1.0.0-rc.1
+- <strong title="The RFC 2119 keyword this requirement is stated with. A validator reports a MUST-level finding as a failure and a SHOULD-level one as a warning, so the level decides severity rather than the check that found it.">Level:</strong> MUST
+- <strong title="Who the requirement binds: a document, an implementation of OO-LD, or nobody in particular. This decides what is even able to enforce it.">Applies to:</strong> <span title="Checkable by validating a schema or instance document">document</span>
+- <strong title="Whether a validator could decide this rule by inspecting a document. It does not say the OO-LD validator enforces it today - oold rules list --unchecked reports that.">Machine-checkable:</strong> yes
+- <strong title="The specification release this rule first appeared in. Ids are permanent and never reused, so this does not change once recorded.">Since:</strong> 1.0.0-rc.1
 
 x-oold-multilang-title/description must map BCP 47 language tags to translated strings.
 
