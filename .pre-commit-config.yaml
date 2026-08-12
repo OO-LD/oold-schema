@@ -1,11 +1,16 @@
-# Three hooks guarding the rule catalogue. All are local, so contributors need only pre-commit
-# itself plus the uv environment the Makefile already uses.
+# Four local hooks: three guard the rule catalogue, the fourth guards the docs build config. All
+# are local, so contributors need only pre-commit itself plus the uv environment the Makefile
+# already uses.
 #
-# The order matters. `rules-extract` regenerates meta/oold-rules.json from the prose and fails if
-# it changed, so a stale catalogue can never be committed. `rules-baseline` then compares that
-# fresh catalogue against meta/rules-baseline.json, the state a human last accepted, and stops on
-# the two things nothing else notices: a rule id that has vanished, and a rule whose text moved.
-# `rules-page` finally regenerates docs/rules.md from the catalogue.
+# The order matters for the catalogue three. `rules-extract` regenerates meta/oold-rules.json from
+# the prose and fails if it changed, so a stale catalogue can never be committed. `rules-baseline`
+# then compares that fresh catalogue against meta/rules-baseline.json, the state a human last
+# accepted, and stops on the two things nothing else notices: a rule id that has vanished, and a
+# rule whose text moved. `rules-page` finally regenerates docs/rules.md from the catalogue.
+#
+# `markdown-extensions` is independent of those three and guards a different failure: declaring
+# any markdown_extensions replaces Zensical's defaults rather than extending them, so dropping one
+# switches an extension off with no warning and no build failure.
 #
 #   pre-commit install
 repos:
@@ -37,4 +42,18 @@ repos:
         files: ^(meta/oold-rules\.json|scripts/render_rules_page\.py)$
         # docs/rules.md is committed and CI fails on drift, exactly like the catalogue. Without
         # this hook it is the one generated artifact a contributor can only discover stale in CI.
+        require_serial: true
+
+      - id: markdown-extensions
+        name: check zensical.toml restates Zensical's default Markdown extensions
+        # Goes through make so the zensical version comes from ZENSICAL_VERSION in the Makefile.
+        # Pinning it here instead would add a third copy of the pin (Makefile, CI workflow) for
+        # the same guard to then not be watching.
+        entry: make check-extensions
+        language: system
+        pass_filenames: false
+        # The Makefile is in scope because that is where the pin lives: bumping ZENSICAL_VERSION
+        # is precisely the moment the restated defaults can go stale, and the moment a contributor
+        # is least likely to think of zensical.toml.
+        files: ^(zensical\.toml|scripts/check_markdown_extensions\.py|Makefile)$
         require_serial: true
