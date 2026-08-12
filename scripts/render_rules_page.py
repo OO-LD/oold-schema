@@ -185,7 +185,13 @@ def render_rule(rule: dict, applies_to: dict[str, str]) -> str:
     lines.append("")
 
     if rule.get("context") and rule["context"] != rule["text"]:
-        lines.append("> **In context:** " + link_to_spec(rule["context"]))
+        # Collapsed by default (`???` rather than `???+`): the surrounding prose is there for
+        # when the sentence alone is ambiguous, and forty expanded paragraphs would bury the
+        # requirements this page exists to list. The text stays in the DOM, so search still
+        # finds it.
+        lines.append('??? quote "In context"')
+        lines.append("")
+        lines.append("    " + link_to_spec(rule["context"]))
         lines.append("")
 
     lines.append(

@@ -34,7 +34,9 @@ A conforming schema or instance must be interchangeable as JSON, canonicalized p
 
 JSON (RFC8259) is the canonical serialization: a conforming OO-LD schema or instance MUST be interchangeable as JSON, and the canonical form used for identity and integrity (for example content-hashing a versioned schema) is its JSON Canonicalization Scheme (RFC8785) serialization.
 
-> **In context:** The normative data model of OO-LD is the JSON data model shared by JSONSCHEMA and JSON-LD11. JSON (RFC8259) is the canonical serialization: a conforming OO-LD schema or instance MUST be interchangeable as JSON, and the canonical form used for identity and integrity (for example content-hashing a versioned schema) is its JSON Canonicalization Scheme (RFC8785) serialization.
+??? quote "In context"
+
+    The normative data model of OO-LD is the JSON data model shared by JSONSCHEMA and JSON-LD11. JSON (RFC8259) is the canonical serialization: a conforming OO-LD schema or instance MUST be interchangeable as JSON, and the canonical form used for identity and integrity (for example content-hashing a versioned schema) is its JSON Canonicalization Scheme (RFC8785) serialization.
 
 See [this rule in the specification](spec/#OOLD-CNF-1120) (section: notation).
 
@@ -51,7 +53,9 @@ An OO-LD schema document must not be interpreted as a JSON-LD document.
 
 OO-LD schema documents MUST NOT be interpreted as JSON-LD documents, because that would apply the schema's own `@context` to the schema itself and produce incorrect triples.
 
-> **In context:** An OO-LD schema is consumed as a JSON-LD remote context (referenced by its URL from an instance's `@context`), never as a JSON-LD document. OO-LD schema documents MUST NOT be interpreted as JSON-LD documents, because that would apply the schema's own `@context` to the schema itself and produce incorrect triples.
+??? quote "In context"
+
+    An OO-LD schema is consumed as a JSON-LD remote context (referenced by its URL from an instance's `@context`), never as a JSON-LD document. OO-LD schema documents MUST NOT be interpreted as JSON-LD documents, because that would apply the schema's own `@context` to the schema itself and produce incorrect triples.
 
 See [this rule in the specification](spec/#OOLD-SCH-a9ee) (section: basic-concepts).
 
@@ -68,7 +72,9 @@ Reflected oneOf/anyOf branch contexts must not map the same keyword to different
 
 The remote contexts of `oneOf` / `anyOf` branches MAY also be reflected into the `@context`, but they MUST NOT conflict at the root - they MUST NOT map the same keyword to different IRIs there.
 
-> **In context:** `oneOf` / `anyOf`. The remote contexts of `oneOf` / `anyOf` branches MAY also be reflected into the `@context`, but they MUST NOT conflict at the root - they MUST NOT map the same keyword to different IRIs there. A JSON-LD processor merges all listed contexts (most-recently-wins) and has no notion of which branch a given instance matched, so a root-level conflict would be decided by context order rather than by the branch the data conforms to.
+??? quote "In context"
+
+    `oneOf` / `anyOf`. The remote contexts of `oneOf` / `anyOf` branches MAY also be reflected into the `@context`, but they MUST NOT conflict at the root - they MUST NOT map the same keyword to different IRIs there. A JSON-LD processor merges all listed contexts (most-recently-wins) and has no notion of which branch a given instance matched, so a root-level conflict would be decided by context order rather than by the branch the data conforms to.
 
 See [this rule in the specification](spec/#OOLD-CMP-1d7e) (section: merging-remote-contexts).
 
@@ -83,7 +89,9 @@ An embedded object property should be reflected as that property's scoped JSON-L
 
 An embedded object reached under an object-valued property - one whose value is an object, directly (`type: object`) or as the `items` of an array (`type: array`), whether inlined or brought in by `$ref` - SHOULD be reflected as that property's scoped JSON-LD context, so its terms resolve only under that property and cannot conflict with a same-named term elsewhere.
 
-> **In context:** It MUST NOT be required to further process an OO-LD schema document in order to interpret it as a JSON-LD context. This implies that all occurrences of `$ref` in the schema are reflected in the JSON-LD context. An embedded object reached under an object-valued property - one whose value is an object, directly (`type: object`) or as the `items` of an array (`type: array`), whether inlined or brought in by `$ref` - SHOULD be reflected as that property's scoped JSON-LD context, so its terms resolve only under that property and cannot conflict with a same-named term elsewhere. That scoped context MAY reference the embedded schema remotely (by URL) or carry its terms inline. Where the embed graph is cyclic - a value type whose scoped context transitively references itself through remote schema files - JSON-LD processors cannot resolve the recursive remote contexts (see [round-trip](spec/#round-trip)); breaking the cycle requires migrating the remote reference to a local (inline) context - inlining the term definitions so there is no remote hop to recurse - which MAY be flattened onto the root context as a shared vocabulary. Moving the remote reference to the root does not break the cycle; only replacing it with local definitions does. A `$ref` at the root level of the OO-LD schema is listed at the root of the JSON-LD context. (A scalar reference - a property whose value is an IRI string, not an embedded object - carries its target type in [`x-oold-range`](spec/#range-of-properties), not a `$ref`, and so contributes no scoped context.) In case of multiple `$ref` within `allOf` the corresponding remote contexts are merged into an array-valued `@context` (see [merging-remote-contexts](spec/#merging-remote-contexts)). For `oneOf` / `anyOf` this requires care to avoid conflicts. At any time the importing OO-LD schema MAY define its own or override the imported JSON-LD context.
+??? quote "In context"
+
+    It MUST NOT be required to further process an OO-LD schema document in order to interpret it as a JSON-LD context. This implies that all occurrences of `$ref` in the schema are reflected in the JSON-LD context. An embedded object reached under an object-valued property - one whose value is an object, directly (`type: object`) or as the `items` of an array (`type: array`), whether inlined or brought in by `$ref` - SHOULD be reflected as that property's scoped JSON-LD context, so its terms resolve only under that property and cannot conflict with a same-named term elsewhere. That scoped context MAY reference the embedded schema remotely (by URL) or carry its terms inline. Where the embed graph is cyclic - a value type whose scoped context transitively references itself through remote schema files - JSON-LD processors cannot resolve the recursive remote contexts (see [round-trip](spec/#round-trip)); breaking the cycle requires migrating the remote reference to a local (inline) context - inlining the term definitions so there is no remote hop to recurse - which MAY be flattened onto the root context as a shared vocabulary. Moving the remote reference to the root does not break the cycle; only replacing it with local definitions does. A `$ref` at the root level of the OO-LD schema is listed at the root of the JSON-LD context. (A scalar reference - a property whose value is an IRI string, not an embedded object - carries its target type in [`x-oold-range`](spec/#range-of-properties), not a `$ref`, and so contributes no scoped context.) In case of multiple `$ref` within `allOf` the corresponding remote contexts are merged into an array-valued `@context` (see [merging-remote-contexts](spec/#merging-remote-contexts)). For `oneOf` / `anyOf` this requires care to avoid conflicts. At any time the importing OO-LD schema MAY define its own or override the imported JSON-LD context.
 
 See [this rule in the specification](spec/#OOLD-CMP-5266) (section: composition).
 
@@ -98,7 +106,9 @@ A schema's JSON Schema and JSON-LD base URIs should be aligned so a relative ref
 
 Relative references resolve against the schema's `$id` (the JSON Schema base URI) and, on the JSON-LD side, against `@base` / the retrieval URL; these base URIs SHOULD be aligned so a relative reference resolves to the same absolute URL under both.
 
-> **In context:** Independent references and base URIs. A JSON Schema `$ref` and a JSON-LD `@context` entry are independent references: they MAY point to the same document (the typical OO-LD case, where one document is both a schema and a context) or to different documents - for example a plain JSON Schema referenced via `$ref` together with a separate remote `@context` that supplies the semantics. Relative references resolve against the schema's `$id` (the JSON Schema base URI) and, on the JSON-LD side, against `@base` / the retrieval URL; these base URIs SHOULD be aligned so a relative reference resolves to the same absolute URL under both. `$id` MUST NOT contain a non-empty fragment (JSONSCHEMA §8.2.1).
+??? quote "In context"
+
+    Independent references and base URIs. A JSON Schema `$ref` and a JSON-LD `@context` entry are independent references: they MAY point to the same document (the typical OO-LD case, where one document is both a schema and a context) or to different documents - for example a plain JSON Schema referenced via `$ref` together with a separate remote `@context` that supplies the semantics. Relative references resolve against the schema's `$id` (the JSON Schema base URI) and, on the JSON-LD side, against `@base` / the retrieval URL; these base URIs SHOULD be aligned so a relative reference resolves to the same absolute URL under both. `$id` MUST NOT contain a non-empty fragment (JSONSCHEMA §8.2.1).
 
 See [this rule in the specification](spec/#OOLD-CMP-53bf) (section: merging-remote-contexts).
 
@@ -113,7 +123,9 @@ A scoped context that must apply only to the immediate node sets @propagate fals
 
 Where a referenced context should apply only to the immediate node, the schema MUST set `"@propagate": false` on that scoped context.
 
-> **In context:** Propagation (`@propagate`). A `$ref` inside a `type: object` property is reflected as a property-scoped context, which by default propagates into the whole subtree rooted at that property ("By default ... contexts propagate across node objects, other than for type-scoped contexts, which default to false"). Where a referenced context should apply only to the immediate node, the schema MUST set `"@propagate": false` on that scoped context.
+??? quote "In context"
+
+    Propagation (`@propagate`). A `$ref` inside a `type: object` property is reflected as a property-scoped context, which by default propagates into the whole subtree rooted at that property ("By default ... contexts propagate across node objects, other than for type-scoped contexts, which default to false"). Where a referenced context should apply only to the immediate node, the schema MUST set `"@propagate": false` on that scoped context.
 
 See [this rule in the specification](spec/#OOLD-CMP-a05a) (section: merging-remote-contexts).
 
@@ -128,7 +140,9 @@ A schema must be usable as a JSON-LD context with no further processing, so ever
 
 It MUST NOT be required to further process an OO-LD schema document in order to interpret it as a JSON-LD context.
 
-> **In context:** It MUST NOT be required to further process an OO-LD schema document in order to interpret it as a JSON-LD context. This implies that all occurrences of `$ref` in the schema are reflected in the JSON-LD context. An embedded object reached under an object-valued property - one whose value is an object, directly (`type: object`) or as the `items` of an array (`type: array`), whether inlined or brought in by `$ref` - SHOULD be reflected as that property's scoped JSON-LD context, so its terms resolve only under that property and cannot conflict with a same-named term elsewhere. That scoped context MAY reference the embedded schema remotely (by URL) or carry its terms inline. Where the embed graph is cyclic - a value type whose scoped context transitively references itself through remote schema files - JSON-LD processors cannot resolve the recursive remote contexts (see [round-trip](spec/#round-trip)); breaking the cycle requires migrating the remote reference to a local (inline) context - inlining the term definitions so there is no remote hop to recurse - which MAY be flattened onto the root context as a shared vocabulary. Moving the remote reference to the root does not break the cycle; only replacing it with local definitions does. A `$ref` at the root level of the OO-LD schema is listed at the root of the JSON-LD context. (A scalar reference - a property whose value is an IRI string, not an embedded object - carries its target type in [`x-oold-range`](spec/#range-of-properties), not a `$ref`, and so contributes no scoped context.) In case of multiple `$ref` within `allOf` the corresponding remote contexts are merged into an array-valued `@context` (see [merging-remote-contexts](spec/#merging-remote-contexts)). For `oneOf` / `anyOf` this requires care to avoid conflicts. At any time the importing OO-LD schema MAY define its own or override the imported JSON-LD context.
+??? quote "In context"
+
+    It MUST NOT be required to further process an OO-LD schema document in order to interpret it as a JSON-LD context. This implies that all occurrences of `$ref` in the schema are reflected in the JSON-LD context. An embedded object reached under an object-valued property - one whose value is an object, directly (`type: object`) or as the `items` of an array (`type: array`), whether inlined or brought in by `$ref` - SHOULD be reflected as that property's scoped JSON-LD context, so its terms resolve only under that property and cannot conflict with a same-named term elsewhere. That scoped context MAY reference the embedded schema remotely (by URL) or carry its terms inline. Where the embed graph is cyclic - a value type whose scoped context transitively references itself through remote schema files - JSON-LD processors cannot resolve the recursive remote contexts (see [round-trip](spec/#round-trip)); breaking the cycle requires migrating the remote reference to a local (inline) context - inlining the term definitions so there is no remote hop to recurse - which MAY be flattened onto the root context as a shared vocabulary. Moving the remote reference to the root does not break the cycle; only replacing it with local definitions does. A `$ref` at the root level of the OO-LD schema is listed at the root of the JSON-LD context. (A scalar reference - a property whose value is an IRI string, not an embedded object - carries its target type in [`x-oold-range`](spec/#range-of-properties), not a `$ref`, and so contributes no scoped context.) In case of multiple `$ref` within `allOf` the corresponding remote contexts are merged into an array-valued `@context` (see [merging-remote-contexts](spec/#merging-remote-contexts)). For `oneOf` / `anyOf` this requires care to avoid conflicts. At any time the importing OO-LD schema MAY define its own or override the imported JSON-LD context.
 
 See [this rule in the specification](spec/#OOLD-CMP-b926) (section: composition).
 
@@ -143,7 +157,9 @@ A schema $id must not contain a non-empty fragment.
 
 `$id` MUST NOT contain a non-empty fragment (JSONSCHEMA §8.2.1).
 
-> **In context:** Independent references and base URIs. A JSON Schema `$ref` and a JSON-LD `@context` entry are independent references: they MAY point to the same document (the typical OO-LD case, where one document is both a schema and a context) or to different documents - for example a plain JSON Schema referenced via `$ref` together with a separate remote `@context` that supplies the semantics. Relative references resolve against the schema's `$id` (the JSON Schema base URI) and, on the JSON-LD side, against `@base` / the retrieval URL; these base URIs SHOULD be aligned so a relative reference resolves to the same absolute URL under both. `$id` MUST NOT contain a non-empty fragment (JSONSCHEMA §8.2.1).
+??? quote "In context"
+
+    Independent references and base URIs. A JSON Schema `$ref` and a JSON-LD `@context` entry are independent references: they MAY point to the same document (the typical OO-LD case, where one document is both a schema and a context) or to different documents - for example a plain JSON Schema referenced via `$ref` together with a separate remote `@context` that supplies the semantics. Relative references resolve against the schema's `$id` (the JSON Schema base URI) and, on the JSON-LD side, against `@base` / the retrieval URL; these base URIs SHOULD be aligned so a relative reference resolves to the same absolute URL under both. `$id` MUST NOT contain a non-empty fragment (JSONSCHEMA §8.2.1).
 
 See [this rule in the specification](spec/#OOLD-CMP-dd2b) (section: merging-remote-contexts).
 
@@ -158,7 +174,9 @@ A schema with multiple $refs must list their remote contexts as an array, in all
 
 By the reflection rule above, the schema's own `@context` MUST list those remote contexts as an array, in the same order as the `allOf` members, so the schema stays usable as a context without further processing.
 
-> **In context:** Multiple `$ref` (e.g. in `allOf`) each correspond to a remote context. By the reflection rule above, the schema's own `@context` MUST list those remote contexts as an array, in the same order as the `allOf` members, so the schema stays usable as a context without further processing. A JSON-LD processor then resolves that array in order, later entries overriding earlier ones - duplicate context terms are overridden using a most-recently-defined-wins mechanism (JSONLD11-API, Context Processing Algorithm). The schema MAY append its own context object as the last array entry to override an inherited term. The single-context `@import` keyword is an alternative only when exactly one remote context is wrapped and locally modified (it cannot contain a nested `@import`), so the array form is used for the multi-`$ref` case.
+??? quote "In context"
+
+    Multiple `$ref` (e.g. in `allOf`) each correspond to a remote context. By the reflection rule above, the schema's own `@context` MUST list those remote contexts as an array, in the same order as the `allOf` members, so the schema stays usable as a context without further processing. A JSON-LD processor then resolves that array in order, later entries overriding earlier ones - duplicate context terms are overridden using a most-recently-defined-wins mechanism (JSONLD11-API, Context Processing Algorithm). The schema MAY append its own context object as the last array entry to override an inherited term. The single-context `@import` keyword is an alternative only when exactly one remote context is wrapped and locally modified (it cannot contain a nested `@import`), so the array form is used for the multi-`$ref` case.
 
 See [this rule in the specification](spec/#OOLD-CMP-e4a3) (section: merging-remote-contexts).
 
@@ -173,7 +191,9 @@ Composition is narrow-only: a derived schema may restrict a constraint but must 
 
 For assertion-bearing keywords the resolved view additionally honors narrow-only composition: a derived schema MAY restrict a constraint but MUST NOT relax it, matching how code generators let a subclass tighten - never loosen - a superclass property's validation.
 
-> **In context:** When such a merge is required, OO-LD resolves the `allOf` chain by applying JSON Merge Patch (RFC7396) semantics: keyed by object member, most-recently-defined (most-derived) wins, and a `null` value removes a key. For the `@context` this coincides with JSON-LD's own override rule. For assertion-bearing keywords the resolved view additionally honors narrow-only composition: a derived schema MAY restrict a constraint but MUST NOT relax it, matching how code generators let a subclass tighten - never loosen - a superclass property's validation.
+??? quote "In context"
+
+    When such a merge is required, OO-LD resolves the `allOf` chain by applying JSON Merge Patch (RFC7396) semantics: keyed by object member, most-recently-defined (most-derived) wins, and a `null` value removes a key. For the `@context` this coincides with JSON-LD's own override rule. For assertion-bearing keywords the resolved view additionally honors narrow-only composition: a derived schema MAY restrict a constraint but MUST NOT relax it, matching how code generators let a subclass tighten - never loosen - a superclass property's validation.
 
 See [this rule in the specification](spec/#OOLD-CMP-f3c7) (section: merge-and-override-model).
 
@@ -190,7 +210,9 @@ An exported identifiable entity must carry an IRI.
 
 An implementation MAY use a non-IRI identifier internally, but when it exports an identifiable entity (to JSON-LD / RDF) it MUST assign an `@id` (or the aliased `id`).
 
-> **In context:** An implementation MAY use a non-IRI identifier internally, but when it exports an identifiable entity (to JSON-LD / RDF) it MUST assign an `@id` (or the aliased `id`). The `@id` SHOULD be resolvable, and it is RECOMMENDED to mint it from an autogenerated UUID - mirroring the schema's `x-oold-uuid` - e.g. `https://example.org/a1b2c3d4-1234-...`.
+??? quote "In context"
+
+    An implementation MAY use a non-IRI identifier internally, but when it exports an identifiable entity (to JSON-LD / RDF) it MUST assign an `@id` (or the aliased `id`). The `@id` SHOULD be resolvable, and it is RECOMMENDED to mint it from an autogenerated UUID - mirroring the schema's `x-oold-uuid` - e.g. `https://example.org/a1b2c3d4-1234-...`.
 
 See [this rule in the specification](spec/#OOLD-INS-1d33) (section: identity).
 
@@ -205,7 +227,9 @@ Under the value-form pattern a reference is written as an object and its term mu
 
 References are written as objects, and the term MUST NOT carry `@type`.
 
-> **In context:** Value-form - a single plain term (no `@type: "@id"`); the value shape alone disambiguates: a bare scalar is a literal, `{ "id": ... }` is a reference, a typed object is embedded. References are written as objects, and the term MUST NOT carry `@type`.
+??? quote "In context"
+
+    Value-form - a single plain term (no `@type: "@id"`); the value shape alone disambiguates: a bare scalar is a literal, `{ "id": ... }` is a reference, a typed object is embedded. References are written as objects, and the term MUST NOT carry `@type`.
 
 See [this rule in the specification](spec/#OOLD-INS-1df7) (section: value-forms).
 
@@ -220,7 +244,9 @@ A consumer should not blindly trust the schema an instance declares for itself.
 
 JSON Schema deliberately does not standardize `$schema` on instances, partly over a self-validation concern: a consumer SHOULD NOT blindly trust the schema an instance declares for itself (a crafted instance could point at a permissive schema) and remains responsible for validating against a schema it trusts.
 
-> **In context:** `@context` already provides a JSON-LD-native link to the schema (resolution case 2 above), so `$schema` is kept primarily for compatibility with the widespread editor and CI convention, not as a second authoritative mechanism. JSON Schema deliberately does not standardize `$schema` on instances, partly over a self-validation concern: a consumer SHOULD NOT blindly trust the schema an instance declares for itself (a crafted instance could point at a permissive schema) and remains responsible for validating against a schema it trusts.
+??? quote "In context"
+
+    `@context` already provides a JSON-LD-native link to the schema (resolution case 2 above), so `$schema` is kept primarily for compatibility with the widespread editor and CI convention, not as a second authoritative mechanism. JSON Schema deliberately does not standardize `$schema` on instances, partly over a self-validation concern: a consumer SHOULD NOT blindly trust the schema an instance declares for itself (a crafted instance could point at a permissive schema) and remains responsible for validating against a schema it trusts.
 
 See [this rule in the specification](spec/#OOLD-INS-27aa) (section: referencing-schema).
 
@@ -248,7 +274,9 @@ A property whose range includes free text must not use @type @id.
 
 A property whose range is references only therefore uses `@type: "@id"` and MAY be written as a bare IRI string; a property whose range includes free text MUST NOT use `@type: "@id"`.
 
-> **In context:** A single `@context` term cannot interpret a bare string as both a literal and an IRI: `@type: "@id"` coerces every string value to an IRI (so free text becomes an - often invalid, then dropped - IRI), while a plain term keeps every string a literal. A property whose range is references only therefore uses `@type: "@id"` and MAY be written as a bare IRI string; a property whose range includes free text MUST NOT use `@type: "@id"`.
+??? quote "In context"
+
+    A single `@context` term cannot interpret a bare string as both a literal and an IRI: `@type: "@id"` coerces every string value to an IRI (so free text becomes an - often invalid, then dropped - IRI), while a plain term keeps every string a literal. A property whose range is references only therefore uses `@type: "@id"` and MAY be written as a bare IRI string; a property whose range includes free text MUST NOT use `@type: "@id"`.
 
 See [this rule in the specification](spec/#OOLD-INS-2e5d) (section: value-forms).
 
@@ -263,7 +291,9 @@ An inline type must be consistent with the schema's x-oold-instance-rdf-type.
 
 If an inline `type` is present it MUST be consistent with the schema's `x-oold-instance-rdf-type`.
 
-> **In context:** If an inline `type` is present it MUST be consistent with the schema's `x-oold-instance-rdf-type`. Note that `@type` alone lets a consumer locate the schema (case 3 above) only when one of the type IRIs resolves to an OO-LD schema.
+??? quote "In context"
+
+    If an inline `type` is present it MUST be consistent with the schema's `x-oold-instance-rdf-type`. Note that `@type` alone lets a consumer locate the schema (case 3 above) only when one of the type IRIs resolves to an OO-LD schema.
 
 See [this rule in the specification](spec/#OOLD-INS-4b5c) (section: semantic-type).
 
@@ -278,7 +308,9 @@ Tooling exporting an instance must materialize the schema-declared rdf:type(s) a
 
 Therefore, when OO-LD tooling exports an instance (to JSON-LD / RDF), it MUST materialize the declared `rdf:type`(s) as an `@type` on the instance, so that the type reaches RDF without access to the schema or to a type registry.
 
-> **In context:** These types live in the schema, not in the instance data, so a JSON-LD-only processor - which sees only the instance and its `@context` - cannot derive them. Therefore, when OO-LD tooling exports an instance (to JSON-LD / RDF), it MUST materialize the declared `rdf:type`(s) as an `@type` on the instance, so that the type reaches RDF without access to the schema or to a type registry.
+??? quote "In context"
+
+    These types live in the schema, not in the instance data, so a JSON-LD-only processor - which sees only the instance and its `@context` - cannot derive them. Therefore, when OO-LD tooling exports an instance (to JSON-LD / RDF), it MUST materialize the declared `rdf:type`(s) as an `@type` on the instance, so that the type reaches RDF without access to the schema or to a type registry.
 
 See [this rule in the specification](spec/#OOLD-INS-75c6) (section: semantic-type).
 
@@ -319,7 +351,9 @@ An instance @id should be resolvable, and is recommended to be minted from an au
 
 The `@id` SHOULD be resolvable, and it is RECOMMENDED to mint it from an autogenerated UUID - mirroring the schema's `x-oold-uuid` - e.g. `https://example.org/a1b2c3d4-1234-...`.
 
-> **In context:** An implementation MAY use a non-IRI identifier internally, but when it exports an identifiable entity (to JSON-LD / RDF) it MUST assign an `@id` (or the aliased `id`). The `@id` SHOULD be resolvable, and it is RECOMMENDED to mint it from an autogenerated UUID - mirroring the schema's `x-oold-uuid` - e.g. `https://example.org/a1b2c3d4-1234-...`.
+??? quote "In context"
+
+    An implementation MAY use a non-IRI identifier internally, but when it exports an identifiable entity (to JSON-LD / RDF) it MUST assign an `@id` (or the aliased `id`). The `@id` SHOULD be resolvable, and it is RECOMMENDED to mint it from an autogenerated UUID - mirroring the schema's `x-oold-uuid` - e.g. `https://example.org/a1b2c3d4-1234-...`.
 
 See [this rule in the specification](spec/#OOLD-INS-cd80) (section: identity).
 
@@ -362,7 +396,9 @@ A strictly array-typed property must declare @container @set or @list.
 
 Because the reconstruction MUST re-validate, a property that is strictly an array (JSON Schema `type: "array"`) MUST declare `@container: "@set"` (or `"@list"`): without it a single-element array returns as a scalar and violates the `array` type.
 
-> **In context:** Multi-valued properties are set-valued in RDF: order is not preserved, duplicates are removed, and a single value compacts to a scalar. Because the reconstruction MUST re-validate, a property that is strictly an array (JSON Schema `type: "array"`) MUST declare `@container: "@set"` (or `"@list"`): without it a single-element array returns as a scalar and violates the `array` type. A property that also permits a scalar (an `anyOf`/`oneOf` of a literal and an array) MAY declare it for a stable array shape, but need not - the scalar form still validates, and a single value and a one-element array are JSON-LD-equivalent. Round-trip equality is set equality; use `@list` only where order is significant, at the cost of merge and query ergonomics.
+??? quote "In context"
+
+    Multi-valued properties are set-valued in RDF: order is not preserved, duplicates are removed, and a single value compacts to a scalar. Because the reconstruction MUST re-validate, a property that is strictly an array (JSON Schema `type: "array"`) MUST declare `@container: "@set"` (or `"@list"`): without it a single-element array returns as a scalar and violates the `array` type. A property that also permits a scalar (an `anyOf`/`oneOf` of a literal and an array) MAY declare it for a stable array shape, but need not - the scalar form still validates, and a single value and a one-element array are JSON-LD-equivalent. Round-trip equality is set equality; use `@list` only where order is significant, at the cost of merge and query ergonomics.
 
 See [this rule in the specification](spec/#OOLD-RT-08f2) (section: round-trip).
 
@@ -377,7 +413,9 @@ The embed graph formed by scoped @contexts should be acyclic.
 
 These scoped contexts form an embed graph between schemas, and that graph SHOULD be acyclic: model a property whose value is an independent entity, or whose type would close an embed cycle (a type embedding itself, or two types embedding each other), as a reference - `@type: "@id"` plus `x-oold-range`, with no scoped `@context` - rather than an embed.
 
-> **In context:** An embedded object is mapped by a scoped `@context` on its property (referencing the embedded type's own context). These scoped contexts form an embed graph between schemas, and that graph SHOULD be acyclic: model a property whose value is an independent entity, or whose type would close an embed cycle (a type embedding itself, or two types embedding each other), as a reference - `@type: "@id"` plus `x-oold-range`, with no scoped `@context` - rather than an embed. This is the linked-data analog of using a pointer instead of inlining a recursive data structure. A self-reference through the top-level `@context` (a property that nests the same type but carries no scoped context, so the global context maps the nested keys - e.g. a `Process` with sub-`Process`es) is not part of this graph and round-trips normally, bounded by the instance's actual depth.
+??? quote "In context"
+
+    An embedded object is mapped by a scoped `@context` on its property (referencing the embedded type's own context). These scoped contexts form an embed graph between schemas, and that graph SHOULD be acyclic: model a property whose value is an independent entity, or whose type would close an embed cycle (a type embedding itself, or two types embedding each other), as a reference - `@type: "@id"` plus `x-oold-range`, with no scoped `@context` - rather than an embed. This is the linked-data analog of using a pointer instead of inlining a recursive data structure. A self-reference through the top-level `@context` (a property that nests the same type but carries no scoped context, so the global context maps the nested keys - e.g. a `Process` with sub-`Process`es) is not part of this graph and round-trips normally, bounded by the instance's actual depth.
 
 See [this rule in the specification](spec/#OOLD-RT-d376) (section: round-trip).
 
@@ -392,7 +430,9 @@ A term must not coerce a literal to a datatype JSON-LD produces by default from 
 
 A term MUST NOT declare `@type` with a datatype that JSON-LD produces by default from a native JSON value: `xsd:string` (from a string), `xsd:boolean` (from a boolean), `xsd:integer` (from an integer number), and `xsd:double` (from a fractional number).
 
-> **In context:** A term MUST NOT declare `@type` with a datatype that JSON-LD produces by default from a native JSON value: `xsd:string` (from a string), `xsd:boolean` (from a boolean), `xsd:integer` (from an integer number), and `xsd:double` (from a fractional number). These are exactly the datatypes reconstruction converts back to native JSON values without an `@type` (JSONLD11-API, RDF to Object Conversion; see [round-trip](spec/#round-trip)): the value arrives from RDF with no datatype, and a term is never selected against a conflicting or absent type mapping (JSONLD11-API, Term Selection), so the value reappears under the full predicate IRI instead. Coercing to one of these is redundant and lossy - a native JSON number already round-trips as `xsd:integer` or `xsd:double` with no coercion at all, and a boolean/string likewise. This is inherent to the compaction algorithm, not a tooling limitation; such terms are left plain (no `@type`), and the projection to RDF still yields the correct datatype from the native JSON type (JSONLD11-API, Data Round Tripping). The behaviour assumes reconstruction with native types (`useNativeTypes`), the mainstream default: a processor that instead keeps every literal as a typed value object would select the coerced term, but then plain native numbers and booleans no longer return as native JSON either (they come back as `{ "@value": ..., "@type": ... }` objects), which defeats the structural model - so native-type reconstruction is assumed throughout.
+??? quote "In context"
+
+    A term MUST NOT declare `@type` with a datatype that JSON-LD produces by default from a native JSON value: `xsd:string` (from a string), `xsd:boolean` (from a boolean), `xsd:integer` (from an integer number), and `xsd:double` (from a fractional number). These are exactly the datatypes reconstruction converts back to native JSON values without an `@type` (JSONLD11-API, RDF to Object Conversion; see [round-trip](spec/#round-trip)): the value arrives from RDF with no datatype, and a term is never selected against a conflicting or absent type mapping (JSONLD11-API, Term Selection), so the value reappears under the full predicate IRI instead. Coercing to one of these is redundant and lossy - a native JSON number already round-trips as `xsd:integer` or `xsd:double` with no coercion at all, and a boolean/string likewise. This is inherent to the compaction algorithm, not a tooling limitation; such terms are left plain (no `@type`), and the projection to RDF still yields the correct datatype from the native JSON type (JSONLD11-API, Data Round Tripping). The behaviour assumes reconstruction with native types (`useNativeTypes`), the mainstream default: a processor that instead keeps every literal as a typed value object would select the coerced term, but then plain native numbers and booleans no longer return as native JSON either (they come back as `{ "@value": ..., "@type": ... }` objects), which defeats the structural model - so native-type reconstruction is assumed throughout.
 
 See [this rule in the specification](spec/#OOLD-RT-d9bd) (section: value-forms).
 
@@ -409,7 +449,9 @@ A schema should be resolvable via its $id.
 
 The schema SHOULD be resolvable via this URI.
 
-> **In context:** OO-LD schemas MUST have a `$id` (JSONSCHEMA §8.2.1) which works as a global and unique identifier of the schema. The value of `$id` MAY be an absolute URI (details below). The schema SHOULD be resolvable via this URI. The schema SHOULD have an annotation `x-oold-uuid` with a UUID value.
+??? quote "In context"
+
+    OO-LD schemas MUST have a `$id` (JSONSCHEMA §8.2.1) which works as a global and unique identifier of the schema. The value of `$id` MAY be an absolute URI (details below). The schema SHOULD be resolvable via this URI. The schema SHOULD have an annotation `x-oold-uuid` with a UUID value.
 
 See [this rule in the specification](spec/#OOLD-VER-2e63) (section: identification).
 
@@ -437,7 +479,9 @@ A schema must have a $id serving as its global unique identifier.
 
 OO-LD schemas MUST have a `$id` (JSONSCHEMA §8.2.1) which works as a global and unique identifier of the schema.
 
-> **In context:** OO-LD schemas MUST have a `$id` (JSONSCHEMA §8.2.1) which works as a global and unique identifier of the schema. The value of `$id` MAY be an absolute URI (details below). The schema SHOULD be resolvable via this URI. The schema SHOULD have an annotation `x-oold-uuid` with a UUID value.
+??? quote "In context"
+
+    OO-LD schemas MUST have a `$id` (JSONSCHEMA §8.2.1) which works as a global and unique identifier of the schema. The value of `$id` MAY be an absolute URI (details below). The schema SHOULD be resolvable via this URI. The schema SHOULD have an annotation `x-oold-uuid` with a UUID value.
 
 See [this rule in the specification](spec/#OOLD-VER-3b96) (section: identification).
 
@@ -465,7 +509,9 @@ A schema should carry an x-oold-uuid annotation holding a UUID value.
 
 The schema SHOULD have an annotation `x-oold-uuid` with a UUID value.
 
-> **In context:** OO-LD schemas MUST have a `$id` (JSONSCHEMA §8.2.1) which works as a global and unique identifier of the schema. The value of `$id` MAY be an absolute URI (details below). The schema SHOULD be resolvable via this URI. The schema SHOULD have an annotation `x-oold-uuid` with a UUID value.
+??? quote "In context"
+
+    OO-LD schemas MUST have a `$id` (JSONSCHEMA §8.2.1) which works as a global and unique identifier of the schema. The value of `$id` MAY be an absolute URI (details below). The schema SHOULD be resolvable via this URI. The schema SHOULD have an annotation `x-oold-uuid` with a UUID value.
 
 See [this rule in the specification](spec/#OOLD-VER-edb9) (section: identification).
 
@@ -482,7 +528,9 @@ A compact-IRI prefix used by a property must be defined in the @context.
 
 Compact form specifically - a `"pattern"` such as `"^[A-Za-z_][\\w.-]:(?!//)\\S$"`, which accepts `ex:alice` and `schema:Person` while rejecting `http://…`; the prefix MUST be defined in the `@context`.
 
-> **In context:** Stricter, ASCII only - `"format": "uri"` or `"uri-reference"`, where values are known not to use internationalized (non-ASCII) IRIs. - Compact form specifically - a `"pattern"` such as `"^[A-Za-z_][\\w.-]:(?!//)\\S$"`, which accepts `ex:alice` and `schema:Person` while rejecting `http://…`; the prefix MUST be defined in the `@context`.
+??? quote "In context"
+
+    Stricter, ASCII only - `"format": "uri"` or `"uri-reference"`, where values are known not to use internationalized (non-ASCII) IRIs. - Compact form specifically - a `"pattern"` such as `"^[A-Za-z_][\\w.-]:(?!//)\\S$"`, which accepts `ex:alice` and `schema:Person` while rejecting `http://…`; the prefix MUST be defined in the `@context`.
 
 See [this rule in the specification](spec/#OOLD-EXT-2b61) (section: range-reference-form).
 
@@ -497,7 +545,9 @@ References inside x-oold-range must use x-oold-ref, never $ref.
 
 References to other schemas inside `x-oold-range` MUST use `x-oold-ref`, never `$ref` (see below).
 
-> **In context:** An OO-LD subschema, the most expressive form. Unions (`anyOf` / `oneOf`), intersections (`allOf`) and inline constraints can be combined to describe an anonymous subclass. References to other schemas inside `x-oold-range` MUST use `x-oold-ref`, never `$ref` (see below). The single-IRI form (1) is a shorthand for `{ "allOf": [ { "x-oold-ref": "Organization.schema.json" } ] }`:
+??? quote "In context"
+
+    An OO-LD subschema, the most expressive form. Unions (`anyOf` / `oneOf`), intersections (`allOf`) and inline constraints can be combined to describe an anonymous subclass. References to other schemas inside `x-oold-range` MUST use `x-oold-ref`, never `$ref` (see below). The single-IRI form (1) is a shorthand for `{ "allOf": [ { "x-oold-ref": "Organization.schema.json" } ] }`:
 
 See [this rule in the specification](spec/#OOLD-EXT-3fe9) (section: range-of-properties).
 
@@ -512,7 +562,9 @@ For OpenAPI 3.0, deliver the context and type per class as vendor extensions.
 
 For OpenAPI 3.0, which rejects unprefixed keywords in a Schema Object (and typically bundles several classes with no document root to host one `@context`), the context and type SHOULD be delivered per class as `x-jsonld-context` and `x-jsonld-type` following [REST API Linked Data Keywords](https://datatracker.ietf.org/doc/html/draft-polli-restapi-ld-keywords-08): `@context` maps to `x-jsonld-context` and `x-oold-instance-rdf-type` to `x-jsonld-type`.
 
-> **In context:** For OpenAPI 3.0, which rejects unprefixed keywords in a Schema Object (and typically bundles several classes with no document root to host one `@context`), the context and type SHOULD be delivered per class as `x-jsonld-context` and `x-jsonld-type` following [REST API Linked Data Keywords](https://datatracker.ietf.org/doc/html/draft-polli-restapi-ld-keywords-08): `@context` maps to `x-jsonld-context` and `x-oold-instance-rdf-type` to `x-jsonld-type`. That draft requires references inside these keywords not to be dereferenced automatically, consistent with the `x-oold-ref` rule (see [why-x-oold-ref](spec/#why-x-oold-ref)). The mapping is reversible, so such an export can be read back into an OO-LD schema.
+??? quote "In context"
+
+    For OpenAPI 3.0, which rejects unprefixed keywords in a Schema Object (and typically bundles several classes with no document root to host one `@context`), the context and type SHOULD be delivered per class as `x-jsonld-context` and `x-jsonld-type` following [REST API Linked Data Keywords](https://datatracker.ietf.org/doc/html/draft-polli-restapi-ld-keywords-08): `@context` maps to `x-jsonld-context` and `x-oold-instance-rdf-type` to `x-jsonld-type`. That draft requires references inside these keywords not to be dereferenced automatically, consistent with the `x-oold-ref` rule (see [why-x-oold-ref](spec/#why-x-oold-ref)). The mapping is reversible, so such an export can be read back into an OO-LD schema.
 
 See [this rule in the specification](spec/#OOLD-EXT-436a) (section: semantic-delivery).
 
@@ -527,7 +579,9 @@ A schema should declare the OO-LD dialect meta-schema as its $schema.
 
 An OO-LD schema SHOULD declare the OO-LD dialect meta-schema (which extends 2020-12) as its `$schema`, e.g. `"$schema": "https://oo-ld.org/latest/meta/oold-meta-schema.json"` - pinning a specific version (e.g. `.../0.4.0/meta/oold-meta-schema.json`) for reproducibility.
 
-> **In context:** OO-LD targets JSONSCHEMA (2020-12) as its normative dialect. An OO-LD schema SHOULD declare the OO-LD dialect meta-schema (which extends 2020-12) as its `$schema`, e.g. `"$schema": "https://oo-ld.org/latest/meta/oold-meta-schema.json"` - pinning a specific version (e.g. `.../0.4.0/meta/oold-meta-schema.json`) for reproducibility. Declaring the plain 2020-12 meta-schema (`https://json-schema.org/draft/2020-12/schema`) remains valid for tools that only understand standard JSON Schema.
+??? quote "In context"
+
+    OO-LD targets JSONSCHEMA (2020-12) as its normative dialect. An OO-LD schema SHOULD declare the OO-LD dialect meta-schema (which extends 2020-12) as its `$schema`, e.g. `"$schema": "https://oo-ld.org/latest/meta/oold-meta-schema.json"` - pinning a specific version (e.g. `.../0.4.0/meta/oold-meta-schema.json`) for reproducibility. Declaring the plain 2020-12 meta-schema (`https://json-schema.org/draft/2020-12/schema`) remains valid for tools that only understand standard JSON Schema.
 
 See [this rule in the specification](spec/#OOLD-EXT-5184) (section: jsonschema-extensions).
 
@@ -542,7 +596,9 @@ A consumer accepting arbitrary JSON Schema keywords should receive the native fo
 
 A consumer that accepts arbitrary JSON Schema keywords SHOULD receive the native form unchanged.
 
-> **In context:** A consumer that accepts arbitrary JSON Schema keywords SHOULD receive the native form unchanged. This covers plain JSON Schema 2020-12 validators, OpenAPI 3.1, and - because they place no restriction on `@context` - Model Context Protocol tool schemas (`inputSchema` / `outputSchema`) as well as LLM tool-use and structured-output APIs, which carry the context through and can use it as grounding.
+??? quote "In context"
+
+    A consumer that accepts arbitrary JSON Schema keywords SHOULD receive the native form unchanged. This covers plain JSON Schema 2020-12 validators, OpenAPI 3.1, and - because they place no restriction on `@context` - Model Context Protocol tool schemas (`inputSchema` / `outputSchema`) as well as LLM tool-use and structured-output APIs, which carry the context through and can use it as grounding.
 
 See [this rule in the specification](spec/#OOLD-EXT-61aa) (section: semantic-delivery).
 
@@ -557,7 +613,9 @@ An IRI-valued property should constrain its lexical form with an IRI/URI-family 
 
 Its lexical form SHOULD be constrained with an IRI/URI-family `format` so that malformed values are rejected; the choices, from most to least permissive:
 
-> **In context:** The value of an IRI-valued property is a JSON string. Its role as a reference comes from the `@context` (`"@type": "@id"`) and its class from `x-oold-range`. Its lexical form SHOULD be constrained with an IRI/URI-family `format` so that malformed values are rejected; the choices, from most to least permissive:
+??? quote "In context"
+
+    The value of an IRI-valued property is a JSON string. Its role as a reference comes from the `@context` (`"@type": "@id"`) and its class from `x-oold-range`. Its lexical form SHOULD be constrained with an IRI/URI-family `format` so that malformed values are rejected; the choices, from most to least permissive:
 
 See [this rule in the specification](spec/#OOLD-EXT-6ea3) (section: range-reference-form).
 
@@ -572,7 +630,9 @@ JSON Schema 2020-12 is required as the dialect, because composition places $ref 
 
 2020-12 is REQUIRED, not merely preferred: OO-LD's composition places `$ref` alongside sibling keywords (e.g. a property carrying `type`, `x-oold-range` and `@context`, or `allOf: [{$ref: ...}]` next to `properties`).
 
-> **In context:** 2020-12 is REQUIRED, not merely preferred: OO-LD's composition places `$ref` alongside sibling keywords (e.g. a property carrying `type`, `x-oold-range` and `@context`, or `allOf: [{$ref: ...}]` next to `properties`). Keywords adjacent to `$ref` are only evaluated from JSON Schema 2019-09 onward; in Draft 4 and Draft 7 they are ignored (JSONSCHEMA §8.2.3.1). Keywords such as `const` (used throughout this document) are likewise only available from draft-06 onward. Migration from the earlier Draft-4-style notation: rename `definitions` to `$defs`, `id` to `$id`, and use the numeric form of `exclusiveMinimum`/`exclusiveMaximum` instead of the boolean form.
+??? quote "In context"
+
+    2020-12 is REQUIRED, not merely preferred: OO-LD's composition places `$ref` alongside sibling keywords (e.g. a property carrying `type`, `x-oold-range` and `@context`, or `allOf: [{$ref: ...}]` next to `properties`). Keywords adjacent to `$ref` are only evaluated from JSON Schema 2019-09 onward; in Draft 4 and Draft 7 they are ignored (JSONSCHEMA §8.2.3.1). Keywords such as `const` (used throughout this document) are likewise only available from draft-06 onward. Migration from the earlier Draft-4-style notation: rename `definitions` to `$defs`, `id` to `$id`, and use the numeric form of `exclusiveMinimum`/`exclusiveMaximum` instead of the boolean form.
 
 See [this rule in the specification](spec/#OOLD-EXT-af50) (section: jsonschema-extensions).
 
@@ -587,7 +647,9 @@ A schema using multilingual annotations should still provide a default title and
 
 A schema SHOULD still provide a default `title` / `description`; a consumer that has no entry for the requested language falls back to that default.
 
-> **In context:** The JSON Schema annotation keywords `title` and `description` carry a single, default human-readable string used by tooling (for example for UI generation). To provide localized variants, OO-LD adds the keywords `x-oold-multilang-title` and `x-oold-multilang-description`. Their value MUST be an object whose keys are [BCP 47](https://www.rfc-editor.org/info/bcp47) language tags (e.g. `en`, `de`, `en-GB`) and whose values are the translated strings. A schema SHOULD still provide a default `title` / `description`; a consumer that has no entry for the requested language falls back to that default. These keywords localize the schema's own labels and are not interpreted as JSON-LD.
+??? quote "In context"
+
+    The JSON Schema annotation keywords `title` and `description` carry a single, default human-readable string used by tooling (for example for UI generation). To provide localized variants, OO-LD adds the keywords `x-oold-multilang-title` and `x-oold-multilang-description`. Their value MUST be an object whose keys are [BCP 47](https://www.rfc-editor.org/info/bcp47) language tags (e.g. `en`, `de`, `en-GB`) and whose values are the translated strings. A schema SHOULD still provide a default `title` / `description`; a consumer that has no entry for the requested language falls back to that default. These keywords localize the schema's own labels and are not interpreted as JSON-LD.
 
 See [this rule in the specification](spec/#OOLD-EXT-dd76) (section: localizing-schema-annotations).
 
@@ -602,7 +664,9 @@ A generated context should declare @version 1.1 as a JSON number.
 
 Generated OO-LD contexts SHOULD therefore declare `"@version": 1.1` (the JSON number `1.1`, not the string `"1.1"`).
 
-> **In context:** Generated OO-LD contexts SHOULD therefore declare `"@version": 1.1` (the JSON number `1.1`, not the string `"1.1"`). Modern processors default to the 1.1 processing mode, so this is a guard rather than a strict requirement: it prevents a JSON-LD 1.0 processor from silently mis-processing a 1.1 document (JSON-LD11 §4.1.1). Because the first encountered `@version` entry determines the processing mode, it is sufficient to declare `"@version": 1.1` once in the base context of a composition (for example a root `Thing` schema).
+??? quote "In context"
+
+    Generated OO-LD contexts SHOULD therefore declare `"@version": 1.1` (the JSON number `1.1`, not the string `"1.1"`). Modern processors default to the 1.1 processing mode, so this is a guard rather than a strict requirement: it prevents a JSON-LD 1.0 processor from silently mis-processing a 1.1 document (JSON-LD11 §4.1.1). Because the first encountered `@version` entry determines the processing mode, it is sufficient to declare `"@version": 1.1` once in the base context of a composition (for example a root `Thing` schema).
 
 See [this rule in the specification](spec/#OOLD-EXT-ddda) (section: processing-mode).
 
@@ -617,6 +681,8 @@ x-oold-multilang-title/description must map BCP 47 language tags to translated s
 
 Their value MUST be an object whose keys are [BCP 47](https://www.rfc-editor.org/info/bcp47) language tags (e.g. `en`, `de`, `en-GB`) and whose values are the translated strings.
 
-> **In context:** The JSON Schema annotation keywords `title` and `description` carry a single, default human-readable string used by tooling (for example for UI generation). To provide localized variants, OO-LD adds the keywords `x-oold-multilang-title` and `x-oold-multilang-description`. Their value MUST be an object whose keys are [BCP 47](https://www.rfc-editor.org/info/bcp47) language tags (e.g. `en`, `de`, `en-GB`) and whose values are the translated strings. A schema SHOULD still provide a default `title` / `description`; a consumer that has no entry for the requested language falls back to that default. These keywords localize the schema's own labels and are not interpreted as JSON-LD.
+??? quote "In context"
+
+    The JSON Schema annotation keywords `title` and `description` carry a single, default human-readable string used by tooling (for example for UI generation). To provide localized variants, OO-LD adds the keywords `x-oold-multilang-title` and `x-oold-multilang-description`. Their value MUST be an object whose keys are [BCP 47](https://www.rfc-editor.org/info/bcp47) language tags (e.g. `en`, `de`, `en-GB`) and whose values are the translated strings. A schema SHOULD still provide a default `title` / `description`; a consumer that has no entry for the requested language falls back to that default. These keywords localize the schema's own labels and are not interpreted as JSON-LD.
 
 See [this rule in the specification](spec/#OOLD-EXT-ef09) (section: localizing-schema-annotations).
