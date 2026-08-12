@@ -37,7 +37,12 @@ sentence actually is.
 
 from __future__ import annotations
 
+import os
 import re
+import sys
+
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from rule_ids import MARKER  # noqa: E402  - the marker itself ends a sentence; see sentence_end
 
 #: A sentence-ending punctuation mark. `!` and `?` need none of the abbreviation/ellipsis
 #: handling below - nothing in the corpus abbreviates with them.
@@ -128,8 +133,18 @@ def sentence_end(text: str, start: int) -> int:
     """
     ranges = _code_span_ranges(text)
     bullet = LIST_MARKER.match(text)
+
+    # The next marker ends this sentence whatever the punctuation says, because it opens the next
+    # rule's sentence. Without this, two consecutive sentences that are both rules merge into one:
+    # the period before the marker is followed by `:rule[`, not by whitespace and a capital, so no
+    # boundary is recognised and the first rule swallows the second's text verbatim.
+    following = MARKER.search(text, start)
+    limit = following.start() if following else len(text)
+
     for match in TERMINATOR.finditer(text, start):
         index = match.start()
+        if index >= limit:
+            break
         if bullet and index < bullet.end():
             continue
         if _inside_code_span(ranges, index):
@@ -142,4 +157,4 @@ def sentence_end(text: str, start: int) -> int:
             continue
         if TRIGGER.match(text, whitespace.end()):
             return closers.end()
-    return len(text)
+    return len(text[:limit].rstrip())

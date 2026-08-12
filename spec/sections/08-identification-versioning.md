@@ -2,7 +2,7 @@
 
 ### Identification {#identification}
 
-:rule[OOLD-VER-3b96]{applies=document level=MUST summary="A schema must have a $id serving as its global unique identifier."}OO-LD schemas MUST have a `$id` ([[JSONSCHEMA]] §8.2.1) which works as a global and unique identifier of the schema. The value of `$id` MAY be an absolute URI (details below). The schema SHOULD be resolvable via this URI. The schema SHOULD have an annotation `x-oold-uuid` with a UUID value.
+:rule[OOLD-VER-3b96]{applies=document level=MUST summary="A schema must have a $id serving as its global unique identifier."}OO-LD schemas MUST have a `$id` ([[JSONSCHEMA]] §8.2.1) which works as a global and unique identifier of the schema. The value of `$id` MAY be an absolute URI (details below). :rule[OOLD-VER-2e63]{applies=document machine_checkable=no level=SHOULD summary="A schema should be resolvable via its $id."}The schema SHOULD be resolvable via this URI. :rule[OOLD-VER-edb9]{applies=document level=SHOULD summary="A schema should carry an x-oold-uuid annotation holding a UUID value."}The schema SHOULD have an annotation `x-oold-uuid` with a UUID value.
 
 This obligation applies to a schema *document*, not to every subschema: a fragment inside `properties`, `$defs` or [`x-oold-range`](#range-of-properties) legitimately has no `$id` of its own. The dialect meta-schema enforces exactly that distinction and so checks the requirement itself - see [](#meta-schema).
 

@@ -163,6 +163,56 @@ def non_normative_blocks(lines: list[str]) -> set[int]:
     return inside
 
 
+def split_sentences(text: str) -> list[str]:
+    """`text` cut at the same boundaries a rule's own sentence is cut at."""
+    out, position = [], 0
+    while position < len(text):
+        end = sentence_end(text, position)
+        out.append(text[position:end].strip())
+        if end <= position:
+            break
+        position = end
+        while position < len(text) and text[position] in " \t":
+            position += 1
+    return out
+
+
+def report_unclaimed(rules: list[dict]) -> None:
+    """Warn about normative sentences sitting in a marked block that no rule identifies.
+
+    Scoping a rule to its sentence made a gap visible that paragraph scope had hidden: a block
+    can state several requirements while only one carries a marker, and the others then look
+    covered because they sat inside the marked paragraph's text. Six such sentences existed the
+    first time this ran.
+
+    A warning, not a failure, deliberately. The specification is edited in passes, and a MUST
+    written now with its id minted in the next commit must not block the build in between. This
+    mirrors `coverage.rules` downstream, which warns for the same reason.
+    """
+    blocks: dict[tuple[str, str], list[dict]] = {}
+    for rule in rules:
+        source = rule["source"].split(":")[0]
+        blocks.setdefault((source, rule.get("context") or rule["text"]), []).append(rule)
+
+    unclaimed: list[str] = []
+    for (source, context), group in sorted(blocks.items()):
+        claimed = [r["text"] for r in group]
+        for sentence in split_sentences(context):
+            keyword = RFC2119.search(sentence)
+            if not keyword:
+                continue
+            if any(sentence in text or text in sentence for text in claimed if text):
+                continue
+            where = f"{source}:{group[0]['source'].split(':')[1]}"
+            unclaimed.append(f"{where} [{keyword.group(1)}] {sentence[:110]}")
+
+    if unclaimed:
+        print(f"WARN {len(unclaimed)} normative sentence(s) in a marked block carry no rule id:", file=sys.stderr)
+        for line in unclaimed:
+            print(f"       {line}", file=sys.stderr)
+        print("     Mark each with :rule[OOLD-<AREA>-?]{...} and run `make rules-mint`.", file=sys.stderr)
+
+
 def extract_file(filename: str, problems: list[str]) -> list[dict]:
     path = os.path.join(SECTIONS_DIR, filename)
     with open(path, encoding="utf-8") as handle:
@@ -320,6 +370,8 @@ def main() -> int:
         for problem in problems:
             print("  - " + problem, file=sys.stderr)
         return 1
+
+    report_unclaimed(rules)
 
     rules.sort(key=lambda r: (r["area"], r["id"]))
     payload = {
