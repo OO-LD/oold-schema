@@ -145,6 +145,14 @@ link = "https://github.com/OO-LD/oold-schema"
 [project.markdown_extensions.pymdownx.arithmatex]
 generic = true
 
+# `admonition` renders the `!!! note` blocks that get-started.md, introduction.md and
+# mappings.md already used; without it they were published as literal "!!! note" text with the
+# body underneath as a code block. `pymdownx.details` adds the `???` form, which is the same
+# thing collapsed - used for the "In context" prose on the rule catalogue page.
+[project.markdown_extensions.admonition]
+
+[project.markdown_extensions.pymdownx.details]
+
 [project.markdown_extensions.pymdownx.emoji]
 emoji_generator = "zensical.extensions.emoji.to_svg"
 emoji_index = "zensical.extensions.emoji.twemoji"
