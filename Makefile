@@ -43,6 +43,10 @@ rules-accept: ## Accept reworded rule(s): make rules-accept IDS="OOLD-RT-08f2 OO
 rules-mint: ## Fill :rule[OOLD-XX-?] placeholders with freshly minted ids
 	@uv run scripts/mint_rule_ids.py $(ARGS)
 
+.PHONY: check-extensions
+check-extensions: ## Check zensical.toml still restates Zensical's default Markdown extensions
+	@uv run --with zensical==$(ZENSICAL_VERSION) scripts/check_markdown_extensions.py
+
 .PHONY: stage-schemas
 stage-schemas: ## Copy meta/ + examples/ into docs/ so the build serves them (versioned per release)
 	@mkdir -p docs/meta docs/schemas
@@ -61,6 +65,7 @@ preview: spec stage-schemas ## Regenerate the spec, then serve the docs with liv
 check: validate spec stage-schemas ## Validate schemas, lint the regenerated spec, and build the site
 	@uv run scripts/check_spec.py
 	@uv run scripts/rules_baseline.py check
+	@$(MAKE) --no-print-directory check-extensions
 	@$(ZENSICAL) build --clean
 
 .PHONY: clean

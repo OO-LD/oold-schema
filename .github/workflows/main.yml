@@ -48,6 +48,13 @@ jobs:
         run: uv run scripts/render_rules_page.py
       - name: Check the catalog, baseline and rule catalogue page are up to date
         run: git diff --exit-code meta/oold-rules.json meta/rules-baseline.json docs/rules.md
+      # Declaring any markdown_extensions replaces Zensical's defaults rather than
+      # extending them, so an omission silently switches an extension off instead of
+      # failing the build. zensical.toml restates the defaults to keep the effective
+      # set visible; this checks that restatement against the pinned Zensical, so
+      # bumping ZENSICAL_VERSION cannot change the set unnoticed.
+      - name: Check the restated Markdown extensions match Zensical's defaults
+        run: uv run --with zensical==${{ env.ZENSICAL_VERSION }} scripts/check_markdown_extensions.py
 
   # Publish the versioned docs + schemas to the `gh-pages` branch with mike (the
   # zensical fork). GitHub Pages must serve from `gh-pages`
