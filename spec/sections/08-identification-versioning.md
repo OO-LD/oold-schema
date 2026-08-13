@@ -64,8 +64,8 @@ OO-LD-aware tooling uses these correspondences to anchor the schema in an ontolo
 
 :rule[OOLD-VER-534a]{applies=document level=SHOULD summary="The schema version should be part of the schema location URL."}The version SHOULD be part of the schema's location:
 
-- For **single-schema** versioning, the version SHOULD be appended after the schema name, e.g. `https://example.org/b5203131-7321-46bb-8a11-acb3d1015840.schema.json/1.1.0`.
-- For **schema-package** versioning (recommended), the version of the package SHOULD be prepended before the schema's ID, e.g. `https://example.org/my-package/2.0.0/b5203131-7321-46bb-8a11-acb3d1015840.schema.json`.
+- :rule[OOLD-VER-befc]{applies=document level=SHOULD summary="Under single-schema versioning, the version should be appended after the schema name in the $id."}For **single-schema** versioning, the version SHOULD be appended after the schema name, e.g. `https://example.org/b5203131-7321-46bb-8a11-acb3d1015840.schema.json/1.1.0`.
+- :rule[OOLD-VER-4261]{applies=document level=SHOULD summary="Under schema-package versioning, the package version should be prepended before the schema id."}For **schema-package** versioning (recommended), the version of the package SHOULD be prepended before the schema's ID, e.g. `https://example.org/my-package/2.0.0/b5203131-7321-46bb-8a11-acb3d1015840.schema.json`.
 - or using release tags on GitHub, e.g. `https://raw.githubusercontent.com/MyOrg/my-package/refs/heads/2.0.0/b5203131-7321-46bb-8a11-acb3d1015840.schema.json`.
 
 Since a package combines multiple schemas, the package version does in general not match the individual schema version.
