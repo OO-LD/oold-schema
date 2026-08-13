@@ -162,7 +162,7 @@
       "text": "By RFC3987 this accepts absolute IRIs, compact IRIs (`ex:alice`, `schema:Person`) and context-relative references alike - the forms OO-LD instances routinely use - so it is the RECOMMENDED default.",
       "text_sha256": "5d4c4a4f84533b109985d2562ad3459f3c9ce3dcd42d66aebeca8ca6c182e815",
       "context": "- Any IRI reference - `\"format\": \"iri-reference\"`. By RFC3987 this accepts absolute IRIs, compact IRIs (`ex:alice`, `schema:Person`) and context-relative references alike - the forms OO-LD instances routinely use - so it is the RECOMMENDED default. It also accepts a bare term such as `alice`, expanded against the context's `@base` / `@vocab`.",
-      "machine_checkable": true,
+      "machine_checkable": false,
       "since": "1.0.0-rc.1",
       "deprecated": false,
       "source": "09-extensions.md:326"
@@ -612,7 +612,7 @@
       "text": "For schema-package versioning (recommended), the version of the package SHOULD be prepended before the schema's ID, e.g. `https://example.org/my-package/2.0.0/b5203131-7321-46bb-8a11-acb3d1015840.schema.json`.",
       "text_sha256": "4e2e5321caa2b8551df124896634f32ecdcd314d40dadde918a6310f297acf1b",
       "context": "- For schema-package versioning (recommended), the version of the package SHOULD be prepended before the schema's ID, e.g. `https://example.org/my-package/2.0.0/b5203131-7321-46bb-8a11-acb3d1015840.schema.json`.",
-      "machine_checkable": true,
+      "machine_checkable": false,
       "since": "1.0.0-rc.1",
       "deprecated": false,
       "source": "08-identification-versioning.md:68"
@@ -642,7 +642,7 @@
       "text": "For single-schema versioning, the version SHOULD be appended after the schema name, e.g. `https://example.org/b5203131-7321-46bb-8a11-acb3d1015840.schema.json/1.1.0`.",
       "text_sha256": "3e485bd18653ac3e879efe279ac5938bf1e8657575a547e99f5084e3f1cb9089",
       "context": "- For single-schema versioning, the version SHOULD be appended after the schema name, e.g. `https://example.org/b5203131-7321-46bb-8a11-acb3d1015840.schema.json/1.1.0`.",
-      "machine_checkable": true,
+      "machine_checkable": false,
       "since": "1.0.0-rc.1",
       "deprecated": false,
       "source": "08-identification-versioning.md:67"
