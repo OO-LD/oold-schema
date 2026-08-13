@@ -468,7 +468,7 @@ Minor unsolved issues:
 
 ## NOMAD
 
-[NOMAD schemas](https://nomad-lab.eu/prod/v1/docs/explanation/basics.html) have comparable concepts about reusable objects (sections) with typed properties (quantities). Example:
+[NOMAD schemas](https://docs.nomad-lab.eu/1.4.3/howto/manage/gui/yaml.html) have comparable concepts about reusable objects (sections) with typed properties (quantities). Example:
 
 ```yaml
 definitions:
