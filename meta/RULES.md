@@ -21,7 +21,7 @@ A new rule is written with a `?` in place of the suffix and minted before it is 
 |---|---|
 | `applies` | `document` (decidable by validating a schema/instance), `implementation` (constrains a library; needs a conformance suite), or `advisory`. Default `document` |
 | `summary` | One short line for a CLI. Optional; the opening sentence is used when absent |
-| `machine_checkable` | Override the default, which is true only for `document` rules |
+| `machine_checkable` | Override the default, which is true only for `document` rules. See below |
 | `since` | Override the release; defaults to the current tag |
 | `deprecated` | `yes` to retire a rule. Its record stays in the catalog |
 | `superseded_by` | Comma-separated ids that replace a deprecated rule |
@@ -29,6 +29,26 @@ A new rule is written with a `?` in place of the suffix and minted before it is 
 
 `level` (MUST / SHOULD / ...), `text` and `context` are extracted from the prose, never authored,
 so the catalog cannot drift from the specification.
+
+### When a document rule is not machine-checkable
+
+`machine_checkable` defaults to true for `document` rules, and that default is wrong whenever the
+rule's **trigger** depends on something a validator cannot see. Set it to `no` when either holds:
+
+- the condition is authorial intent. *"Where a referenced context should apply only to the
+  immediate node ..."* (`OOLD-CMP-a05a`) and *"Under single-schema versioning ..."*
+  (`OOLD-VER-befc`) both bind documents, but nothing in a document says which case it is in.
+- deciding it needs something outside the document, such as dereferencing a URL to see whether it
+  resolves (`OOLD-VER-2e63`).
+
+A refinement whose enforceable part is already covered by a broader rule belongs here too:
+`OOLD-EXT-1f92` recommends `iri-reference` as the default format, but every alternative the
+specification lists is legitimate, so nothing is left for a checker to decide that
+`OOLD-EXT-6ea3` does not already cover.
+
+This matters because the flag is a denominator. A downstream validator reports the rules it does
+not yet enforce, and a rule that can never be enforced sits in that list permanently, making the
+gap look larger than the work that actually remains.
 
 ### Put the marker on the sentence, not the paragraph
 
