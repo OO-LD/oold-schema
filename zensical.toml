@@ -102,7 +102,8 @@ link = "https://github.com/OO-LD/oold-schema"
 #     config.get("markdown_extensions", DEFAULT_MARKDOWN_EXTENSIONS)
 # which is a fallback, not a merge. Every default left out here is therefore
 # silently switched off - that is how `!!! note` callouts ended up rendering as
-# literal text before "admonition" was restored.
+# literal text before "admonition" was restored. The rule catalogue page depends
+# on "pymdownx.details" the same way, for its collapsed "In context" prose.
 #
 # The entries below reproduce Zensical 0.0.46's defaults, so the effective set
 # is visible in one file. Treat them as upstream values: re-check them against
@@ -144,14 +145,6 @@ link = "https://github.com/OO-LD/oold-schema"
 
 [project.markdown_extensions.pymdownx.arithmatex]
 generic = true
-
-# `admonition` renders the `!!! note` blocks that get-started.md, introduction.md and
-# mappings.md already used; without it they were published as literal "!!! note" text with the
-# body underneath as a code block. `pymdownx.details` adds the `???` form, which is the same
-# thing collapsed - used for the "In context" prose on the rule catalogue page.
-[project.markdown_extensions.admonition]
-
-[project.markdown_extensions.pymdownx.details]
 
 [project.markdown_extensions.pymdownx.emoji]
 emoji_generator = "zensical.extensions.emoji.to_svg"
