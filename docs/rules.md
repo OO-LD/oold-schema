@@ -55,7 +55,8 @@ OO-LD schema documents MUST NOT be interpreted as JSON-LD documents, because tha
 
 ??? quote "In context"
 
-    An OO-LD schema is consumed as a JSON-LD remote context (referenced by its URL from an instance's `@context`), never as a JSON-LD document. OO-LD schema documents MUST NOT be interpreted as JSON-LD documents, because that would apply the schema's own `@context` to the schema itself and produce incorrect triples.
+
+    - An OO-LD schema is consumed as a JSON-LD remote context (referenced by its URL from an instance's `@context`), never as a JSON-LD document. OO-LD schema documents MUST NOT be interpreted as JSON-LD documents, because that would apply the schema's own `@context` to the schema itself and produce incorrect triples.
 
 See [this rule in the specification](spec/#OOLD-SCH-a9ee) (section: basic-concepts).
 
@@ -229,7 +230,8 @@ References are written as objects, and the term MUST NOT carry `@type`.
 
 ??? quote "In context"
 
-    Value-form - a single plain term (no `@type: "@id"`); the value shape alone disambiguates: a bare scalar is a literal, `{ "id": ... }` is a reference, a typed object is embedded. References are written as objects, and the term MUST NOT carry `@type`.
+
+    1. Value-form - a single plain term (no `@type: "@id"`); the value shape alone disambiguates: a bare scalar is a literal, `{ "id": ... }` is a reference, a typed object is embedded. References are written as objects, and the term MUST NOT carry `@type`.
 
 See [this rule in the specification](spec/#OOLD-INS-1df7) (section: value-forms).
 
@@ -370,7 +372,10 @@ For a property whose range mixes free text with references and/or embedded objec
 
 ??? quote "In context"
 
-    For a property whose range mixes free text with references and/or embedded objects (for example `Text | PostalAddress | Place`), two patterns keep the instance round-trippable (see [round-trip](spec/#round-trip)); a model ecosystem SHOULD adopt one of them consistently: 1. Value-form - a single plain term (no `@type: "@id"`); the value shape alone disambiguates: a bare scalar is a literal, `{ "id": ... }` is a reference, a typed object is embedded. References are written as objects, and the term MUST NOT carry `@type`. 2. Separate keys - a canonical term `p` with `@type: "@id"` (a bare IRI string reference, plus embedded objects via a scoped `@context`) and a companion `p_text` that is a plain term for the literal.
+    For a property whose range mixes free text with references and/or embedded objects (for example `Text | PostalAddress | Place`), two patterns keep the instance round-trippable (see [round-trip](spec/#round-trip)); a model ecosystem SHOULD adopt one of them consistently:
+
+    1. Value-form - a single plain term (no `@type: "@id"`); the value shape alone disambiguates: a bare scalar is a literal, `{ "id": ... }` is a reference, a typed object is embedded. References are written as objects, and the term MUST NOT carry `@type`.
+    2. Separate keys - a canonical term `p` with `@type: "@id"` (a bare IRI string reference, plus embedded objects via a scoped `@context`) and a companion `p_text` that is a plain term for the literal.
 
 See [this rule in the specification](spec/#OOLD-INS-da1a) (section: value-forms).
 
@@ -402,7 +407,8 @@ Because the reconstruction MUST re-validate, a property that is strictly an arra
 
 ??? quote "In context"
 
-    Multi-valued properties are set-valued in RDF: order is not preserved, duplicates are removed, and a single value compacts to a scalar. Because the reconstruction MUST re-validate, a property that is strictly an array (JSON Schema `type: "array"`) MUST declare `@container: "@set"` (or `"@list"`): without it a single-element array returns as a scalar and violates the `array` type. A property that also permits a scalar (an `anyOf`/`oneOf` of a literal and an array) MAY declare it for a stable array shape, but need not - the scalar form still validates, and a single value and a one-element array are JSON-LD-equivalent. Round-trip equality is set equality; use `@list` only where order is significant, at the cost of merge and query ergonomics.
+
+    - Multi-valued properties are set-valued in RDF: order is not preserved, duplicates are removed, and a single value compacts to a scalar. Because the reconstruction MUST re-validate, a property that is strictly an array (JSON Schema `type: "array"`) MUST declare `@container: "@set"` (or `"@list"`): without it a single-element array returns as a scalar and violates the `array` type. A property that also permits a scalar (an `anyOf`/`oneOf` of a literal and an array) MAY declare it for a stable array shape, but need not - the scalar form still validates, and a single value and a one-element array are JSON-LD-equivalent. Round-trip equality is set equality; use `@list` only where order is significant, at the cost of merge and query ergonomics.
 
 See [this rule in the specification](spec/#OOLD-RT-08f2) (section: round-trip).
 
@@ -502,7 +508,11 @@ The version SHOULD be part of the schema's location:
 
 ??? quote "In context"
 
-    The version SHOULD be part of the schema's location: - For single-schema versioning, the version SHOULD be appended after the schema name, e.g. `https://example.org/b5203131-7321-46bb-8a11-acb3d1015840.schema.json/1.1.0`. - For schema-package versioning (recommended), the version of the package SHOULD be prepended before the schema's ID, e.g. `https://example.org/my-package/2.0.0/b5203131-7321-46bb-8a11-acb3d1015840.schema.json`. - or using release tags on GitHub, e.g. `https://raw.githubusercontent.com/MyOrg/my-package/refs/heads/2.0.0/b5203131-7321-46bb-8a11-acb3d1015840.schema.json`.
+    The version SHOULD be part of the schema's location:
+
+    - For single-schema versioning, the version SHOULD be appended after the schema name, e.g. `https://example.org/b5203131-7321-46bb-8a11-acb3d1015840.schema.json/1.1.0`.
+    - For schema-package versioning (recommended), the version of the package SHOULD be prepended before the schema's ID, e.g. `https://example.org/my-package/2.0.0/b5203131-7321-46bb-8a11-acb3d1015840.schema.json`.
+    - or using release tags on GitHub, e.g. `https://raw.githubusercontent.com/MyOrg/my-package/refs/heads/2.0.0/b5203131-7321-46bb-8a11-acb3d1015840.schema.json`.
 
 See [this rule in the specification](spec/#OOLD-VER-534a) (section: versioning).
 
@@ -538,7 +548,9 @@ Compact form specifically - a `"pattern"` such as `"^[A-Za-z_][\\w.-]:(?!//)\\S$
 
 ??? quote "In context"
 
-    Stricter, ASCII only - `"format": "uri"` or `"uri-reference"`, where values are known not to use internationalized (non-ASCII) IRIs. - Compact form specifically - a `"pattern"` such as `"^[A-Za-z_][\\w.-]:(?!//)\\S$"`, which accepts `ex:alice` and `schema:Person` while rejecting `http://…`; the prefix MUST be defined in the `@context`.
+
+    - Stricter, ASCII only - `"format": "uri"` or `"uri-reference"`, where values are known not to use internationalized (non-ASCII) IRIs.
+    - Compact form specifically - a `"pattern"` such as `"^[A-Za-z_][\\w.-]:(?!//)\\S$"`, which accepts `ex:alice` and `schema:Person` while rejecting `http://…`; the prefix MUST be defined in the `@context`.
 
 See [this rule in the specification](spec/#OOLD-EXT-2b61) (section: range-reference-form).
 
@@ -555,7 +567,8 @@ References to other schemas inside `x-oold-range` MUST use `x-oold-ref`, never `
 
 ??? quote "In context"
 
-    An OO-LD subschema, the most expressive form. Unions (`anyOf` / `oneOf`), intersections (`allOf`) and inline constraints can be combined to describe an anonymous subclass. References to other schemas inside `x-oold-range` MUST use `x-oold-ref`, never `$ref` (see below). The single-IRI form (1) is a shorthand for `{ "allOf": [ { "x-oold-ref": "Organization.schema.json" } ] }`:
+
+    3. An OO-LD subschema, the most expressive form. Unions (`anyOf` / `oneOf`), intersections (`allOf`) and inline constraints can be combined to describe an anonymous subclass. References to other schemas inside `x-oold-range` MUST use `x-oold-ref`, never `$ref` (see below). The single-IRI form (1) is a shorthand for `{ "allOf": [ { "x-oold-ref": "Organization.schema.json" } ] }`:
 
 See [this rule in the specification](spec/#OOLD-EXT-3fe9) (section: range-of-properties).
 
@@ -572,7 +585,8 @@ For OpenAPI 3.0, which rejects unprefixed keywords in a Schema Object (and typic
 
 ??? quote "In context"
 
-    For OpenAPI 3.0, which rejects unprefixed keywords in a Schema Object (and typically bundles several classes with no document root to host one `@context`), the context and type SHOULD be delivered per class as `x-jsonld-context` and `x-jsonld-type` following [REST API Linked Data Keywords](https://datatracker.ietf.org/doc/html/draft-polli-restapi-ld-keywords-08): `@context` maps to `x-jsonld-context` and `x-oold-instance-rdf-type` to `x-jsonld-type`. That draft requires references inside these keywords not to be dereferenced automatically, consistent with the `x-oold-ref` rule (see [why-x-oold-ref](spec/#why-x-oold-ref)). The mapping is reversible, so such an export can be read back into an OO-LD schema.
+
+    - For OpenAPI 3.0, which rejects unprefixed keywords in a Schema Object (and typically bundles several classes with no document root to host one `@context`), the context and type SHOULD be delivered per class as `x-jsonld-context` and `x-jsonld-type` following [REST API Linked Data Keywords](https://datatracker.ietf.org/doc/html/draft-polli-restapi-ld-keywords-08): `@context` maps to `x-jsonld-context` and `x-oold-instance-rdf-type` to `x-jsonld-type`. That draft requires references inside these keywords not to be dereferenced automatically, consistent with the `x-oold-ref` rule (see [why-x-oold-ref](spec/#why-x-oold-ref)). The mapping is reversible, so such an export can be read back into an OO-LD schema.
 
 See [this rule in the specification](spec/#OOLD-EXT-436a) (section: semantic-delivery).
 
@@ -606,7 +620,8 @@ A consumer that accepts arbitrary JSON Schema keywords SHOULD receive the native
 
 ??? quote "In context"
 
-    A consumer that accepts arbitrary JSON Schema keywords SHOULD receive the native form unchanged. This covers plain JSON Schema 2020-12 validators, OpenAPI 3.1, and - because they place no restriction on `@context` - Model Context Protocol tool schemas (`inputSchema` / `outputSchema`) as well as LLM tool-use and structured-output APIs, which carry the context through and can use it as grounding.
+
+    - A consumer that accepts arbitrary JSON Schema keywords SHOULD receive the native form unchanged. This covers plain JSON Schema 2020-12 validators, OpenAPI 3.1, and - because they place no restriction on `@context` - Model Context Protocol tool schemas (`inputSchema` / `outputSchema`) as well as LLM tool-use and structured-output APIs, which carry the context through and can use it as grounding.
 
 See [this rule in the specification](spec/#OOLD-EXT-61aa) (section: semantic-delivery).
 
@@ -623,7 +638,11 @@ Its lexical form SHOULD be constrained with an IRI/URI-family `format` so that m
 
 ??? quote "In context"
 
-    The value of an IRI-valued property is a JSON string. Its role as a reference comes from the `@context` (`"@type": "@id"`) and its class from `x-oold-range`. Its lexical form SHOULD be constrained with an IRI/URI-family `format` so that malformed values are rejected; the choices, from most to least permissive: - Any IRI reference - `"format": "iri-reference"`. By RFC3987 this accepts absolute IRIs, compact IRIs (`ex:alice`, `schema:Person`) and context-relative references alike - the forms OO-LD instances routinely use - so it is the RECOMMENDED default. It also accepts a bare term such as `alice`, expanded against the context's `@base` / `@vocab`. - Absolute IRIs only - `"format": "iri"`. A compact IRI is itself a valid absolute IRI (scheme `ex`, path `alice`), so `iri` accepts `ex:alice`; choose it to additionally forbid relative references. - Stricter, ASCII only - `"format": "uri"` or `"uri-reference"`, where values are known not to use internationalized (non-ASCII) IRIs.
+    The value of an IRI-valued property is a JSON string. Its role as a reference comes from the `@context` (`"@type": "@id"`) and its class from `x-oold-range`. Its lexical form SHOULD be constrained with an IRI/URI-family `format` so that malformed values are rejected; the choices, from most to least permissive:
+
+    - Any IRI reference - `"format": "iri-reference"`. By RFC3987 this accepts absolute IRIs, compact IRIs (`ex:alice`, `schema:Person`) and context-relative references alike - the forms OO-LD instances routinely use - so it is the RECOMMENDED default. It also accepts a bare term such as `alice`, expanded against the context's `@base` / `@vocab`.
+    - Absolute IRIs only - `"format": "iri"`. A compact IRI is itself a valid absolute IRI (scheme `ex`, path `alice`), so `iri` accepts `ex:alice`; choose it to additionally forbid relative references.
+    - Stricter, ASCII only - `"format": "uri"` or `"uri-reference"`, where values are known not to use internationalized (non-ASCII) IRIs.
 
 See [this rule in the specification](spec/#OOLD-EXT-6ea3) (section: range-reference-form).
 

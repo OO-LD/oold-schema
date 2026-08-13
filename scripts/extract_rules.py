@@ -203,7 +203,12 @@ def report_unclaimed(rules: list[dict]) -> None:
     unclaimed: list[str] = []
     for (source, context), group in sorted(blocks.items()):
         claimed = claimed_in[source]
-        for sentence in split_sentences(context):
+        # List items are judged one by one during extraction, where their structure is still
+        # visible; collapsing them into sentences here would report the same thing twice, and
+        # a lead-in merged with its first item reads as one sentence that "contains" the
+        # lead-in's own text and so looks claimed when it is not.
+        prose = " ".join(part for part in context.splitlines() if not LIST_ITEM.match(part))
+        for sentence in split_sentences(prose):
             keyword = RFC2119.search(sentence)
             if not keyword:
                 continue
@@ -255,7 +260,52 @@ def introduced_list(lines: list[str], end: int) -> int:
     return last
 
 
-def extract_file(filename: str, problems: list[str]) -> list[dict]:
+def list_elements(lines: list[str], end: int, listed: int) -> list[str]:
+    """The items of the list a block's trailing colon introduces, one string per item.
+
+    Continuation lines are folded into the item above them, so each string is one complete
+    element and can be asked whether it states a requirement of its own.
+    """
+    if listed <= end:
+        return []
+    items: list[str] = []
+    for raw in lines[end + 1 : listed + 1]:
+        if not raw.strip():
+            continue
+        if LIST_ITEM.match(raw):
+            items.append(raw)
+        elif items:
+            items[-1] += " " + raw.strip()
+    return items
+
+
+def clean_block(block: list[str]) -> str:
+    """A block's prose, with any list it introduces still shaped like a list.
+
+    `clean_text` collapses a whole block to a single line. That is right for one sentence and
+    wrong for a lead-in plus its items: it produced prose reading "the schema's location: - For
+    single-schema versioning ..." with the bullets stranded mid-sentence. Items keep their own
+    line here, so the catalogue page renders the list the specification actually wrote.
+    """
+    out: list[str] = []
+    for raw in block:
+        stripped = RULE.sub("", raw)
+        if not stripped.strip():
+            continue
+        cleaned = clean_text(stripped)
+        if not cleaned:
+            continue
+        item = LIST_ITEM.match(stripped)
+        if item:
+            out.append(f"{item.group(0).strip()} {cleaned}")
+        elif out:
+            out[-1] = f"{out[-1]} {cleaned}"
+        else:
+            out.append(cleaned)
+    return "\n".join(out)
+
+
+def extract_file(filename: str, problems: list[str], notes: list[str]) -> list[dict]:
     path = os.path.join(SECTIONS_DIR, filename)
     with open(path, encoding="utf-8") as handle:
         lines = handle.read().split("\n")
@@ -302,14 +352,31 @@ def extract_file(filename: str, problems: list[str]) -> list[dict]:
                 continue
 
             start, end = paragraph_bounds(lines, number)
-            end = introduced_list(lines, end)
-            context = clean_text(RULE.sub("", "\n".join(lines[start : end + 1])))
+            listed = introduced_list(lines, end)
+            context = clean_block(lines[start : listed + 1])
 
             # A sentence never spans a line break in the marked prose (confirmed across every
             # current marker; see rule_scope), so the boundary search only needs the marker's own
             # source line, not the whole block.
             stop = sentence_end(line, match.end())
             text = clean_text(RULE.sub("", line[match.end() : stop]))
+
+            # A colon-terminated sentence introduces a list, and whether that list belongs to
+            # this rule depends on what is in it. Pure enumeration - no element states a
+            # requirement of its own - is part of the requirement, and reading the lead-in
+            # without it states nothing. An element that does carry an RFC 2119 keyword is its
+            # own requirement and takes its own id, so the lead-in stays the umbrella over them.
+            elements = list_elements(lines, end, listed)
+            if elements and not any(RFC2119.search(RULE.sub("", e)) for e in elements):
+                enumerated = " ".join(clean_text(RULE.sub("", e)) for e in elements)
+                text = f"{text} {enumerated}".strip()
+            for element in elements:
+                stated = RFC2119.search(RULE.sub("", element))
+                if stated and not RULE.search(element):
+                    notes.append(
+                        f"{where} [{stated.group(1)}] an item of the list {rule_id} introduces "
+                        f"states its own requirement: {clean_text(element)[:88]}"
+                    )
 
             # The marked *sentence* - not the paragraph around it - has to carry the requirement's
             # own keyword, or the id names something other than what it is attached to. Checked
@@ -383,10 +450,14 @@ def main() -> int:
     VERSION = spec_version()
     SINCE = recorded_since()
     problems: list[str] = []
+    #: Warnings, not problems: an item that states its own requirement needs its own id, but the
+    #: specification is edited in passes and a build must not stop between writing the prose and
+    #: minting the id. Same reasoning as report_unclaimed.
+    notes: list[str] = []
     rules: list[dict] = []
     for entry in cfg.SECTIONS:
         if entry.get("file"):
-            rules.extend(extract_file(entry["file"], problems))
+            rules.extend(extract_file(entry["file"], problems, notes))
 
     seen: dict[str, str] = {}
     for rule in rules:
@@ -413,6 +484,12 @@ def main() -> int:
         for problem in problems:
             print("  - " + problem, file=sys.stderr)
         return 1
+
+    if notes:
+        print(f"WARN {len(notes)} list item(s) state a requirement but carry no rule id:", file=sys.stderr)
+        for note in notes:
+            print(f"       {note}", file=sys.stderr)
+        print("     Mark each with :rule[OOLD-<AREA>-?]{...} and run `make rules-mint`.", file=sys.stderr)
 
     report_unclaimed(rules)
 
