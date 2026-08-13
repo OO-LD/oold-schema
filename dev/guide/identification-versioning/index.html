@@ -1123,7 +1123,7 @@
 
 
 <h1 id="identification-versioning">Identification &amp; Versioning<a class="headerlink" href="#identification-versioning" title="Permanent link">&para;</a></h1>
-<p>Every OO-LD schema has a globally unique, resolvable <code>$id</code> and a stable <code>x-oold-uuid</code> (which the <code>$id</code> typically embeds). A schema may also declare which external ontology resources it corresponds to (a schema-level <code>x-sssom</code> mapping, distinct from both the document <code>$id</code> and the instance <code>rdf:type</code>).</p>
+<p>Every OO-LD schema has a globally unique, resolvable <code>$id</code> and a stable <code>x-oold-uuid</code> (which the <code>$id</code> typically embeds). A schema may also declare which external ontology resources it corresponds to (a schema-level <code>x-oold-sssom</code> mapping, distinct from both the document <code>$id</code> and the instance <code>rdf:type</code>).</p>
 <p>Versions are expressed in the schema's location - appended for a single schema, prepended as a package version (recommended), or via a GitHub release tag - and instances should always reference a <em>versioned</em> schema URL so it is unambiguous which version they conform to.</p>
 <p>Learn more:</p>
 <ul>
@@ -1131,7 +1131,7 @@
 <li><a href="https://www.w3.org/TR/owl-ref/#VersionInformation">W3C OWL Ref: Version Information</a></li>
 <li><a href="https://github.com/json-schema-org/website/issues/197">JSON Schema Organisation issue on schema versions</a></li>
 </ul>
-<p>For the normative rules and worked examples (<code>$id</code>/<code>x-oold-uuid</code>, schema-level <code>x-sssom</code> correspondences, version annotations, backward-compatibility, and relative-URI packages), see <a href="../../spec/#identification-versioning">Identification and Versioning</a> in the specification.</p>
+<p>For the normative rules and worked examples (<code>$id</code>/<code>x-oold-uuid</code>, schema-level <code>x-oold-sssom</code> correspondences, version annotations, backward-compatibility, and relative-URI packages), see <a href="../../spec/#identification-versioning">Identification and Versioning</a> in the specification.</p>
 
 
 

@@ -1219,7 +1219,7 @@
 <h1 id="from-owl-or-shacl">From OWL or SHACL<a class="headerlink" href="#from-owl-or-shacl" title="Permanent link">&para;</a></h1>
 <p>Coming from an ontology (OWL) or shape constraints (SHACL), OO-LD is not a replacement - it is the object-shaped, JSON-native layer that <em>points at</em> your ontology and carries just enough constraint for validation and UI or code generation:</p>
 <ul>
-<li>a schema-level <code>x-sssom</code> maps the schema to the OWL/RDFS class it corresponds to.</li>
+<li>a schema-level <code>x-oold-sssom</code> maps the schema to the OWL/RDFS class it corresponds to.</li>
 <li><code>@context</code> maps each property to its predicate IRI (and marks references with <code>"@type": "@id"</code>).</li>
 <li><code>x-oold-range</code> constrains the target class of a relation (the SHACL <code>sh:class</code> / object-property range case) - an IRI, a list of IRIs, or an inline subschema.</li>
 </ul>
@@ -1235,14 +1235,14 @@
 </span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>   <span class="nn">sh</span><span class="p">:</span><span class="nt">targetClass</span> <span class="nn">schema</span><span class="p">:</span><span class="nt">Organization</span> <span class="p">;</span>
 </span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>   <span class="nn">sh</span><span class="p">:</span><span class="nt">property</span> <span class="p">[</span> <span class="nn">sh</span><span class="p">:</span><span class="nt">path</span> <span class="nn">schema</span><span class="p">:</span><span class="nt">employee</span> <span class="p">;</span> <span class="nn">sh</span><span class="p">:</span><span class="nt">class</span> <span class="nn">schema</span><span class="p">:</span><span class="nt">Person</span> <span class="p">]</span> <span class="p">.</span>
 </span></code></pre></div>
-<p>The same as an OO-LD schema - a schema-level <code>x-sssom</code> records the class correspondence, the <code>@context</code> maps the relation to its predicate and marks it a reference, and <code>x-oold-range</code> carries the <code>sh:class</code> target:</p>
+<p>The same as an OO-LD schema - a schema-level <code>x-oold-sssom</code> records the class correspondence, the <code>@context</code> maps the relation to its predicate and marks it a reference, and <code>x-oold-range</code> carries the <code>sh:class</code> target:</p>
 <div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">JSON</label><label for="__tabbed_1_2">View as YAML</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <div class="language-json highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="p">{</span>
 </span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">  </span><span class="nt">&quot;$schema&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;https://oo-ld.org/latest/meta/oold-meta-schema.json&quot;</span><span class="p">,</span>
 </span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span><span class="nt">&quot;$id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;OwlOrganization.schema.json&quot;</span><span class="p">,</span>
-</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span><span class="nt">&quot;x-sssom&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;schema:Organization&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;predicate_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;skos:exactMatch&quot;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">},</span>
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span><span class="nt">&quot;x-oold-sssom&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;schema:Organization&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;predicate_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;skos:exactMatch&quot;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">},</span>
 </span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">  </span><span class="nt">&quot;@context&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 </span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">    </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;@id&quot;</span><span class="p">,</span>
 </span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">    </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;@type&quot;</span><span class="p">,</span>
@@ -1270,7 +1270,7 @@
 <div class="tabbed-block">
 <div class="language-yaml highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nt">$schema</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://oo-ld.org/latest/meta/oold-meta-schema.json</span>
 </span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nt">$id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">OwlOrganization.schema.json</span>
-</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="nt">x-sssom</span><span class="p">:</span>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="nt">x-oold-sssom</span><span class="p">:</span>
 </span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span><span class="nt">schema:Organization</span><span class="p">:</span>
 </span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">    </span><span class="nt">predicate_id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">skos:exactMatch</span>
 </span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="s">&#39;@context&#39;</span><span class="p p-Indicator">:</span>
@@ -1308,7 +1308,7 @@
 </ul>
 <h2 id="next-steps">Next steps<a class="headerlink" href="#next-steps" title="Permanent link">&para;</a></h2>
 <ul>
-<li><a href="../../guide/extensions/">Extensions</a> - <code>x-sssom</code>, <code>x-oold-range</code>, and reverse properties.</li>
+<li><a href="../../guide/extensions/">Extensions</a> - <code>x-oold-sssom</code>, <code>x-oold-range</code>, and reverse properties.</li>
 <li><a href="../from-rdf/">From RDF, in particular JSON-LD</a> - the RDF and JSON-LD data chain.</li>
 </ul>
 
