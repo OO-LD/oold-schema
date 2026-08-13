@@ -49,6 +49,9 @@ something."""
 #: the target heading, which only works on the spec page itself.
 XREF = re.compile(r"\[([^\]]*)\]\(#([A-Za-z0-9_-]+)\)")
 
+#: A list item, as `context` preserves it. Same shape extract_rules.py uses.
+LIST_ITEM = re.compile(r"^\s*(?:[-*+]|\d+\.)\s")
+
 
 def link_to_spec(text: str) -> str:
     """Repoint the specification's own cross-references at the specification.
@@ -191,7 +194,16 @@ def render_rule(rule: dict, applies_to: dict[str, str]) -> str:
         # finds it.
         lines.append('??? quote "In context"')
         lines.append("")
-        lines.append("    " + link_to_spec(rule["context"]))
+        # `context` keeps a lead-in's list on its own lines, so every line is indented into the
+        # admonition and a list gets the blank line Markdown needs after a paragraph. Emitting
+        # it as one string put the bullets mid-sentence.
+        in_list = False
+        for part in link_to_spec(rule["context"]).splitlines():
+            item = bool(LIST_ITEM.match(part))
+            if item and not in_list:
+                lines.append("")
+            lines.append(f"    {part}")
+            in_list = item
         lines.append("")
 
     lines.append(
