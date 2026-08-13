@@ -368,6 +368,10 @@ A model ecosystem should adopt one of the two ambiguous-range patterns consisten
 
 For a property whose range mixes free text with references and/or embedded objects (for example `Text | PostalAddress | Place`), two patterns keep the instance round-trippable (see [round-trip](spec/#round-trip)); a model ecosystem SHOULD adopt one of them consistently:
 
+??? quote "In context"
+
+    For a property whose range mixes free text with references and/or embedded objects (for example `Text | PostalAddress | Place`), two patterns keep the instance round-trippable (see [round-trip](spec/#round-trip)); a model ecosystem SHOULD adopt one of them consistently: 1. Value-form - a single plain term (no `@type: "@id"`); the value shape alone disambiguates: a bare scalar is a literal, `{ "id": ... }` is a reference, a typed object is embedded. References are written as objects, and the term MUST NOT carry `@type`. 2. Separate keys - a canonical term `p` with `@type: "@id"` (a bare IRI string reference, plus embedded objects via a scoped `@context`) and a companion `p_text` that is a plain term for the literal.
+
 See [this rule in the specification](spec/#OOLD-INS-da1a) (section: value-forms).
 
 ### OOLD-INS-f010
@@ -496,6 +500,10 @@ The schema version should be part of the schema location URL.
 
 The version SHOULD be part of the schema's location:
 
+??? quote "In context"
+
+    The version SHOULD be part of the schema's location: - For single-schema versioning, the version SHOULD be appended after the schema name, e.g. `https://example.org/b5203131-7321-46bb-8a11-acb3d1015840.schema.json/1.1.0`. - For schema-package versioning (recommended), the version of the package SHOULD be prepended before the schema's ID, e.g. `https://example.org/my-package/2.0.0/b5203131-7321-46bb-8a11-acb3d1015840.schema.json`. - or using release tags on GitHub, e.g. `https://raw.githubusercontent.com/MyOrg/my-package/refs/heads/2.0.0/b5203131-7321-46bb-8a11-acb3d1015840.schema.json`.
+
 See [this rule in the specification](spec/#OOLD-VER-534a) (section: versioning).
 
 ### OOLD-VER-edb9
@@ -615,7 +623,7 @@ Its lexical form SHOULD be constrained with an IRI/URI-family `format` so that m
 
 ??? quote "In context"
 
-    The value of an IRI-valued property is a JSON string. Its role as a reference comes from the `@context` (`"@type": "@id"`) and its class from `x-oold-range`. Its lexical form SHOULD be constrained with an IRI/URI-family `format` so that malformed values are rejected; the choices, from most to least permissive:
+    The value of an IRI-valued property is a JSON string. Its role as a reference comes from the `@context` (`"@type": "@id"`) and its class from `x-oold-range`. Its lexical form SHOULD be constrained with an IRI/URI-family `format` so that malformed values are rejected; the choices, from most to least permissive: - Any IRI reference - `"format": "iri-reference"`. By RFC3987 this accepts absolute IRIs, compact IRIs (`ex:alice`, `schema:Person`) and context-relative references alike - the forms OO-LD instances routinely use - so it is the RECOMMENDED default. It also accepts a bare term such as `alice`, expanded against the context's `@base` / `@vocab`. - Absolute IRIs only - `"format": "iri"`. A compact IRI is itself a valid absolute IRI (scheme `ex`, path `alice`), so `iri` accepts `ex:alice`; choose it to additionally forbid relative references. - Stricter, ASCII only - `"format": "uri"` or `"uri-reference"`, where values are known not to use internationalized (non-ASCII) IRIs.
 
 See [this rule in the specification](spec/#OOLD-EXT-6ea3) (section: range-reference-form).
 
