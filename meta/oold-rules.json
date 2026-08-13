@@ -165,7 +165,7 @@
       "machine_checkable": true,
       "since": "1.0.0-rc.1",
       "deprecated": false,
-      "source": "09-extensions.md:327"
+      "source": "09-extensions.md:329"
     },
     {
       "id": "OOLD-EXT-3fe9",
@@ -195,7 +195,7 @@
       "machine_checkable": false,
       "since": "1.0.0-rc.1",
       "deprecated": false,
-      "source": "09-extensions.md:427"
+      "source": "09-extensions.md:429"
     },
     {
       "id": "OOLD-EXT-5184",
@@ -225,7 +225,7 @@
       "machine_checkable": false,
       "since": "1.0.0-rc.1",
       "deprecated": false,
-      "source": "09-extensions.md:426"
+      "source": "09-extensions.md:428"
     },
     {
       "id": "OOLD-EXT-6ea3",
@@ -240,7 +240,7 @@
       "machine_checkable": true,
       "since": "1.0.0-rc.1",
       "deprecated": false,
-      "source": "09-extensions.md:322"
+      "source": "09-extensions.md:324"
     },
     {
       "id": "OOLD-EXT-af50",
@@ -570,7 +570,7 @@
       "machine_checkable": true,
       "since": "1.0.0-rc.1",
       "deprecated": false,
-      "source": "08-identification-versioning.md:49"
+      "source": "08-identification-versioning.md:51"
     },
     {
       "id": "OOLD-VER-3b96",
@@ -600,7 +600,7 @@
       "machine_checkable": true,
       "since": "1.0.0-rc.1",
       "deprecated": false,
-      "source": "08-identification-versioning.md:63"
+      "source": "08-identification-versioning.md:65"
     },
     {
       "id": "OOLD-VER-edb9",
