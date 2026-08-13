@@ -190,13 +190,19 @@ def report_unclaimed(rules: list[dict]) -> None:
     mirrors `coverage.rules` downstream, which warns for the same reason.
     """
     blocks: dict[tuple[str, str], list[dict]] = {}
+    #: Claims are collected per file rather than per block, because contexts overlap: a rule
+    #: whose lead-in ends in a colon takes in the list below it, and a rule marked on one of
+    #: those list items is a block of its own. Matching only within a block reported such a
+    #: sentence as unclaimed while the rule claiming it sat right there.
+    claimed_in: dict[str, list[str]] = {}
     for rule in rules:
         source = rule["source"].split(":")[0]
         blocks.setdefault((source, rule.get("context") or rule["text"]), []).append(rule)
+        claimed_in.setdefault(source, []).append(rule["text"])
 
     unclaimed: list[str] = []
     for (source, context), group in sorted(blocks.items()):
-        claimed = [r["text"] for r in group]
+        claimed = claimed_in[source]
         for sentence in split_sentences(context):
             keyword = RFC2119.search(sentence)
             if not keyword:
@@ -211,6 +217,42 @@ def report_unclaimed(rules: list[dict]) -> None:
         for line in unclaimed:
             print(f"       {line}", file=sys.stderr)
         print("     Mark each with :rule[OOLD-<AREA>-?]{...} and run `make rules-mint`.", file=sys.stderr)
+
+
+def introduced_list(lines: list[str], end: int) -> int:
+    """Extend a block over the list its trailing colon introduces.
+
+    A requirement is routinely written as a lead-in ending in a colon followed by the forms it
+    allows: "The version SHOULD be part of the schema's location:" and then three URL shapes.
+    `paragraph_bounds` stops at the blank line between them, so `context` held the lead-in and
+    none of the forms. For OOLD-VER-534a that left the catalogue recording a sentence which,
+    read on its own, states no requirement at all.
+
+    A list only. A colon can also introduce a `:::example`, and two rules here do exactly that,
+    but the conformance section declares examples non-normative - pulling one into a rule's
+    context would file text the specification disclaims as part of the requirement.
+    """
+    if not lines[end].rstrip().endswith(":"):
+        return end
+
+    probe = end + 1
+    while probe < len(lines) and not lines[probe].strip():
+        probe += 1
+    if probe >= len(lines) or not LIST_ITEM.match(lines[probe]):
+        return end
+
+    last = probe
+    while probe < len(lines):
+        line = lines[probe]
+        if line.strip():
+            # An item, or a continuation line indented under one. Anything else ends the list,
+            # including the blank-line-then-prose that follows it.
+            if LIST_ITEM.match(line) or line.startswith((" ", "\t")):
+                last = probe
+            else:
+                break
+        probe += 1
+    return last
 
 
 def extract_file(filename: str, problems: list[str]) -> list[dict]:
@@ -260,6 +302,7 @@ def extract_file(filename: str, problems: list[str]) -> list[dict]:
                 continue
 
             start, end = paragraph_bounds(lines, number)
+            end = introduced_list(lines, end)
             context = clean_text(RULE.sub("", "\n".join(lines[start : end + 1])))
 
             # A sentence never spans a line break in the marked prose (confirmed across every
