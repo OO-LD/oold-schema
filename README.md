@@ -25,7 +25,7 @@ OO-LD connects the structural modelling of objects and subobjects with the model
 }
 ```
 
-The JSON Schema part (`type`, `properties`) describes the structure; the `@context` maps `name` to the semantic term `schema:name`. Try it in the [interactive playground](https://oo-ld.github.io/playground/).
+The JSON Schema part (`type`, `properties`) describes the structure; the `@context` maps `name` to the semantic term `schema:name`. Try it in the [interactive playground](https://oo-ld.github.io/playground/?schema=https://oo-ld.org/latest/schemas/Minimal.schema.json).
 
 ## Documentation
 

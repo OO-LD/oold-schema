@@ -6,7 +6,7 @@ A minimal example:
 
 {{ example('Minimal') }}
 
-You can explore this in the [interactive playground](https://oo-ld.github.io/playground/).
+You can explore this exact example in the [interactive playground](https://oo-ld.github.io/playground/?schema=https://oo-ld.org/latest/schemas/Minimal.schema.json).
 
 ## Schemas vs. instances
 
