@@ -17,7 +17,7 @@ The core idea of OO-LD is that a single document is at once a valid **JSON Schem
 
 ## Step 2 - Try it in the playground
 
-You can explore this exact example - validation, UI generation, and RDF output - in the [interactive playground](https://oo-ld.github.io/playground/).
+You can explore this exact example - validation, UI generation, and RDF output - in the [interactive playground](https://oo-ld.github.io/playground/?schema=https://oo-ld.org/latest/schemas/Minimal.schema.json). The playground otherwise opens with the richer `Person` example; every official example under [`examples/`](https://github.com/OO-LD/oold-schema/tree/main/examples) can be loaded the same way via `?schema=`.
 
 ## Step 3 - Validate schemas in this repository
 
