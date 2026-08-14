@@ -8,3 +8,11 @@ meta/*.json  text eol=lf
 # Same reasoning for the compliance fixtures: they are copied verbatim into downstream test
 # suites, which compare them against upstream.
 examples/compliance/*.json  text eol=lf
+
+# A different reason: `render_rules_page.py` writes this file with an explicit `newline="\n"`, so
+# without the pin a Windows checkout is CRLF while every regeneration rewrites it as LF. The file
+# then sits permanently modified in `git status` with an empty `git diff`, since the diff
+# normalizes what the status stat-check does not. Phantom-dirty artifacts are worth avoiding here
+# in particular, because a clean tree after regeneration is exactly the signal the drift guard
+# relies on.
+docs/rules.md  text eol=lf
