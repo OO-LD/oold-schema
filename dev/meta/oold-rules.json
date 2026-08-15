@@ -183,6 +183,21 @@
       "source": "03-conformance.md:11"
     },
     {
+      "id": "OOLD-CNF-d71d",
+      "area": "CNF",
+      "level": "MUST",
+      "applies_to": "document",
+      "section": "notation",
+      "summary": "Where a YAML form and its canonical JSON disagree, the JSON form is authoritative.",
+      "text": "Where the two forms disagree, the JSON form MUST be treated as authoritative.",
+      "text_sha256": "bbaaecdeec3c9419d4056db8917d92c8b14f3bd0af5c6d9c765c55814f3976b9",
+      "context": "Authors using YAML should be aware that YAML comments and implicit type coercions (for example the strings `NO` or `1.10` read as a boolean or a truncated number by some parsers) do not survive conversion to the canonical JSON. Where the two forms disagree, the JSON form MUST be treated as authoritative. Examples in this specification are shown as JSON, with an equivalent YAML rendering available under \"View as YAML\".",
+      "machine_checkable": false,
+      "since": "1.0.0-rc.1",
+      "deprecated": false,
+      "source": "03-conformance.md:13"
+    },
+    {
       "id": "OOLD-EXT-1dc8",
       "area": "EXT",
       "level": "MUST NOT",
@@ -213,6 +228,21 @@
       "source": "09-extensions.md:326"
     },
     {
+      "id": "OOLD-EXT-2542",
+      "area": "EXT",
+      "level": "SHOULD",
+      "applies_to": "document",
+      "section": "value-term-aliases",
+      "summary": "Value terms should not collide with JSON-LD keyword aliases or other context terms.",
+      "text": "The value terms SHOULD also be kept from colliding with JSON-LD keyword aliases (`id`, `type`) or other context terms, since a value term shares the context's global term namespace - a term added for a value would otherwise also rewrite a property or keyword of the same name.",
+      "text_sha256": "e004b9449c9c6f9b84588bb7bf7660d81665e99f0a1040320bce572ae2f7fb45",
+      "context": "Because `@vocab` expands an unmatched string against the vocabulary - concatenating it onto the default vocabulary base when one is set (minting a new IRI), or leaving it a relative IRI when none is - a typo silently becomes a stray IRI rather than an error. A property coerced `\"@type\": \"@vocab\"` therefore SHOULD constrain its values with an `enum` of the value terms (optionally named with `x-enum-varnames`) or with `x-oold-range`, so only intended individuals are accepted. The value terms SHOULD also be kept from colliding with JSON-LD keyword aliases (`id`, `type`) or other context terms, since a value term shares the context's global term namespace - a term added for a value would otherwise also rewrite a property or keyword of the same name. Confining the value terms to the property's own scoped `@context` keeps them out of that shared namespace, since they then resolve only for that property's values; naming them with opaque identifiers such as UUIDs avoids the clash where readability is not required.",
+      "machine_checkable": true,
+      "since": "1.0.0-rc.1",
+      "deprecated": false,
+      "source": "09-extensions.md:335"
+    },
+    {
       "id": "OOLD-EXT-2b61",
       "area": "EXT",
       "level": "MUST",
@@ -226,6 +256,21 @@
       "since": "1.0.0-rc.1",
       "deprecated": false,
       "source": "09-extensions.md:329"
+    },
+    {
+      "id": "OOLD-EXT-391e",
+      "area": "EXT",
+      "level": "MUST",
+      "applies_to": "implementation",
+      "section": "range-of-properties",
+      "summary": "A loader that dereferences a target validates it against the declared range and does not assume the target conforms.",
+      "text": "A loader that dereferences a target MUST validate it against that range before treating it as a member, and MUST NOT assume the target conforms, since the target is a separate document that may change independently of the reference.",
+      "text_sha256": "b0caa6b770adbdec9bcdb37cfb4d365c87eed6817f55c8f40574ec0d6587077d",
+      "context": "An `x-oold-range` value is a reference: the property holds the target's IRI, and an OO-LD-aware loader MAY dereference that IRI to obtain the target document itself, so a large or shared object can live in a separate document and be pulled in on demand (data bundling). A published reference SHOULD point at a target that validates against the property's declared range. A loader that dereferences a target MUST validate it against that range before treating it as a member, and MUST NOT assume the target conforms, since the target is a separate document that may change independently of the reference. This holds whether the reference is written as a bare IRI string or as a `{ \"@id\": … }` object; generic tooling leaves it unresolved, exactly as it leaves `x-oold-ref` (see [](#why-x-oold-ref)).",
+      "machine_checkable": false,
+      "since": "1.0.0-rc.1",
+      "deprecated": false,
+      "source": "09-extensions.md:320"
     },
     {
       "id": "OOLD-EXT-3fe9",
@@ -363,6 +408,21 @@
       "source": "09-extensions.md:324"
     },
     {
+      "id": "OOLD-EXT-7256",
+      "area": "EXT",
+      "level": "SHOULD NOT",
+      "applies_to": "implementation",
+      "section": "synonyms",
+      "summary": "Entries that are not exactMatch should not be co-emitted unless a consumer explicitly requests it.",
+      "text": "By default a converter co-emits only `skos:exactMatch` entries; entries whose `predicate_id` is `skos:closeMatch`/`broadMatch`/`narrowMatch`/`relatedMatch` SHOULD NOT be co-emitted unless a consumer explicitly requests it, since such a triple asserts a broader, narrower or merely related relation, not that the value holds under the synonym property, so the requester takes responsibility for that reading.",
+      "text_sha256": "1d8752aa41f9ee074a8b56e0e957c837218642db3fe32699d62cd0e5a669456b",
+      "context": "Co-emission. Selection yields one IRI per term; for interoperability a converter MAY additionally co-emit the instance value under other synonyms' IRIs. This is a pragmatic interoperability aid, not a logical entailment: `skos:exactMatch` records that two terms are interchangeable across a wide range of applications, but it is not `owl:equivalentProperty` / `owl:equivalentClass` and licenses no reasoner inference - which is exactly why the mapping predicates are SKOS (reasoner-safe) rather than OWL. By default a converter co-emits only `skos:exactMatch` entries; entries whose `predicate_id` is `skos:closeMatch`/`broadMatch`/`narrowMatch`/`relatedMatch` SHOULD NOT be co-emitted unless a consumer explicitly requests it, since such a triple asserts a broader, narrower or merely related relation, not that the value holds under the synonym property, so the requester takes responsibility for that reading.",
+      "machine_checkable": false,
+      "since": "1.0.0-rc.1",
+      "deprecated": false,
+      "source": "09-extensions.md:64"
+    },
+    {
       "id": "OOLD-EXT-7c5d",
       "area": "EXT",
       "level": "MUST",
@@ -453,6 +513,21 @@
       "source": "09-extensions.md:13"
     },
     {
+      "id": "OOLD-EXT-ece0",
+      "area": "EXT",
+      "level": "SHOULD",
+      "applies_to": "document",
+      "section": "range-of-properties",
+      "summary": "A published reference should point at a target that validates against the property's declared range.",
+      "text": "A published reference SHOULD point at a target that validates against the property's declared range.",
+      "text_sha256": "261731e44c8056793242380d5f01d4bade80a43f9db81cbc6c04296d2eeeffd7",
+      "context": "An `x-oold-range` value is a reference: the property holds the target's IRI, and an OO-LD-aware loader MAY dereference that IRI to obtain the target document itself, so a large or shared object can live in a separate document and be pulled in on demand (data bundling). A published reference SHOULD point at a target that validates against the property's declared range. A loader that dereferences a target MUST validate it against that range before treating it as a member, and MUST NOT assume the target conforms, since the target is a separate document that may change independently of the reference. This holds whether the reference is written as a bare IRI string or as a `{ \"@id\": … }` object; generic tooling leaves it unresolved, exactly as it leaves `x-oold-ref` (see [](#why-x-oold-ref)).",
+      "machine_checkable": false,
+      "since": "1.0.0-rc.1",
+      "deprecated": false,
+      "source": "09-extensions.md:320"
+    },
+    {
       "id": "OOLD-EXT-ef09",
       "area": "EXT",
       "level": "MUST",
@@ -466,6 +541,21 @@
       "since": "1.0.0-rc.1",
       "deprecated": false,
       "source": "09-extensions.md:195"
+    },
+    {
+      "id": "OOLD-EXT-fdd8",
+      "area": "EXT",
+      "level": "SHOULD",
+      "applies_to": "document",
+      "section": "value-term-aliases",
+      "summary": "A property coerced @type @vocab should constrain its values with an enum or x-oold-range.",
+      "text": "A property coerced `\"@type\": \"@vocab\"` therefore SHOULD constrain its values with an `enum` of the value terms (optionally named with `x-enum-varnames`) or with `x-oold-range`, so only intended individuals are accepted.",
+      "text_sha256": "c4bcd0af638b79ed0dc4ec4e25a597d38f2b3a957fab6ec77075e728b5887712",
+      "context": "Because `@vocab` expands an unmatched string against the vocabulary - concatenating it onto the default vocabulary base when one is set (minting a new IRI), or leaving it a relative IRI when none is - a typo silently becomes a stray IRI rather than an error. A property coerced `\"@type\": \"@vocab\"` therefore SHOULD constrain its values with an `enum` of the value terms (optionally named with `x-enum-varnames`) or with `x-oold-range`, so only intended individuals are accepted. The value terms SHOULD also be kept from colliding with JSON-LD keyword aliases (`id`, `type`) or other context terms, since a value term shares the context's global term namespace - a term added for a value would otherwise also rewrite a property or keyword of the same name. Confining the value terms to the property's own scoped `@context` keeps them out of that shared namespace, since they then resolve only for that property's values; naming them with opaque identifiers such as UUIDs avoids the clash where readability is not required.",
+      "machine_checkable": true,
+      "since": "1.0.0-rc.1",
+      "deprecated": false,
+      "source": "09-extensions.md:335"
     },
     {
       "id": "OOLD-INS-1d33",
@@ -596,7 +686,7 @@
       "summary": "Instances should reference a versioned schema URL.",
       "text": "Instances SHOULD use a versioned schema URL so that it is unambiguous which schema version they conform to.",
       "text_sha256": "e9929e4d9ba01bc251bf092b05c886ff703d9432859d20c4c7db8dcdc6e8244d",
-      "context": "Instances SHOULD use a versioned schema URL so that it is unambiguous which schema version they conform to.",
+      "context": "The two SHOULD point at the same schema URL, so that the context an instance is read with and the schema it is validated against are the same document. Instances SHOULD use a versioned schema URL so that it is unambiguous which schema version they conform to.",
       "machine_checkable": true,
       "since": "1.0.0-rc.1",
       "deprecated": false,
@@ -616,6 +706,21 @@
       "since": "1.0.0-rc.1",
       "deprecated": false,
       "source": "07-schema-instances.md:37"
+    },
+    {
+      "id": "OOLD-INS-cb1a",
+      "area": "INS",
+      "level": "SHOULD",
+      "applies_to": "document",
+      "section": "schema-instances",
+      "summary": "An instance's @context and $schema should point at the same schema URL.",
+      "text": "The two SHOULD point at the same schema URL, so that the context an instance is read with and the schema it is validated against are the same document.",
+      "text_sha256": "523bf44316cca4e0b580834e1c588fb24e88d3720b86285bcea4ce7b4beb3990",
+      "context": "The two SHOULD point at the same schema URL, so that the context an instance is read with and the schema it is validated against are the same document. Instances SHOULD use a versioned schema URL so that it is unambiguous which schema version they conform to.",
+      "machine_checkable": true,
+      "since": "1.0.0-rc.1",
+      "deprecated": false,
+      "source": "07-schema-instances.md:17"
     },
     {
       "id": "OOLD-INS-cd80",
