@@ -1,7 +1,7 @@
 {
   "$schema": "https://oo-ld.org/dev/meta/oold-rules.schema.json",
   "$comment": "Catalog of the normative statements in the OO-LD specification, generated from the :rule[...] markers in spec/sections/*.md by scripts/extract_rules.py. Do not edit by hand. Ids are immutable and never reused; see meta/RULES.md.",
-  "spec_version": "1.0.0-rc.1",
+  "spec_version": "1.0.0-rc.2",
   "areas": {
     "CNF": "Serialization and conformance",
     "SCH": "Schema well-formedness and the meta-schema",
