@@ -48,7 +48,7 @@ _:b1 <ex:petName> "Bruno" .
 
 **`oneOf` / `anyOf`.** :rule[OOLD-CMP-1d7e]{applies=document level="MUST NOT" summary="Reflected oneOf/anyOf branch contexts must not map the same keyword to different IRIs at the root."}The remote contexts of `oneOf` / `anyOf` branches MAY also be reflected into the `@context`, but they MUST NOT conflict at the root - they MUST NOT map the same keyword to different IRIs there. A JSON-LD processor merges all listed contexts (most-recently-wins) and has no notion of which branch a given instance matched, so a root-level conflict would be decided by context order rather than by the branch the data conforms to.
 
-Where branches genuinely need different mappings for the same keyword, do not place them at the root; scope them so each mapping applies only where its branch applies, using JSON-LD scoped contexts:
+:rule[OOLD-CMP-6d7b]{applies=document level=MUST summary="Branch-specific mappings for the same keyword must be scoped rather than placed at the root."}Where branches genuinely need different mappings for the same keyword, those mappings MUST be scoped with JSON-LD scoped contexts so each applies only where its branch applies, rather than placed at the root, since colliding root mappings are resolved by context order instead of by the branch the data conforms to:
 
 - **Type-scoped contexts** when the branches are distinguished by `@type`. The
 scoped `@context` is attached to the term used as the type value and is activated only for nodes carrying that `@type`:
