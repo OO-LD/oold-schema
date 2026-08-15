@@ -65,10 +65,10 @@ OO-LD-aware tooling uses these correspondences to anchor the schema in an ontolo
 :rule[OOLD-VER-534a]{applies=document level=SHOULD summary="The schema version should be part of the schema location URL."}The version SHOULD be part of the schema's location:
 
 - :rule[OOLD-VER-befc]{applies=document machine_checkable=no level=SHOULD summary="Under single-schema versioning, the version should be appended after the schema name in the $id."}For **single-schema** versioning, the version SHOULD be appended after the schema name, e.g. `https://example.org/b5203131-7321-46bb-8a11-acb3d1015840.schema.json/1.1.0`.
-- :rule[OOLD-VER-4261]{applies=document machine_checkable=no level=SHOULD summary="Under schema-package versioning, the package version should be prepended before the schema id."}For **schema-package** versioning (recommended), the version of the package SHOULD be prepended before the schema's ID, e.g. `https://example.org/my-package/2.0.0/b5203131-7321-46bb-8a11-acb3d1015840.schema.json`.
-- or using release tags on GitHub, e.g. `https://raw.githubusercontent.com/MyOrg/my-package/refs/heads/2.0.0/b5203131-7321-46bb-8a11-acb3d1015840.schema.json`.
+- :rule[OOLD-VER-4261]{applies=document machine_checkable=no level=SHOULD summary="Under schema-package versioning, the package version should be prepended before the schema id."}For **schema-package** versioning (recommended), the version of the package SHOULD be prepended before the schema's ID, e.g. `https://example.org/my-package/2.0.0/b5203131-7321-46bb-8a11-acb3d1015840.schema.json`. Since a package combines multiple schemas, the package version does in general not match the individual schema version.
+- or a release tag on a code-hosting service, e.g. `https://raw.githubusercontent.com/MyOrg/my-package/refs/tags/2.0.0/b5203131-7321-46bb-8a11-acb3d1015840.schema.json`. :rule[OOLD-VER-d826]{applies=document machine_checkable=no level=SHOULD summary="A version carried in a schema location should be pinned to an immutable ref, not a mutable branch."}Such a location SHOULD name an **immutable** ref: a branch name identifies a moving target, whose content changes with every push, rather than a fixed version.
 
-Since a package combines multiple schemas, the package version does in general not match the individual schema version.
+:rule[OOLD-VER-c92e]{applies=document machine_checkable=no level=SHOULD summary="A schema published for long-term reuse should be identified by a persistent identifier that resolves to its current hosting."}A raw hosting URL is convenient, but it binds the identifier to one host and one repository layout and carries no persistence guarantee, so a schema published for long-term reuse SHOULD be identified by a **persistent identifier** - a [w3id.org](https://w3id.org/) or [PURL](https://purl.archive.org/) redirect, or a DOI for a released package - that resolves to wherever the schema is currently hosted. The persistent identifier is then the `$id`, and the raw URL is only where it happens to resolve today, so the schema survives a move between hosts without changing identity.
 
 Schemas MAY indicate explicit backward-compatibility with `x-oold-backward-compatible-with` and `x-oold-incompatible-with`:
 
@@ -86,7 +86,7 @@ Schemas MAY indicate explicit backward-compatibility with `x-oold-backward-compa
 ```
 :::
 
-Schemas within a package or package repository MAY use relative URIs ([[RFC3986]] §5.1). For example, `A.schema.json` referenced from `https://raw.githubusercontent.com/MyOrg/my-package/refs/heads/2.0.0/`:
+Schemas within a package or package repository MAY use relative URIs ([[RFC3986]] §5.1). For example, `A.schema.json` referenced from `https://raw.githubusercontent.com/MyOrg/my-package/refs/tags/2.0.0/`:
 
 :::example{title="Relative `$ref` inside a package"}
 ```json
@@ -100,9 +100,9 @@ Schemas within a package or package repository MAY use relative URIs ([[RFC3986]
 expands to:
 ```json
 {
-  "$id": "https://raw.githubusercontent.com/MyOrg/my-package/refs/heads/2.0.0/B.schema.json",
+  "$id": "https://raw.githubusercontent.com/MyOrg/my-package/refs/tags/2.0.0/B.schema.json",
   "title": "Foo",
-  "allOf": [ { "$ref": "https://raw.githubusercontent.com/MyOrg/my-package/refs/heads/2.0.0/A.schema.json" } ]
+  "allOf": [ { "$ref": "https://raw.githubusercontent.com/MyOrg/my-package/refs/tags/2.0.0/A.schema.json" } ]
 }
 ```
 :::

@@ -509,7 +509,7 @@ For schema-package versioning (recommended), the version of the package SHOULD b
 ??? quote "In context"
 
 
-    - For schema-package versioning (recommended), the version of the package SHOULD be prepended before the schema's ID, e.g. `https://example.org/my-package/2.0.0/b5203131-7321-46bb-8a11-acb3d1015840.schema.json`.
+    - For schema-package versioning (recommended), the version of the package SHOULD be prepended before the schema's ID, e.g. `https://example.org/my-package/2.0.0/b5203131-7321-46bb-8a11-acb3d1015840.schema.json`. Since a package combines multiple schemas, the package version does in general not match the individual schema version.
 
 See [this rule in the specification](spec/#OOLD-VER-4261) (section: versioning).
 
@@ -529,8 +529,8 @@ The version SHOULD be part of the schema's location:
     The version SHOULD be part of the schema's location:
 
     - For single-schema versioning, the version SHOULD be appended after the schema name, e.g. `https://example.org/b5203131-7321-46bb-8a11-acb3d1015840.schema.json/1.1.0`.
-    - For schema-package versioning (recommended), the version of the package SHOULD be prepended before the schema's ID, e.g. `https://example.org/my-package/2.0.0/b5203131-7321-46bb-8a11-acb3d1015840.schema.json`.
-    - or using release tags on GitHub, e.g. `https://raw.githubusercontent.com/MyOrg/my-package/refs/heads/2.0.0/b5203131-7321-46bb-8a11-acb3d1015840.schema.json`.
+    - For schema-package versioning (recommended), the version of the package SHOULD be prepended before the schema's ID, e.g. `https://example.org/my-package/2.0.0/b5203131-7321-46bb-8a11-acb3d1015840.schema.json`. Since a package combines multiple schemas, the package version does in general not match the individual schema version.
+    - or a release tag on a code-hosting service, e.g. `https://raw.githubusercontent.com/MyOrg/my-package/refs/tags/2.0.0/b5203131-7321-46bb-8a11-acb3d1015840.schema.json`. Such a location SHOULD name an immutable ref: a branch name identifies a moving target, whose content changes with every push, rather than a fixed version.
 
 See [this rule in the specification](spec/#OOLD-VER-534a) (section: versioning).
 
@@ -551,6 +551,41 @@ For single-schema versioning, the version SHOULD be appended after the schema na
     - For single-schema versioning, the version SHOULD be appended after the schema name, e.g. `https://example.org/b5203131-7321-46bb-8a11-acb3d1015840.schema.json/1.1.0`.
 
 See [this rule in the specification](spec/#OOLD-VER-befc) (section: versioning).
+
+### OOLD-VER-c92e
+
+- <strong title="The RFC 2119 keyword this requirement is stated with. A validator reports a MUST-level finding as a failure and a SHOULD-level one as a warning, so the level decides severity rather than the check that found it.">Level:</strong> SHOULD
+- <strong title="Who the requirement binds: a document, an implementation of OO-LD, or nobody in particular. This decides what is even able to enforce it.">Applies to:</strong> <span title="Checkable by validating a schema or instance document">document</span>
+- <strong title="Whether a validator could decide this rule by inspecting a document. It does not say the OO-LD validator enforces it today - oold rules list --unchecked reports that.">Machine-checkable:</strong> no
+- <strong title="The specification release this rule first appeared in. Ids are permanent and never reused, so this does not change once recorded.">Since:</strong> 1.0.0-rc.1
+
+A schema published for long-term reuse should be identified by a persistent identifier that resolves to its current hosting.
+
+A raw hosting URL is convenient, but it binds the identifier to one host and one repository layout and carries no persistence guarantee, so a schema published for long-term reuse SHOULD be identified by a persistent identifier - a [w3id.org](https://w3id.org/) or [PURL](https://purl.archive.org/) redirect, or a DOI for a released package - that resolves to wherever the schema is currently hosted.
+
+??? quote "In context"
+
+    A raw hosting URL is convenient, but it binds the identifier to one host and one repository layout and carries no persistence guarantee, so a schema published for long-term reuse SHOULD be identified by a persistent identifier - a [w3id.org](https://w3id.org/) or [PURL](https://purl.archive.org/) redirect, or a DOI for a released package - that resolves to wherever the schema is currently hosted. The persistent identifier is then the `$id`, and the raw URL is only where it happens to resolve today, so the schema survives a move between hosts without changing identity.
+
+See [this rule in the specification](spec/#OOLD-VER-c92e) (section: versioning).
+
+### OOLD-VER-d826
+
+- <strong title="The RFC 2119 keyword this requirement is stated with. A validator reports a MUST-level finding as a failure and a SHOULD-level one as a warning, so the level decides severity rather than the check that found it.">Level:</strong> SHOULD
+- <strong title="Who the requirement binds: a document, an implementation of OO-LD, or nobody in particular. This decides what is even able to enforce it.">Applies to:</strong> <span title="Checkable by validating a schema or instance document">document</span>
+- <strong title="Whether a validator could decide this rule by inspecting a document. It does not say the OO-LD validator enforces it today - oold rules list --unchecked reports that.">Machine-checkable:</strong> no
+- <strong title="The specification release this rule first appeared in. Ids are permanent and never reused, so this does not change once recorded.">Since:</strong> 1.0.0-rc.1
+
+A version carried in a schema location should be pinned to an immutable ref, not a mutable branch.
+
+Such a location SHOULD name an immutable ref: a branch name identifies a moving target, whose content changes with every push, rather than a fixed version.
+
+??? quote "In context"
+
+
+    - or a release tag on a code-hosting service, e.g. `https://raw.githubusercontent.com/MyOrg/my-package/refs/tags/2.0.0/b5203131-7321-46bb-8a11-acb3d1015840.schema.json`. Such a location SHOULD name an immutable ref: a branch name identifies a moving target, whose content changes with every push, rather than a fixed version.
+
+See [this rule in the specification](spec/#OOLD-VER-d826) (section: versioning).
 
 ### OOLD-VER-edb9
 
