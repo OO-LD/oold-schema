@@ -48,7 +48,13 @@ APPLIES = ("document", "implementation", "advisory")
 
 HEADING = re.compile(r"^\s*#{2,6}\s+.*\{[^}]*#([A-Za-z0-9_-]+)[^}]*\}\s*$")
 ATTR = re.compile(r'(\w+)\s*=\s*(?:"([^"]*)"|(\S+))')
-RFC2119 = re.compile(r"\b(MUST NOT|MUST|SHALL NOT|SHALL|SHOULD NOT|SHOULD|REQUIRED|RECOMMENDED)\b")
+#: Every negated form is listed before the bare keyword it contains, so the alternation matches the
+#: longer one. `NOT RECOMMENDED` is an RFC 2119 keyword ([RFC2119] §4) like the `X NOT` forms, but
+#: negates on the left, so without its own branch the bare `RECOMMENDED` inside it would match and a
+#: prohibition would be catalogued as a recommendation.
+RFC2119 = re.compile(
+    r"\b(MUST NOT|MUST|SHALL NOT|SHALL|SHOULD NOT|SHOULD|NOT RECOMMENDED|REQUIRED|RECOMMENDED)\b"
+)
 
 LIST_ITEM = re.compile(r"^\s*(?:[-*+]|\d+\.)\s")
 
@@ -400,7 +406,12 @@ def extract_file(filename: str, problems: list[str], notes: list[str]) -> list[d
                     continue
             else:
                 level = RFC2119.search(text).group(1)
-            if level not in context:
+            # Membership in the keywords the prose actually matched, not a substring test: `MUST` is
+            # a substring of `MUST NOT`, so `in context` accepts `level=MUST` on a prohibition and
+            # files the rule as the opposite of what it says. Same for SHALL, SHOULD and
+            # RECOMMENDED against their negated forms. The catalogue is cited for the authority of
+            # its level, so an inverted one is worse than a missing rule.
+            if level not in {match.group(1) for match in RFC2119.finditer(context)}:
                 problems.append(f"{where}: {rule_id} declares level={level!r}, absent from the marked prose")
                 continue
 
