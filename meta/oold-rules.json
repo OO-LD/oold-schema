@@ -183,6 +183,21 @@
       "source": "03-conformance.md:11"
     },
     {
+      "id": "OOLD-CNF-d71d",
+      "area": "CNF",
+      "level": "MUST",
+      "applies_to": "document",
+      "section": "notation",
+      "summary": "Where a YAML form and its canonical JSON disagree, the JSON form is authoritative.",
+      "text": "Where the two forms disagree, the JSON form MUST be treated as authoritative.",
+      "text_sha256": "bbaaecdeec3c9419d4056db8917d92c8b14f3bd0af5c6d9c765c55814f3976b9",
+      "context": "Authors using YAML should be aware that YAML comments and implicit type coercions (for example the strings `NO` or `1.10` read as a boolean or a truncated number by some parsers) do not survive conversion to the canonical JSON. Where the two forms disagree, the JSON form MUST be treated as authoritative. Examples in this specification are shown as JSON, with an equivalent YAML rendering available under \"View as YAML\".",
+      "machine_checkable": false,
+      "since": "1.0.0-rc.1",
+      "deprecated": false,
+      "source": "03-conformance.md:13"
+    },
+    {
       "id": "OOLD-EXT-1dc8",
       "area": "EXT",
       "level": "MUST NOT",
@@ -671,7 +686,7 @@
       "summary": "Instances should reference a versioned schema URL.",
       "text": "Instances SHOULD use a versioned schema URL so that it is unambiguous which schema version they conform to.",
       "text_sha256": "e9929e4d9ba01bc251bf092b05c886ff703d9432859d20c4c7db8dcdc6e8244d",
-      "context": "Instances SHOULD use a versioned schema URL so that it is unambiguous which schema version they conform to.",
+      "context": "The two SHOULD point at the same schema URL, so that the context an instance is read with and the schema it is validated against are the same document. Instances SHOULD use a versioned schema URL so that it is unambiguous which schema version they conform to.",
       "machine_checkable": true,
       "since": "1.0.0-rc.1",
       "deprecated": false,
@@ -691,6 +706,21 @@
       "since": "1.0.0-rc.1",
       "deprecated": false,
       "source": "07-schema-instances.md:37"
+    },
+    {
+      "id": "OOLD-INS-cb1a",
+      "area": "INS",
+      "level": "SHOULD",
+      "applies_to": "document",
+      "section": "schema-instances",
+      "summary": "An instance's @context and $schema should point at the same schema URL.",
+      "text": "The two SHOULD point at the same schema URL, so that the context an instance is read with and the schema it is validated against are the same document.",
+      "text_sha256": "523bf44316cca4e0b580834e1c588fb24e88d3720b86285bcea4ce7b4beb3990",
+      "context": "The two SHOULD point at the same schema URL, so that the context an instance is read with and the schema it is validated against are the same document. Instances SHOULD use a versioned schema URL so that it is unambiguous which schema version they conform to.",
+      "machine_checkable": true,
+      "since": "1.0.0-rc.1",
+      "deprecated": false,
+      "source": "07-schema-instances.md:17"
     },
     {
       "id": "OOLD-INS-cd80",
