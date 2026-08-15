@@ -732,10 +732,10 @@ different parent properties. The mapping is attached to the parent property's te
 <p><span class="rule" id="OOLD-VER-534a" tabindex="0" role="link" title="OOLD-VER-534a - The schema version should be part of the schema location URL.">The version <em class="rfc2119">SHOULD</em> be part of the schema's location:</span></p>
 <ul>
 <li><span class="rule" id="OOLD-VER-befc" tabindex="0" role="link" title="OOLD-VER-befc - Under single-schema versioning, the version should be appended after the schema name in the $id.">For <strong>single-schema</strong> versioning, the version <em class="rfc2119">SHOULD</em> be appended after the schema name, e.g. <code>https://example.org/b5203131-7321-46bb-8a11-acb3d1015840.schema.json/1.1.0</code>.</span></li>
-<li><span class="rule" id="OOLD-VER-4261" tabindex="0" role="link" title="OOLD-VER-4261 - Under schema-package versioning, the package version should be prepended before the schema id.">For <strong>schema-package</strong> versioning (recommended), the version of the package <em class="rfc2119">SHOULD</em> be prepended before the schema's ID, e.g. <code>https://example.org/my-package/2.0.0/b5203131-7321-46bb-8a11-acb3d1015840.schema.json</code>.</span></li>
-<li>or using release tags on GitHub, e.g. <code>https://raw.githubusercontent.com/MyOrg/my-package/refs/heads/2.0.0/b5203131-7321-46bb-8a11-acb3d1015840.schema.json</code>.</li>
+<li><span class="rule" id="OOLD-VER-4261" tabindex="0" role="link" title="OOLD-VER-4261 - Under schema-package versioning, the package version should be prepended before the schema id.">For <strong>schema-package</strong> versioning (recommended), the version of the package <em class="rfc2119">SHOULD</em> be prepended before the schema's ID, e.g. <code>https://example.org/my-package/2.0.0/b5203131-7321-46bb-8a11-acb3d1015840.schema.json</code>.</span> Since a package combines multiple schemas, the package version does in general not match the individual schema version.</li>
+<li>or a release tag on a code-hosting service, e.g. <code>https://raw.githubusercontent.com/MyOrg/my-package/refs/tags/2.0.0/b5203131-7321-46bb-8a11-acb3d1015840.schema.json</code>. <span class="rule" id="OOLD-VER-d826" tabindex="0" role="link" title="OOLD-VER-d826 - A version carried in a schema location should be pinned to an immutable ref, not a mutable branch.">Such a location <em class="rfc2119">SHOULD</em> name an <strong>immutable</strong> ref: a branch name identifies a moving target, whose content changes with every push, rather than a fixed version.</span></li>
 </ul>
-<p>Since a package combines multiple schemas, the package version does in general not match the individual schema version.</p>
+<p><span class="rule" id="OOLD-VER-c92e" tabindex="0" role="link" title="OOLD-VER-c92e - A schema published for long-term reuse should be identified by a persistent identifier that resolves to its current hosting.">A raw hosting URL is convenient, but it binds the identifier to one host and one repository layout and carries no persistence guarantee, so a schema published for long-term reuse <em class="rfc2119">SHOULD</em> be identified by a <strong>persistent identifier</strong> - a <a href="https://w3id.org/">w3id.org</a> or <a href="https://purl.archive.org/">PURL</a> redirect, or a DOI for a released package - that resolves to wherever the schema is currently hosted.</span> The persistent identifier is then the <code>$id</code>, and the raw URL is only where it happens to resolve today, so the schema survives a move between hosts without changing identity.</p>
 <p>Schemas <em class="rfc2119">MAY</em> indicate explicit backward-compatibility with <code>x-oold-backward-compatible-with</code> and <code>x-oold-incompatible-with</code>:</p>
 <aside class="example" title="Declaring backward-compatibility"><pre><code class="language-json">{
   &quot;$id&quot;: &quot;https://example.org/my-package/2.1.0/b5203131-7321-46bb-8a11-acb3d1015840.schema.json&quot;,
@@ -747,7 +747,7 @@ different parent properties. The mapping is attached to the parent property's te
   &quot;x-oold-incompatible-with&quot;: &quot;https://example.org/my-package/1.0.0/b5203131-7321-46bb-8a11-acb3d1015840.schema.json&quot;
 }
 </code></pre></aside>
-<p>Schemas within a package or package repository <em class="rfc2119">MAY</em> use relative URIs ([[RFC3986]] §5.1). For example, <code>A.schema.json</code> referenced from <code>https://raw.githubusercontent.com/MyOrg/my-package/refs/heads/2.0.0/</code>:</p>
+<p>Schemas within a package or package repository <em class="rfc2119">MAY</em> use relative URIs ([[RFC3986]] §5.1). For example, <code>A.schema.json</code> referenced from <code>https://raw.githubusercontent.com/MyOrg/my-package/refs/tags/2.0.0/</code>:</p>
 <aside class="example" title="Relative `$ref` inside a package"><pre><code class="language-json">{
   &quot;$id&quot;: &quot;B.schema.json&quot;,
   &quot;title&quot;: &quot;Foo&quot;,
@@ -756,9 +756,9 @@ different parent properties. The mapping is attached to the parent property's te
 </code></pre>
 <p>expands to:</p>
 <pre><code class="language-json">{
-  &quot;$id&quot;: &quot;https://raw.githubusercontent.com/MyOrg/my-package/refs/heads/2.0.0/B.schema.json&quot;,
+  &quot;$id&quot;: &quot;https://raw.githubusercontent.com/MyOrg/my-package/refs/tags/2.0.0/B.schema.json&quot;,
   &quot;title&quot;: &quot;Foo&quot;,
-  &quot;allOf&quot;: [ { &quot;$ref&quot;: &quot;https://raw.githubusercontent.com/MyOrg/my-package/refs/heads/2.0.0/A.schema.json&quot; } ]
+  &quot;allOf&quot;: [ { &quot;$ref&quot;: &quot;https://raw.githubusercontent.com/MyOrg/my-package/refs/tags/2.0.0/A.schema.json&quot; } ]
 }
 </code></pre></aside>
 <p>Instance documents <em class="rfc2119">SHOULD</em> always use a versioned schema URL to make clear which schema version they comply with:</p>

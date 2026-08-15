@@ -1237,6 +1237,28 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#oold-ver-c92e" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        OOLD-VER-c92e
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#oold-ver-d826" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        OOLD-VER-d826
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#oold-ver-edb9" class="md-nav__link">
     <span class="md-ellipsis">
       <span class="md-typeset">
@@ -1982,6 +2004,28 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#oold-ver-c92e" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        OOLD-VER-c92e
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#oold-ver-d826" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        OOLD-VER-d826
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#oold-ver-edb9" class="md-nav__link">
     <span class="md-ellipsis">
       <span class="md-typeset">
@@ -2612,7 +2656,7 @@ repeats the explanation, so you do not have to come back here.</p>
 <details class="quote">
 <summary>In context</summary>
 <ul>
-<li>For schema-package versioning (recommended), the version of the package SHOULD be prepended before the schema's ID, e.g. <code>https://example.org/my-package/2.0.0/b5203131-7321-46bb-8a11-acb3d1015840.schema.json</code>.</li>
+<li>For schema-package versioning (recommended), the version of the package SHOULD be prepended before the schema's ID, e.g. <code>https://example.org/my-package/2.0.0/b5203131-7321-46bb-8a11-acb3d1015840.schema.json</code>. Since a package combines multiple schemas, the package version does in general not match the individual schema version.</li>
 </ul>
 </details>
 <p>See <a href="../spec/#OOLD-VER-4261">this rule in the specification</a> (section: versioning).</p>
@@ -2630,8 +2674,8 @@ repeats the explanation, so you do not have to come back here.</p>
 <p>The version SHOULD be part of the schema's location:</p>
 <ul>
 <li>For single-schema versioning, the version SHOULD be appended after the schema name, e.g. <code>https://example.org/b5203131-7321-46bb-8a11-acb3d1015840.schema.json/1.1.0</code>.</li>
-<li>For schema-package versioning (recommended), the version of the package SHOULD be prepended before the schema's ID, e.g. <code>https://example.org/my-package/2.0.0/b5203131-7321-46bb-8a11-acb3d1015840.schema.json</code>.</li>
-<li>or using release tags on GitHub, e.g. <code>https://raw.githubusercontent.com/MyOrg/my-package/refs/heads/2.0.0/b5203131-7321-46bb-8a11-acb3d1015840.schema.json</code>.</li>
+<li>For schema-package versioning (recommended), the version of the package SHOULD be prepended before the schema's ID, e.g. <code>https://example.org/my-package/2.0.0/b5203131-7321-46bb-8a11-acb3d1015840.schema.json</code>. Since a package combines multiple schemas, the package version does in general not match the individual schema version.</li>
+<li>or a release tag on a code-hosting service, e.g. <code>https://raw.githubusercontent.com/MyOrg/my-package/refs/tags/2.0.0/b5203131-7321-46bb-8a11-acb3d1015840.schema.json</code>. Such a location SHOULD name an immutable ref: a branch name identifies a moving target, whose content changes with every push, rather than a fixed version.</li>
 </ul>
 </details>
 <p>See <a href="../spec/#OOLD-VER-534a">this rule in the specification</a> (section: versioning).</p>
@@ -2651,6 +2695,36 @@ repeats the explanation, so you do not have to come back here.</p>
 </ul>
 </details>
 <p>See <a href="../spec/#OOLD-VER-befc">this rule in the specification</a> (section: versioning).</p>
+<h3 id="oold-ver-c92e">OOLD-VER-c92e<a class="headerlink" href="#oold-ver-c92e" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong title="The RFC 2119 keyword this requirement is stated with. A validator reports a MUST-level finding as a failure and a SHOULD-level one as a warning, so the level decides severity rather than the check that found it.">Level:</strong> SHOULD</li>
+<li><strong title="Who the requirement binds: a document, an implementation of OO-LD, or nobody in particular. This decides what is even able to enforce it.">Applies to:</strong> <span title="Checkable by validating a schema or instance document">document</span></li>
+<li><strong title="Whether a validator could decide this rule by inspecting a document. It does not say the OO-LD validator enforces it today - oold rules list --unchecked reports that.">Machine-checkable:</strong> no</li>
+<li><strong title="The specification release this rule first appeared in. Ids are permanent and never reused, so this does not change once recorded.">Since:</strong> 1.0.0-rc.1</li>
+</ul>
+<p>A schema published for long-term reuse should be identified by a persistent identifier that resolves to its current hosting.</p>
+<p>A raw hosting URL is convenient, but it binds the identifier to one host and one repository layout and carries no persistence guarantee, so a schema published for long-term reuse SHOULD be identified by a persistent identifier - a <a href="https://w3id.org/">w3id.org</a> or <a href="https://purl.archive.org/">PURL</a> redirect, or a DOI for a released package - that resolves to wherever the schema is currently hosted.</p>
+<details class="quote">
+<summary>In context</summary>
+<p>A raw hosting URL is convenient, but it binds the identifier to one host and one repository layout and carries no persistence guarantee, so a schema published for long-term reuse SHOULD be identified by a persistent identifier - a <a href="https://w3id.org/">w3id.org</a> or <a href="https://purl.archive.org/">PURL</a> redirect, or a DOI for a released package - that resolves to wherever the schema is currently hosted. The persistent identifier is then the <code>$id</code>, and the raw URL is only where it happens to resolve today, so the schema survives a move between hosts without changing identity.</p>
+</details>
+<p>See <a href="../spec/#OOLD-VER-c92e">this rule in the specification</a> (section: versioning).</p>
+<h3 id="oold-ver-d826">OOLD-VER-d826<a class="headerlink" href="#oold-ver-d826" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong title="The RFC 2119 keyword this requirement is stated with. A validator reports a MUST-level finding as a failure and a SHOULD-level one as a warning, so the level decides severity rather than the check that found it.">Level:</strong> SHOULD</li>
+<li><strong title="Who the requirement binds: a document, an implementation of OO-LD, or nobody in particular. This decides what is even able to enforce it.">Applies to:</strong> <span title="Checkable by validating a schema or instance document">document</span></li>
+<li><strong title="Whether a validator could decide this rule by inspecting a document. It does not say the OO-LD validator enforces it today - oold rules list --unchecked reports that.">Machine-checkable:</strong> no</li>
+<li><strong title="The specification release this rule first appeared in. Ids are permanent and never reused, so this does not change once recorded.">Since:</strong> 1.0.0-rc.1</li>
+</ul>
+<p>A version carried in a schema location should be pinned to an immutable ref, not a mutable branch.</p>
+<p>Such a location SHOULD name an immutable ref: a branch name identifies a moving target, whose content changes with every push, rather than a fixed version.</p>
+<details class="quote">
+<summary>In context</summary>
+<ul>
+<li>or a release tag on a code-hosting service, e.g. <code>https://raw.githubusercontent.com/MyOrg/my-package/refs/tags/2.0.0/b5203131-7321-46bb-8a11-acb3d1015840.schema.json</code>. Such a location SHOULD name an immutable ref: a branch name identifies a moving target, whose content changes with every push, rather than a fixed version.</li>
+</ul>
+</details>
+<p>See <a href="../spec/#OOLD-VER-d826">this rule in the specification</a> (section: versioning).</p>
 <h3 id="oold-ver-edb9">OOLD-VER-edb9<a class="headerlink" href="#oold-ver-edb9" title="Permanent link">&para;</a></h3>
 <ul>
 <li><strong title="The RFC 2119 keyword this requirement is stated with. A validator reports a MUST-level finding as a failure and a SHOULD-level one as a warning, so the level decides severity rather than the check that found it.">Level:</strong> SHOULD</li>
