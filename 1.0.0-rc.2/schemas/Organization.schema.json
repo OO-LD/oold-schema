@@ -1,0 +1,39 @@
+{
+  "$schema": "https://oo-ld.org/1.0.0-rc.2/meta/oold-meta-schema.json",
+  "$id": "Organization.schema.json",
+  "x-oold-uuid": "c6314242-8432-57cc-9b22-bd4e2026951f",
+  "x-oold-version": "1.0.0",
+  "x-oold-instance-rdf-type": ["schema:Organization"],
+  "@context": [
+    "Thing.schema.json",
+    {
+      "schema": "http://schema.org/",
+      "address": { "@id": "schema:address", "@context": "Address.schema.json" },
+      "employees": { "@reverse": "schema:worksFor", "@type": "@id" }
+    }
+  ],
+  "title": "Organization",
+  "x-oold-multilang-title": { "en": "Organization", "de": "Organisation" },
+  "allOf": [ { "$ref": "Thing.schema.json" } ],
+  "type": "object",
+  "properties": {
+    "address": {
+      "type": "object",
+      "$ref": "Address.schema.json",
+      "description": "Postal address of the organization"
+    }
+  },
+  "x-oold-reverse-properties": {
+    "employees": {
+      "type": "array",
+      "title": "Employees",
+      "description": "Persons who work for this organization; stored on each Person as works_for, editable here via JSON-LD @reverse.",
+      "x-oold-ui-default-property": true,
+      "items": {
+        "type": "string",
+        "format": "iri-reference",
+        "x-oold-range": "Person.schema.json"
+      }
+    }
+  }
+}

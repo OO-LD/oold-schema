@@ -1,0 +1,26 @@
+{
+  "$schema": "https://oo-ld.org/1.0.0-rc.2/meta/oold-meta-schema.json",
+  "$id": "OwlOrganization.schema.json",
+  "x-oold-sssom": { "schema:Organization": { "predicate_id": "skos:exactMatch" } },
+  "@context": {
+    "id": "@id",
+    "type": "@type",
+    "ex": "https://example.org/",
+    "schema": "http://schema.org/",
+    "employee": { "@id": "schema:employee", "@type": "@id", "@container": "@set" }
+  },
+  "title": "Organization",
+  "type": "object",
+  "properties": {
+    "id": { "type": "string" },
+    "type": { "type": "string", "const": "schema:Organization" },
+    "employee": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "format": "iri-reference",
+        "x-oold-range": "RdfPerson.schema.json"
+      }
+    }
+  }
+}

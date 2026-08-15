@@ -1,0 +1,19 @@
+{
+  "$schema": "https://oo-ld.org/1.0.0-rc.2/meta/oold-meta-schema.json",
+  "$id": "RdfPerson.schema.json",
+  "x-oold-sssom": { "schema:Person": { "predicate_id": "skos:exactMatch" } },
+  "@context": {
+    "id": "@id",
+    "type": "@type",
+    "ex": "https://example.org/",
+    "schema": "http://schema.org/",
+    "name": "schema:name"
+  },
+  "title": "Person",
+  "type": "object",
+  "properties": {
+    "id": { "type": "string" },
+    "type": { "type": "string", "const": "schema:Person" },
+    "name": { "type": "string" }
+  }
+}
