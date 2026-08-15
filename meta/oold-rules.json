@@ -87,7 +87,7 @@
       "text": "Where a referenced context should apply only to the immediate node, the schema MUST set `\"@propagate\": false` on that scoped context.",
       "text_sha256": "c9059a4861176c0efa21e2f497d557b096d3105ca0cf872497191c5ed80cc7e8",
       "context": "Propagation (`@propagate`). A `$ref` inside a `type: object` property is reflected as a property-scoped context, which by default propagates into the whole subtree rooted at that property (\"By default ... contexts propagate across node objects, other than for type-scoped contexts, which default to false\"). Where a referenced context should apply only to the immediate node, the schema MUST set `\"@propagate\": false` on that scoped context.",
-      "machine_checkable": true,
+      "machine_checkable": false,
       "since": "1.0.0-rc.1",
       "deprecated": false,
       "source": "06-composition.md:70"
