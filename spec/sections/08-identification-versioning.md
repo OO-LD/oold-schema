@@ -107,7 +107,7 @@ expands to:
 ```
 :::
 
-Instance documents SHOULD always use a versioned schema URL to make clear which schema version they comply with:
+Instance documents reference a versioned schema URL, as required in [](#schema-instances), to make clear which schema version they comply with:
 
 :::example{title="An instance pinned to a schema version"}
 ```json

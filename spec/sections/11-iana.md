@@ -13,4 +13,4 @@
 
 ### Security Considerations {#security}
 
-Both the security considerations of [[JSON-LD11]] (§C) and of [[JSONSCHEMA]] (§13) apply. In particular, a consumer SHOULD NOT blindly trust the schema an instance declares for itself (a crafted instance could point at a permissive schema) and remains responsible for validating against a schema it trusts.
+Both the security considerations of [[JSON-LD11]] (§C) and of [[JSONSCHEMA]] (§13) apply. In particular, as required in [](#referencing-schema), a consumer does not blindly trust the schema an instance declares for itself (a crafted instance could point at a permissive schema) and remains responsible for validating against a schema it trusts.
