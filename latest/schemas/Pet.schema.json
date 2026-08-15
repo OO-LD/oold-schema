@@ -1,5 +1,5 @@
 {
-  "$schema": "https://oo-ld.org/0.9.0/meta/oold-meta-schema.json",
+  "$schema": "https://oo-ld.org/1.0.0-rc.2/meta/oold-meta-schema.json",
   "$id": "Pet.schema.json",
   "@context": {
     "ex": "https://example.org/",

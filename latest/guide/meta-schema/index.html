@@ -12,7 +12,7 @@
         <meta name="author" content="OO-LD Contributors">
       
       
-        <link rel="canonical" href="https://oo-ld.org/0.9.0/guide/meta-schema/">
+        <link rel="canonical" href="https://oo-ld.org/1.0.0-rc.2/guide/meta-schema/">
       
       
         <link rel="prev" href="../extensions/">
@@ -25,7 +25,7 @@
       
       
       <link rel="icon" href="../../assets/OO-LD_logo.jpg">
-      <meta name="generator" content="zensical-0.0.52">
+      <meta name="generator" content="zensical-0.0.54">
     
     
       
@@ -36,7 +36,7 @@
       
         
       
-      <link rel="stylesheet" href="../../assets/stylesheets/modern/main.8b3b5a67.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/modern/main.20815dad.min.css">
       
         
           
@@ -350,6 +350,22 @@
         
   
   Reference
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../rules/" class="md-tabs__link">
+        
+  
+  Rule catalogue
 
       </a>
     </li>
@@ -905,6 +921,32 @@
   
   
   
+    <li class="md-nav__item">
+      <a href="../../rules/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Rule catalogue
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
     
     
       
@@ -1134,8 +1176,16 @@
 </thead>
 <tbody>
 <tr>
+<td><code>@context</code></td>
+<td>JSON-LD context for instances of this schema. The schema is consumed as a remote JSON-LD context; this entry is ignored by JSON-Schema validators. Only the outer shape is checked here - a context definition is a map, an IRI reference to a remote context, an array combining either, or null (JSON-LD 1.1, Context Definitions). Whether the term definitions inside are well-formed is decided by a JSON-LD processor, not by JSON Schema.</td>
+</tr>
+<tr>
 <td><code>x-oold-context</code></td>
-<td>Extended term mappings (synonyms): an object keyed by term (a property, class, or value term), each holding a dict keyed by synonym IRI whose value is a JSON-LD term-definition fragment plus an optional strippable x-sssom block. OO-LD tooling reads only two x-sssom slots - predicate_id (a SKOS mapping predicate) and mapping_set_id (for profile-based selection); all other slots ride along and round-trip to SSSOM. Supports override under composition (most-derived-wins; null removes) and namespace/mapping-set selection. Promoted into @context by OO-LD-aware tooling; see the 'Term mappings and synonyms' section.</td>
+<td>Extended term mappings (synonyms): an object keyed by term (a property, class, or value term), each holding a dict keyed by synonym IRI whose value is a JSON-LD term-definition fragment plus an optional strippable x-oold-sssom block. OO-LD tooling reads only two x-oold-sssom slots - predicate_id (a SKOS mapping predicate) and mapping_set_id (for profile-based selection); all other slots ride along and round-trip to SSSOM. Supports override under composition (most-derived-wins; null removes) and namespace/mapping-set selection. Promoted into @context by OO-LD-aware tooling; see the 'Term mappings and synonyms' section.</td>
+</tr>
+<tr>
+<td><code>x-oold-sssom</code></td>
+<td>Schema-level ontology correspondences: an SSSOM mapping set whose subject is this schema, keyed by the object IRI of a resolvable resource, each value carrying SSSOM slots (predicate_id default skos:exactMatch, mapping_set_id, ...). The schema-level counterpart of the per-term x-oold-sssom used inside x-oold-context; it describes the schema itself, not its instances. See the 'Ontology correspondence' section.</td>
 </tr>
 <tr>
 <td><code>x-oold-uuid</code></td>
@@ -1188,6 +1238,10 @@
 <tr>
 <td><code>x-oold-reverse-default-properties</code></td>
 <td>Deprecated. Names of reverse properties shown by default in generated user interfaces. Like the object-level defaultProperties array this is extend-only under composition; prefer a per-reverse-property x-oold-ui-default-property boolean, which is overridable.</td>
+</tr>
+<tr>
+<td><code>@context</code></td>
+<td></td>
 </tr>
 </tbody>
 </table>
@@ -1314,7 +1368,7 @@
       <script id="__config" type="application/json">{"annotate":null,"base":"../..","features":["announce.dismiss","content.code.annotate","content.action.edit","content.action.view","content.code.copy","content.code.select","content.footnote.tooltips","content.tabs.link","content.tooltips","navigation.footer","navigation.indexes","navigation.tabs","navigation.instant","navigation.instant.prefetch","navigation.path","navigation.prune","navigation.top","navigation.tracking","search.highlight"],"search":"../../assets/javascripts/workers/search.7d14d953.min.js","tags":null,"translations":{"clipboard.copied":"Copied to clipboard","clipboard.copy":"Copy to clipboard","search.result.more.one":"1 more on this page","search.result.more.other":"# more on this page","search.result.none":"No matching documents","search.result.one":"1 matching document","search.result.other":"# matching documents","search.result.placeholder":"Type to start searching","search.result.term.missing":"Missing","select.version":"Select version"},"version":{"provider":"mike"}}</script>
     
     
-      <script src="../../assets/javascripts/bundle.ed145cee.min.js"></script>
+      <script src="../../assets/javascripts/bundle.e886cdf1.min.js"></script>
       
     
   </body>

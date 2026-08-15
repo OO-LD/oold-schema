@@ -1,5 +1,5 @@
 {
-  "$schema": "https://oo-ld.org/0.9.0/meta/oold-meta-schema.json",
+  "$schema": "https://oo-ld.org/1.0.0-rc.2/meta/oold-meta-schema.json",
   "$id": "UiAnnotations.schema.json",
   "@context": [
     {
@@ -15,7 +15,7 @@
   "x-oold-uuid": "b1e7a0c2-2d4f-4a1e-9c3a-7f0e5d2b6a11",
   "title": "Researcher",
   "x-oold-multilang-title": { "en": "Researcher", "de": "Forschende Person" },
-  "x-sssom": { "schema:Person": { "predicate_id": "skos:exactMatch" } },
+  "x-oold-sssom": { "schema:Person": { "predicate_id": "skos:exactMatch" } },
   "type": "object",
   "properties": {
     "name": {

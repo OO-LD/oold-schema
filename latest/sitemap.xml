@@ -1,66 +1,69 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
       <url>
-        <loc>https://oo-ld.org/0.9.0/</loc>
+        <loc>https://oo-ld.org/1.0.0-rc.2/</loc>
       </url>
       <url>
-        <loc>https://oo-ld.org/0.9.0/introduction/</loc>
+        <loc>https://oo-ld.org/1.0.0-rc.2/introduction/</loc>
       </url>
       <url>
-        <loc>https://oo-ld.org/0.9.0/get-started/</loc>
+        <loc>https://oo-ld.org/1.0.0-rc.2/get-started/</loc>
       </url>
       <url>
-        <loc>https://oo-ld.org/0.9.0/guide/</loc>
+        <loc>https://oo-ld.org/1.0.0-rc.2/guide/</loc>
       </url>
       <url>
-        <loc>https://oo-ld.org/0.9.0/guide/basic-concepts/</loc>
+        <loc>https://oo-ld.org/1.0.0-rc.2/guide/basic-concepts/</loc>
       </url>
       <url>
-        <loc>https://oo-ld.org/0.9.0/guide/composition/</loc>
+        <loc>https://oo-ld.org/1.0.0-rc.2/guide/composition/</loc>
       </url>
       <url>
-        <loc>https://oo-ld.org/0.9.0/guide/schema-instances/</loc>
+        <loc>https://oo-ld.org/1.0.0-rc.2/guide/schema-instances/</loc>
       </url>
       <url>
-        <loc>https://oo-ld.org/0.9.0/guide/identification-versioning/</loc>
+        <loc>https://oo-ld.org/1.0.0-rc.2/guide/identification-versioning/</loc>
       </url>
       <url>
-        <loc>https://oo-ld.org/0.9.0/guide/extensions/</loc>
+        <loc>https://oo-ld.org/1.0.0-rc.2/guide/extensions/</loc>
       </url>
       <url>
-        <loc>https://oo-ld.org/0.9.0/guide/meta-schema/</loc>
+        <loc>https://oo-ld.org/1.0.0-rc.2/guide/meta-schema/</loc>
       </url>
       <url>
-        <loc>https://oo-ld.org/0.9.0/use-cases/</loc>
+        <loc>https://oo-ld.org/1.0.0-rc.2/use-cases/</loc>
       </url>
       <url>
-        <loc>https://oo-ld.org/0.9.0/mappings/</loc>
+        <loc>https://oo-ld.org/1.0.0-rc.2/mappings/</loc>
       </url>
       <url>
-        <loc>https://oo-ld.org/0.9.0/tooling/</loc>
+        <loc>https://oo-ld.org/1.0.0-rc.2/tooling/</loc>
       </url>
       <url>
-        <loc>https://oo-ld.org/0.9.0/reference/</loc>
+        <loc>https://oo-ld.org/1.0.0-rc.2/reference/</loc>
       </url>
       <url>
-        <loc>https://oo-ld.org/0.9.0/migration/</loc>
+        <loc>https://oo-ld.org/1.0.0-rc.2/rules/</loc>
       </url>
       <url>
-        <loc>https://oo-ld.org/0.9.0/migration/from-json-schema/</loc>
+        <loc>https://oo-ld.org/1.0.0-rc.2/migration/</loc>
       </url>
       <url>
-        <loc>https://oo-ld.org/0.9.0/migration/from-rdf/</loc>
+        <loc>https://oo-ld.org/1.0.0-rc.2/migration/from-json-schema/</loc>
       </url>
       <url>
-        <loc>https://oo-ld.org/0.9.0/migration/from-owl-shacl/</loc>
+        <loc>https://oo-ld.org/1.0.0-rc.2/migration/from-rdf/</loc>
       </url>
       <url>
-        <loc>https://oo-ld.org/0.9.0/migration/from-python/</loc>
+        <loc>https://oo-ld.org/1.0.0-rc.2/migration/from-owl-shacl/</loc>
       </url>
       <url>
-        <loc>https://oo-ld.org/0.9.0/migration/from-legacy-osw/</loc>
+        <loc>https://oo-ld.org/1.0.0-rc.2/migration/from-python/</loc>
       </url>
       <url>
-        <loc>https://oo-ld.org/0.9.0/migration/legacy-keyword-inventory/</loc>
+        <loc>https://oo-ld.org/1.0.0-rc.2/migration/from-legacy-osw/</loc>
+      </url>
+      <url>
+        <loc>https://oo-ld.org/1.0.0-rc.2/migration/legacy-keyword-inventory/</loc>
       </url>
 </urlset>

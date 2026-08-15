@@ -12,7 +12,7 @@
         <meta name="author" content="OO-LD Contributors">
       
       
-        <link rel="canonical" href="https://oo-ld.org/0.9.0/tooling/">
+        <link rel="canonical" href="https://oo-ld.org/1.0.0-rc.2/tooling/">
       
       
         <link rel="prev" href="../mappings/">
@@ -25,7 +25,7 @@
       
       
       <link rel="icon" href="../assets/OO-LD_logo.jpg">
-      <meta name="generator" content="zensical-0.0.52">
+      <meta name="generator" content="zensical-0.0.54">
     
     
       
@@ -36,7 +36,7 @@
       
         
       
-      <link rel="stylesheet" href="../assets/stylesheets/modern/main.8b3b5a67.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/modern/main.20815dad.min.css">
       
         
           
@@ -350,6 +350,22 @@
         
   
   Reference
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../rules/" class="md-tabs__link">
+        
+  
+  Rule catalogue
 
       </a>
     </li>
@@ -831,6 +847,32 @@
   
   
   
+    <li class="md-nav__item">
+      <a href="../rules/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Rule catalogue
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
     
     
       
@@ -1098,15 +1140,15 @@
 <p>The <a href="https://github.com/OO-LD/oold-schema"><code>oold-schema</code></a> repository ships a validation harness (<a href="https://github.com/OO-LD/oold-schema/blob/main/scripts/validate.mjs"><code>scripts/validate.mjs</code></a>) with two tiers. Run both with <code>make validate</code>, or <code>make check</code> (which also re-renders the spec and builds the site); CI runs <code>make check</code> on every push.</p>
 <h3 id="general-workflow-any-schema-no-fixtures">General workflow (any schema, no fixtures)<a class="headerlink" href="#general-workflow-any-schema-no-fixtures" title="Permanent link">&para;</a></h3>
 <p>These run on every schema and instance in <a href="https://github.com/OO-LD/oold-schema/tree/main/examples"><code>examples/</code></a> with no per-schema test data, so they apply to any OO-LD schema you write. They are also <strong>reusable on your own schemas</strong>: the harness is exposed as an <code>oold-validate</code> CLI, so a downstream repo can conformance-check its generated schemas against this exact pipeline without copying it -</p>
-<div class="highlight"><pre><span></span><code>npx --yes github:OO-LD/oold-schema oold-validate path/to/schemas
-</code></pre></div>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>npx --yes github:OO-LD/oold-schema oold-validate path/to/schemas
+</span></code></pre></div>
 <p>Given a directory argument, <code>oold-validate &lt;dir&gt;</code> runs only the general-workflow tier below (well-formedness, auto-generated instance, branch iteration, RDF roundtrip, pattern lint) over that directory's <code>*.schema.json</code>, using this package's meta-schemas; the deterministic per-feature suites and vocabulary coverage stay scoped to this repo's own <code>examples/</code>. The checks are:</p>
 <ul>
 <li><strong>Well-formedness</strong> - the schema validates against the OO-LD meta-schema and its <code>$ref</code> composition resolves.</li>
-<li><strong>Auto-generated instance</strong> - an instance is generated (via <a href="https://github.com/json-schema-faker/json-schema-faker">json-schema-faker</a>, all properties, declared <code>format</code>s respected) and must validate against the schema; this catches unsatisfiable schemas.</li>
+<li><strong>Auto-generated instance</strong> - an instance is generated (via <a href="https://github.com/json-schema-faker/json-schema-faker">json-schema-faker</a>, all properties, declared <code>format</code>s respected) and must validate against the schema; this catches unsatisfiable schemas. Generation runs with <code>useExamplesValue</code> and <code>useDefaultValue</code> enabled, so any <code>examples</code> or <code>default</code> value in the schema is used as-is and must satisfy its own subschema. JSON Schema treats those keywords as annotations and does not validate them; this harness effectively does, which catches example values that contradict their own constraints (a <code>pattern</code> violated by its example, a string example on a <code>type: number</code> property). A <code>GEN-INVALID</code> whose instance path points at such a value indicates the annotation, not an unsatisfiable schema.</li>
 <li><strong>Branch iteration</strong> - each <code>oneOf</code> / <code>anyOf</code> branch is pinned in turn and an instance generated for it, exercising every variant deterministically.</li>
 <li><strong>RDF roundtrip</strong> - each instance is converted instance -&gt; RDF -&gt; instance. It fails if a property is lost (the <code>@context</code> does not map it) or if the reconstruction no longer validates against its schema (the <code>@context</code> did not preserve a property's shape - for example a strict <code>type: array</code> property whose single-element array came back as a scalar).</li>
-<li><strong>Pattern lint</strong> - each schema's <code>@context</code> is checked for round-trip-safe patterns. Errors (MUST): a term must not coerce a literal to a datatype JSON encodes natively (<code>"@type": "xsd:string"</code>, <code>xsd:boolean</code>, <code>xsd:integer</code>, <code>xsd:double</code>, <code>xsd:float</code> - none of them round-trip: <code>xsd:string</code> is elided from plain literals and boolean/numeric literals reconstruct as untyped native JSON values, so the coercing term is never selected on the way back), and a strictly <code>type: array</code> property must declare <code>"@container": "@set"</code> (or <code>"@list"</code>), or a single-element array returns as a scalar and fails re-validation. A cardinality-flexible property (a <code>oneOf</code>/<code>anyOf</code> of a literal and an array) MAY declare it but need not. Warning (SHOULD): a bare-IRI-string reference that lacks an <code>iri-reference</code> (or stricter <code>uri*</code>) <code>format</code> - the reference still round-trips, so a lexical format is only recommended.</li>
+<li><strong>Pattern lint</strong> - each schema's <code>@context</code> is checked for round-trip-safe patterns. Errors (MUST): a term must not coerce a literal to a datatype JSON-LD produces by default from a native JSON value (<code>"@type": "xsd:string"</code>, <code>xsd:boolean</code>, <code>xsd:integer</code>, <code>xsd:double</code> - none of them round-trip: <code>xsd:string</code> is elided from plain literals and boolean/integer/double literals reconstruct as untyped native JSON values, so the coercing term is never selected on the way back; non-default datatypes such as <code>xsd:date</code> or <code>xsd:float</code> coerce fine), and a strictly <code>type: array</code> property must declare <code>"@container": "@set"</code> (or <code>"@list"</code>), or a single-element array returns as a scalar and fails re-validation. A cardinality-flexible property (a <code>oneOf</code>/<code>anyOf</code> of a literal and an array) MAY declare it but need not. Warning (SHOULD): a bare-IRI-string reference that lacks an <code>iri-reference</code> (or stricter <code>uri*</code>) <code>format</code> - the reference still round-trips, so a lexical format is only recommended.</li>
 </ul>
 <p>Note on cyclic scoped contexts: a property that embeds an object carries a <em>scoped</em> <code>@context</code> referencing the embedded type's context; these references form an embed graph. When that graph has a cycle (a type embedding itself, or two types embedding each other), a JSON-LD processor must eagerly validate the recursive scoped context. The spec bounds this, but neither jsonld.js 8.3.3 (heap exhaustion) nor PyLD 3.1.0 (recursion error) honors the bound, so such a schema is not round-trippable in practice. The harness detects schemas that reach a scoped-context cycle and <strong>skips their round-trip with a warning</strong> (the meta-schema and pattern-lint checks still run) rather than crashing. Model cyclic or independent-entity edges as references (<code>@type: "@id"</code> + <code>x-oold-range</code>, no scoped context); a self-reference through the top-level context is fine. See the specification's <a href="../../spec/#round-trip">Projection to RDF and round-trip</a>.</p>
 <p>Note on IRI formats: <code>iri</code> and <code>iri-reference</code> are provided by the <a href="https://github.com/luzlab/ajv-formats-draft2019"><code>ajv-formats-draft2019</code></a> plugin, whose regexes are currently buggy - they reject valid compact IRIs such as <code>ex:alice</code> and are even mutually inconsistent (<code>iri</code> accepts <code>urn:uuid:...</code>, <code>iri-reference</code> does not). Because a compact IRI is a valid IRI (<a href="https://www.rfc-editor.org/rfc/rfc3987">RFC 3987</a> - an IRI is a superset of a URI), the harness overrides these two <code>format</code> checks with conformant implementations. If you validate OO-LD schemas with your own ajv setup, apply the same override until the plugin is fixed (<a href="https://github.com/luzlab/ajv-formats-draft2019/issues/31">upstream bug</a>).</p>
@@ -1240,7 +1282,7 @@
       <script id="__config" type="application/json">{"annotate":null,"base":"..","features":["announce.dismiss","content.code.annotate","content.action.edit","content.action.view","content.code.copy","content.code.select","content.footnote.tooltips","content.tabs.link","content.tooltips","navigation.footer","navigation.indexes","navigation.tabs","navigation.instant","navigation.instant.prefetch","navigation.path","navigation.prune","navigation.top","navigation.tracking","search.highlight"],"search":"../assets/javascripts/workers/search.7d14d953.min.js","tags":null,"translations":{"clipboard.copied":"Copied to clipboard","clipboard.copy":"Copy to clipboard","search.result.more.one":"1 more on this page","search.result.more.other":"# more on this page","search.result.none":"No matching documents","search.result.one":"1 matching document","search.result.other":"# matching documents","search.result.placeholder":"Type to start searching","search.result.term.missing":"Missing","select.version":"Select version"},"version":{"provider":"mike"}}</script>
     
     
-      <script src="../assets/javascripts/bundle.ed145cee.min.js"></script>
+      <script src="../assets/javascripts/bundle.e886cdf1.min.js"></script>
       
     
   </body>
