@@ -108,14 +108,15 @@ jobs:
           # --alias-type=copy so /latest/ is a real directory (its schema JSON is
           # fetchable; a redirect alias would 404 for machine schema references).
           MIKE="uvx --with pyyaml==6.0.2 --from $MIKE_SPEC mike"
-          case "$ver" in
-            *-*)
-              # Pre-release (semver has a hyphen, e.g. 1.0.0-rc.1): publish the versioned
-              # docs only. Do NOT move `latest` or the site default - those track the most
-              # recent STABLE release, so /latest/ never serves a release candidate.
-              $MIKE deploy --push "$ver" ;;
-            *)
-              # Stable release: publish and repoint `latest` + the site default.
-              $MIKE deploy --push --alias-type=copy --update-aliases "$ver" latest
-              $MIKE set-default --push latest ;;
-          esac
+          # TEMPORARY, until v1.0.0 ships: every release, pre-release included, repoints
+          # `latest` and the site default. During the v1.0 review window the candidate is the
+          # document reviewers should be reading, and a /latest/ still serving 0.9.0 sends
+          # them to superseded prose. The concrete /X.Y.Z/ of every release stays published,
+          # so pinning remains possible.
+          #
+          # REVERT WHEN v1.0.0 IS TAGGED: restore the `case "$ver" in *-*) ... esac` guard so
+          # that `latest` tracks the most recent STABLE release again and never serves a
+          # release candidate. After v1.0 the trade-off flips - a stable spec exists, and
+          # /latest/ pointing at a candidate would then be the misleading answer.
+          $MIKE deploy --push --alias-type=copy --update-aliases "$ver" latest
+          $MIKE set-default --push latest
