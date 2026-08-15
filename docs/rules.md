@@ -747,6 +747,23 @@ By RFC3987 this accepts absolute IRIs, compact IRIs (`ex:alice`, `schema:Person`
 
 See [this rule in the specification](spec/#OOLD-EXT-1f92) (section: range-reference-form).
 
+### OOLD-EXT-2542
+
+- <strong title="The RFC 2119 keyword this requirement is stated with. A validator reports a MUST-level finding as a failure and a SHOULD-level one as a warning, so the level decides severity rather than the check that found it.">Level:</strong> SHOULD
+- <strong title="Who the requirement binds: a document, an implementation of OO-LD, or nobody in particular. This decides what is even able to enforce it.">Applies to:</strong> <span title="Checkable by validating a schema or instance document">document</span>
+- <strong title="Whether a validator could decide this rule by inspecting a document. It does not say the OO-LD validator enforces it today - oold rules list --unchecked reports that.">Machine-checkable:</strong> yes
+- <strong title="The specification release this rule first appeared in. Ids are permanent and never reused, so this does not change once recorded.">Since:</strong> 1.0.0-rc.1
+
+Value terms should not collide with JSON-LD keyword aliases or other context terms.
+
+The value terms SHOULD also be kept from colliding with JSON-LD keyword aliases (`id`, `type`) or other context terms, since a value term shares the context's global term namespace - a term added for a value would otherwise also rewrite a property or keyword of the same name.
+
+??? quote "In context"
+
+    Because `@vocab` expands an unmatched string against the vocabulary - concatenating it onto the default vocabulary base when one is set (minting a new IRI), or leaving it a relative IRI when none is - a typo silently becomes a stray IRI rather than an error. A property coerced `"@type": "@vocab"` therefore SHOULD constrain its values with an `enum` of the value terms (optionally named with `x-enum-varnames`) or with `x-oold-range`, so only intended individuals are accepted. The value terms SHOULD also be kept from colliding with JSON-LD keyword aliases (`id`, `type`) or other context terms, since a value term shares the context's global term namespace - a term added for a value would otherwise also rewrite a property or keyword of the same name. Confining the value terms to the property's own scoped `@context` keeps them out of that shared namespace, since they then resolve only for that property's values; naming them with opaque identifiers such as UUIDs avoids the clash where readability is not required.
+
+See [this rule in the specification](spec/#OOLD-EXT-2542) (section: value-term-aliases).
+
 ### OOLD-EXT-2b61
 
 - <strong title="The RFC 2119 keyword this requirement is stated with. A validator reports a MUST-level finding as a failure and a SHOULD-level one as a warning, so the level decides severity rather than the check that found it.">Level:</strong> MUST
@@ -765,6 +782,23 @@ Compact form specifically - a `"pattern"` such as `"^[A-Za-z_][\\w.-]:(?!//)\\S$
     - Compact form specifically - a `"pattern"` such as `"^[A-Za-z_][\\w.-]:(?!//)\\S$"`, which accepts `ex:alice` and `schema:Person` while rejecting `http://…`; the prefix MUST be defined in the `@context`.
 
 See [this rule in the specification](spec/#OOLD-EXT-2b61) (section: range-reference-form).
+
+### OOLD-EXT-391e
+
+- <strong title="The RFC 2119 keyword this requirement is stated with. A validator reports a MUST-level finding as a failure and a SHOULD-level one as a warning, so the level decides severity rather than the check that found it.">Level:</strong> MUST
+- <strong title="Who the requirement binds: a document, an implementation of OO-LD, or nobody in particular. This decides what is even able to enforce it.">Applies to:</strong> <span title="Constrains an OO-LD implementation; needs a library conformance suite">implementation</span>
+- <strong title="Whether a validator could decide this rule by inspecting a document. It does not say the OO-LD validator enforces it today - oold rules list --unchecked reports that.">Machine-checkable:</strong> no
+- <strong title="The specification release this rule first appeared in. Ids are permanent and never reused, so this does not change once recorded.">Since:</strong> 1.0.0-rc.1
+
+A loader that dereferences a target validates it against the declared range and does not assume the target conforms.
+
+A loader that dereferences a target MUST validate it against that range before treating it as a member, and MUST NOT assume the target conforms, since the target is a separate document that may change independently of the reference.
+
+??? quote "In context"
+
+    An `x-oold-range` value is a reference: the property holds the target's IRI, and an OO-LD-aware loader MAY dereference that IRI to obtain the target document itself, so a large or shared object can live in a separate document and be pulled in on demand (data bundling). A published reference SHOULD point at a target that validates against the property's declared range. A loader that dereferences a target MUST validate it against that range before treating it as a member, and MUST NOT assume the target conforms, since the target is a separate document that may change independently of the reference. This holds whether the reference is written as a bare IRI string or as a `{ "@id": … }` object; generic tooling leaves it unresolved, exactly as it leaves `x-oold-ref` (see [why-x-oold-ref](spec/#why-x-oold-ref)).
+
+See [this rule in the specification](spec/#OOLD-EXT-391e) (section: range-of-properties).
 
 ### OOLD-EXT-3fe9
 
@@ -926,6 +960,23 @@ Its lexical form SHOULD be constrained with an IRI/URI-family `format` so that m
 
 See [this rule in the specification](spec/#OOLD-EXT-6ea3) (section: range-reference-form).
 
+### OOLD-EXT-7256
+
+- <strong title="The RFC 2119 keyword this requirement is stated with. A validator reports a MUST-level finding as a failure and a SHOULD-level one as a warning, so the level decides severity rather than the check that found it.">Level:</strong> SHOULD NOT
+- <strong title="Who the requirement binds: a document, an implementation of OO-LD, or nobody in particular. This decides what is even able to enforce it.">Applies to:</strong> <span title="Constrains an OO-LD implementation; needs a library conformance suite">implementation</span>
+- <strong title="Whether a validator could decide this rule by inspecting a document. It does not say the OO-LD validator enforces it today - oold rules list --unchecked reports that.">Machine-checkable:</strong> no
+- <strong title="The specification release this rule first appeared in. Ids are permanent and never reused, so this does not change once recorded.">Since:</strong> 1.0.0-rc.1
+
+Entries that are not exactMatch should not be co-emitted unless a consumer explicitly requests it.
+
+By default a converter co-emits only `skos:exactMatch` entries; entries whose `predicate_id` is `skos:closeMatch`/`broadMatch`/`narrowMatch`/`relatedMatch` SHOULD NOT be co-emitted unless a consumer explicitly requests it, since such a triple asserts a broader, narrower or merely related relation, not that the value holds under the synonym property, so the requester takes responsibility for that reading.
+
+??? quote "In context"
+
+    Co-emission. Selection yields one IRI per term; for interoperability a converter MAY additionally co-emit the instance value under other synonyms' IRIs. This is a pragmatic interoperability aid, not a logical entailment: `skos:exactMatch` records that two terms are interchangeable across a wide range of applications, but it is not `owl:equivalentProperty` / `owl:equivalentClass` and licenses no reasoner inference - which is exactly why the mapping predicates are SKOS (reasoner-safe) rather than OWL. By default a converter co-emits only `skos:exactMatch` entries; entries whose `predicate_id` is `skos:closeMatch`/`broadMatch`/`narrowMatch`/`relatedMatch` SHOULD NOT be co-emitted unless a consumer explicitly requests it, since such a triple asserts a broader, narrower or merely related relation, not that the value holds under the synonym property, so the requester takes responsibility for that reading.
+
+See [this rule in the specification](spec/#OOLD-EXT-7256) (section: synonyms).
+
 ### OOLD-EXT-7c5d
 
 - <strong title="The RFC 2119 keyword this requirement is stated with. A validator reports a MUST-level finding as a failure and a SHOULD-level one as a warning, so the level decides severity rather than the check that found it.">Level:</strong> MUST
@@ -1028,6 +1079,23 @@ Generated OO-LD contexts SHOULD therefore declare `"@version": 1.1` (the JSON nu
 
 See [this rule in the specification](spec/#OOLD-EXT-ddda) (section: processing-mode).
 
+### OOLD-EXT-ece0
+
+- <strong title="The RFC 2119 keyword this requirement is stated with. A validator reports a MUST-level finding as a failure and a SHOULD-level one as a warning, so the level decides severity rather than the check that found it.">Level:</strong> SHOULD
+- <strong title="Who the requirement binds: a document, an implementation of OO-LD, or nobody in particular. This decides what is even able to enforce it.">Applies to:</strong> <span title="Checkable by validating a schema or instance document">document</span>
+- <strong title="Whether a validator could decide this rule by inspecting a document. It does not say the OO-LD validator enforces it today - oold rules list --unchecked reports that.">Machine-checkable:</strong> no
+- <strong title="The specification release this rule first appeared in. Ids are permanent and never reused, so this does not change once recorded.">Since:</strong> 1.0.0-rc.1
+
+A published reference should point at a target that validates against the property's declared range.
+
+A published reference SHOULD point at a target that validates against the property's declared range.
+
+??? quote "In context"
+
+    An `x-oold-range` value is a reference: the property holds the target's IRI, and an OO-LD-aware loader MAY dereference that IRI to obtain the target document itself, so a large or shared object can live in a separate document and be pulled in on demand (data bundling). A published reference SHOULD point at a target that validates against the property's declared range. A loader that dereferences a target MUST validate it against that range before treating it as a member, and MUST NOT assume the target conforms, since the target is a separate document that may change independently of the reference. This holds whether the reference is written as a bare IRI string or as a `{ "@id": … }` object; generic tooling leaves it unresolved, exactly as it leaves `x-oold-ref` (see [why-x-oold-ref](spec/#why-x-oold-ref)).
+
+See [this rule in the specification](spec/#OOLD-EXT-ece0) (section: range-of-properties).
+
 ### OOLD-EXT-ef09
 
 - <strong title="The RFC 2119 keyword this requirement is stated with. A validator reports a MUST-level finding as a failure and a SHOULD-level one as a warning, so the level decides severity rather than the check that found it.">Level:</strong> MUST
@@ -1044,3 +1112,20 @@ Their value MUST be an object whose keys are [BCP 47](https://www.rfc-editor.org
     The JSON Schema annotation keywords `title` and `description` carry a single, default human-readable string used by tooling (for example for UI generation). To provide localized variants, OO-LD adds the keywords `x-oold-multilang-title` and `x-oold-multilang-description`. Their value MUST be an object whose keys are [BCP 47](https://www.rfc-editor.org/info/bcp47) language tags (e.g. `en`, `de`, `en-GB`) and whose values are the translated strings. A schema SHOULD still provide a default `title` / `description`; a consumer that has no entry for the requested language falls back to that default. These keywords localize the schema's own labels and are not interpreted as JSON-LD.
 
 See [this rule in the specification](spec/#OOLD-EXT-ef09) (section: localizing-schema-annotations).
+
+### OOLD-EXT-fdd8
+
+- <strong title="The RFC 2119 keyword this requirement is stated with. A validator reports a MUST-level finding as a failure and a SHOULD-level one as a warning, so the level decides severity rather than the check that found it.">Level:</strong> SHOULD
+- <strong title="Who the requirement binds: a document, an implementation of OO-LD, or nobody in particular. This decides what is even able to enforce it.">Applies to:</strong> <span title="Checkable by validating a schema or instance document">document</span>
+- <strong title="Whether a validator could decide this rule by inspecting a document. It does not say the OO-LD validator enforces it today - oold rules list --unchecked reports that.">Machine-checkable:</strong> yes
+- <strong title="The specification release this rule first appeared in. Ids are permanent and never reused, so this does not change once recorded.">Since:</strong> 1.0.0-rc.1
+
+A property coerced @type @vocab should constrain its values with an enum or x-oold-range.
+
+A property coerced `"@type": "@vocab"` therefore SHOULD constrain its values with an `enum` of the value terms (optionally named with `x-enum-varnames`) or with `x-oold-range`, so only intended individuals are accepted.
+
+??? quote "In context"
+
+    Because `@vocab` expands an unmatched string against the vocabulary - concatenating it onto the default vocabulary base when one is set (minting a new IRI), or leaving it a relative IRI when none is - a typo silently becomes a stray IRI rather than an error. A property coerced `"@type": "@vocab"` therefore SHOULD constrain its values with an `enum` of the value terms (optionally named with `x-enum-varnames`) or with `x-oold-range`, so only intended individuals are accepted. The value terms SHOULD also be kept from colliding with JSON-LD keyword aliases (`id`, `type`) or other context terms, since a value term shares the context's global term namespace - a term added for a value would otherwise also rewrite a property or keyword of the same name. Confining the value terms to the property's own scoped `@context` keeps them out of that shared namespace, since they then resolve only for that property's values; naming them with opaque identifiers such as UUIDs avoids the clash where readability is not required.
+
+See [this rule in the specification](spec/#OOLD-EXT-fdd8) (section: value-term-aliases).
