@@ -57,6 +57,23 @@ A YAML document outside this subset, including one relying on the features YAML-
 
 See [this rule in the specification](spec/#OOLD-CNF-22d3) (section: notation).
 
+### OOLD-CNF-d71d
+
+- <strong title="The RFC 2119 keyword this requirement is stated with. A validator reports a MUST-level finding as a failure and a SHOULD-level one as a warning, so the level decides severity rather than the check that found it.">Level:</strong> MUST
+- <strong title="Who the requirement binds: a document, an implementation of OO-LD, or nobody in particular. This decides what is even able to enforce it.">Applies to:</strong> <span title="Checkable by validating a schema or instance document">document</span>
+- <strong title="Whether a validator could decide this rule by inspecting a document. It does not say the OO-LD validator enforces it today - oold rules list --unchecked reports that.">Machine-checkable:</strong> no
+- <strong title="The specification release this rule first appeared in. Ids are permanent and never reused, so this does not change once recorded.">Since:</strong> 1.0.0-rc.1
+
+Where a YAML form and its canonical JSON disagree, the JSON form is authoritative.
+
+Where the two forms disagree, the JSON form MUST be treated as authoritative.
+
+??? quote "In context"
+
+    Authors using YAML should be aware that YAML comments and implicit type coercions (for example the strings `NO` or `1.10` read as a boolean or a truncated number by some parsers) do not survive conversion to the canonical JSON. Where the two forms disagree, the JSON form MUST be treated as authoritative. Examples in this specification are shown as JSON, with an equivalent YAML rendering available under "View as YAML".
+
+See [this rule in the specification](spec/#OOLD-CNF-d71d) (section: notation).
+
 ## SCH - Schema well-formedness and the meta-schema
 
 ### OOLD-SCH-a9ee
@@ -380,6 +397,10 @@ Instances should reference a versioned schema URL.
 
 Instances SHOULD use a versioned schema URL so that it is unambiguous which schema version they conform to.
 
+??? quote "In context"
+
+    The two SHOULD point at the same schema URL, so that the context an instance is read with and the schema it is validated against are the same document. Instances SHOULD use a versioned schema URL so that it is unambiguous which schema version they conform to.
+
 See [this rule in the specification](spec/#OOLD-INS-9416) (section: schema-instances).
 
 ### OOLD-INS-ba9e
@@ -394,6 +415,23 @@ A schema closing its objects must still permit the $schema and @context members.
 Because an instance carries `$schema` and `@context` as ordinary members, an OO-LD schema that closes its objects with `additionalProperties: false` or `unevaluatedProperties: false` MUST permit these two members, or conforming instances would fail validation.
 
 See [this rule in the specification](spec/#OOLD-INS-ba9e) (section: referencing-schema).
+
+### OOLD-INS-cb1a
+
+- <strong title="The RFC 2119 keyword this requirement is stated with. A validator reports a MUST-level finding as a failure and a SHOULD-level one as a warning, so the level decides severity rather than the check that found it.">Level:</strong> SHOULD
+- <strong title="Who the requirement binds: a document, an implementation of OO-LD, or nobody in particular. This decides what is even able to enforce it.">Applies to:</strong> <span title="Checkable by validating a schema or instance document">document</span>
+- <strong title="Whether a validator could decide this rule by inspecting a document. It does not say the OO-LD validator enforces it today - oold rules list --unchecked reports that.">Machine-checkable:</strong> yes
+- <strong title="The specification release this rule first appeared in. Ids are permanent and never reused, so this does not change once recorded.">Since:</strong> 1.0.0-rc.1
+
+An instance's @context and $schema should point at the same schema URL.
+
+The two SHOULD point at the same schema URL, so that the context an instance is read with and the schema it is validated against are the same document.
+
+??? quote "In context"
+
+    The two SHOULD point at the same schema URL, so that the context an instance is read with and the schema it is validated against are the same document. Instances SHOULD use a versioned schema URL so that it is unambiguous which schema version they conform to.
+
+See [this rule in the specification](spec/#OOLD-INS-cb1a) (section: schema-instances).
 
 ### OOLD-INS-cd80
 

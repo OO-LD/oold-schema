@@ -83,7 +83,7 @@ This single model governs every place OO-LD collapses composition into a resolve
 
 ### Closing composed objects {#closing-composed-objects .informative}
 
-Because `allOf` composition is conjunctive, `additionalProperties: false` on one subschema rejects the members that the other composed subschemas contribute, so it cannot close a composed object. To close such an object - rejecting members that no composed subschema declares - use `unevaluatedProperties: false` ([[JSONSCHEMA]] §11.3), which is evaluated after the `allOf` branches and therefore accounts for their properties. A schema closed this way should still allow the instance-level `$schema` and `@context` members (see [](#schema-instances)).
+Because `allOf` composition is conjunctive, `additionalProperties: false` on one subschema rejects the members that the other composed subschemas contribute, so it cannot close a composed object. To close such an object - rejecting members that no composed subschema declares - use `unevaluatedProperties: false` ([[JSONSCHEMA]] §11.3), which is evaluated after the `allOf` branches and therefore accounts for their properties. Note that [](#schema-instances) requires such a schema to still permit the instance-level `$schema` and `@context` members.
 
 :::example{title="Closing an inherited object with `unevaluatedProperties`"}
 ```json

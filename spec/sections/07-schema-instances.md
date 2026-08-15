@@ -1,6 +1,6 @@
 ## Schema Instances {#schema-instances}
 
-An [=OO-LD instance=] is a JSON document that conforms to an [=OO-LD schema=]. It references that schema in two ways, both pointing at the same (preferably versioned) schema URL:
+An [=OO-LD instance=] is a JSON document that conforms to an [=OO-LD schema=]. It references that schema in two ways:
 
 - `@context` - the schema URL, loaded as a JSON-LD remote context. This is what makes the instance a JSON-LD document.
 - `$schema` - the schema URL, identifying the schema the instance is intended to validate against.
@@ -14,7 +14,7 @@ An [=OO-LD instance=] is a JSON document that conforms to an [=OO-LD schema=]. I
 ```
 :::
 
-:rule[OOLD-INS-9416]{applies=document summary="Instances should reference a versioned schema URL."}Instances SHOULD use a versioned schema URL so that it is unambiguous which schema version they conform to.
+:rule[OOLD-INS-cb1a]{applies=document level=SHOULD summary="An instance's @context and $schema should point at the same schema URL."}The two SHOULD point at the same schema URL, so that the context an instance is read with and the schema it is validated against are the same document. :rule[OOLD-INS-9416]{applies=document summary="Instances should reference a versioned schema URL."}Instances SHOULD use a versioned schema URL so that it is unambiguous which schema version they conform to.
 
 ### Referencing the schema with `$schema` {#referencing-schema}
 
