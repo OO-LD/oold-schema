@@ -184,47 +184,61 @@ def split_sentences(text: str) -> list[str]:
 
 
 def report_unclaimed(rules: list[dict]) -> None:
-    """Warn about normative sentences sitting in a marked block that no rule identifies.
+    """Warn about normative sentences in the specification that no rule identifies.
 
     Scoping a rule to its sentence made a gap visible that paragraph scope had hidden: a block
     can state several requirements while only one carries a marker, and the others then look
     covered because they sat inside the marked paragraph's text. Six such sentences existed the
     first time this ran.
 
+    Every normative line is scanned, not only the lines a marker already sits on. Restricting
+    the scan to marked blocks meant an RFC 2119 sentence in a block nobody had marked at all was
+    invisible here - the one case where nothing else would catch it either, since a rule that
+    does not exist cannot fail a guard.
+
     A warning, not a failure, deliberately. The specification is edited in passes, and a MUST
     written now with its id minted in the next commit must not block the build in between. This
     mirrors `coverage.rules` downstream, which warns for the same reason.
     """
-    blocks: dict[tuple[str, str], list[dict]] = {}
     #: Claims are collected per file rather than per block, because contexts overlap: a rule
     #: whose lead-in ends in a colon takes in the list below it, and a rule marked on one of
     #: those list items is a block of its own. Matching only within a block reported such a
     #: sentence as unclaimed while the rule claiming it sat right there.
     claimed_in: dict[str, list[str]] = {}
     for rule in rules:
-        source = rule["source"].split(":")[0]
-        blocks.setdefault((source, rule.get("context") or rule["text"]), []).append(rule)
-        claimed_in.setdefault(source, []).append(rule["text"])
+        claimed_in.setdefault(rule["source"].split(":")[0], []).append(rule["text"])
 
     unclaimed: list[str] = []
-    for (source, context), group in sorted(blocks.items()):
-        claimed = claimed_in[source]
-        # List items are judged one by one during extraction, where their structure is still
-        # visible; collapsing them into sentences here would report the same thing twice, and
-        # a lead-in merged with its first item reads as one sentence that "contains" the
-        # lead-in's own text and so looks claimed when it is not.
-        prose = " ".join(part for part in context.splitlines() if not LIST_ITEM.match(part))
-        for sentence in split_sentences(prose):
-            keyword = RFC2119.search(sentence)
-            if not keyword:
+    for filename in sorted(os.listdir(SECTIONS_DIR)):
+        if not filename.endswith(".md"):
+            continue
+        with open(os.path.join(SECTIONS_DIR, filename), encoding="utf-8") as handle:
+            lines = handle.read().split("\n")
+        informative = non_normative_blocks(lines)
+        claimed = claimed_in.get(filename, [])
+        fenced = False
+        for number, line in enumerate(lines):
+            if line.lstrip().startswith("```"):
+                fenced = not fenced
                 continue
-            if any(sentence in text or text in sentence for text in claimed if text):
+            # The house style is one line per paragraph, so a line is a block and its number is
+            # the one to report - which is also why the boundary search never crosses lines.
+            if fenced or number in informative or line.startswith("#") or not line.strip():
                 continue
-            where = f"{source}:{group[0]['source'].split(':')[1]}"
-            unclaimed.append(f"{where} [{keyword.group(1)}] {sentence[:110]}")
+            # The sentence that defines the key words is not itself a requirement.
+            if "[[!RFC2119]]" in line:
+                continue
+            prose = clean_text(LIST_ITEM.sub("", RULE.sub("", line), count=1))
+            for sentence in split_sentences(prose):
+                keyword = RFC2119.search(sentence)
+                if not keyword:
+                    continue
+                if any(sentence in text or text in sentence for text in claimed if text):
+                    continue
+                unclaimed.append(f"{filename}:{number + 1} [{keyword.group(1)}] {sentence[:110]}")
 
     if unclaimed:
-        print(f"WARN {len(unclaimed)} normative sentence(s) in a marked block carry no rule id:", file=sys.stderr)
+        print(f"WARN {len(unclaimed)} normative sentence(s) carry no rule id:", file=sys.stderr)
         for line in unclaimed:
             print(f"       {line}", file=sys.stderr)
         print("     Mark each with :rule[OOLD-<AREA>-?]{...} and run `make rules-mint`.", file=sys.stderr)
