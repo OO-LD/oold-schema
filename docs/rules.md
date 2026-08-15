@@ -40,6 +40,23 @@ JSON (RFC8259) is the canonical serialization: a conforming OO-LD schema or inst
 
 See [this rule in the specification](spec/#OOLD-CNF-1120) (section: notation).
 
+### OOLD-CNF-22d3
+
+- <strong title="The RFC 2119 keyword this requirement is stated with. A validator reports a MUST-level finding as a failure and a SHOULD-level one as a warning, so the level decides severity rather than the check that found it.">Level:</strong> MUST NOT
+- <strong title="Who the requirement binds: a document, an implementation of OO-LD, or nobody in particular. This decides what is even able to enforce it.">Applies to:</strong> <span title="Checkable by validating a schema or instance document">document</span>
+- <strong title="Whether a validator could decide this rule by inspecting a document. It does not say the OO-LD validator enforces it today - oold rules list --unchecked reports that.">Machine-checkable:</strong> yes
+- <strong title="The specification release this rule first appeared in. Ids are permanent and never reused, so this does not change once recorded.">Since:</strong> 1.0.0-rc.1
+
+A YAML serialization outside the JSON-compatible subset is not a conforming OO-LD serialization.
+
+A YAML document outside this subset, including one relying on the features YAML-LD admits only in its Extended profile, MUST NOT be treated as a conforming OO-LD serialization.
+
+??? quote "In context"
+
+    A document MAY additionally be authored or served as YAML, provided it stays within the JSON-compatible subset of [YAML 1.2](https://yaml.org/spec/1.2.2/): no tags, anchors, aliases, or merge keys; a single document; and no implicit typing beyond what JSON expresses. Within this subset - which coincides with the Basic profile of [YAML-LD](https://github.com/w3c/yaml-ld) - a YAML document maps one-to-one onto the JSON data model and converts to the canonical JSON without loss. A YAML document outside this subset, including one relying on the features YAML-LD admits only in its Extended profile, MUST NOT be treated as a conforming OO-LD serialization.
+
+See [this rule in the specification](spec/#OOLD-CNF-22d3) (section: notation).
+
 ## SCH - Schema well-formedness and the meta-schema
 
 ### OOLD-SCH-a9ee
@@ -112,6 +129,25 @@ Relative references resolve against the schema's `$id` (the JSON Schema base URI
     Independent references and base URIs. A JSON Schema `$ref` and a JSON-LD `@context` entry are independent references: they MAY point to the same document (the typical OO-LD case, where one document is both a schema and a context) or to different documents - for example a plain JSON Schema referenced via `$ref` together with a separate remote `@context` that supplies the semantics. Relative references resolve against the schema's `$id` (the JSON Schema base URI) and, on the JSON-LD side, against `@base` / the retrieval URL; these base URIs SHOULD be aligned so a relative reference resolves to the same absolute URL under both. `$id` MUST NOT contain a non-empty fragment (JSONSCHEMA §8.2.1).
 
 See [this rule in the specification](spec/#OOLD-CMP-53bf) (section: merging-remote-contexts).
+
+### OOLD-CMP-6d7b
+
+- <strong title="The RFC 2119 keyword this requirement is stated with. A validator reports a MUST-level finding as a failure and a SHOULD-level one as a warning, so the level decides severity rather than the check that found it.">Level:</strong> MUST
+- <strong title="Who the requirement binds: a document, an implementation of OO-LD, or nobody in particular. This decides what is even able to enforce it.">Applies to:</strong> <span title="Checkable by validating a schema or instance document">document</span>
+- <strong title="Whether a validator could decide this rule by inspecting a document. It does not say the OO-LD validator enforces it today - oold rules list --unchecked reports that.">Machine-checkable:</strong> yes
+- <strong title="The specification release this rule first appeared in. Ids are permanent and never reused, so this does not change once recorded.">Since:</strong> 1.0.0-rc.1
+
+Branch-specific mappings for the same keyword must be scoped rather than placed at the root.
+
+Where branches genuinely need different mappings for the same keyword, those mappings MUST be scoped with JSON-LD scoped contexts so each applies only where its branch applies, rather than placed at the root, since colliding root mappings are resolved by context order instead of by the branch the data conforms to: Type-scoped contexts when the branches are distinguished by `@type`. The
+
+??? quote "In context"
+
+    Where branches genuinely need different mappings for the same keyword, those mappings MUST be scoped with JSON-LD scoped contexts so each applies only where its branch applies, rather than placed at the root, since colliding root mappings are resolved by context order instead of by the branch the data conforms to:
+
+    - Type-scoped contexts when the branches are distinguished by `@type`. The
+
+See [this rule in the specification](spec/#OOLD-CMP-6d7b) (section: merging-remote-contexts).
 
 ### OOLD-CMP-a05a
 
@@ -299,6 +335,23 @@ If an inline `type` is present it MUST be consistent with the schema's `x-oold-i
 
 See [this rule in the specification](spec/#OOLD-INS-4b5c) (section: semantic-type).
 
+### OOLD-INS-559f
+
+- <strong title="The RFC 2119 keyword this requirement is stated with. A validator reports a MUST-level finding as a failure and a SHOULD-level one as a warning, so the level decides severity rather than the check that found it.">Level:</strong> MUST
+- <strong title="Who the requirement binds: a document, an implementation of OO-LD, or nobody in particular. This decides what is even able to enforce it.">Applies to:</strong> <span title="Checkable by validating a schema or instance document">document</span>
+- <strong title="Whether a validator could decide this rule by inspecting a document. It does not say the OO-LD validator enforces it today - oold rules list --unchecked reports that.">Machine-checkable:</strong> yes
+- <strong title="The specification release this rule first appeared in. Ids are permanent and never reused, so this does not change once recorded.">Since:</strong> 1.0.0-rc.1
+
+The nearest x-oold-instance-rdf-type declaration in an allOf chain replaces a base class's value rather than appending to it.
+
+The nearest declaration in the `allOf` chain is authoritative and MUST replace a base class's value rather than append to it.
+
+??? quote "In context"
+
+    Under composition, `x-oold-instance-rdf-type` follows the same most-derived-wins rule as the rest of the schema (see [composition](spec/#composition)). The nearest declaration in the `allOf` chain is authoritative and MUST replace a base class's value rather than append to it. Superclass types are recoverable by ontology inference (`rdfs:subClassOf`) and so need not be materialized; a schema that wants a supertype carried in the data lists it explicitly (e.g. `["schema:Researcher", "schema:Person"]`).
+
+See [this rule in the specification](spec/#OOLD-INS-559f) (section: semantic-type).
+
 ### OOLD-INS-75c6
 
 - <strong title="The RFC 2119 keyword this requirement is stated with. A validator reports a MUST-level finding as a failure and a SHOULD-level one as a warning, so the level decides severity rather than the check that found it.">Level:</strong> MUST
@@ -408,9 +461,62 @@ Because the reconstruction MUST re-validate, a property that is strictly an arra
 ??? quote "In context"
 
 
-    - Multi-valued properties are set-valued in RDF: order is not preserved, duplicates are removed, and a single value compacts to a scalar. Because the reconstruction MUST re-validate, a property that is strictly an array (JSON Schema `type: "array"`) MUST declare `@container: "@set"` (or `"@list"`): without it a single-element array returns as a scalar and violates the `array` type. A property that also permits a scalar (an `anyOf`/`oneOf` of a literal and an array) MAY declare it for a stable array shape, but need not - the scalar form still validates, and a single value and a one-element array are JSON-LD-equivalent. Round-trip equality is set equality; use `@list` only where order is significant, at the cost of merge and query ergonomics.
+    - Multi-valued properties are set-valued in RDF: order is not preserved, duplicates are removed, and a single value compacts to a scalar. Because the reconstruction MUST re-validate, a property that is strictly an array (JSON Schema `type: "array"`) MUST declare `@container: "@set"` (or `"@list"`): without it a single-element array returns as a scalar and violates the `array` type. A property that also permits a scalar (an `anyOf`/`oneOf` of a literal and an array) MAY declare it for a stable array shape, but need not - the scalar form still validates, and a single value and a one-element array are JSON-LD-equivalent. Round-trip equality is set equality. A property SHOULD NOT declare `@list` unless the order of its values is significant, since ordering costs merge and query ergonomics.
 
 See [this rule in the specification](spec/#OOLD-RT-08f2) (section: round-trip).
+
+### OOLD-RT-2028
+
+- <strong title="The RFC 2119 keyword this requirement is stated with. A validator reports a MUST-level finding as a failure and a SHOULD-level one as a warning, so the level decides severity rather than the check that found it.">Level:</strong> SHOULD NOT
+- <strong title="Who the requirement binds: a document, an implementation of OO-LD, or nobody in particular. This decides what is even able to enforce it.">Applies to:</strong> <span title="Checkable by validating a schema or instance document">document</span>
+- <strong title="Whether a validator could decide this rule by inspecting a document. It does not say the OO-LD validator enforces it today - oold rules list --unchecked reports that.">Machine-checkable:</strong> yes
+- <strong title="The specification release this rule first appeared in. Ids are permanent and never reused, so this does not change once recorded.">Since:</strong> 1.0.0-rc.1
+
+A property should not declare @list unless the order of its values is significant.
+
+A property SHOULD NOT declare `@list` unless the order of its values is significant, since ordering costs merge and query ergonomics.
+
+??? quote "In context"
+
+
+    - Multi-valued properties are set-valued in RDF: order is not preserved, duplicates are removed, and a single value compacts to a scalar. Because the reconstruction MUST re-validate, a property that is strictly an array (JSON Schema `type: "array"`) MUST declare `@container: "@set"` (or `"@list"`): without it a single-element array returns as a scalar and violates the `array` type. A property that also permits a scalar (an `anyOf`/`oneOf` of a literal and an array) MAY declare it for a stable array shape, but need not - the scalar form still validates, and a single value and a one-element array are JSON-LD-equivalent. Round-trip equality is set equality. A property SHOULD NOT declare `@list` unless the order of its values is significant, since ordering costs merge and query ergonomics.
+
+See [this rule in the specification](spec/#OOLD-RT-2028) (section: round-trip).
+
+### OOLD-RT-a12c
+
+- <strong title="The RFC 2119 keyword this requirement is stated with. A validator reports a MUST-level finding as a failure and a SHOULD-level one as a warning, so the level decides severity rather than the check that found it.">Level:</strong> MUST
+- <strong title="Who the requirement binds: a document, an implementation of OO-LD, or nobody in particular. This decides what is even able to enforce it.">Applies to:</strong> <span title="Checkable by validating a schema or instance document">document</span>
+- <strong title="Whether a validator could decide this rule by inspecting a document. It does not say the OO-LD validator enforces it today - oold rules list --unchecked reports that.">Machine-checkable:</strong> yes
+- <strong title="The specification release this rule first appeared in. Ids are permanent and never reused, so this does not change once recorded.">Since:</strong> 1.0.0-rc.1
+
+An embedded object must carry an explicit type where the scoped context is type-scoped or the reconstruction frame matches on @type.
+
+The embedded object MUST carry an explicit `type` where the property's scoped `@context` is type-scoped - keyed by the value's `@type` to distinguish several embedded types (or to stamp the node's `rdf:type`) - or where the frame used to reconstruct it matches on `@type`, as a frame derived from the schema's class type does (see [framing](spec/#framing)).
+
+??? quote "In context"
+
+
+    - Embedded objects are flattened in RDF, and compaction does not re-nest a flat graph, so reconstructing the tree requires [Framing](spec/#framing) - the frame can be as small as `{ "<property>": {} }`. The embedded object MUST carry an explicit `type` where the property's scoped `@context` is type-scoped - keyed by the value's `@type` to distinguish several embedded types (or to stamp the node's `rdf:type`) - or where the frame used to reconstruct it matches on `@type`, as a frame derived from the schema's class type does (see [framing](spec/#framing)). A flat scoped context reconstructed through a property-matching frame needs none. Where required, tooling materializes the type on export (see [semantic-type](spec/#semantic-type)).
+
+See [this rule in the specification](spec/#OOLD-RT-a12c) (section: round-trip).
+
+### OOLD-RT-ad63
+
+- <strong title="The RFC 2119 keyword this requirement is stated with. A validator reports a MUST-level finding as a failure and a SHOULD-level one as a warning, so the level decides severity rather than the check that found it.">Level:</strong> SHOULD NOT
+- <strong title="Who the requirement binds: a document, an implementation of OO-LD, or nobody in particular. This decides what is even able to enforce it.">Applies to:</strong> <span title="Checkable by validating a schema or instance document">document</span>
+- <strong title="Whether a validator could decide this rule by inspecting a document. It does not say the OO-LD validator enforces it today - oold rules list --unchecked reports that.">Machine-checkable:</strong> yes
+- <strong title="The specification release this rule first appeared in. Ids are permanent and never reused, so this does not change once recorded.">Since:</strong> 1.0.0-rc.1
+
+A numeric property should not be coerced to a narrower datatype unless the exact RDF datatype matters.
+
+A numeric property SHOULD NOT be coerced to a narrower datatype, and its values SHOULD be left as native JSON numbers, unless the exact RDF datatype matters.
+
+??? quote "In context"
+
+    Datatypes JSON-LD does not produce by default are the ones to declare with `@type`: the date/time family (`xsd:date`, `xsd:dateTime`, `xsd:time`, `xsd:duration`), `xsd:anyURI`, and every numeric refinement outside the two native ones (`xsd:float`, `xsd:decimal`, `xsd:long`, `xsd:int`, `xsd:unsignedByte`, ...). These stay explicit on the literal through the round-trip and compact back onto the term, but JSON has no native syntax for them, so their value is carried as a JSON string. The consequence is worth stating plainly: a JSON-native number can only ever be `xsd:integer` or `xsd:double`; any narrower or more specific numeric datatype is reached by writing the value as a string under an `@type` coercion (a bare JSON number under, say, `@type: "xsd:float"` keeps the term but comes back as its canonical string form). A numeric property SHOULD NOT be coerced to a narrower datatype, and its values SHOULD be left as native JSON numbers, unless the exact RDF datatype matters.
+
+See [this rule in the specification](spec/#OOLD-RT-ad63) (section: value-forms).
 
 ### OOLD-RT-d376
 
@@ -606,6 +712,23 @@ See [this rule in the specification](spec/#OOLD-VER-edb9) (section: identificati
 
 ## EXT - Standard extensions (JSON-LD and JSON Schema)
 
+### OOLD-EXT-1dc8
+
+- <strong title="The RFC 2119 keyword this requirement is stated with. A validator reports a MUST-level finding as a failure and a SHOULD-level one as a warning, so the level decides severity rather than the check that found it.">Level:</strong> MUST NOT
+- <strong title="Who the requirement binds: a document, an implementation of OO-LD, or nobody in particular. This decides what is even able to enforce it.">Applies to:</strong> <span title="Checkable by validating a schema or instance document">document</span>
+- <strong title="Whether a validator could decide this rule by inspecting a document. It does not say the OO-LD validator enforces it today - oold rules list --unchecked reports that.">Machine-checkable:</strong> yes
+- <strong title="The specification release this rule first appeared in. Ids are permanent and never reused, so this does not change once recorded.">Since:</strong> 1.0.0-rc.1
+
+A predicate_id must not be a bare local name.
+
+A bare local name (`exactMatch`) MUST NOT be used as a `predicate_id`.
+
+??? quote "In context"
+
+    `predicate_id` is a [SKOS](https://www.w3.org/TR/skos-reference/) mapping predicate - `skos:exactMatch` (the default when the slot is absent), `skos:closeMatch`, `skos:broadMatch`, `skos:narrowMatch` or `skos:relatedMatch` - relating the term's primary IRI (subject) to the synonym IRI (object); it decides which entries denote equivalence. It MUST be written as a full IRI or a CURIE and compared by expansion to an absolute IRI, the same rule the synonym keys follow, so `skos:exactMatch` and `http://www.w3.org/2004/02/skos/core#exactMatch` are one predicate. `x-oold-context` is a schema-level keyword consumed by OO-LD processors (it is promoted into a clean `@context` before any generic JSON-LD processor runs), so its CURIEs - the synonym keys and the `predicate_id` / `mapping_set_id` values alike - are expanded not against the instance `@context` but against a fixed well-known prefix set the meta-schema defines (`skos`, `rdfs`, `owl`, `xsd`, `sssom`), reached through the schema's `$schema`. The contract therefore holds without the author redeclaring those prefixes in the data context. A bare local name (`exactMatch`) MUST NOT be used as a `predicate_id`.
+
+See [this rule in the specification](spec/#OOLD-EXT-1dc8) (section: synonyms).
+
 ### OOLD-EXT-1f92
 
 - <strong title="The RFC 2119 keyword this requirement is stated with. A validator reports a MUST-level finding as a failure and a SHOULD-level one as a warning, so the level decides severity rather than the check that found it.">Level:</strong> RECOMMENDED
@@ -679,6 +802,23 @@ For OpenAPI 3.0, which rejects unprefixed keywords in a Schema Object (and typic
 
 See [this rule in the specification](spec/#OOLD-EXT-436a) (section: semantic-delivery).
 
+### OOLD-EXT-4966
+
+- <strong title="The RFC 2119 keyword this requirement is stated with. A validator reports a MUST-level finding as a failure and a SHOULD-level one as a warning, so the level decides severity rather than the check that found it.">Level:</strong> MUST
+- <strong title="Who the requirement binds: a document, an implementation of OO-LD, or nobody in particular. This decides what is even able to enforce it.">Applies to:</strong> <span title="Constrains an OO-LD implementation; needs a library conformance suite">implementation</span>
+- <strong title="Whether a validator could decide this rule by inspecting a document. It does not say the OO-LD validator enforces it today - oold rules list --unchecked reports that.">Machine-checkable:</strong> no
+- <strong title="The specification release this rule first appeared in. Ids are permanent and never reused, so this does not change once recorded.">Since:</strong> 1.0.0-rc.1
+
+Promotion selects one synonym per term for the target profile, writes it as the term definition and drops the x-oold-sssom blocks.
+
+To promote `x-oold-context` into a real `@context`, a preprocessor MUST select one synonym per term for a target profile, write `{ "@id": <synonym IRI>, ...fragment without x-oold-sssom }` as that term's definition, and drop the `x-oold-sssom` blocks, so standard JSON-LD tools then run on a clean context.
+
+??? quote "In context"
+
+    Selection. To promote `x-oold-context` into a real `@context`, a preprocessor MUST select one synonym per term for a target profile, write `{ "@id": <synonym IRI>, ...fragment without x-oold-sssom }` as that term's definition, and drop the `x-oold-sssom` blocks, so standard JSON-LD tools then run on a clean context. A profile is expressed either as an ordered list of IRI namespaces (ontology-family priority - `schema:` before `bfo:` before `emmo:`) or as one or more `mapping_set_id`s (a set may span namespaces, e.g. a PMDco profile of `pmd:` plus reused `obo:` terms). A term with no synonym matching the target keeps its default `@context` IRI. Selection MUST NOT use a synonym from outside the target profile; where the profile is an ordered list, the highest-priority match wins and a lower-priority entry is selected only where no higher one matches.
+
+See [this rule in the specification](spec/#OOLD-EXT-4966) (section: synonyms).
+
 ### OOLD-EXT-5184
 
 - <strong title="The RFC 2119 keyword this requirement is stated with. A validator reports a MUST-level finding as a failure and a SHOULD-level one as a warning, so the level decides severity rather than the check that found it.">Level:</strong> SHOULD
@@ -695,6 +835,40 @@ An OO-LD schema SHOULD declare the OO-LD dialect meta-schema (which extends 2020
     OO-LD targets JSONSCHEMA (2020-12) as its normative dialect. An OO-LD schema SHOULD declare the OO-LD dialect meta-schema (which extends 2020-12) as its `$schema`, e.g. `"$schema": "https://oo-ld.org/latest/meta/oold-meta-schema.json"` - pinning a specific version (e.g. `.../0.4.0/meta/oold-meta-schema.json`) for reproducibility. Declaring the plain 2020-12 meta-schema (`https://json-schema.org/draft/2020-12/schema`) remains valid for tools that only understand standard JSON Schema.
 
 See [this rule in the specification](spec/#OOLD-EXT-5184) (section: jsonschema-extensions).
+
+### OOLD-EXT-557e
+
+- <strong title="The RFC 2119 keyword this requirement is stated with. A validator reports a MUST-level finding as a failure and a SHOULD-level one as a warning, so the level decides severity rather than the check that found it.">Level:</strong> MUST
+- <strong title="Who the requirement binds: a document, an implementation of OO-LD, or nobody in particular. This decides what is even able to enforce it.">Applies to:</strong> <span title="Constrains an OO-LD implementation; needs a library conformance suite">implementation</span>
+- <strong title="Whether a validator could decide this rule by inspecting a document. It does not say the OO-LD validator enforces it today - oold rules list --unchecked reports that.">Machine-checkable:</strong> no
+- <strong title="The specification release this rule first appeared in. Ids are permanent and never reused, so this does not change once recorded.">Since:</strong> 1.0.0-rc.1
+
+A predicate_id is written as a full IRI or CURIE and compared by expansion to an absolute IRI.
+
+It MUST be written as a full IRI or a CURIE and compared by expansion to an absolute IRI, the same rule the synonym keys follow, so `skos:exactMatch` and `http://www.w3.org/2004/02/skos/core#exactMatch` are one predicate.
+
+??? quote "In context"
+
+    `predicate_id` is a [SKOS](https://www.w3.org/TR/skos-reference/) mapping predicate - `skos:exactMatch` (the default when the slot is absent), `skos:closeMatch`, `skos:broadMatch`, `skos:narrowMatch` or `skos:relatedMatch` - relating the term's primary IRI (subject) to the synonym IRI (object); it decides which entries denote equivalence. It MUST be written as a full IRI or a CURIE and compared by expansion to an absolute IRI, the same rule the synonym keys follow, so `skos:exactMatch` and `http://www.w3.org/2004/02/skos/core#exactMatch` are one predicate. `x-oold-context` is a schema-level keyword consumed by OO-LD processors (it is promoted into a clean `@context` before any generic JSON-LD processor runs), so its CURIEs - the synonym keys and the `predicate_id` / `mapping_set_id` values alike - are expanded not against the instance `@context` but against a fixed well-known prefix set the meta-schema defines (`skos`, `rdfs`, `owl`, `xsd`, `sssom`), reached through the schema's `$schema`. The contract therefore holds without the author redeclaring those prefixes in the data context. A bare local name (`exactMatch`) MUST NOT be used as a `predicate_id`.
+
+See [this rule in the specification](spec/#OOLD-EXT-557e) (section: synonyms).
+
+### OOLD-EXT-6007
+
+- <strong title="The RFC 2119 keyword this requirement is stated with. A validator reports a MUST-level finding as a failure and a SHOULD-level one as a warning, so the level decides severity rather than the check that found it.">Level:</strong> SHOULD
+- <strong title="Who the requirement binds: a document, an implementation of OO-LD, or nobody in particular. This decides what is even able to enforce it.">Applies to:</strong> <span title="Constrains an OO-LD implementation; needs a library conformance suite">implementation</span>
+- <strong title="Whether a validator could decide this rule by inspecting a document. It does not say the OO-LD validator enforces it today - oold rules list --unchecked reports that.">Machine-checkable:</strong> no
+- <strong title="The specification release this rule first appeared in. Ids are permanent and never reused, so this does not change once recorded.">Since:</strong> 1.0.0-rc.1
+
+An OO-LD-aware tool resolves x-oold-ref lazily and handles a cyclic reference graph by terminating rather than recursing indefinitely.
+
+An OO-LD-aware tool SHOULD resolve `x-oold-ref` lazily, and MUST handle a cyclic reference graph - terminating and returning the references it has already resolved, rather than recursing indefinitely - since the graph it opts into may be unbounded or self-referential.
+
+??? quote "In context"
+
+    `x-oold-ref` avoids this. Generic tools only follow the standard `$ref` keyword, so they leave `x-oold-ref` untouched. An OO-LD-aware tool SHOULD resolve `x-oold-ref` lazily, and MUST handle a cyclic reference graph - terminating and returning the references it has already resolved, rather than recursing indefinitely - since the graph it opts into may be unbounded or self-referential. The standard `$ref` continues to be used for ordinary schema composition (`allOf`, `properties`, `$defs`), which bundlers are expected to resolve. Because the only difference is the keyword name, the mapping is reversible: an OO-LD-aware tool can mechanically replace `x-oold-ref` with `$ref` to obtain a plain, fully-resolvable JSON Schema - the explicit opt-in to resolving the (possibly cyclic) graph.
+
+See [this rule in the specification](spec/#OOLD-EXT-6007) (section: why-x-oold-ref).
 
 ### OOLD-EXT-61aa
 
@@ -713,6 +887,23 @@ A consumer that accepts arbitrary JSON Schema keywords SHOULD receive the native
     - A consumer that accepts arbitrary JSON Schema keywords SHOULD receive the native form unchanged. This covers plain JSON Schema 2020-12 validators, OpenAPI 3.1, and - because they place no restriction on `@context` - Model Context Protocol tool schemas (`inputSchema` / `outputSchema`) as well as LLM tool-use and structured-output APIs, which carry the context through and can use it as grounding.
 
 See [this rule in the specification](spec/#OOLD-EXT-61aa) (section: semantic-delivery).
+
+### OOLD-EXT-6312
+
+- <strong title="The RFC 2119 keyword this requirement is stated with. A validator reports a MUST-level finding as a failure and a SHOULD-level one as a warning, so the level decides severity rather than the check that found it.">Level:</strong> MUST NOT
+- <strong title="Who the requirement binds: a document, an implementation of OO-LD, or nobody in particular. This decides what is even able to enforce it.">Applies to:</strong> <span title="Checkable by validating a schema or instance document">document</span>
+- <strong title="Whether a validator could decide this rule by inspecting a document. It does not say the OO-LD validator enforces it today - oold rules list --unchecked reports that.">Machine-checkable:</strong> yes
+- <strong title="The specification release this rule first appeared in. Ids are permanent and never reused, so this does not change once recorded.">Since:</strong> 1.0.0-rc.1
+
+The multilang keywords must not be used to localize an instance value; the standard JSON-LD mechanism is used instead.
+
+To localize a value of an instance - a translatable string in the data that should round-trip to language-tagged RDF literals - the keywords above MUST NOT be used; the standard JSON-LD mechanism MUST be used instead.
+
+??? quote "In context"
+
+    To localize a value of an instance - a translatable string in the data that should round-trip to language-tagged RDF literals - the keywords above MUST NOT be used; the standard JSON-LD mechanism MUST be used instead. There are two equivalent JSON-LD-native ways to carry such a value, both producing the same language-tagged literals.
+
+See [this rule in the specification](spec/#OOLD-EXT-6312) (section: localizing-instance-values).
 
 ### OOLD-EXT-6ea3
 
@@ -734,6 +925,57 @@ Its lexical form SHOULD be constrained with an IRI/URI-family `format` so that m
     - Stricter, ASCII only - `"format": "uri"` or `"uri-reference"`, where values are known not to use internationalized (non-ASCII) IRIs.
 
 See [this rule in the specification](spec/#OOLD-EXT-6ea3) (section: range-reference-form).
+
+### OOLD-EXT-7c5d
+
+- <strong title="The RFC 2119 keyword this requirement is stated with. A validator reports a MUST-level finding as a failure and a SHOULD-level one as a warning, so the level decides severity rather than the check that found it.">Level:</strong> MUST
+- <strong title="Who the requirement binds: a document, an implementation of OO-LD, or nobody in particular. This decides what is even able to enforce it.">Applies to:</strong> <span title="Constrains an OO-LD implementation; needs a library conformance suite">implementation</span>
+- <strong title="Whether a validator could decide this rule by inspecting a document. It does not say the OO-LD validator enforces it today - oold rules list --unchecked reports that.">Machine-checkable:</strong> no
+- <strong title="The specification release this rule first appeared in. Ids are permanent and never reused, so this does not change once recorded.">Since:</strong> 1.0.0-rc.1
+
+A conforming mapping processor reads exactly the synonym IRI, the term-definition fragment, predicate_id and mapping_set_id from an entry.
+
+A conforming OO-LD mapping processor MUST read exactly four things from each entry: the synonym IRI (the key), the promotable term-definition fragment, and two `x-oold-sssom` slots - `predicate_id` and `mapping_set_id`.
+
+??? quote "In context"
+
+    Processing contract. A conforming OO-LD mapping processor MUST read exactly four things from each entry: the synonym IRI (the key), the promotable term-definition fragment, and two `x-oold-sssom` slots - `predicate_id` and `mapping_set_id`. Conformance MUST NOT depend on anything else an entry carries (the rest of `x-oold-sssom`, any further fragment keys); a processor MAY interpret such keys as its own extension, and MUST carry them through unchanged where it rewrites an entry rather than promoting it - promotion deliberately drops the `x-oold-sssom` blocks, as Selection describes below. Those two slots, over the SKOS predicate vocabulary, are the whole stable contract an implementation depends on.
+
+See [this rule in the specification](spec/#OOLD-EXT-7c5d) (section: synonyms).
+
+### OOLD-EXT-8f62
+
+- <strong title="The RFC 2119 keyword this requirement is stated with. A validator reports a MUST-level finding as a failure and a SHOULD-level one as a warning, so the level decides severity rather than the check that found it.">Level:</strong> MUST NOT
+- <strong title="Who the requirement binds: a document, an implementation of OO-LD, or nobody in particular. This decides what is even able to enforce it.">Applies to:</strong> <span title="Constrains an OO-LD implementation; needs a library conformance suite">implementation</span>
+- <strong title="Whether a validator could decide this rule by inspecting a document. It does not say the OO-LD validator enforces it today - oold rules list --unchecked reports that.">Machine-checkable:</strong> no
+- <strong title="The specification release this rule first appeared in. Ids are permanent and never reused, so this does not change once recorded.">Since:</strong> 1.0.0-rc.1
+
+Selection must not use a synonym outside the target profile; within an ordered profile the highest-priority match wins.
+
+Selection MUST NOT use a synonym from outside the target profile; where the profile is an ordered list, the highest-priority match wins and a lower-priority entry is selected only where no higher one matches.
+
+??? quote "In context"
+
+    Selection. To promote `x-oold-context` into a real `@context`, a preprocessor MUST select one synonym per term for a target profile, write `{ "@id": <synonym IRI>, ...fragment without x-oold-sssom }` as that term's definition, and drop the `x-oold-sssom` blocks, so standard JSON-LD tools then run on a clean context. A profile is expressed either as an ordered list of IRI namespaces (ontology-family priority - `schema:` before `bfo:` before `emmo:`) or as one or more `mapping_set_id`s (a set may span namespaces, e.g. a PMDco profile of `pmd:` plus reused `obo:` terms). A term with no synonym matching the target keeps its default `@context` IRI. Selection MUST NOT use a synonym from outside the target profile; where the profile is an ordered list, the highest-priority match wins and a lower-priority entry is selected only where no higher one matches.
+
+See [this rule in the specification](spec/#OOLD-EXT-8f62) (section: synonyms).
+
+### OOLD-EXT-adcc
+
+- <strong title="The RFC 2119 keyword this requirement is stated with. A validator reports a MUST-level finding as a failure and a SHOULD-level one as a warning, so the level decides severity rather than the check that found it.">Level:</strong> MUST NOT
+- <strong title="Who the requirement binds: a document, an implementation of OO-LD, or nobody in particular. This decides what is even able to enforce it.">Applies to:</strong> <span title="Constrains an OO-LD implementation; needs a library conformance suite">implementation</span>
+- <strong title="Whether a validator could decide this rule by inspecting a document. It does not say the OO-LD validator enforces it today - oold rules list --unchecked reports that.">Machine-checkable:</strong> no
+- <strong title="The specification release this rule first appeared in. Ids are permanent and never reused, so this does not change once recorded.">Since:</strong> 1.0.0-rc.1
+
+Conformance must not depend on anything an entry carries beyond the four contract members.
+
+Conformance MUST NOT depend on anything else an entry carries (the rest of `x-oold-sssom`, any further fragment keys); a processor MAY interpret such keys as its own extension, and MUST carry them through unchanged where it rewrites an entry rather than promoting it - promotion deliberately drops the `x-oold-sssom` blocks, as Selection describes below.
+
+??? quote "In context"
+
+    Processing contract. A conforming OO-LD mapping processor MUST read exactly four things from each entry: the synonym IRI (the key), the promotable term-definition fragment, and two `x-oold-sssom` slots - `predicate_id` and `mapping_set_id`. Conformance MUST NOT depend on anything else an entry carries (the rest of `x-oold-sssom`, any further fragment keys); a processor MAY interpret such keys as its own extension, and MUST carry them through unchanged where it rewrites an entry rather than promoting it - promotion deliberately drops the `x-oold-sssom` blocks, as Selection describes below. Those two slots, over the SKOS predicate vocabulary, are the whole stable contract an implementation depends on.
+
+See [this rule in the specification](spec/#OOLD-EXT-adcc) (section: synonyms).
 
 ### OOLD-EXT-af50
 
