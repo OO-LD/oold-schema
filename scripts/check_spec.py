@@ -98,12 +98,10 @@ if os.path.exists(RULES_FILE):
 # happened when NOT RECOMMENDED was added to the extractor alone.
 RULES_SCHEMA_FILE = os.path.join(ROOT, "meta", "oold-rules.schema.json")
 if os.path.exists(RULES_SCHEMA_FILE):
-    sys.path.insert(0, HERE)
-    from extract_rules import RFC2119  # noqa: E402
+    from extract_rules import RFC2119_LEVELS as recognised  # noqa: E402
 
     with open(RULES_SCHEMA_FILE, encoding="utf-8") as handle:
         allowed = json.load(handle)["$defs"]["rule"]["properties"]["level"]["enum"]
-    recognised = RFC2119.pattern.split("(", 1)[1].split(")", 1)[0].split("|")
     for keyword in recognised:
         if keyword not in allowed:
             errors.append(

@@ -48,13 +48,28 @@ APPLIES = ("document", "implementation", "advisory")
 
 HEADING = re.compile(r"^\s*#{2,6}\s+.*\{[^}]*#([A-Za-z0-9_-]+)[^}]*\}\s*$")
 ATTR = re.compile(r'(\w+)\s*=\s*(?:"([^"]*)"|(\S+))')
-#: Every negated form is listed before the bare keyword it contains, so the alternation matches the
-#: longer one. `NOT RECOMMENDED` is an RFC 2119 keyword ([RFC2119] §4) like the `X NOT` forms, but
-#: negates on the left, so without its own branch the bare `RECOMMENDED` inside it would match and a
-#: prohibition would be catalogued as a recommendation.
-RFC2119 = re.compile(
-    r"\b(MUST NOT|MUST|SHALL NOT|SHALL|SHOULD NOT|SHOULD|NOT RECOMMENDED|REQUIRED|RECOMMENDED)\b"
+#: The levels a rule can be stated with, in match order: every negated form precedes the bare
+#: keyword it contains, so the alternation takes the longer one. `NOT RECOMMENDED` is an RFC 2119
+#: keyword ([RFC2119] §4) like the `X NOT` forms, but negates on the left, so without its own entry
+#: the bare `RECOMMENDED` inside it would match and a prohibition would be catalogued as a
+#: recommendation.
+#:
+#: `meta/oold-rules.schema.json` constrains `level` to this same vocabulary, and `check_spec.py`
+#: compares the two. Declared as a list rather than written straight into the pattern so that the
+#: comparison reads the vocabulary itself, not a substring of a regex.
+RFC2119_LEVELS = (
+    "MUST NOT",
+    "MUST",
+    "SHALL NOT",
+    "SHALL",
+    "SHOULD NOT",
+    "SHOULD",
+    "NOT RECOMMENDED",
+    "REQUIRED",
+    "RECOMMENDED",
 )
+
+RFC2119 = re.compile(r"\b(" + "|".join(RFC2119_LEVELS) + r")\b")
 
 LIST_ITEM = re.compile(r"^\s*(?:[-*+]|\d+\.)\s")
 
