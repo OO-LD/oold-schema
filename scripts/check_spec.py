@@ -92,6 +92,32 @@ if os.path.exists(RULES_FILE):
     with open(RULES_FILE, encoding="utf-8") as handle:
         rules = json.load(handle).get("rules", [])
 
+# The keywords extraction recognises and the levels the catalog schema admits are two lists of
+# the same thing, written in two files. When they drift, the failure lands nowhere near the
+# cause: extraction succeeds, and the catalog it wrote then fails its own schema. That is what
+# happened when NOT RECOMMENDED was added to the extractor alone.
+RULES_SCHEMA_FILE = os.path.join(ROOT, "meta", "oold-rules.schema.json")
+if os.path.exists(RULES_SCHEMA_FILE):
+    sys.path.insert(0, HERE)
+    from extract_rules import RFC2119  # noqa: E402
+
+    with open(RULES_SCHEMA_FILE, encoding="utf-8") as handle:
+        allowed = json.load(handle)["$defs"]["rule"]["properties"]["level"]["enum"]
+    recognised = RFC2119.pattern.split("(", 1)[1].split(")", 1)[0].split("|")
+    for keyword in recognised:
+        if keyword not in allowed:
+            errors.append(
+                f"extraction recognises the level {keyword!r} but meta/oold-rules.schema.json "
+                "does not admit it, so a rule stated with it would write a catalog that fails "
+                "its own schema. Add it to the level enum."
+            )
+    for keyword in allowed:
+        if keyword not in recognised:
+            errors.append(
+                f"meta/oold-rules.schema.json admits the level {keyword!r} but extraction never "
+                "produces it. Remove it from the enum, or add it to RFC2119 in extract_rules.py."
+            )
+
 #: The anchor has to sit on the marked sentence itself - a <span class="rule" id="...">
 #: emitted by render_spec.py - so that following a cited link lands on the requirement and
 #: `:target` can highlight it. class="rule" and id="..." can appear in either order on the
