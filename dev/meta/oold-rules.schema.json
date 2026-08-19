@@ -109,7 +109,8 @@
             "SHOULD",
             "SHOULD NOT",
             "REQUIRED",
-            "RECOMMENDED"
+            "RECOMMENDED",
+            "NOT RECOMMENDED"
           ],
           "description": "The RFC 2119 keyword in the marked prose. A validator reads this to decide whether a violation fails or warns, and never hardcodes it."
         },
