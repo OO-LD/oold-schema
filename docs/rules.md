@@ -76,6 +76,23 @@ See [this rule in the specification](spec/#OOLD-CNF-d71d) (section: notation).
 
 ## SCH - Schema well-formedness and the meta-schema
 
+### OOLD-SCH-2d05
+
+- <strong title="The RFC 2119 keyword this requirement is stated with. A validator reports a MUST-level finding as a failure and a SHOULD-level one as a warning, so the level decides severity rather than the check that found it.">Level:</strong> MUST NOT
+- <strong title="Who the requirement binds: a document, an implementation of OO-LD, or nobody in particular. This decides what is even able to enforce it.">Applies to:</strong> <span title="Constrains an OO-LD implementation; needs a library conformance suite">implementation</span>
+- <strong title="Whether a validator could decide this rule by inspecting a document. It does not say the OO-LD validator enforces it today - oold rules list --unchecked reports that.">Machine-checkable:</strong> no
+- <strong title="The specification release this rule first appeared in. Ids are permanent and never reused, so this does not change once recorded.">Since:</strong> 1.0.0-rc.2
+
+An unmapped term is not a conformance failure, though a tool may report it under an opt-in strict mode.
+
+An implementation MUST NOT treat an unmapped term as a conformance failure, though it MAY report one as guidance, or reject it under a strict mode the user opts into.
+
+??? quote "In context"
+
+    A term of an OO-LD schema MAY be left unmapped. An unmapped term is structurally valid and simply produces no triples under JSON-LD expansion, which is what lets semantics be added incrementally, one term at a time, rather than committed to up front. Where every term is intended to reach RDF, a schema MAY declare `@vocab` in its `@context`, mapping each otherwise-unmapped term into a default namespace, or carry the mapping in [`x-oold-context`](spec/#synonyms), whose entries are promoted into the `@context` before a JSON-LD processor runs. An implementation MUST NOT treat an unmapped term as a conformance failure, though it MAY report one as guidance, or reject it under a strict mode the user opts into.
+
+See [this rule in the specification](spec/#OOLD-SCH-2d05) (section: basic-concepts).
+
 ### OOLD-SCH-a9ee
 
 - <strong title="The RFC 2119 keyword this requirement is stated with. A validator reports a MUST-level finding as a failure and a SHOULD-level one as a warning, so the level decides severity rather than the check that found it.">Level:</strong> MUST NOT
