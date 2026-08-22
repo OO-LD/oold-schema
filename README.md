@@ -34,7 +34,7 @@ The JSON Schema part (`type`, `properties`) describes the structure; the `@conte
 The site covers the concepts and specification in an orientation-style guide with worked examples:
 
 - [Introduction](https://oo-ld.org/latest/introduction/) - what OO-LD is and why, closing with a [Get Started](https://oo-ld.org/latest/introduction/#get-started) hands-on example.
-- [Guide](https://oo-ld.org/latest/guide/) - the concepts (basics, composition, schema instances, identification & versioning, extensions, meta-schema) plus [Tooling](https://oo-ld.org/latest/tooling/), [Mappings](https://oo-ld.org/latest/mappings/), [Migration](https://oo-ld.org/latest/migration/), and [Related Work](https://oo-ld.org/latest/related-work/).
+- [Guide](https://oo-ld.org/latest/guide/) - the concepts (basics, composition, schema instances, identification & versioning, extensions, meta-schema) plus tooling, mappings, migration and related work.
 - [Use Cases](https://oo-ld.org/latest/use-cases/) and the [Rule Catalogue](https://oo-ld.org/latest/rules/).
 
 The normative, W3C-style **[Specification](https://oo-ld.org/latest/spec/)** (rendered with [ReSpec](https://respec.org/)) accompanies the guide: the guide is for learning, the specification is for conformance and citation.
