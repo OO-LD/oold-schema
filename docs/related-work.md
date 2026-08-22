@@ -1,19 +1,8 @@
-# Reference
+# Related Work
 
 This page collects informative reference material - the package registry, discussion pointers, and a comparison with related work. The normative IANA / media-type considerations, security considerations, and the bibliography are in the [Specification](spec/).
 
-## Registry
-
-- [OpenSemanticWorld Package Registry](https://github.com/OpenSemanticWorld-Packages), deployed e. g. [OpenSemanticWorld](https://opensemantic.world/)
-
-## Discussion
-
-- In the context of YAML-LD: <https://github.com/w3c/yaml-ld/issues/19>
-- The "LLM Wiki" pattern (persistent, LLM-maintained knowledge bases), and OO-LD's structured take on it: <https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f>
-
-## Related Work
-
-### Approaches to unifying structure and semantics
+## Approaches to unifying structure and semantics
 
 Keeping structure, semantics, shapes, docs and code in sync is a shared goal of many "polyglot" or "single-source" frameworks. They differ mainly on **where the single source of truth lives** and **whether a build step is required**. OO-LD's distinguishing choice is that the artefact *is* the source: one document is at the same time a valid JSON Schema and a referenceable JSON-LD remote context, with no separate modelling language and no compilation.
 
@@ -30,9 +19,9 @@ Keeping structure, semantics, shapes, docs and code in sync is a shared goal of 
 | [REST-API-LD](https://datatracker.ietf.org/doc/html/draft-polli-restapi-ld-keywords-08) | Annotate JSON Schema in place | JSON Schema / OpenAPI + `x-jsonld-*` | none | yes (context via extension keywords) | eGovernment APIs (Italy); IETF I-D |
 | [WoT JSON Schema in RDF](https://www.w3.org/2019/wot/json-schema) | Annotate JSON Schema in place | JSON Schema + instance-context | none | yes | W3C Web of Things; standards precedent |
 
-Reading: the dominant paradigm is *compile-from-a-source-language* (LinkML, SPDX 3.0, TreeLDR, yml2vocab), which accepts a bespoke source plus a build step and must then keep generated artefacts in sync. Only REST-API-LD and WoT JSON-Schema-in-RDF share OO-LD's "annotate in place, no new language" property; REST-API-LD is the closest neighbour, published as an individual IETF Internet-Draft. OCA is the opposite philosophy (decentralized overlays, not RDF-native), Semantic Treehouse is a hub rather than a language, and Croissant is a single-domain JSON-LD vocabulary with outsized adoption. The related layers OO-LD generates to - [SHACL](https://www.w3.org/TR/shacl12-core/) (logical) and OWL (conceptual) - are targets rather than competitors. Worked mappings from several of these formats to OO-LD are in [Mappings](mappings.md).
+Reading: the dominant paradigm is *compile-from-a-source-language* (LinkML, SPDX 3.0, TreeLDR, yml2vocab), which accepts a bespoke source plus a build step and must then keep generated artefacts in sync. Only REST-API-LD and WoT JSON-Schema-in-RDF share OO-LD's "annotate in place, no new language" property; REST-API-LD is the closest neighbour, published as an individual IETF Internet-Draft. OCA is the opposite philosophy (decentralized overlays, not RDF-native), Semantic Treehouse is a hub rather than a language, and Croissant is a single-domain JSON-LD vocabulary with outsized adoption. The related layers OO-LD generates to - [SHACL](https://www.w3.org/TR/shacl12-core/) (logical) and OWL (conceptual) - are targets rather than competitors. Worked mappings from several of these formats to OO-LD are in [Mappings](mappings/index.md).
 
-### Schema Overview
+## Schema Overview
 
 | Name                                                                                                     | Description                                                                                                                                                                                                                                                                                                                                               |
 | -------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -62,7 +51,7 @@ Reading: the dominant paradigm is *compile-from-a-source-language* (LinkML, SPDX
 | [Semantic Treehouse](https://www.semantic-treehouse.nl/) | TNO vocabulary-hub platform for dataspaces. Hosts and collaboratively maintains vocabularies (OWL, SHACL and, more recently, JSON Schema) rather than defining a serialization; a registry counterpart to OO-LD schemas. |
 | [WoT JSON Schema in RDF](https://www.w3.org/2019/wot/json-schema) | W3C note expressing JSON Schema as RDF and attaching a JSON-LD context to instances via `jsonld:context`. The closest standards precedent for annotating JSON Schema in place. |
 
-### Serializations and neighbouring formats
+## Serializations and neighbouring formats
 
 OO-LD interoperates with several JSON-LD serialization and data-definition formats. They operate on the serialization / wire layer, or on the structural layer that OO-LD fills with JSON Schema:
 
@@ -71,3 +60,12 @@ OO-LD interoperates with several JSON-LD serialization and data-definition forma
 | [YAML-LD](https://w3c.github.io/yaml-ld/) | A YAML serialization of JSON-LD (W3C CG) | OO-LD is serialization-agnostic; its YAML form is the JSON-compatible subset, which coincides with YAML-LD's Basic profile (lossless round-trip to JSON-LD and back). OO-LD adds no YAML-specific features. |
 | [CBOR-LD](https://w3c.github.io/cbor-ld/) | A binary (CBOR) encoding of JSON-LD (experimental) | Complementary transport, not a schema. An OO-LD instance is JSON-LD and can be CBOR-LD-encoded; its `@context` is the term dictionary the encoder's semantic compression uses. Its codecs/registries are oriented to Verifiable Credentials; see [Large and bulk data](use-cases.md#large-and-bulk-data) for the technical-data angle. |
 | [CDDL (RFC 8610)](https://www.rfc-editor.org/rfc/rfc8610.html) | A structural data-definition language for CBOR and JSON | The IETF counterpart to JSON Schema: structural only (no linked-data layer) and without JSON-Pointer / `$ref` referencing ([RFC 6901](https://www.rfc-editor.org/rfc/rfc6901.html)), offering generics and sockets/plugs instead. A CDDL rule can describe the shape of OO-LD instances; OO-LD uses JSON Schema plus JSON-LD to add the semantics CDDL does not model. |
+
+## Registry
+
+- [OpenSemanticWorld Package Registry](https://github.com/OpenSemanticWorld-Packages), deployed e. g. [OpenSemanticWorld](https://opensemantic.world/)
+
+## Discussion
+
+- In the context of YAML-LD: <https://github.com/w3c/yaml-ld/issues/19>
+- The "LLM Wiki" pattern (persistent, LLM-maintained knowledge bases), and OO-LD's structured take on it: <https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f>
