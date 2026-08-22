@@ -15,6 +15,6 @@ hide:
 
 <p class="oold-hero__text"> An OO-LD document is at once a valid JSON Schema and a JSON-LD context. Define the structure of your data and its semantics in one source, then reuse that single schema for validation, RDF generation, code generation, user interfaces, and API definitions - using the standard JSON Schema and JSON-LD tooling you already have. </p>
 
-<p class="oold-hero__actions" markdown> [Get started](get-started.md){ .md-button .md-button--primary } [Introduction](introduction.md){ .md-button } [Specification](spec/){ .md-button } </p>
+<p class="oold-hero__actions" markdown> [Introduction](introduction.md){ .md-button .md-button--primary } [Guide](guide/index.md){ .md-button } [Use Cases](use-cases.md){ .md-button } [Specification](spec/){ .md-button } </p>
 
 </div>
