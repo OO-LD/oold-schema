@@ -8,6 +8,6 @@ Reach OO-LD from where you already are. Each page below is a short orientation f
 - [From a Python dataclass](from-python.md) - round-trip with pydantic and code generation.
 - [From a legacy OpenSemanticWorld schema](from-legacy-osw.md) - the detailed keyword-by-keyword guide, backed by the [legacy keyword inventory](legacy-keyword-inventory.md).
 
-For migration from other schema languages and data models (Asset Administration Shell, SAMM, LinkML, NOMAD, DLite, ...), see [Mappings](../mappings.md); for how OO-LD compares to related work, see [Reference](../reference.md).
+For migration from other schema languages and data models (Asset Administration Shell, SAMM, LinkML, NOMAD, DLite, ...), see [Mappings](../mappings/index.md); for how OO-LD compares to related work, see [Related Work](../related-work.md).
 
-New to both JSON Schema and JSON-LD? Start with the [Introduction](../introduction.md) and [Get Started](../get-started.md) first.
+New to both JSON Schema and JSON-LD? Start with the [Introduction](../introduction.md) and its [Get Started](../introduction.md#get-started) section first.

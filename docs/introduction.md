@@ -18,7 +18,7 @@ What makes OO-LD different from other approaches that unify structure and semant
 
 > JSON, JSON Schema and JSON-LD technology stack with [OpenSemanticLab](https://github.com/OpenSemanticLab) as example document store / platform
 
-New to OO-LD? Head to [Get Started](get-started.md) for a first hands-on example, then work through the [Guide](guide/index.md).
+New to OO-LD? Head to [Get Started](#get-started) below for a first hands-on example, then work through the [Guide](guide/index.md).
 
 !!! note "Guide vs. Specification"
     This site is the didactic, example-driven **guide (primer)**. The normative, W3C-style **[Specification](spec/)** defines the conformance requirements (`MUST`/`SHOULD`) with defined terms and references. The two are cross-linked: use the guide to learn, the specification to cite.
@@ -54,7 +54,7 @@ OO-LD schema documents allow to specify all information that is needed to automa
 
 Data modelling is often described in three layers: conceptual (RDFS, OWL), logical (SHACL, ShEx) and physical (JSON Schema, XML Schema). OO-LD is a physical-layer artefact that carries enough conceptual annotation to generate the logical and conceptual layers from the same source. Rather than replacing frameworks like LinkML, SPDX or TreeLDR - which compile a bespoke source into a separate schema and context - OO-LD annotates JSON Schema in place and offers generated bridges (for example `x-jsonld-*` for OpenAPI and MCP delivery) to the forms other ecosystems expect. It therefore acts as an interlingua rather than yet another isolated syntax.
 
-A detailed comparison with related schema languages and data models (OWL, SHACL, Asset Administration Shell, SAMM, LinkML, SPDX, Croissant, dlite, NOMAD, and more) is collected in the [Reference » Related Work](reference.md#related-work) table.
+A detailed comparison with related schema languages and data models (OWL, SHACL, Asset Administration Shell, SAMM, LinkML, SPDX, Croissant, dlite, NOMAD, and more) is collected in the guide's [Related Work](related-work.md) tables.
 
 ## Getting involved
 
@@ -66,3 +66,39 @@ Questions, ideas and design discussion are welcome - for now all in the issue tr
 - **Contributions** - pull requests are welcome; for larger changes, open a `discussion` issue first.
 
 JSON Schema and JSON-LD take the same approach on their spec repos, keeping questions and proposals as labelled issues. We'll consider GitHub Discussions or a chat once demand grows.
+
+## Get Started
+
+This section walks you through the smallest possible OO-LD schema, step by step. If you are not familiar yet with [JSON Schema](https://json-schema.org/) or [JSON-LD](https://json-ld.org/), you may first want to look at dedicated tutorials like the [OSW JSON Schema Tutorial](https://opensemantic.world/wiki/Item:OSWf4a9514baed04859a4c6c374a7312f10) and the [OSW JSON-LD Tutorial](https://opensemantic.world/wiki/Item:OSW911488771ea449a6a34051f8213d7f2f).
+
+### Step 1 - Write a schema that is also a context
+
+The core idea of OO-LD is that a single document is at once a valid **JSON Schema** and a reference-able **JSON-LD remote context**. Start from a plain JSON Schema and add an `@context`:
+
+{{ example('Minimal') }}
+
+- The JSON Schema part (`type`, `properties`, …) describes the **structure** of the object.
+- The `@context` part maps the `name` property to the semantic term `schema:name`, describing its **meaning**.
+- `$id` gives the schema a stable identity and `$schema` declares the OO-LD dialect (the meta-schema).
+
+!!! note "JSON or YAML?"
+    JSON is the canonical notation for OO-LD. YAML is an equivalent, more human-friendly rendering as long as it stays within the JSON-compatible subset (no anchors, tags, or implicit typing surprises), so every example here has a **"View as YAML"** tab. See the specification's [Notation](spec/#notation) section for the normative rule.
+
+### Step 2 - Try it in the playground
+
+You can explore this exact example - validation, UI generation, and RDF output - in the [interactive playground](https://oo-ld.github.io/playground/?schema=https://oo-ld.org/latest/schemas/Minimal.schema.json). The playground otherwise opens with the richer `Person` example; every official example under [`examples/`](https://github.com/OO-LD/oold-schema/tree/main/examples) can be loaded the same way via `?schema=`.
+
+### Step 3 - Validate schemas in this repository
+
+This repository ships example schemas under [`examples/`](https://github.com/OO-LD/oold-schema/tree/main/examples) and the OO-LD meta-schema under [`meta/`](https://github.com/OO-LD/oold-schema/tree/main/meta). To validate them locally:
+
+```bash
+npm install
+npm run validate
+```
+
+### Next steps
+
+- [Basic Concepts](guide/basic-concepts.md) - how a schema doubles as a context, and how inheritance works.
+- [Composition](guide/composition.md) - assemble complex types from reusable building blocks.
+- [Schema Instances](guide/schema-instances.md) - how instance documents reference their schema and carry identity and type.

@@ -30,8 +30,8 @@ The `employee` value is a plain string; `"@type": "@id"` in the context makes it
 
 That covers the common object-modelling subset; OO-LD does not aim to express the full OWL axiom set or every SHACL constraint. For how OO-LD relates to these and other schema languages, and for worked mappings, see:
 
-- [Reference](../reference.md) - comparison with related work.
-- [Mappings](../mappings.md) - worked interoperability mappings.
+- [Related Work](../related-work.md) - comparison with related work.
+- [Mappings](../mappings/index.md) - worked interoperability mappings.
 
 ## Next steps
 

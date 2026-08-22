@@ -127,7 +127,7 @@ An LLM-maintained knowledge base only *compounds* if what accumulates is structu
 
 OO-LD gives each entry a schema-defined structured payload alongside its prose. Because an OO-LD schema is at once a JSON Schema and a JSON-LD context, the *same* schema (a) generates the human edit form, (b) constrains LLM structured-output extraction, and (c\) yields an RDF knowledge graph queryable with SPARQL across all entries - so "find contradictions, orphans or duplicates" becomes a graph query rather than a re-read.
 
-The workflow this enables, and where current research sits, is the ingest loop: take an unstructured knowledge chunk, select the schema(s) that represent it, then fill them correctly *and* deduplicate against entities that already exist. That last step - entity resolution against a live graph - is the hard part. [OpenSemanticLab](https://github.com/OpenSemanticLab) is the reference implementation of this pattern; the broader idea is discussed in the [Reference](reference.md#discussion) pointers.
+The workflow this enables, and where current research sits, is the ingest loop: take an unstructured knowledge chunk, select the schema(s) that represent it, then fill them correctly *and* deduplicate against entities that already exist. That last step - entity resolution against a live graph - is the hard part. [OpenSemanticLab](https://github.com/OpenSemanticLab) is the reference implementation of this pattern; the broader idea is discussed in the [Related Work](related-work.md#discussion) pointers.
 
 ## Large and bulk data
 
@@ -139,4 +139,4 @@ An OO-LD instance can grow large: a multi-column table or a long time series is 
 
 **External container (distribution).** For genuinely huge, homogeneous numeric bulk, store the payload in a purpose-built file (Parquet, HDF5, CSV) and keep the OO-LD instance as a lightweight descriptor: the column schema plus a typed reference (`x-oold-range` / IRI) to the file and extraction metadata (format, column-to-property mapping, units). This is the Croissant / DCAT-distribution pattern; the descriptor stays in the entity model and `@context` still gives the columns their semantics.
 
-Either way the logical OO-LD model is the same - a table is a typed object whose columns are properties - so semantics, validation and code generation are unchanged whether the bulk travels inline (CBOR) or by reference (an external file). See [Serializations and neighbouring formats](reference.md#serializations-and-neighbouring-formats).
+Either way the logical OO-LD model is the same - a table is a typed object whose columns are properties - so semantics, validation and code generation are unchanged whether the bulk travels inline (CBOR) or by reference (an external file). See [Serializations and neighbouring formats](related-work.md#serializations-and-neighbouring-formats).
