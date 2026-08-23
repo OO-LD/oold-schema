@@ -831,6 +831,23 @@ A bare local name (`exactMatch`) MUST NOT be used as a `predicate_id`.
 
 See [this rule in the specification](spec/#OOLD-EXT-1dc8) (section: synonyms).
 
+### OOLD-EXT-1e3c
+
+- <strong title="The RFC 2119 keyword this requirement is stated with. A validator reports a MUST-level finding as a failure and a SHOULD-level one as a warning, so the level decides severity rather than the check that found it.">Level:</strong> MUST
+- <strong title="Who the requirement binds: a document, an implementation of OO-LD, or nobody in particular. This decides what is even able to enforce it.">Applies to:</strong> <span title="Checkable by validating a schema or instance document">document</span>
+- <strong title="Whether a validator could decide this rule by inspecting a document. It does not say the OO-LD validator enforces it today - oold rules list --unchecked reports that.">Machine-checkable:</strong> yes
+- <strong title="The specification release this rule first appeared in. Ids are permanent and never reused, so this does not change once recorded.">Since:</strong> 1.0.0-rc.2
+
+A widget hint that is not a registered format goes in x-oold-ui-widget, leaving format for validation.
+
+A value that is not a registered format (`table`, `tabs`, `grid`, `autocomplete`, `textarea`, `checkbox`, `markdown`, `color`, ...) is widget-only and MUST be carried in `x-oold-ui-widget` rather than `format`, which stays a validation assertion: a validator that checks declared formats would otherwise reject every value of the property.
+
+??? quote "In context"
+
+    `format` carries the widget hint when its value is a registered JSON Schema 2020-12 format (`date`, `date-time`, `time`, `duration`, `email`, `uri`, `iri`, `uuid`, ...); a validator may check it and a form generator picks the matching input. A value that is not a registered format (`table`, `tabs`, `grid`, `autocomplete`, `textarea`, `checkbox`, `markdown`, `color`, ...) is widget-only and MUST be carried in `x-oold-ui-widget` rather than `format`, which stays a validation assertion: a validator that checks declared formats would otherwise reject every value of the property.
+
+See [this rule in the specification](spec/#OOLD-EXT-1e3c) (section: widget-hints).
+
 ### OOLD-EXT-1f92
 
 - <strong title="The RFC 2119 keyword this requirement is stated with. A validator reports a MUST-level finding as a failure and a SHOULD-level one as a warning, so the level decides severity rather than the check that found it.">Level:</strong> RECOMMENDED

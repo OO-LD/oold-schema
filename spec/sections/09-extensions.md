@@ -380,7 +380,7 @@ Many relations are symmetric (e.g. Organization employs Person ⇔ Person works 
 
 An OO-LD-aware implementation uses this to read and modify properties that are actually stored in another object: loading an `Organization` editor prepopulates `employees` by querying which persons work for it; storing the `Organization` writes it into each referenced person's `works_for` field; and removing a person from `employees` removes the organization from theirs.
 
-#### UI Generation {#ui-generation .informative}
+#### UI Generation {#ui-generation}
 
 OO-LD schemas double as the source for auto-generated forms and views. UI intent is carried in two layers:
 
@@ -420,7 +420,7 @@ The text-valued keywords have a `x-oold-multilang-*` variant carrying a BCP-47 l
 
 ##### Widget hints: `format` vs `x-oold-ui-widget` {#widget-hints}
 
-`format` carries the widget hint when its value is a registered JSON Schema 2020-12 format (`date`, `date-time`, `time`, `duration`, `email`, `uri`, `iri`, `uuid`, ...); a validator may check it and a form generator picks the matching input. Values that are not registered formats (`table`, `tabs`, `grid`, `autocomplete`, `textarea`, `checkbox`, `markdown`, `color`, ...) are widget-only and go in `x-oold-ui-widget`, leaving `format` for validation semantics.
+`format` carries the widget hint when its value is a registered JSON Schema 2020-12 format (`date`, `date-time`, `time`, `duration`, `email`, `uri`, `iri`, `uuid`, ...); a validator may check it and a form generator picks the matching input. :rule[OOLD-EXT-1e3c]{applies=document level=MUST summary="A widget hint that is not a registered format goes in x-oold-ui-widget, leaving format for validation."}A value that is not a registered format (`table`, `tabs`, `grid`, `autocomplete`, `textarea`, `checkbox`, `markdown`, `color`, ...) is widget-only and MUST be carried in `x-oold-ui-widget` rather than `format`, which stays a validation assertion: a validator that checks declared formats would otherwise reject every value of the property.
 
 ##### Validator vs. form widget {#validator-vs-widget .informative}
 
