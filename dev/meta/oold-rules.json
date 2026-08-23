@@ -225,7 +225,7 @@
       "machine_checkable": false,
       "since": "1.0.0-rc.1",
       "deprecated": false,
-      "source": "09-extensions.md:326"
+      "source": "09-extensions.md:343"
     },
     {
       "id": "OOLD-EXT-2542",
@@ -240,7 +240,7 @@
       "machine_checkable": true,
       "since": "1.0.0-rc.1",
       "deprecated": false,
-      "source": "09-extensions.md:335"
+      "source": "09-extensions.md:352"
     },
     {
       "id": "OOLD-EXT-2b61",
@@ -255,7 +255,7 @@
       "machine_checkable": true,
       "since": "1.0.0-rc.1",
       "deprecated": false,
-      "source": "09-extensions.md:329"
+      "source": "09-extensions.md:346"
     },
     {
       "id": "OOLD-EXT-391e",
@@ -270,7 +270,7 @@
       "machine_checkable": false,
       "since": "1.0.0-rc.1",
       "deprecated": false,
-      "source": "09-extensions.md:320"
+      "source": "09-extensions.md:337"
     },
     {
       "id": "OOLD-EXT-3fe9",
@@ -285,7 +285,7 @@
       "machine_checkable": true,
       "since": "1.0.0-rc.1",
       "deprecated": false,
-      "source": "09-extensions.md:298"
+      "source": "09-extensions.md:315"
     },
     {
       "id": "OOLD-EXT-436a",
@@ -300,7 +300,7 @@
       "machine_checkable": false,
       "since": "1.0.0-rc.1",
       "deprecated": false,
-      "source": "09-extensions.md:429"
+      "source": "09-extensions.md:446"
     },
     {
       "id": "OOLD-EXT-4966",
@@ -360,7 +360,7 @@
       "machine_checkable": false,
       "since": "1.0.0-rc.1",
       "deprecated": false,
-      "source": "09-extensions.md:341"
+      "source": "09-extensions.md:358"
     },
     {
       "id": "OOLD-EXT-61aa",
@@ -375,7 +375,7 @@
       "machine_checkable": false,
       "since": "1.0.0-rc.1",
       "deprecated": false,
-      "source": "09-extensions.md:428"
+      "source": "09-extensions.md:445"
     },
     {
       "id": "OOLD-EXT-6312",
@@ -390,7 +390,7 @@
       "machine_checkable": true,
       "since": "1.0.0-rc.1",
       "deprecated": false,
-      "source": "09-extensions.md:210"
+      "source": "09-extensions.md:227"
     },
     {
       "id": "OOLD-EXT-6ea3",
@@ -405,7 +405,7 @@
       "machine_checkable": true,
       "since": "1.0.0-rc.1",
       "deprecated": false,
-      "source": "09-extensions.md:324"
+      "source": "09-extensions.md:341"
     },
     {
       "id": "OOLD-EXT-7256",
@@ -483,6 +483,36 @@
       "source": "09-extensions.md:187"
     },
     {
+      "id": "OOLD-EXT-b23b",
+      "area": "EXT",
+      "level": "SHOULD",
+      "applies_to": "implementation",
+      "section": "enum-names",
+      "summary": "A form generator labels an option with x-oold-ui-enum-titles where the schema gives it, and may show x-enum-descriptions as further explanation.",
+      "text": "a form generator SHOULD label each option with [`x-oold-ui-enum-titles`](#ui-generation) where the schema gives it, and MAY additionally present `x-enum-descriptions` as further explanation - help text or a tooltip beside the option - rather than as the label itself.",
+      "text_sha256": "3e4db6d0120646f017b231c986401334c428bf6180dd10a230da209ecbd7f943",
+      "context": "Three keywords serve two generators. Code generation uses `x-enum-varnames` for the member name and `x-enum-descriptions` for that member's doc comment. Form generation uses a keyword of its own for the option label, [`x-oold-ui-enum-titles`](#ui-generation): a form generator SHOULD label each option with [`x-oold-ui-enum-titles`](#ui-generation) where the schema gives it, and MAY additionally present `x-enum-descriptions` as further explanation - help text or a tooltip beside the option - rather than as the label itself.",
+      "machine_checkable": false,
+      "since": "1.0.0-rc.2",
+      "deprecated": false,
+      "source": "09-extensions.md:204"
+    },
+    {
+      "id": "OOLD-EXT-b249",
+      "area": "EXT",
+      "level": "SHOULD",
+      "applies_to": "document",
+      "section": "enum-names",
+      "summary": "An enum whose values are not all valid identifiers should declare x-enum-varnames.",
+      "text": "Where any `enum` value is not a valid identifier in the target language, the schema SHOULD declare `x-enum-varnames`, because each generator otherwise applies its own mangling: the member name becomes toolchain-dependent, and two values differing only in characters the mangling strips can collapse onto a single member.",
+      "text_sha256": "48a867bb4a45f9c94cb0aa8a8cda5406c8d95c801abb2011eebfc22ababb73ad",
+      "context": "Where any `enum` value is not a valid identifier in the target language, the schema SHOULD declare `x-enum-varnames`, because each generator otherwise applies its own mangling: the member name becomes toolchain-dependent, and two values differing only in characters the mangling strips can collapse onto a single member. Where every value is already a valid identifier the keyword MAY be omitted, since a generator derives the same names from the values.",
+      "machine_checkable": true,
+      "since": "1.0.0-rc.2",
+      "deprecated": false,
+      "source": "09-extensions.md:200"
+    },
+    {
       "id": "OOLD-EXT-dd76",
       "area": "EXT",
       "level": "SHOULD",
@@ -495,7 +525,7 @@
       "machine_checkable": true,
       "since": "1.0.0-rc.1",
       "deprecated": false,
-      "source": "09-extensions.md:195"
+      "source": "09-extensions.md:212"
     },
     {
       "id": "OOLD-EXT-ddda",
@@ -525,7 +555,7 @@
       "machine_checkable": false,
       "since": "1.0.0-rc.1",
       "deprecated": false,
-      "source": "09-extensions.md:320"
+      "source": "09-extensions.md:337"
     },
     {
       "id": "OOLD-EXT-ef09",
@@ -540,7 +570,7 @@
       "machine_checkable": true,
       "since": "1.0.0-rc.1",
       "deprecated": false,
-      "source": "09-extensions.md:195"
+      "source": "09-extensions.md:212"
     },
     {
       "id": "OOLD-EXT-fdd8",
@@ -555,7 +585,7 @@
       "machine_checkable": true,
       "since": "1.0.0-rc.1",
       "deprecated": false,
-      "source": "09-extensions.md:335"
+      "source": "09-extensions.md:352"
     },
     {
       "id": "OOLD-INS-1d33",

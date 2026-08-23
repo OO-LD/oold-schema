@@ -224,6 +224,18 @@
         "type": "string"
       }
     },
+    "x-enum-varnames": {
+      "description": "Identifier-safe code names aligned positionally with `enum`, for code generation. For `enum: [\"m\", \"s\"]` the value `[\"metre\", \"second\"]` names each option (so a generator can emit `Unit.metre` instead of `Unit.m`). An established vendor extension (OpenAPI Generator; NSwag uses the camelCase `x-enumNames`). Kept as-is; distinct from the human labels in `x-oold-ui-enum-titles`.",
+      "type": "array",
+      "items": { "type": "string" },
+      "examples": [["metre", "second"]]
+    },
+    "x-enum-descriptions": {
+      "description": "Per-value descriptions aligned positionally with `enum`, the established companion of `x-enum-varnames`. For `enum: [\"m\", \"s\"]`: `[\"SI base unit of length\", \"SI base unit of time\"]`.",
+      "type": "array",
+      "items": { "type": "string" },
+      "examples": [["SI base unit of length", "SI base unit of time"]]
+    },
     "x-oold-reverse-default-properties": {
       "description": "Deprecated. Names of reverse properties shown by default in generated user interfaces. Like the object-level defaultProperties array this is extend-only under composition; prefer a per-reverse-property x-oold-ui-default-property boolean, which is overridable.",
       "deprecated": true,
