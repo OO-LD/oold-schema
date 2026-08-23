@@ -40,6 +40,7 @@ from rule_ids import AREAS, LEGACY_ID, PLACEHOLDER  # noqa: E402
 from rule_ids import MARKER as RULE  # noqa: E402
 from rule_ids import RULE_ID  # noqa: E402
 from rule_scope import sentence_end  # noqa: E402
+from section_scope import informative_lines  # noqa: E402
 
 #: Who a requirement binds. This decides what is able to enforce it: `document` rules are
 #: machine-checkable by validating a schema or instance, `implementation` rules constrain a
@@ -348,6 +349,7 @@ def extract_file(filename: str, problems: list[str], notes: list[str]) -> list[d
     rules: list[dict] = []
     section = None
     informative = non_normative_blocks(lines)
+    informative_sections = informative_lines(lines)
     for number, line in enumerate(lines):
         heading = HEADING.match(line)
         if heading:
@@ -361,6 +363,19 @@ def extract_file(filename: str, problems: list[str], notes: list[str]) -> list[d
                     f"{where}: {rule_id} is inside a :::note/:::example block, which the "
                     "conformance section declares non-normative. Move the requirement into "
                     "normative prose, or set in_note=yes if the placement is deliberate."
+                )
+                continue
+
+            # The other half of "non-normative": a section marked `.informative`. Unlike a note,
+            # there is no in_note-style escape, because the section heading already says the whole
+            # section is disclaimed - a rule there would have the catalogue assert a requirement
+            # the specification withdraws on the same page. Move the section or move the rule.
+            if number in informative_sections:
+                problems.append(
+                    f"{where}: {rule_id} is inside a section marked .informative, which the "
+                    "conformance section declares non-normative, so the catalog would state a "
+                    "requirement the specification does not. Move the requirement into a "
+                    "normative section."
                 )
                 continue
 

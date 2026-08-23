@@ -34,6 +34,7 @@ import macros  # noqa: E402  - repo-root shared macros
 import spec_config as cfg  # noqa: E402
 from rule_ids import MARKER as RULE  # noqa: E402
 from rule_scope import sentence_end  # noqa: E402
+from section_scope import is_informative  # noqa: E402
 
 SECTIONS_DIR = os.path.join(ROOT, "spec", "sections")
 OUT = os.path.join(ROOT, "docs", "spec", "index.html")
@@ -245,7 +246,7 @@ def parse_sections(text):
 
 
 def render_node(node, informative):
-    informative = informative or ("informative" in node["classes"]) or node["id"] in ("index", "introduction")
+    informative = is_informative(node["id"], node["classes"], informative)
     attrs = f' id="{node["id"]}"' if node["id"] else ""
     if node["classes"]:
         attrs += f' class="{" ".join(node["classes"])}"'
