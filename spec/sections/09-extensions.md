@@ -203,8 +203,6 @@ Neither spelling is standardized - the [OpenAPI Specification](https://spec.open
 
 Three keywords serve two generators. **Code generation** uses `x-enum-varnames` for the member name and `x-enum-descriptions` for that member's doc comment. **Form generation** uses a keyword of its own for the option label, [`x-oold-ui-enum-titles`](#ui-generation): :rule[OOLD-EXT-b23b]{applies=implementation level=SHOULD summary="A form generator labels an option with x-oold-ui-enum-titles where the schema gives it, and may show x-enum-descriptions as further explanation."}a form generator SHOULD label each option with [`x-oold-ui-enum-titles`](#ui-generation) where the schema gives it, and MAY additionally present `x-enum-descriptions` as further explanation - help text or a tooltip beside the option - rather than as the label itself.
 
-The label and the description are often the same text. A schema generated from an annotated enumeration typically has one piece of prose per member - a docstring - and nothing to distinguish a label from a description, so it writes that prose to both keywords. A schema MAY carry the same list in `x-oold-ui-enum-titles` and `x-enum-descriptions`.
-
 #### Multilanguage support {#multilanguage}
 
 There are two distinct localization concerns: translating a schema's own annotations, and translating a value carried by an instance.
