@@ -186,6 +186,19 @@ OO-LD targets [[JSONSCHEMA]] (2020-12) as its normative dialect. :rule[OOLD-EXT-
 
 :rule[OOLD-EXT-af50]{applies=document level=REQUIRED summary="JSON Schema 2020-12 is required as the dialect, because composition places $ref alongside sibling keywords."}2020-12 is REQUIRED, not merely preferred: OO-LD's composition places `$ref` alongside sibling keywords (e.g. a property carrying `type`, `x-oold-range` and `@context`, or `allOf: [{$ref: ...}]` next to `properties`). Keywords adjacent to `$ref` are only evaluated from JSON Schema 2019-09 onward; in Draft 4 and Draft 7 they are ignored ([[JSONSCHEMA]] §8.2.3.1). Keywords such as `const` (used throughout this document) are likewise only available from draft-06 onward. Migration from the earlier Draft-4-style notation: rename `definitions` to `$defs`, `id` to `$id`, and use the numeric form of `exclusiveMinimum`/`exclusiveMaximum` instead of the boolean form.
 
+#### Enum names and descriptions {#enum-names}
+
+An `enum` constrains a property to a fixed set of values. Those values are data, chosen for what they mean on the wire, so they are routinely not usable as identifiers in generated code: an IRI, a CURIE, a value carrying spaces or hyphens, or a number. Two established vendor extensions carry the missing information, each a list positionally aligned with `enum`:
+
+- **`x-enum-varnames`** - the identifier-safe name of each value, used as the generated enum member name.
+- **`x-enum-descriptions`** - the documentation of each value, used as the generated member's doc comment.
+
+Both keep their unprefixed names deliberately. Unlike the rest of OO-LD's vocabulary these keywords are not OO-LD's to name: they are read today by OpenAPI Generator and by several TypeScript generators, and the only reason to emit them is that those tools already understand them. A `x-oold-`-prefixed spelling would be read by nothing (see [](#meta-schema)). Other toolchains spell the pair `x-enumNames` / `x-enumDescriptions` (NSwag, NJsonSchema); OO-LD emits the `x-enum-*` form, and a reader MAY additionally recognize the alternates.
+
+:rule[OOLD-EXT-b249]{applies=document level=SHOULD summary="An enum whose values are not all valid identifiers should declare x-enum-varnames."}Where any `enum` value is not a valid identifier in the target language, the schema SHOULD declare `x-enum-varnames`, because each generator otherwise applies its own mangling: the member name becomes toolchain-dependent, and two values differing only in characters the mangling strips can collapse onto a single member. Where every value is already a valid identifier the keyword MAY be omitted, since a generator derives the same names from the values.
+
+`x-enum-descriptions` carries documentation that cannot be derived from the value at all, so it is unconditional and is omitted only where there is nothing to say. Both are distinct from [`x-oold-ui-enum-titles`](#ui-generation), which holds human display labels for a form rather than code identifiers.
+
 #### Multilanguage support {#multilanguage}
 
 There are two distinct localization concerns: translating a schema's own annotations, and translating a value carried by an instance.
@@ -397,7 +410,7 @@ All keywords apply to the (sub)schema of a single property.
 
 The text-valued keywords have a `x-oold-multilang-*` variant carrying a BCP-47 language map, mirroring `x-oold-multilang-title` (see [](#localizing-schema-annotations)): `x-oold-multilang-ui-hint` and `x-oold-multilang-ui-enum-titles`.
 
-For enum code generation OO-LD keeps the established `x-enum-varnames` (identifier-safe names aligned with `enum`) and its companion `x-enum-descriptions`; these are widely supported vendor extensions (OpenAPI Generator; NSwag's `x-enumNames`) and are distinct from the human display labels in `x-oold-ui-enum-titles`.
+`x-oold-ui-enum-titles` holds human display labels for a form, and is distinct from the code-generation keywords `x-enum-varnames` and `x-enum-descriptions`, which are specified in [](#enum-names).
 
 `x-oold-ui-default-property` replaces the json-editor `defaultProperties` array (which listed the optional properties shown initially). That array is *extend-only* under composition: because composed schemas merge the arrays, a derived schema can add a default property but cannot switch one off. A per-property boolean is *overridable* - it resolves most-derived-wins (see [](#merge-and-override-model)), so a derived schema sets it to `false` to hide a property a base schema showed. For the same reason `x-oold-reverse-default-properties` is deprecated in favour of `x-oold-ui-default-property` on the reverse property.
 

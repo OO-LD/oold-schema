@@ -1117,6 +1117,23 @@ JSON Schema 2020-12 is required as the dialect, because composition places $ref 
 
 See [this rule in the specification](spec/#OOLD-EXT-af50) (section: jsonschema-extensions).
 
+### OOLD-EXT-b249
+
+- <strong title="The RFC 2119 keyword this requirement is stated with. A validator reports a MUST-level finding as a failure and a SHOULD-level one as a warning, so the level decides severity rather than the check that found it.">Level:</strong> SHOULD
+- <strong title="Who the requirement binds: a document, an implementation of OO-LD, or nobody in particular. This decides what is even able to enforce it.">Applies to:</strong> <span title="Checkable by validating a schema or instance document">document</span>
+- <strong title="Whether a validator could decide this rule by inspecting a document. It does not say the OO-LD validator enforces it today - oold rules list --unchecked reports that.">Machine-checkable:</strong> yes
+- <strong title="The specification release this rule first appeared in. Ids are permanent and never reused, so this does not change once recorded.">Since:</strong> 1.0.0-rc.2
+
+An enum whose values are not all valid identifiers should declare x-enum-varnames.
+
+Where any `enum` value is not a valid identifier in the target language, the schema SHOULD declare `x-enum-varnames`, because each generator otherwise applies its own mangling: the member name becomes toolchain-dependent, and two values differing only in characters the mangling strips can collapse onto a single member.
+
+??? quote "In context"
+
+    Where any `enum` value is not a valid identifier in the target language, the schema SHOULD declare `x-enum-varnames`, because each generator otherwise applies its own mangling: the member name becomes toolchain-dependent, and two values differing only in characters the mangling strips can collapse onto a single member. Where every value is already a valid identifier the keyword MAY be omitted, since a generator derives the same names from the values.
+
+See [this rule in the specification](spec/#OOLD-EXT-b249) (section: enum-names).
+
 ### OOLD-EXT-dd76
 
 - <strong title="The RFC 2119 keyword this requirement is stated with. A validator reports a MUST-level finding as a failure and a SHOULD-level one as a warning, so the level decides severity rather than the check that found it.">Level:</strong> SHOULD
