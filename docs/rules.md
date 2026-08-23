@@ -130,6 +130,23 @@ See [this rule in the specification](spec/#OOLD-SCH-a9ee) (section: basic-concep
 
 ## CMP - Composition, merge and override
 
+### OOLD-CMP-1257
+
+- <strong title="The RFC 2119 keyword this requirement is stated with. A validator reports a MUST-level finding as a failure and a SHOULD-level one as a warning, so the level decides severity rather than the check that found it.">Level:</strong> MUST
+- <strong title="Who the requirement binds: a document, an implementation of OO-LD, or nobody in particular. This decides what is even able to enforce it.">Applies to:</strong> <span title="Checkable by validating a schema or instance document">document</span>
+- <strong title="Whether a validator could decide this rule by inspecting a document. It does not say the OO-LD validator enforces it today - oold rules list --unchecked reports that.">Machine-checkable:</strong> yes
+- <strong title="The specification release this rule first appeared in. Ids are permanent and never reused, so this does not change once recorded.">Since:</strong> 1.0.0-rc.2
+
+A composed object is closed with unevaluatedProperties, not additionalProperties.
+
+A schema that closes a composed object MUST do so with `unevaluatedProperties: false` (JSONSCHEMA §11.3), which is evaluated after the `allOf` branches and therefore accounts for their properties, rather than with `additionalProperties: false`, which does not see them and so rejects instances the composition permits.
+
+??? quote "In context"
+
+    Because `allOf` composition is conjunctive, `additionalProperties: false` on one subschema rejects the members that the other composed subschemas contribute, so it cannot close a composed object. A schema that closes a composed object MUST do so with `unevaluatedProperties: false` (JSONSCHEMA §11.3), which is evaluated after the `allOf` branches and therefore accounts for their properties, rather than with `additionalProperties: false`, which does not see them and so rejects instances the composition permits. Note that [schema-instances](spec/#schema-instances) requires such a schema to still permit the instance-level `$schema` and `@context` members.
+
+See [this rule in the specification](spec/#OOLD-CMP-1257) (section: closing-composed-objects).
+
 ### OOLD-CMP-1d7e
 
 - <strong title="The RFC 2119 keyword this requirement is stated with. A validator reports a MUST-level finding as a failure and a SHOULD-level one as a warning, so the level decides severity rather than the check that found it.">Level:</strong> MUST NOT
@@ -690,6 +707,19 @@ For schema-package versioning (recommended), the version of the package SHOULD b
     - For schema-package versioning (recommended), the version of the package SHOULD be prepended before the schema's ID, e.g. `https://example.org/my-package/2.0.0/b5203131-7321-46bb-8a11-acb3d1015840.schema.json`. Since a package combines multiple schemas, the package version does in general not match the individual schema version.
 
 See [this rule in the specification](spec/#OOLD-VER-4261) (section: versioning).
+
+### OOLD-VER-46b9
+
+- <strong title="The RFC 2119 keyword this requirement is stated with. A validator reports a MUST-level finding as a failure and a SHOULD-level one as a warning, so the level decides severity rather than the check that found it.">Level:</strong> SHOULD
+- <strong title="Who the requirement binds: a document, an implementation of OO-LD, or nobody in particular. This decides what is even able to enforce it.">Applies to:</strong> <span title="Checkable by validating a schema or instance document">document</span>
+- <strong title="Whether a validator could decide this rule by inspecting a document. It does not say the OO-LD validator enforces it today - oold rules list --unchecked reports that.">Machine-checkable:</strong> yes
+- <strong title="The specification release this rule first appeared in. Ids are permanent and never reused, so this does not change once recorded.">Since:</strong> 1.0.0-rc.2
+
+A schema that carries an x-oold-uuid should also use it in its $id.
+
+A schema carrying `x-oold-uuid` SHOULD also use that UUID in its `$id`, so the identifier stays stable across a move between hosts or paths and the two identifiers cannot disagree about which schema they name.
+
+See [this rule in the specification](spec/#OOLD-VER-46b9) (section: identification).
 
 ### OOLD-VER-534a
 
