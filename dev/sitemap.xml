@@ -1,13 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
       <url>
-        <loc>https://oo-ld.org/dev/</loc>
-      </url>
-      <url>
         <loc>https://oo-ld.org/dev/introduction/</loc>
-      </url>
-      <url>
-        <loc>https://oo-ld.org/dev/get-started/</loc>
       </url>
       <url>
         <loc>https://oo-ld.org/dev/guide/</loc>
@@ -31,19 +25,46 @@
         <loc>https://oo-ld.org/dev/guide/meta-schema/</loc>
       </url>
       <url>
-        <loc>https://oo-ld.org/dev/use-cases/</loc>
+        <loc>https://oo-ld.org/dev/tooling/</loc>
       </url>
       <url>
         <loc>https://oo-ld.org/dev/mappings/</loc>
       </url>
       <url>
-        <loc>https://oo-ld.org/dev/tooling/</loc>
+        <loc>https://oo-ld.org/dev/mappings/aas/</loc>
       </url>
       <url>
-        <loc>https://oo-ld.org/dev/reference/</loc>
+        <loc>https://oo-ld.org/dev/mappings/samm/</loc>
       </url>
       <url>
-        <loc>https://oo-ld.org/dev/rules/</loc>
+        <loc>https://oo-ld.org/dev/mappings/linkml/</loc>
+      </url>
+      <url>
+        <loc>https://oo-ld.org/dev/mappings/nomad/</loc>
+      </url>
+      <url>
+        <loc>https://oo-ld.org/dev/mappings/dlite/</loc>
+      </url>
+      <url>
+        <loc>https://oo-ld.org/dev/mappings/rest-api-ld/</loc>
+      </url>
+      <url>
+        <loc>https://oo-ld.org/dev/mappings/wot/</loc>
+      </url>
+      <url>
+        <loc>https://oo-ld.org/dev/mappings/spdx/</loc>
+      </url>
+      <url>
+        <loc>https://oo-ld.org/dev/mappings/croissant/</loc>
+      </url>
+      <url>
+        <loc>https://oo-ld.org/dev/mappings/oca/</loc>
+      </url>
+      <url>
+        <loc>https://oo-ld.org/dev/mappings/treeldr/</loc>
+      </url>
+      <url>
+        <loc>https://oo-ld.org/dev/mappings/yml2vocab/</loc>
       </url>
       <url>
         <loc>https://oo-ld.org/dev/migration/</loc>
@@ -65,5 +86,14 @@
       </url>
       <url>
         <loc>https://oo-ld.org/dev/migration/legacy-keyword-inventory/</loc>
+      </url>
+      <url>
+        <loc>https://oo-ld.org/dev/related-work/</loc>
+      </url>
+      <url>
+        <loc>https://oo-ld.org/dev/use-cases/</loc>
+      </url>
+      <url>
+        <loc>https://oo-ld.org/dev/rules/</loc>
       </url>
 </urlset>
