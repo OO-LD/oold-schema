@@ -18,6 +18,21 @@
   },
   "rules": [
     {
+      "id": "OOLD-CMP-1257",
+      "area": "CMP",
+      "level": "MUST",
+      "applies_to": "document",
+      "section": "closing-composed-objects",
+      "summary": "A composed object is closed with unevaluatedProperties, not additionalProperties.",
+      "text": "A schema that closes a composed object MUST do so with `unevaluatedProperties: false` (JSONSCHEMA §11.3), which is evaluated after the `allOf` branches and therefore accounts for their properties, rather than with `additionalProperties: false`, which does not see them and so rejects instances the composition permits.",
+      "text_sha256": "7e3a4ba0adb7bb93289004c49bf1f53410d852293e4be4089eb7d3618c7d5087",
+      "context": "Because `allOf` composition is conjunctive, `additionalProperties: false` on one subschema rejects the members that the other composed subschemas contribute, so it cannot close a composed object. A schema that closes a composed object MUST do so with `unevaluatedProperties: false` (JSONSCHEMA §11.3), which is evaluated after the `allOf` branches and therefore accounts for their properties, rather than with `additionalProperties: false`, which does not see them and so rejects instances the composition permits. Note that [](#schema-instances) requires such a schema to still permit the instance-level `$schema` and `@context` members.",
+      "machine_checkable": true,
+      "since": "1.0.0-rc.2",
+      "deprecated": false,
+      "source": "06-composition.md:86"
+    },
+    {
       "id": "OOLD-CMP-1d7e",
       "area": "CMP",
       "level": "MUST NOT",
@@ -211,6 +226,21 @@
       "since": "1.0.0-rc.1",
       "deprecated": false,
       "source": "09-extensions.md:58"
+    },
+    {
+      "id": "OOLD-EXT-1e3c",
+      "area": "EXT",
+      "level": "MUST",
+      "applies_to": "document",
+      "section": "widget-hints",
+      "summary": "A widget hint that is not a registered format goes in x-oold-ui-widget, leaving format for validation.",
+      "text": "A value that is not a registered format (`table`, `tabs`, `grid`, `autocomplete`, `textarea`, `checkbox`, `markdown`, `color`, ...) is widget-only and MUST be carried in `x-oold-ui-widget` rather than `format`, which stays a validation assertion: a validator that checks declared formats would otherwise reject every value of the property.",
+      "text_sha256": "a10af104ed72237be86bd01f683041cf51fae97707f843e0906d22c53016011a",
+      "context": "`format` carries the widget hint when its value is a registered JSON Schema 2020-12 format (`date`, `date-time`, `time`, `duration`, `email`, `uri`, `iri`, `uuid`, ...); a validator may check it and a form generator picks the matching input. A value that is not a registered format (`table`, `tabs`, `grid`, `autocomplete`, `textarea`, `checkbox`, `markdown`, `color`, ...) is widget-only and MUST be carried in `x-oold-ui-widget` rather than `format`, which stays a validation assertion: a validator that checks declared formats would otherwise reject every value of the property.",
+      "machine_checkable": true,
+      "since": "1.0.0-rc.2",
+      "deprecated": false,
+      "source": "09-extensions.md:423"
     },
     {
       "id": "OOLD-EXT-1f92",
@@ -960,7 +990,7 @@
       "machine_checkable": true,
       "since": "1.0.0-rc.1",
       "deprecated": false,
-      "source": "08-identification-versioning.md:51"
+      "source": "08-identification-versioning.md:53"
     },
     {
       "id": "OOLD-VER-3b96",
@@ -990,7 +1020,22 @@
       "machine_checkable": false,
       "since": "1.0.0-rc.1",
       "deprecated": false,
-      "source": "08-identification-versioning.md:68"
+      "source": "08-identification-versioning.md:70"
+    },
+    {
+      "id": "OOLD-VER-46b9",
+      "area": "VER",
+      "level": "SHOULD",
+      "applies_to": "document",
+      "section": "identification",
+      "summary": "A schema that carries an x-oold-uuid should also use it in its $id.",
+      "text": "A schema carrying `x-oold-uuid` SHOULD also use that UUID in its `$id`, so the identifier stays stable across a move between hosts or paths and the two identifiers cannot disagree about which schema they name.",
+      "text_sha256": "001c99d80b7203c504c23e8d611aa7425921edd311ef5da9d92f3f447db59f44",
+      "context": "A schema carrying `x-oold-uuid` SHOULD also use that UUID in its `$id`, so the identifier stays stable across a move between hosts or paths and the two identifiers cannot disagree about which schema they name.",
+      "machine_checkable": true,
+      "since": "1.0.0-rc.2",
+      "deprecated": false,
+      "source": "08-identification-versioning.md:7"
     },
     {
       "id": "OOLD-VER-534a",
@@ -1005,7 +1050,7 @@
       "machine_checkable": true,
       "since": "1.0.0-rc.1",
       "deprecated": false,
-      "source": "08-identification-versioning.md:65"
+      "source": "08-identification-versioning.md:67"
     },
     {
       "id": "OOLD-VER-befc",
@@ -1020,7 +1065,7 @@
       "machine_checkable": false,
       "since": "1.0.0-rc.1",
       "deprecated": false,
-      "source": "08-identification-versioning.md:67"
+      "source": "08-identification-versioning.md:69"
     },
     {
       "id": "OOLD-VER-c92e",
@@ -1035,7 +1080,7 @@
       "machine_checkable": false,
       "since": "1.0.0-rc.1",
       "deprecated": false,
-      "source": "08-identification-versioning.md:71"
+      "source": "08-identification-versioning.md:73"
     },
     {
       "id": "OOLD-VER-d826",
@@ -1050,7 +1095,7 @@
       "machine_checkable": false,
       "since": "1.0.0-rc.1",
       "deprecated": false,
-      "source": "08-identification-versioning.md:69"
+      "source": "08-identification-versioning.md:71"
     },
     {
       "id": "OOLD-VER-edb9",

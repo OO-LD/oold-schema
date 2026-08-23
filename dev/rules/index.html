@@ -657,6 +657,17 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#oold-cmp-1257" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        OOLD-CMP-1257
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#oold-cmp-1d7e" class="md-nav__link">
     <span class="md-ellipsis">
       <span class="md-typeset">
@@ -1071,6 +1082,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#oold-ver-46b9" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        OOLD-VER-46b9
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#oold-ver-534a" class="md-nav__link">
     <span class="md-ellipsis">
       <span class="md-typeset">
@@ -1147,6 +1169,17 @@
     <span class="md-ellipsis">
       <span class="md-typeset">
         OOLD-EXT-1dc8
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#oold-ext-1e3c" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        OOLD-EXT-1e3c
       </span>
     </span>
   </a>
@@ -1631,6 +1664,17 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#oold-cmp-1257" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        OOLD-CMP-1257
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#oold-cmp-1d7e" class="md-nav__link">
     <span class="md-ellipsis">
       <span class="md-typeset">
@@ -2045,6 +2089,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#oold-ver-46b9" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        OOLD-VER-46b9
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#oold-ver-534a" class="md-nav__link">
     <span class="md-ellipsis">
       <span class="md-typeset">
@@ -2121,6 +2176,17 @@
     <span class="md-ellipsis">
       <span class="md-typeset">
         OOLD-EXT-1dc8
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#oold-ext-1e3c" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        OOLD-EXT-1e3c
       </span>
     </span>
   </a>
@@ -2573,6 +2639,20 @@ repeats the explanation, so you do not have to come back here.</p>
 </details>
 <p>See <a href="../spec/#OOLD-SCH-a9ee">this rule in the specification</a> (section: basic-concepts).</p>
 <h2 id="cmp-composition-merge-and-override">CMP - Composition, merge and override<a class="headerlink" href="#cmp-composition-merge-and-override" title="Permanent link">&para;</a></h2>
+<h3 id="oold-cmp-1257">OOLD-CMP-1257<a class="headerlink" href="#oold-cmp-1257" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong title="The RFC 2119 keyword this requirement is stated with. A validator reports a MUST-level finding as a failure and a SHOULD-level one as a warning, so the level decides severity rather than the check that found it.">Level:</strong> MUST</li>
+<li><strong title="Who the requirement binds: a document, an implementation of OO-LD, or nobody in particular. This decides what is even able to enforce it.">Applies to:</strong> <span title="Checkable by validating a schema or instance document">document</span></li>
+<li><strong title="Whether a validator could decide this rule by inspecting a document. It does not say the OO-LD validator enforces it today - oold rules list --unchecked reports that.">Machine-checkable:</strong> yes</li>
+<li><strong title="The specification release this rule first appeared in. Ids are permanent and never reused, so this does not change once recorded.">Since:</strong> 1.0.0-rc.2</li>
+</ul>
+<p>A composed object is closed with unevaluatedProperties, not additionalProperties.</p>
+<p>A schema that closes a composed object MUST do so with <code>unevaluatedProperties: false</code> (JSONSCHEMA §11.3), which is evaluated after the <code>allOf</code> branches and therefore accounts for their properties, rather than with <code>additionalProperties: false</code>, which does not see them and so rejects instances the composition permits.</p>
+<details class="quote">
+<summary>In context</summary>
+<p>Because <code>allOf</code> composition is conjunctive, <code>additionalProperties: false</code> on one subschema rejects the members that the other composed subschemas contribute, so it cannot close a composed object. A schema that closes a composed object MUST do so with <code>unevaluatedProperties: false</code> (JSONSCHEMA §11.3), which is evaluated after the <code>allOf</code> branches and therefore accounts for their properties, rather than with <code>additionalProperties: false</code>, which does not see them and so rejects instances the composition permits. Note that <a href="../spec/#schema-instances">schema-instances</a> requires such a schema to still permit the instance-level <code>$schema</code> and <code>@context</code> members.</p>
+</details>
+<p>See <a href="../spec/#OOLD-CMP-1257">this rule in the specification</a> (section: closing-composed-objects).</p>
 <h3 id="oold-cmp-1d7e">OOLD-CMP-1d7e<a class="headerlink" href="#oold-cmp-1d7e" title="Permanent link">&para;</a></h3>
 <ul>
 <li><strong title="The RFC 2119 keyword this requirement is stated with. A validator reports a MUST-level finding as a failure and a SHOULD-level one as a warning, so the level decides severity rather than the check that found it.">Level:</strong> MUST NOT</li>
@@ -3039,6 +3119,16 @@ repeats the explanation, so you do not have to come back here.</p>
 </ul>
 </details>
 <p>See <a href="../spec/#OOLD-VER-4261">this rule in the specification</a> (section: versioning).</p>
+<h3 id="oold-ver-46b9">OOLD-VER-46b9<a class="headerlink" href="#oold-ver-46b9" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong title="The RFC 2119 keyword this requirement is stated with. A validator reports a MUST-level finding as a failure and a SHOULD-level one as a warning, so the level decides severity rather than the check that found it.">Level:</strong> SHOULD</li>
+<li><strong title="Who the requirement binds: a document, an implementation of OO-LD, or nobody in particular. This decides what is even able to enforce it.">Applies to:</strong> <span title="Checkable by validating a schema or instance document">document</span></li>
+<li><strong title="Whether a validator could decide this rule by inspecting a document. It does not say the OO-LD validator enforces it today - oold rules list --unchecked reports that.">Machine-checkable:</strong> yes</li>
+<li><strong title="The specification release this rule first appeared in. Ids are permanent and never reused, so this does not change once recorded.">Since:</strong> 1.0.0-rc.2</li>
+</ul>
+<p>A schema that carries an x-oold-uuid should also use it in its $id.</p>
+<p>A schema carrying <code>x-oold-uuid</code> SHOULD also use that UUID in its <code>$id</code>, so the identifier stays stable across a move between hosts or paths and the two identifiers cannot disagree about which schema they name.</p>
+<p>See <a href="../spec/#OOLD-VER-46b9">this rule in the specification</a> (section: identification).</p>
 <h3 id="oold-ver-534a">OOLD-VER-534a<a class="headerlink" href="#oold-ver-534a" title="Permanent link">&para;</a></h3>
 <ul>
 <li><strong title="The RFC 2119 keyword this requirement is stated with. A validator reports a MUST-level finding as a failure and a SHOULD-level one as a warning, so the level decides severity rather than the check that found it.">Level:</strong> SHOULD</li>
@@ -3133,6 +3223,20 @@ repeats the explanation, so you do not have to come back here.</p>
 <p><code>predicate_id</code> is a <a href="https://www.w3.org/TR/skos-reference/">SKOS</a> mapping predicate - <code>skos:exactMatch</code> (the default when the slot is absent), <code>skos:closeMatch</code>, <code>skos:broadMatch</code>, <code>skos:narrowMatch</code> or <code>skos:relatedMatch</code> - relating the term's primary IRI (subject) to the synonym IRI (object); it decides which entries denote equivalence. It MUST be written as a full IRI or a CURIE and compared by expansion to an absolute IRI, the same rule the synonym keys follow, so <code>skos:exactMatch</code> and <code>http://www.w3.org/2004/02/skos/core#exactMatch</code> are one predicate. <code>x-oold-context</code> is a schema-level keyword consumed by OO-LD processors (it is promoted into a clean <code>@context</code> before any generic JSON-LD processor runs), so its CURIEs - the synonym keys and the <code>predicate_id</code> / <code>mapping_set_id</code> values alike - are expanded not against the instance <code>@context</code> but against a fixed well-known prefix set the meta-schema defines (<code>skos</code>, <code>rdfs</code>, <code>owl</code>, <code>xsd</code>, <code>sssom</code>), reached through the schema's <code>$schema</code>. The contract therefore holds without the author redeclaring those prefixes in the data context. A bare local name (<code>exactMatch</code>) MUST NOT be used as a <code>predicate_id</code>.</p>
 </details>
 <p>See <a href="../spec/#OOLD-EXT-1dc8">this rule in the specification</a> (section: synonyms).</p>
+<h3 id="oold-ext-1e3c">OOLD-EXT-1e3c<a class="headerlink" href="#oold-ext-1e3c" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong title="The RFC 2119 keyword this requirement is stated with. A validator reports a MUST-level finding as a failure and a SHOULD-level one as a warning, so the level decides severity rather than the check that found it.">Level:</strong> MUST</li>
+<li><strong title="Who the requirement binds: a document, an implementation of OO-LD, or nobody in particular. This decides what is even able to enforce it.">Applies to:</strong> <span title="Checkable by validating a schema or instance document">document</span></li>
+<li><strong title="Whether a validator could decide this rule by inspecting a document. It does not say the OO-LD validator enforces it today - oold rules list --unchecked reports that.">Machine-checkable:</strong> yes</li>
+<li><strong title="The specification release this rule first appeared in. Ids are permanent and never reused, so this does not change once recorded.">Since:</strong> 1.0.0-rc.2</li>
+</ul>
+<p>A widget hint that is not a registered format goes in x-oold-ui-widget, leaving format for validation.</p>
+<p>A value that is not a registered format (<code>table</code>, <code>tabs</code>, <code>grid</code>, <code>autocomplete</code>, <code>textarea</code>, <code>checkbox</code>, <code>markdown</code>, <code>color</code>, ...) is widget-only and MUST be carried in <code>x-oold-ui-widget</code> rather than <code>format</code>, which stays a validation assertion: a validator that checks declared formats would otherwise reject every value of the property.</p>
+<details class="quote">
+<summary>In context</summary>
+<p><code>format</code> carries the widget hint when its value is a registered JSON Schema 2020-12 format (<code>date</code>, <code>date-time</code>, <code>time</code>, <code>duration</code>, <code>email</code>, <code>uri</code>, <code>iri</code>, <code>uuid</code>, ...); a validator may check it and a form generator picks the matching input. A value that is not a registered format (<code>table</code>, <code>tabs</code>, <code>grid</code>, <code>autocomplete</code>, <code>textarea</code>, <code>checkbox</code>, <code>markdown</code>, <code>color</code>, ...) is widget-only and MUST be carried in <code>x-oold-ui-widget</code> rather than <code>format</code>, which stays a validation assertion: a validator that checks declared formats would otherwise reject every value of the property.</p>
+</details>
+<p>See <a href="../spec/#OOLD-EXT-1e3c">this rule in the specification</a> (section: widget-hints).</p>
 <h3 id="oold-ext-1f92">OOLD-EXT-1f92<a class="headerlink" href="#oold-ext-1f92" title="Permanent link">&para;</a></h3>
 <ul>
 <li><strong title="The RFC 2119 keyword this requirement is stated with. A validator reports a MUST-level finding as a failure and a SHOULD-level one as a warning, so the level decides severity rather than the check that found it.">Level:</strong> RECOMMENDED</li>
