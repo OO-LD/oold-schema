@@ -1357,14 +1357,6 @@ properties:
   <td><code>x-oold-ui-default-property</code></td>
   <td>Whether this optional property is shown by default in generated user interfaces. Replaces the object-level <code>defaultProperties</code> array: a per-property boolean is overridable under composition (most-derived-wins), so a derived schema can set it false, whereas the merged array form was extend-only.</td>
 </tr>
-<tr>
-  <td><code>x-enum-varnames</code></td>
-  <td>Identifier-safe code names aligned positionally with <code>enum</code>, for code generation. For <code>enum: [&quot;m&quot;, &quot;s&quot;]</code> the value <code>[&quot;metre&quot;, &quot;second&quot;]</code> names each option (so a generator can emit <code>Unit.metre</code> instead of <code>Unit.m</code>). An established vendor extension (OpenAPI Generator; NSwag uses the camelCase <code>x-enumNames</code>). Kept as-is; distinct from the human labels in <code>x-oold-ui-enum-titles</code>.</td>
-</tr>
-<tr>
-  <td><code>x-enum-descriptions</code></td>
-  <td>Per-value descriptions aligned positionally with <code>enum</code>, the established companion of <code>x-enum-varnames</code>. For <code>enum: [&quot;m&quot;, &quot;s&quot;]</code>: <code>[&quot;SI base unit of length&quot;, &quot;SI base unit of time&quot;]</code>.</td>
-</tr>
 </tbody>
 </table>
 <p>The text-valued keywords have a <code>x-oold-multilang-*</code> variant carrying a BCP-47 language map, mirroring <code>x-oold-multilang-title</code> (see <a href="#localizing-schema-annotations"></a>): <code>x-oold-multilang-ui-hint</code> and <code>x-oold-multilang-ui-enum-titles</code>.</p>
