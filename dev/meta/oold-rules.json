@@ -858,6 +858,21 @@
       "source": "07-schema-instances.md:164"
     },
     {
+      "id": "OOLD-SCH-21d7",
+      "area": "SCH",
+      "level": "SHOULD",
+      "applies_to": "document",
+      "section": "basic-concepts",
+      "summary": "A schema should offer at least one complete mapping, so its instances can round-trip through RDF without loss.",
+      "text": "A schema SHOULD offer at least one complete mapping - a [target profile](#synonyms) under which every declared property carries a term - because a property with no term produces no triple, so an instance can only round-trip through RDF without loss under a mapping that covers all of them.",
+      "text_sha256": "62ae3aa3447402336c6dfd9ae5a221e58a3727b9752de1054d9632b6b31a40f0",
+      "context": "Leaving a term unmapped is a deferral, not a destination. A schema SHOULD offer at least one complete mapping - a [target profile](#synonyms) under which every declared property carries a term - because a property with no term produces no triple, so an instance can only round-trip through RDF without loss under a mapping that covers all of them. A schema MAY carry further, deliberately partial profiles alongside it.",
+      "machine_checkable": true,
+      "since": "1.0.0-rc.2",
+      "deprecated": false,
+      "source": "05-basic-concepts.md:18"
+    },
+    {
       "id": "OOLD-SCH-2d05",
       "area": "SCH",
       "level": "MUST NOT",

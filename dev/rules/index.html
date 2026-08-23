@@ -607,6 +607,17 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#oold-sch-21d7" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        OOLD-SCH-21d7
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#oold-sch-2d05" class="md-nav__link">
     <span class="md-ellipsis">
       <span class="md-typeset">
@@ -1548,6 +1559,17 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#oold-sch-21d7" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        OOLD-SCH-21d7
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#oold-sch-2d05" class="md-nav__link">
     <span class="md-ellipsis">
       <span class="md-typeset">
@@ -2462,6 +2484,20 @@ repeats the explanation, so you do not have to come back here.</p>
 </details>
 <p>See <a href="../spec/#OOLD-CNF-d71d">this rule in the specification</a> (section: notation).</p>
 <h2 id="sch-schema-well-formedness-and-the-meta-schema">SCH - Schema well-formedness and the meta-schema<a class="headerlink" href="#sch-schema-well-formedness-and-the-meta-schema" title="Permanent link">&para;</a></h2>
+<h3 id="oold-sch-21d7">OOLD-SCH-21d7<a class="headerlink" href="#oold-sch-21d7" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong title="The RFC 2119 keyword this requirement is stated with. A validator reports a MUST-level finding as a failure and a SHOULD-level one as a warning, so the level decides severity rather than the check that found it.">Level:</strong> SHOULD</li>
+<li><strong title="Who the requirement binds: a document, an implementation of OO-LD, or nobody in particular. This decides what is even able to enforce it.">Applies to:</strong> <span title="Checkable by validating a schema or instance document">document</span></li>
+<li><strong title="Whether a validator could decide this rule by inspecting a document. It does not say the OO-LD validator enforces it today - oold rules list --unchecked reports that.">Machine-checkable:</strong> yes</li>
+<li><strong title="The specification release this rule first appeared in. Ids are permanent and never reused, so this does not change once recorded.">Since:</strong> 1.0.0-rc.2</li>
+</ul>
+<p>A schema should offer at least one complete mapping, so its instances can round-trip through RDF without loss.</p>
+<p>A schema SHOULD offer at least one complete mapping - a <a href="../spec/#synonyms">target profile</a> under which every declared property carries a term - because a property with no term produces no triple, so an instance can only round-trip through RDF without loss under a mapping that covers all of them.</p>
+<details class="quote">
+<summary>In context</summary>
+<p>Leaving a term unmapped is a deferral, not a destination. A schema SHOULD offer at least one complete mapping - a <a href="../spec/#synonyms">target profile</a> under which every declared property carries a term - because a property with no term produces no triple, so an instance can only round-trip through RDF without loss under a mapping that covers all of them. A schema MAY carry further, deliberately partial profiles alongside it.</p>
+</details>
+<p>See <a href="../spec/#OOLD-SCH-21d7">this rule in the specification</a> (section: basic-concepts).</p>
 <h3 id="oold-sch-2d05">OOLD-SCH-2d05<a class="headerlink" href="#oold-sch-2d05" title="Permanent link">&para;</a></h3>
 <ul>
 <li><strong title="The RFC 2119 keyword this requirement is stated with. A validator reports a MUST-level finding as a failure and a SHOULD-level one as a warning, so the level decides severity rather than the check that found it.">Level:</strong> MUST NOT</li>
