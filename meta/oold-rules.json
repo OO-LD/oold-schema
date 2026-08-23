@@ -491,7 +491,7 @@
       "summary": "A form generator labels an option with x-oold-ui-enum-titles where the schema gives it, and may show x-enum-descriptions as further explanation.",
       "text": "a form generator SHOULD label each option with [`x-oold-ui-enum-titles`](#ui-generation) where the schema gives it, and MAY additionally present `x-enum-descriptions` as further explanation - help text or a tooltip beside the option - rather than as the label itself.",
       "text_sha256": "3e4db6d0120646f017b231c986401334c428bf6180dd10a230da209ecbd7f943",
-      "context": "The three are consumed by two different generators, and the split is not symmetric. Code generation uses `x-enum-varnames` for the member name and `x-enum-descriptions` for that member's doc comment. Form generation has its own label keyword: a form generator SHOULD label each option with [`x-oold-ui-enum-titles`](#ui-generation) where the schema gives it, and MAY additionally present `x-enum-descriptions` as further explanation - help text or a tooltip beside the option - rather than as the label itself.",
+      "context": "Three keywords serve two generators. Code generation uses `x-enum-varnames` for the member name and `x-enum-descriptions` for that member's doc comment. Form generation uses a keyword of its own for the option label, [`x-oold-ui-enum-titles`](#ui-generation): a form generator SHOULD label each option with [`x-oold-ui-enum-titles`](#ui-generation) where the schema gives it, and MAY additionally present `x-enum-descriptions` as further explanation - help text or a tooltip beside the option - rather than as the label itself.",
       "machine_checkable": false,
       "since": "1.0.0-rc.2",
       "deprecated": false,
