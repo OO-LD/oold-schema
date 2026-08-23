@@ -1117,6 +1117,23 @@ JSON Schema 2020-12 is required as the dialect, because composition places $ref 
 
 See [this rule in the specification](spec/#OOLD-EXT-af50) (section: jsonschema-extensions).
 
+### OOLD-EXT-b23b
+
+- <strong title="The RFC 2119 keyword this requirement is stated with. A validator reports a MUST-level finding as a failure and a SHOULD-level one as a warning, so the level decides severity rather than the check that found it.">Level:</strong> SHOULD
+- <strong title="Who the requirement binds: a document, an implementation of OO-LD, or nobody in particular. This decides what is even able to enforce it.">Applies to:</strong> <span title="Constrains an OO-LD implementation; needs a library conformance suite">implementation</span>
+- <strong title="Whether a validator could decide this rule by inspecting a document. It does not say the OO-LD validator enforces it today - oold rules list --unchecked reports that.">Machine-checkable:</strong> no
+- <strong title="The specification release this rule first appeared in. Ids are permanent and never reused, so this does not change once recorded.">Since:</strong> 1.0.0-rc.2
+
+A form generator labels an option with x-oold-ui-enum-titles where the schema gives it, and may show x-enum-descriptions as further explanation.
+
+a form generator SHOULD label each option with [`x-oold-ui-enum-titles`](spec/#ui-generation) where the schema gives it, and MAY additionally present `x-enum-descriptions` as further explanation - help text or a tooltip beside the option - rather than as the label itself.
+
+??? quote "In context"
+
+    The three are consumed by two different generators, and the split is not symmetric. Code generation uses `x-enum-varnames` for the member name and `x-enum-descriptions` for that member's doc comment. Form generation has its own label keyword: a form generator SHOULD label each option with [`x-oold-ui-enum-titles`](spec/#ui-generation) where the schema gives it, and MAY additionally present `x-enum-descriptions` as further explanation - help text or a tooltip beside the option - rather than as the label itself.
+
+See [this rule in the specification](spec/#OOLD-EXT-b23b) (section: enum-names).
+
 ### OOLD-EXT-b249
 
 - <strong title="The RFC 2119 keyword this requirement is stated with. A validator reports a MUST-level finding as a failure and a SHOULD-level one as a warning, so the level decides severity rather than the check that found it.">Level:</strong> SHOULD
