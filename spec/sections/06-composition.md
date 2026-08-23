@@ -81,9 +81,9 @@ When such a merge is required, OO-LD resolves the `allOf` chain by applying **JS
 
 This single model governs every place OO-LD collapses composition into a resolved value: single-valued annotations such as `title` and `x-oold-multilang-title` resolve most-derived-wins, constraints resolve narrow-only, and additive maps merge by key. A preprocessor applying it produces exactly the view that UI and code generators already compute, so no separate "resolved schema" format is needed.
 
-### Closing composed objects {#closing-composed-objects .informative}
+### Closing composed objects {#closing-composed-objects}
 
-Because `allOf` composition is conjunctive, `additionalProperties: false` on one subschema rejects the members that the other composed subschemas contribute, so it cannot close a composed object. To close such an object - rejecting members that no composed subschema declares - use `unevaluatedProperties: false` ([[JSONSCHEMA]] §11.3), which is evaluated after the `allOf` branches and therefore accounts for their properties. Note that [](#schema-instances) requires such a schema to still permit the instance-level `$schema` and `@context` members.
+Because `allOf` composition is conjunctive, `additionalProperties: false` on one subschema rejects the members that the other composed subschemas contribute, so it cannot close a composed object. :rule[OOLD-CMP-1257]{applies=document level=MUST summary="A composed object is closed with unevaluatedProperties, not additionalProperties."}A schema that closes a composed object MUST do so with `unevaluatedProperties: false` ([[JSONSCHEMA]] §11.3), which is evaluated after the `allOf` branches and therefore accounts for their properties, rather than with `additionalProperties: false`, which does not see them and so rejects instances the composition permits. Note that [](#schema-instances) requires such a schema to still permit the instance-level `$schema` and `@context` members.
 
 :::example{title="Closing an inherited object with `unevaluatedProperties`"}
 ```json

@@ -4,6 +4,8 @@
 
 :rule[OOLD-VER-3b96]{applies=document level=MUST summary="A schema must have a $id serving as its global unique identifier."}OO-LD schemas MUST have a `$id` ([[JSONSCHEMA]] §8.2.1) which works as a global and unique identifier of the schema. The value of `$id` MAY be an absolute URI (details below). :rule[OOLD-VER-2e63]{applies=document machine_checkable=no level=SHOULD summary="A schema should be resolvable via its $id."}The schema SHOULD be resolvable via this URI. :rule[OOLD-VER-edb9]{applies=document level=SHOULD summary="A schema should carry an x-oold-uuid annotation holding a UUID value."}The schema SHOULD have an annotation `x-oold-uuid` with a UUID value.
 
+:rule[OOLD-VER-46b9]{applies=document level=SHOULD summary="A schema that carries an x-oold-uuid should also use it in its $id."}A schema carrying `x-oold-uuid` SHOULD also use that UUID in its `$id`, so the identifier stays stable across a move between hosts or paths and the two identifiers cannot disagree about which schema they name.
+
 This obligation applies to a schema *document*, not to every subschema: a fragment inside `properties`, `$defs` or [`x-oold-range`](#range-of-properties) legitimately has no `$id` of its own. The dialect meta-schema enforces exactly that distinction and so checks the requirement itself - see [](#meta-schema).
 
 :::example{title="A schema `$id` and its `x-oold-uuid`"}
@@ -15,7 +17,7 @@ This obligation applies to a schema *document*, not to every subschema: a fragme
 }
 ```
 
-It is recommended to use the UUID also in the `$id`:
+The same schema, with the UUID carried in the `$id` as well:
 ```json
 {
   "$id": "https://example.org/b5203131-7321-46bb-8a11-acb3d1015840.schema.json",
