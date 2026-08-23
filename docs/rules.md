@@ -76,6 +76,23 @@ See [this rule in the specification](spec/#OOLD-CNF-d71d) (section: notation).
 
 ## SCH - Schema well-formedness and the meta-schema
 
+### OOLD-SCH-21d7
+
+- <strong title="The RFC 2119 keyword this requirement is stated with. A validator reports a MUST-level finding as a failure and a SHOULD-level one as a warning, so the level decides severity rather than the check that found it.">Level:</strong> SHOULD
+- <strong title="Who the requirement binds: a document, an implementation of OO-LD, or nobody in particular. This decides what is even able to enforce it.">Applies to:</strong> <span title="Checkable by validating a schema or instance document">document</span>
+- <strong title="Whether a validator could decide this rule by inspecting a document. It does not say the OO-LD validator enforces it today - oold rules list --unchecked reports that.">Machine-checkable:</strong> yes
+- <strong title="The specification release this rule first appeared in. Ids are permanent and never reused, so this does not change once recorded.">Since:</strong> 1.0.0-rc.2
+
+A schema should offer at least one complete mapping, so its instances can round-trip through RDF without loss.
+
+A schema SHOULD offer at least one complete mapping - a [target profile](spec/#synonyms) under which every declared property carries a term - because a property with no term produces no triple, so an instance can only round-trip through RDF without loss under a mapping that covers all of them.
+
+??? quote "In context"
+
+    Leaving a term unmapped is a deferral, not a destination. A schema SHOULD offer at least one complete mapping - a [target profile](spec/#synonyms) under which every declared property carries a term - because a property with no term produces no triple, so an instance can only round-trip through RDF without loss under a mapping that covers all of them. A schema MAY carry further, deliberately partial profiles alongside it.
+
+See [this rule in the specification](spec/#OOLD-SCH-21d7) (section: basic-concepts).
+
 ### OOLD-SCH-2d05
 
 - <strong title="The RFC 2119 keyword this requirement is stated with. A validator reports a MUST-level finding as a failure and a SHOULD-level one as a warning, so the level decides severity rather than the check that found it.">Level:</strong> MUST NOT
