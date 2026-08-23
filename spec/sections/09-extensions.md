@@ -199,6 +199,8 @@ Both keep their unprefixed names deliberately. Unlike the rest of OO-LD's vocabu
 
 `x-enum-descriptions` carries documentation that cannot be derived from the value at all, so it is unconditional and is omitted only where there is nothing to say. Both are distinct from [`x-oold-ui-enum-titles`](#ui-generation), which holds human display labels for a form rather than code identifiers.
 
+Distinct in purpose does not mean distinct in content. A value's documentation usually reads perfectly well as its display label, and both are commonly written once at the source - a generator emitting from an annotated enumeration typically has one text per member and no reason to invent a second. So `x-enum-descriptions` and `x-oold-ui-enum-titles` MAY carry the same list, and a consumer needing one MAY fall back to the other where it is absent: a form to the description, a generated doc comment to the title. `x-enum-varnames` is never a substitute for either, being an identifier chosen for the target language rather than prose written for a reader.
+
 #### Multilanguage support {#multilanguage}
 
 There are two distinct localization concerns: translating a schema's own annotations, and translating a value carried by an instance.
