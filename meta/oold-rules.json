@@ -228,6 +228,21 @@
       "source": "09-extensions.md:58"
     },
     {
+      "id": "OOLD-EXT-1e3c",
+      "area": "EXT",
+      "level": "MUST",
+      "applies_to": "document",
+      "section": "widget-hints",
+      "summary": "A widget hint that is not a registered format goes in x-oold-ui-widget, leaving format for validation.",
+      "text": "A value that is not a registered format (`table`, `tabs`, `grid`, `autocomplete`, `textarea`, `checkbox`, `markdown`, `color`, ...) is widget-only and MUST be carried in `x-oold-ui-widget` rather than `format`, which stays a validation assertion: a validator that checks declared formats would otherwise reject every value of the property.",
+      "text_sha256": "a10af104ed72237be86bd01f683041cf51fae97707f843e0906d22c53016011a",
+      "context": "`format` carries the widget hint when its value is a registered JSON Schema 2020-12 format (`date`, `date-time`, `time`, `duration`, `email`, `uri`, `iri`, `uuid`, ...); a validator may check it and a form generator picks the matching input. A value that is not a registered format (`table`, `tabs`, `grid`, `autocomplete`, `textarea`, `checkbox`, `markdown`, `color`, ...) is widget-only and MUST be carried in `x-oold-ui-widget` rather than `format`, which stays a validation assertion: a validator that checks declared formats would otherwise reject every value of the property.",
+      "machine_checkable": true,
+      "since": "1.0.0-rc.2",
+      "deprecated": false,
+      "source": "09-extensions.md:423"
+    },
+    {
       "id": "OOLD-EXT-1f92",
       "area": "EXT",
       "level": "RECOMMENDED",
