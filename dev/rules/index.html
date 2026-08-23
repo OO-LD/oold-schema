@@ -25,7 +25,7 @@
       
       
       <link rel="icon" href="../assets/OO-LD_logo.jpg">
-      <meta name="generator" content="zensical-0.0.56">
+      <meta name="generator" content="zensical-0.0.57">
     
     
       
@@ -36,12 +36,12 @@
       
         
       
-      <link rel="stylesheet" href="../assets/stylesheets/modern/main.20815dad.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/modern/main.5da3a30f.min.css">
       
         
           
         
-        <link rel="stylesheet" href="../assets/stylesheets/modern/palette.dfe2e883.min.css">
+        <link rel="stylesheet" href="../assets/stylesheets/modern/palette.812a03bb.min.css">
       
       
 
@@ -859,6 +859,17 @@
   
     <nav class="md-nav" aria-label="SCH - Schema well-formedness and the meta-schema">
       <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#oold-sch-2d05" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        OOLD-SCH-2d05
+      </span>
+    </span>
+  </a>
+  
+</li>
         
           <li class="md-nav__item">
   <a href="#oold-sch-a9ee" class="md-nav__link">
@@ -1859,6 +1870,17 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#oold-sch-2d05" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        OOLD-SCH-2d05
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#oold-sch-a9ee" class="md-nav__link">
     <span class="md-ellipsis">
       <span class="md-typeset">
@@ -2762,6 +2784,20 @@ repeats the explanation, so you do not have to come back here.</p>
 </details>
 <p>See <a href="../spec/#OOLD-CNF-d71d">this rule in the specification</a> (section: notation).</p>
 <h2 id="sch-schema-well-formedness-and-the-meta-schema">SCH - Schema well-formedness and the meta-schema<a class="headerlink" href="#sch-schema-well-formedness-and-the-meta-schema" title="Permanent link">&para;</a></h2>
+<h3 id="oold-sch-2d05">OOLD-SCH-2d05<a class="headerlink" href="#oold-sch-2d05" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong title="The RFC 2119 keyword this requirement is stated with. A validator reports a MUST-level finding as a failure and a SHOULD-level one as a warning, so the level decides severity rather than the check that found it.">Level:</strong> MUST NOT</li>
+<li><strong title="Who the requirement binds: a document, an implementation of OO-LD, or nobody in particular. This decides what is even able to enforce it.">Applies to:</strong> <span title="Constrains an OO-LD implementation; needs a library conformance suite">implementation</span></li>
+<li><strong title="Whether a validator could decide this rule by inspecting a document. It does not say the OO-LD validator enforces it today - oold rules list --unchecked reports that.">Machine-checkable:</strong> no</li>
+<li><strong title="The specification release this rule first appeared in. Ids are permanent and never reused, so this does not change once recorded.">Since:</strong> 1.0.0-rc.2</li>
+</ul>
+<p>An unmapped term is not a conformance failure, though a tool may report it under an opt-in strict mode.</p>
+<p>An implementation MUST NOT treat an unmapped term as a conformance failure, though it MAY report one as guidance, or reject it under a strict mode the user opts into.</p>
+<details class="quote">
+<summary>In context</summary>
+<p>A term of an OO-LD schema MAY be left unmapped. An unmapped term is structurally valid and simply produces no triples under JSON-LD expansion, which is what lets semantics be added incrementally, one term at a time, rather than committed to up front. Where every term is intended to reach RDF, a schema MAY declare <code>@vocab</code> in its <code>@context</code>, mapping each otherwise-unmapped term into a default namespace, or carry the mapping in <a href="../spec/#synonyms"><code>x-oold-context</code></a>, whose entries are promoted into the <code>@context</code> before a JSON-LD processor runs. An implementation MUST NOT treat an unmapped term as a conformance failure, though it MAY report one as guidance, or reject it under a strict mode the user opts into.</p>
+</details>
+<p>See <a href="../spec/#OOLD-SCH-2d05">this rule in the specification</a> (section: basic-concepts).</p>
 <h3 id="oold-sch-a9ee">OOLD-SCH-a9ee<a class="headerlink" href="#oold-sch-a9ee" title="Permanent link">&para;</a></h3>
 <ul>
 <li><strong title="The RFC 2119 keyword this requirement is stated with. A validator reports a MUST-level finding as a failure and a SHOULD-level one as a warning, so the level decides severity rather than the check that found it.">Level:</strong> MUST NOT</li>
@@ -3799,7 +3835,7 @@ repeats the explanation, so you do not have to come back here.</p>
       <script id="__config" type="application/json">{"annotate":null,"base":"..","features":["announce.dismiss","content.code.annotate","content.action.edit","content.action.view","content.code.copy","content.code.select","content.footnote.tooltips","content.tabs.link","content.tooltips","navigation.footer","navigation.indexes","navigation.tabs","navigation.instant","navigation.instant.prefetch","navigation.path","navigation.prune","navigation.top","navigation.tracking","search.highlight"],"search":"../assets/javascripts/workers/search.7d14d953.min.js","tags":null,"translations":{"clipboard.copied":"Copied to clipboard","clipboard.copy":"Copy to clipboard","search.result.more.one":"1 more on this page","search.result.more.other":"# more on this page","search.result.none":"No matching documents","search.result.one":"1 matching document","search.result.other":"# matching documents","search.result.placeholder":"Type to start searching","search.result.term.missing":"Missing","select.version":"Select version"},"version":{"provider":"mike"}}</script>
     
     
-      <script src="../assets/javascripts/bundle.e886cdf1.min.js"></script>
+      <script src="../assets/javascripts/bundle.49251538.min.js"></script>
       
     
   </body>
