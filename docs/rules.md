@@ -1130,7 +1130,7 @@ a form generator SHOULD label each option with [`x-oold-ui-enum-titles`](spec/#u
 
 ??? quote "In context"
 
-    The three are consumed by two different generators, and the split is not symmetric. Code generation uses `x-enum-varnames` for the member name and `x-enum-descriptions` for that member's doc comment. Form generation has its own label keyword: a form generator SHOULD label each option with [`x-oold-ui-enum-titles`](spec/#ui-generation) where the schema gives it, and MAY additionally present `x-enum-descriptions` as further explanation - help text or a tooltip beside the option - rather than as the label itself.
+    Three keywords serve two generators. Code generation uses `x-enum-varnames` for the member name and `x-enum-descriptions` for that member's doc comment. Form generation uses a keyword of its own for the option label, [`x-oold-ui-enum-titles`](spec/#ui-generation): a form generator SHOULD label each option with [`x-oold-ui-enum-titles`](spec/#ui-generation) where the schema gives it, and MAY additionally present `x-enum-descriptions` as further explanation - help text or a tooltip beside the option - rather than as the label itself.
 
 See [this rule in the specification](spec/#OOLD-EXT-b23b) (section: enum-names).
 
