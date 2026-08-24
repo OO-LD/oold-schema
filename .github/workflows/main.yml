@@ -20,12 +20,13 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0  # full history + tags so render_spec.py can derive the spec version
-      - uses: actions/setup-node@v4
-        with:
-          node-version: "20"
       - uses: astral-sh/setup-uv@v6
-      - run: npm install
-      - run: npm run validate
+      # Validation runs on oold-python. --meta . reads the meta-schemas and the rule
+      # catalogue from THIS checkout, so a rule added in this branch is enforced by the
+      # run that introduces it; a released version could not see it. Node is no longer
+      # installed here: scripts/validate.mjs is frozen as the reference oold-python is
+      # compared against, and is run by that comparison rather than by this workflow.
+      - run: make validate
       # Re-render the spec and fail if the committed docs/spec/index.html is stale
       # (drift guard), then lint its structure. Renderer deps are pinned inline
       # via PEP 723, so `uv run` stays reproducible.

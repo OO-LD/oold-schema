@@ -9,8 +9,16 @@ ZENSICAL := uvx --with pyyaml==6.0.2 zensical@$(ZENSICAL_VERSION)
 # pinned inline in the script (PEP 723), so `uv run` needs no extra flags and the
 # generated HTML stays reproducible (the CI drift guard compares byte-for-byte).
 
-# Node runs only the schema validator. Override when `node` is not on PATH
-# (e.g. WSL with only a Windows install): make validate NODE="/c/.../node.exe"
+# Validation runs on oold-python, the reference implementation this specification is
+# developed against. Pinned so a validator release cannot change what CI means without a
+# commit here. --meta . points it at THIS working tree rather than a released tag, so a
+# rule added in a branch is enforced by the run that introduces it.
+OOLD_VERSION ?= 0.18.0
+OOLD := uv run --with "oold[validation]==$(OOLD_VERSION)" oold
+
+# scripts/validate.mjs is frozen: kept runnable as the reference the Python port is
+# compared against (oold-python's parity suite), but no longer what CI runs. Override
+# when `node` is not on PATH: make validate-reference NODE="/c/.../node.exe"
 NODE ?= node
 
 .PHONY: install
@@ -18,7 +26,12 @@ install: ## Install the Node dependencies (schema validation)
 	@npm install
 
 .PHONY: validate
-validate: ## Validate example schemas + instances (meta-schema, formats, JSON-LD)
+validate: ## Validate example schemas + instances against this working tree's meta-schemas
+	@$(OOLD) validate examples --meta . --offline
+	@$(OOLD) compliance examples/compliance --meta . --offline
+
+.PHONY: validate-reference
+validate-reference: ## Run the frozen JS reference validator (not run by CI)
 	@"$(NODE)" scripts/validate.mjs
 
 .PHONY: spec
