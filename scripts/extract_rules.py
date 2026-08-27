@@ -137,9 +137,9 @@ def paragraph_bounds(lines: list[str], index: int) -> tuple[int, int]:
     """The prose block containing line `index`.
 
     This feeds `context`: the surrounding prose a rule's sentence was stated in, kept for
-    display. It is not what gets hashed - see rule_scope.sentence_end for the narrower `text`,
-    and for why sentence-level extraction is safe despite the hazards block granularity used to
-    dodge (abbreviations, periods inside code spans).
+    display. It is not what gets hashed - see rule_scope.sentence_end for the narrower `text`, and
+    for how it handles the hazards of cutting prose into sentences (abbreviations, periods inside
+    code spans).
 
     A list item is its own block. Several of the round-trip requirements are bullets in one list,
     and treating the list as a single paragraph would give every one of them the same `context`

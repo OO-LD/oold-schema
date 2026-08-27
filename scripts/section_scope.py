@@ -9,14 +9,15 @@ guidelines, diagrams, examples, and notes in this specification are non-normativ
 express that: the `:::note` / `:::example` blocks that `extract_rules.non_normative_blocks` already
 handles, and a heading marked `.informative`, which is what this module covers.
 
-`scripts/render_spec.py` acted on the second and `scripts/extract_rules.py` did not, so a
-`:rule[...]` placed in an informative section was rendered without RFC 2119 markup and catalogued
-as normative anyway - the catalogue asserting a requirement the specification disclaims on the same
-page. Nothing exploited that, but only because no marker had been written there yet.
+`scripts/render_spec.py` and `scripts/extract_rules.py` both consult :func:`is_informative`, so
+the renderer and the extractor cannot disagree about which sections are disclaimed. They must not:
+the renderer omits RFC 2119 markup in an informative section, and the extractor rejects a
+`:rule[...]` there, so a split reading would let the catalogue assert a requirement the
+specification withdraws on the same page.
 
-The rule itself is small and lives in :func:`is_informative`, so the renderer and the extractor
-cannot disagree about it. Its inheritance is the part worth stating: `informative` propagates to
-every descendant heading, so marking a level-4 section covers the level-5 sections beneath it.
+Inheritance is the part worth stating: `informative` propagates to every descendant heading, so
+marking a level-4 section covers the level-5 sections beneath it, and a sibling at the same level
+starts again from its own markers.
 """
 
 from __future__ import annotations

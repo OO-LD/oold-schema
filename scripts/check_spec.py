@@ -93,9 +93,8 @@ if os.path.exists(RULES_FILE):
         rules = json.load(handle).get("rules", [])
 
 # The keywords extraction recognises and the levels the catalog schema admits are two lists of
-# the same thing, written in two files. When they drift, the failure lands nowhere near the
-# cause: extraction succeeds, and the catalog it wrote then fails its own schema. That is what
-# happened when NOT RECOMMENDED was added to the extractor alone.
+# the same thing, written in two files. Checked here because drift between them surfaces nowhere
+# near its cause: extraction succeeds, and the catalog it just wrote then fails its own schema.
 RULES_SCHEMA_FILE = os.path.join(ROOT, "meta", "oold-rules.schema.json")
 if os.path.exists(RULES_SCHEMA_FILE):
     from extract_rules import RFC2119_LEVELS as recognised  # noqa: E402
