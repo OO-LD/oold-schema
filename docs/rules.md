@@ -128,6 +128,23 @@ OO-LD schema documents MUST NOT be interpreted as JSON-LD documents, because tha
 
 See [this rule in the specification](spec/#OOLD-SCH-a9ee) (section: basic-concepts).
 
+### OOLD-SCH-cfb8
+
+- <strong title="The RFC 2119 keyword this requirement is stated with. A validator reports a MUST-level finding as a failure and a SHOULD-level one as a warning, so the level decides severity rather than the check that found it.">Level:</strong> MUST
+- <strong title="Who the requirement binds: a document, an implementation of OO-LD, or nobody in particular. This decides what is even able to enforce it.">Applies to:</strong> <span title="Checkable by validating a schema or instance document">document</span>
+- <strong title="Whether a validator could decide this rule by inspecting a document. It does not say the OO-LD validator enforces it today - oold rules list --unchecked reports that.">Machine-checkable:</strong> yes
+- <strong title="The specification release this rule first appeared in. Ids are permanent and never reused, so this does not change once recorded.">Since:</strong> 1.0.0-rc.3
+
+A keyword OO-LD defines carries the x-oold- prefix, unless its name is fixed elsewhere.
+
+A keyword OO-LD defines MUST carry the `x-oold-` prefix (an `x-` vendor extension in the JSON Schema / OpenAPI sense - the namespace marks the defining project, not a commercial or closed status; OO-LD's keywords are openly specified here), so it is a valid [JSON Schema extension keyword](https://json-schema.org/draft/2020-12/json-schema-core#section-6.5) and, at the same time, a valid [OpenAPI 3.0 Specification Extension](https://spec.openapis.org/oas/v3.0.3.html#specification-extensions) (OpenAPI 3.0 rejects unprefixed custom keywords in a Schema object).
+
+??? quote "In context"
+
+    OO-LD adds keywords on top of JSON Schema 2020-12. A keyword OO-LD defines MUST carry the `x-oold-` prefix (an `x-` vendor extension in the JSON Schema / OpenAPI sense - the namespace marks the defining project, not a commercial or closed status; OO-LD's keywords are openly specified here), so it is a valid [JSON Schema extension keyword](https://json-schema.org/draft/2020-12/json-schema-core#section-6.5) and, at the same time, a valid [OpenAPI 3.0 Specification Extension](https://spec.openapis.org/oas/v3.0.3.html#specification-extensions) (OpenAPI 3.0 rejects unprefixed custom keywords in a Schema object). Exempt are the keywords whose name is not OO-LD's to choose: `@context`, fixed by JSON-LD11 and therefore impossible to namespace, and `x-enum-varnames` / `x-enum-descriptions`, adopted unchanged from the generator tooling that already reads them (see [enum-names](spec/#enum-names)). Everything else OO-LD defines carries the prefix, including `x-oold-sssom`, whose payload follows [SSSOM](https://w3id.org/sssom/) but whose keyword name is OO-LD's own choice (see [ontology-mapping](spec/#ontology-mapping)).
+
+See [this rule in the specification](spec/#OOLD-SCH-cfb8) (section: meta-schema).
+
 ## CMP - Composition, merge and override
 
 ### OOLD-CMP-1257
@@ -330,12 +347,12 @@ See [this rule in the specification](spec/#OOLD-INS-1d33) (section: identity).
 
 Under the value-form pattern a reference is written as an object and its term must not carry @type.
 
-References are written as objects, and the term MUST NOT carry `@type`.
+A reference MUST be written as an object, and the term MUST NOT carry `@type`.
 
 ??? quote "In context"
 
 
-    1. Value-form - a single plain term (no `@type: "@id"`); the value shape alone disambiguates: a bare scalar is a literal, `{ "id": ... }` is a reference, a typed object is embedded. References are written as objects, and the term MUST NOT carry `@type`.
+    1. Value-form - a single plain term (no `@type: "@id"`); the value shape alone disambiguates: a bare scalar is a literal, `{ "id": ... }` is a reference, a typed object is embedded. A reference MUST be written as an object, and the term MUST NOT carry `@type`.
 
 See [this rule in the specification](spec/#OOLD-INS-1df7) (section: value-forms).
 
@@ -378,11 +395,11 @@ See [this rule in the specification](spec/#OOLD-INS-2b3f) (section: identity).
 
 A property whose range includes free text must not use @type @id.
 
-A property whose range is references only therefore uses `@type: "@id"` and MAY be written as a bare IRI string; a property whose range includes free text MUST NOT use `@type: "@id"`.
+A property whose range includes free text therefore MUST NOT use `@type: "@id"`.
 
 ??? quote "In context"
 
-    A single `@context` term cannot interpret a bare string as both a literal and an IRI: `@type: "@id"` coerces every string value to an IRI (so free text becomes an - often invalid, then dropped - IRI), while a plain term keeps every string a literal. A property whose range is references only therefore uses `@type: "@id"` and MAY be written as a bare IRI string; a property whose range includes free text MUST NOT use `@type: "@id"`.
+    A single `@context` term cannot interpret a bare string as both a literal and an IRI: `@type: "@id"` coerces every string value to an IRI (so free text becomes an - often invalid, then dropped - IRI), while a plain term keeps every string a literal. A property whose range includes free text therefore MUST NOT use `@type: "@id"`. A property whose range is references only MAY be written as a bare IRI string, and where it is, its term MUST carry `@type: "@id"`.
 
 See [this rule in the specification](spec/#OOLD-INS-2e5d) (section: value-forms).
 
@@ -436,6 +453,23 @@ Therefore, when OO-LD tooling exports an instance (to JSON-LD / RDF), it MUST ma
     These types live in the schema, not in the instance data, so a JSON-LD-only processor - which sees only the instance and its `@context` - cannot derive them. Therefore, when OO-LD tooling exports an instance (to JSON-LD / RDF), it MUST materialize the declared `rdf:type`(s) as an `@type` on the instance, so that the type reaches RDF without access to the schema or to a type registry.
 
 See [this rule in the specification](spec/#OOLD-INS-75c6) (section: semantic-type).
+
+### OOLD-INS-770a
+
+- <strong title="The RFC 2119 keyword this requirement is stated with. A validator reports a MUST-level finding as a failure and a SHOULD-level one as a warning, so the level decides severity rather than the check that found it.">Level:</strong> MUST
+- <strong title="Who the requirement binds: a document, an implementation of OO-LD, or nobody in particular. This decides what is even able to enforce it.">Applies to:</strong> <span title="Checkable by validating a schema or instance document">document</span>
+- <strong title="Whether a validator could decide this rule by inspecting a document. It does not say the OO-LD validator enforces it today - oold rules list --unchecked reports that.">Machine-checkable:</strong> yes
+- <strong title="The specification release this rule first appeared in. Ids are permanent and never reused, so this does not change once recorded.">Since:</strong> 1.0.0-rc.3
+
+A reference written as a bare IRI string requires @type @id on its term.
+
+A property whose range is references only MAY be written as a bare IRI string, and where it is, its term MUST carry `@type: "@id"`.
+
+??? quote "In context"
+
+    A single `@context` term cannot interpret a bare string as both a literal and an IRI: `@type: "@id"` coerces every string value to an IRI (so free text becomes an - often invalid, then dropped - IRI), while a plain term keeps every string a literal. A property whose range includes free text therefore MUST NOT use `@type: "@id"`. A property whose range is references only MAY be written as a bare IRI string, and where it is, its term MUST carry `@type: "@id"`.
+
+See [this rule in the specification](spec/#OOLD-INS-770a) (section: value-forms).
 
 ### OOLD-INS-9416
 
@@ -516,7 +550,7 @@ For a property whose range mixes free text with references and/or embedded objec
 
     For a property whose range mixes free text with references and/or embedded objects (for example `Text | PostalAddress | Place`), two patterns keep the instance round-trippable (see [round-trip](spec/#round-trip)); a model ecosystem SHOULD adopt one of them consistently:
 
-    1. Value-form - a single plain term (no `@type: "@id"`); the value shape alone disambiguates: a bare scalar is a literal, `{ "id": ... }` is a reference, a typed object is embedded. References are written as objects, and the term MUST NOT carry `@type`.
+    1. Value-form - a single plain term (no `@type: "@id"`); the value shape alone disambiguates: a bare scalar is a literal, `{ "id": ... }` is a reference, a typed object is embedded. A reference MUST be written as an object, and the term MUST NOT carry `@type`.
     2. Separate keys - a canonical term `p` with `@type: "@id"` (a bare IRI string reference, plus embedded objects via a scoped `@context`) and a companion `p_text` that is a plain term for the literal.
 
 See [this rule in the specification](spec/#OOLD-INS-da1a) (section: value-forms).
@@ -530,7 +564,7 @@ See [this rule in the specification](spec/#OOLD-INS-da1a) (section: value-forms)
 
 A consuming side must not be assumed to hold an rdf:type-to-schema registry; exports are self-sufficient.
 
-An implementation MAY additionally maintain a registry mapping `rdf:type` IRIs to OO-LD schemas to resolve case 3, but such a registry MUST NOT be assumed to exist on the consuming side - so exports must be self-sufficient (see below).
+An implementation MAY additionally maintain a registry mapping `rdf:type` IRIs to OO-LD schemas to resolve case 3, but such a registry MUST NOT be assumed to exist on the consuming side - so exports are self-sufficient (see below).
 
 See [this rule in the specification](spec/#OOLD-INS-f010) (section: referencing-schema).
 
@@ -741,6 +775,23 @@ The version SHOULD be part of the schema's location:
     - or a release tag on a code-hosting service, e.g. `https://raw.githubusercontent.com/MyOrg/my-package/refs/tags/2.0.0/b5203131-7321-46bb-8a11-acb3d1015840.schema.json`. Such a location SHOULD name an immutable ref: a branch name identifies a moving target, whose content changes with every push, rather than a fixed version.
 
 See [this rule in the specification](spec/#OOLD-VER-534a) (section: versioning).
+
+### OOLD-VER-9846
+
+- <strong title="The RFC 2119 keyword this requirement is stated with. A validator reports a MUST-level finding as a failure and a SHOULD-level one as a warning, so the level decides severity rather than the check that found it.">Level:</strong> MUST NOT
+- <strong title="Who the requirement binds: a document, an implementation of OO-LD, or nobody in particular. This decides what is even able to enforce it.">Applies to:</strong> <span title="Constrains an OO-LD implementation; needs a library conformance suite">implementation</span>
+- <strong title="Whether a validator could decide this rule by inspecting a document. It does not say the OO-LD validator enforces it today - oold rules list --unchecked reports that.">Machine-checkable:</strong> no
+- <strong title="The specification release this rule first appeared in. Ids are permanent and never reused, so this does not change once recorded.">Since:</strong> 1.0.0-rc.3
+
+x-oold-sssom annotates the schema, so an exporter must not stamp it onto instances.
+
+It is an annotation about the schema itself, and an exporter MUST NOT stamp it onto instances - distinct from `x-oold-instance-rdf-type`, the `rdf:type`s instances carry on export (see [semantic-type](spec/#semantic-type)), which are stamped onto instance data.
+
+??? quote "In context"
+
+    A schema states which external ontology resources it corresponds to with a top-level `x-oold-sssom` block - the [term-synonym](spec/#synonyms) mapping row lifted to the schema level. Its subject is the schema itself, identified by its `$id`: in OO-LD the schema document at that URL is the class definition, so `$id` serves as the mapping's `subject_id`. It is an object keyed by the object IRI of a resolvable resource (an RDF/OWL class, a controlled-vocabulary term, another schema), each value carrying the SSSOM slots: `predicate_id` (default `skos:exactMatch`; `skos:closeMatch` for a looser correspondence), `mapping_set_id`, and the rest of the open bag. Because these are SKOS mapping predicates the correspondence is non-logical and reasoner-safe: `skos:exactMatch` asserts interchangeability, not the logical `owl:equivalentClass` (a schema that wants the reasoner-affecting claim uses `owl:equivalentClass` explicitly as the `predicate_id`). It is an annotation about the schema itself, and an exporter MUST NOT stamp it onto instances - distinct from `x-oold-instance-rdf-type`, the `rdf:type`s instances carry on export (see [semantic-type](spec/#semantic-type)), which are stamped onto instance data.
+
+See [this rule in the specification](spec/#OOLD-VER-9846) (section: ontology-mapping).
 
 ### OOLD-VER-befc
 
@@ -955,6 +1006,23 @@ For OpenAPI 3.0, which rejects unprefixed keywords in a Schema Object (and typic
 
 See [this rule in the specification](spec/#OOLD-EXT-436a) (section: semantic-delivery).
 
+### OOLD-EXT-44bd
+
+- <strong title="The RFC 2119 keyword this requirement is stated with. A validator reports a MUST-level finding as a failure and a SHOULD-level one as a warning, so the level decides severity rather than the check that found it.">Level:</strong> MUST NOT
+- <strong title="Who the requirement binds: a document, an implementation of OO-LD, or nobody in particular. This decides what is even able to enforce it.">Applies to:</strong> <span title="Constrains an OO-LD implementation; needs a library conformance suite">implementation</span>
+- <strong title="Whether a validator could decide this rule by inspecting a document. It does not say the OO-LD validator enforces it today - oold rules list --unchecked reports that.">Machine-checkable:</strong> no
+- <strong title="The specification release this rule first appeared in. Ids are permanent and never reused, so this does not change once recorded.">Since:</strong> 1.0.0-rc.3
+
+The multilang schema-annotation keywords label the schema, so they must not be interpreted as JSON-LD.
+
+These keywords localize the schema's own labels and MUST NOT be interpreted as JSON-LD.
+
+??? quote "In context"
+
+    The JSON Schema annotation keywords `title` and `description` carry a single, default human-readable string used by tooling (for example for UI generation). To provide localized variants, OO-LD adds the keywords `x-oold-multilang-title` and `x-oold-multilang-description`. Their value MUST be an object whose keys are [BCP 47](https://www.rfc-editor.org/info/bcp47) language tags (e.g. `en`, `de`, `en-GB`) and whose values are the translated strings. A schema SHOULD still provide a default `title` / `description`; a consumer that has no entry for the requested language falls back to that default. These keywords localize the schema's own labels and MUST NOT be interpreted as JSON-LD.
+
+See [this rule in the specification](spec/#OOLD-EXT-44bd) (section: localizing-schema-annotations).
+
 ### OOLD-EXT-4966
 
 - <strong title="The RFC 2119 keyword this requirement is stated with. A validator reports a MUST-level finding as a failure and a SHOULD-level one as a warning, so the level decides severity rather than the check that found it.">Level:</strong> MUST
@@ -1058,6 +1126,23 @@ To localize a value of an instance - a translatable string in the data that shou
 
 See [this rule in the specification](spec/#OOLD-EXT-6312) (section: localizing-instance-values).
 
+### OOLD-EXT-68fa
+
+- <strong title="The RFC 2119 keyword this requirement is stated with. A validator reports a MUST-level finding as a failure and a SHOULD-level one as a warning, so the level decides severity rather than the check that found it.">Level:</strong> MUST
+- <strong title="Who the requirement binds: a document, an implementation of OO-LD, or nobody in particular. This decides what is even able to enforce it.">Applies to:</strong> <span title="Constrains an OO-LD implementation; needs a library conformance suite">implementation</span>
+- <strong title="Whether a validator could decide this rule by inspecting a document. It does not say the OO-LD validator enforces it today - oold rules list --unchecked reports that.">Machine-checkable:</strong> no
+- <strong title="The specification release this rule first appeared in. Ids are permanent and never reused, so this does not change once recorded.">Since:</strong> 1.0.0-rc.3
+
+A frame derived from a schema takes its @type from the class type, embeds inlined object properties as subframes and keeps reference-valued properties as IRIs with @embed @never.
+
+A tool that derives a frame MUST derive it mechanically: the schema's class type becomes the frame `@type`; an inlined object property becomes a nested subframe that embeds the referenced node; a reference-valued property (including one whose term is mapped with JSON-LD `@reverse`) becomes a subframe with `@embed: @never` so its targets stay IRIs, in line with the inline-versus-reference choice `x-oold-range` already records; and `@explicit` / `@requireAll` / `@default` follow from `additionalProperties` and `required`.
+
+??? quote "In context"
+
+    This makes an OO-LD schema bidirectional: its `@context` drives expansion (JSON to RDF), and the frame derived from its structure drives framing (RDF back to the schema's JSON tree). A tool that derives a frame MUST derive it mechanically: the schema's class type becomes the frame `@type`; an inlined object property becomes a nested subframe that embeds the referenced node; a reference-valued property (including one whose term is mapped with JSON-LD `@reverse`) becomes a subframe with `@embed: @never` so its targets stay IRIs, in line with the inline-versus-reference choice `x-oold-range` already records; and `@explicit` / `@requireAll` / `@default` follow from `additionalProperties` and `required`. The frame's `@context` is the composition of the referenced schemas' contexts.
+
+See [this rule in the specification](spec/#OOLD-EXT-68fa) (section: framing).
+
 ### OOLD-EXT-6ea3
 
 - <strong title="The RFC 2119 keyword this requirement is stated with. A validator reports a MUST-level finding as a failure and a SHOULD-level one as a warning, so the level decides severity rather than the check that found it.">Level:</strong> SHOULD
@@ -1130,6 +1215,26 @@ Selection MUST NOT use a synonym from outside the target profile; where the prof
 
 See [this rule in the specification](spec/#OOLD-EXT-8f62) (section: synonyms).
 
+### OOLD-EXT-ad60
+
+- <strong title="The RFC 2119 keyword this requirement is stated with. A validator reports a MUST-level finding as a failure and a SHOULD-level one as a warning, so the level decides severity rather than the check that found it.">Level:</strong> SHOULD NOT
+- <strong title="Who the requirement binds: a document, an implementation of OO-LD, or nobody in particular. This decides what is even able to enforce it.">Applies to:</strong> <span title="Checkable by validating a schema or instance document">document</span>
+- <strong title="Whether a validator could decide this rule by inspecting a document. It does not say the OO-LD validator enforces it today - oold rules list --unchecked reports that.">Machine-checkable:</strong> yes
+- <strong title="The specification release this rule first appeared in. Ids are permanent and never reused, so this does not change once recorded.">Since:</strong> 1.0.0-rc.3
+
+The deprecated x-oold-reverse-default-properties array should not be used; x-oold-ui-default-property on the property replaces it.
+
+The earlier `x-oold-reverse-default-properties` array is deprecated and SHOULD NOT be used: a reverse property shown by default is marked with `x-oold-ui-default-property` on the property itself (see [ui-generation](spec/#ui-generation)), which, unlike the merged array, is overridable under composition. define `works_for` in the `properties` of `Person`, mapped to a semantic property (`schema:worksFor`) in the `@context` of `Person`; define `employees` in `x-oold-reverse-properties` of `Organization`, mapped with `@reverse` to the same property in the `@context` of `Organization` (JSON-LD11 reverse properties).
+
+??? quote "In context"
+
+    Many relations are symmetric (e.g. Organization employs Person ⇔ Person works for Organization) and users want to edit them from both sides, without storing the information twice. The keywords `x-oold-reverse-properties` and `x-oold-reverse-required` declare such a reverse property, mapped with JSON-LD `@reverse` in the `@context`. The earlier `x-oold-reverse-default-properties` array is deprecated and SHOULD NOT be used: a reverse property shown by default is marked with `x-oold-ui-default-property` on the property itself (see [ui-generation](spec/#ui-generation)), which, unlike the merged array, is overridable under composition. To make `employees` the reverse of `works_for`:
+
+    - define `works_for` in the `properties` of `Person`, mapped to a semantic property (`schema:worksFor`) in the `@context` of `Person`;
+    - define `employees` in `x-oold-reverse-properties` of `Organization`, mapped with `@reverse` to the same property in the `@context` of `Organization` (JSON-LD11 reverse properties).
+
+See [this rule in the specification](spec/#OOLD-EXT-ad60) (section: reverse-properties).
+
 ### OOLD-EXT-adcc
 
 - <strong title="The RFC 2119 keyword this requirement is stated with. A validator reports a MUST-level finding as a failure and a SHOULD-level one as a warning, so the level decides severity rather than the check that found it.">Level:</strong> MUST NOT
@@ -1198,6 +1303,25 @@ Where any `enum` value is not a valid identifier in the target language, the sch
 
 See [this rule in the specification](spec/#OOLD-EXT-b249) (section: enum-names).
 
+### OOLD-EXT-c77a
+
+- <strong title="The RFC 2119 keyword this requirement is stated with. A validator reports a MUST-level finding as a failure and a SHOULD-level one as a warning, so the level decides severity rather than the check that found it.">Level:</strong> MUST
+- <strong title="Who the requirement binds: a document, an implementation of OO-LD, or nobody in particular. This decides what is even able to enforce it.">Applies to:</strong> <span title="Checkable by validating a schema or instance document">document</span>
+- <strong title="Whether a validator could decide this rule by inspecting a document. It does not say the OO-LD validator enforces it today - oold rules list --unchecked reports that.">Machine-checkable:</strong> yes
+- <strong title="The specification release this rule first appeared in. Ids are permanent and never reused, so this does not change once recorded.">Since:</strong> 1.0.0-rc.3
+
+An x-oold-range takes one of three forms: an IRI, an array of IRIs, or a subschema.
+
+Its value MUST take one of three forms, and no other: An IRI (string) referencing a single allowed target schema. This is the common case:
+
+??? quote "In context"
+
+    JSON Schema itself supports linked data only in the form of a subobject; references to independent external objects are just URL-strings without further restrictions. To express constraints on the type of the referenced object - as in OWL and SHACL - the keyword `x-oold-range` is introduced (see also [json-schema-org/json-schema-vocabularies#55](https://github.com/json-schema-org/json-schema-vocabularies/issues/55)). Its value MUST take one of three forms, and no other:
+
+    1. An IRI (string) referencing a single allowed target schema. This is the common case:
+
+See [this rule in the specification](spec/#OOLD-EXT-c77a) (section: range-of-properties).
+
 ### OOLD-EXT-dd76
 
 - <strong title="The RFC 2119 keyword this requirement is stated with. A validator reports a MUST-level finding as a failure and a SHOULD-level one as a warning, so the level decides severity rather than the check that found it.">Level:</strong> SHOULD
@@ -1211,7 +1335,7 @@ A schema SHOULD still provide a default `title` / `description`; a consumer that
 
 ??? quote "In context"
 
-    The JSON Schema annotation keywords `title` and `description` carry a single, default human-readable string used by tooling (for example for UI generation). To provide localized variants, OO-LD adds the keywords `x-oold-multilang-title` and `x-oold-multilang-description`. Their value MUST be an object whose keys are [BCP 47](https://www.rfc-editor.org/info/bcp47) language tags (e.g. `en`, `de`, `en-GB`) and whose values are the translated strings. A schema SHOULD still provide a default `title` / `description`; a consumer that has no entry for the requested language falls back to that default. These keywords localize the schema's own labels and are not interpreted as JSON-LD.
+    The JSON Schema annotation keywords `title` and `description` carry a single, default human-readable string used by tooling (for example for UI generation). To provide localized variants, OO-LD adds the keywords `x-oold-multilang-title` and `x-oold-multilang-description`. Their value MUST be an object whose keys are [BCP 47](https://www.rfc-editor.org/info/bcp47) language tags (e.g. `en`, `de`, `en-GB`) and whose values are the translated strings. A schema SHOULD still provide a default `title` / `description`; a consumer that has no entry for the requested language falls back to that default. These keywords localize the schema's own labels and MUST NOT be interpreted as JSON-LD.
 
 See [this rule in the specification](spec/#OOLD-EXT-dd76) (section: localizing-schema-annotations).
 
@@ -1249,6 +1373,19 @@ A published reference SHOULD point at a target that validates against the proper
 
 See [this rule in the specification](spec/#OOLD-EXT-ece0) (section: range-of-properties).
 
+### OOLD-EXT-eeda
+
+- <strong title="The RFC 2119 keyword this requirement is stated with. A validator reports a MUST-level finding as a failure and a SHOULD-level one as a warning, so the level decides severity rather than the check that found it.">Level:</strong> MUST
+- <strong title="Who the requirement binds: a document, an implementation of OO-LD, or nobody in particular. This decides what is even able to enforce it.">Applies to:</strong> <span title="Constrains an OO-LD implementation; needs a library conformance suite">implementation</span>
+- <strong title="Whether a validator could decide this rule by inspecting a document. It does not say the OO-LD validator enforces it today - oold rules list --unchecked reports that.">Machine-checkable:</strong> no
+- <strong title="The specification release this rule first appeared in. Ids are permanent and never reused, so this does not change once recorded.">Since:</strong> 1.0.0-rc.3
+
+An implementation supporting reverse properties reads them from, and writes an edit back to, the forward property on the referenced object.
+
+An implementation that supports reverse properties MUST read and modify them on the object that actually stores them: loading an `Organization` editor prepopulates `employees` by querying which persons work for it; storing the `Organization` writes it into each referenced person's `works_for` field; and removing a person from `employees` removes the organization from theirs.
+
+See [this rule in the specification](spec/#OOLD-EXT-eeda) (section: reverse-properties).
+
 ### OOLD-EXT-ef09
 
 - <strong title="The RFC 2119 keyword this requirement is stated with. A validator reports a MUST-level finding as a failure and a SHOULD-level one as a warning, so the level decides severity rather than the check that found it.">Level:</strong> MUST
@@ -1262,7 +1399,7 @@ Their value MUST be an object whose keys are [BCP 47](https://www.rfc-editor.org
 
 ??? quote "In context"
 
-    The JSON Schema annotation keywords `title` and `description` carry a single, default human-readable string used by tooling (for example for UI generation). To provide localized variants, OO-LD adds the keywords `x-oold-multilang-title` and `x-oold-multilang-description`. Their value MUST be an object whose keys are [BCP 47](https://www.rfc-editor.org/info/bcp47) language tags (e.g. `en`, `de`, `en-GB`) and whose values are the translated strings. A schema SHOULD still provide a default `title` / `description`; a consumer that has no entry for the requested language falls back to that default. These keywords localize the schema's own labels and are not interpreted as JSON-LD.
+    The JSON Schema annotation keywords `title` and `description` carry a single, default human-readable string used by tooling (for example for UI generation). To provide localized variants, OO-LD adds the keywords `x-oold-multilang-title` and `x-oold-multilang-description`. Their value MUST be an object whose keys are [BCP 47](https://www.rfc-editor.org/info/bcp47) language tags (e.g. `en`, `de`, `en-GB`) and whose values are the translated strings. A schema SHOULD still provide a default `title` / `description`; a consumer that has no entry for the requested language falls back to that default. These keywords localize the schema's own labels and MUST NOT be interpreted as JSON-LD.
 
 See [this rule in the specification](spec/#OOLD-EXT-ef09) (section: localizing-schema-annotations).
 

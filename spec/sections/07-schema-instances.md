@@ -32,7 +32,7 @@ An OO-LD-aware tool determines an instance's schema in the following order:
 2. otherwise, the URL given under `@context`, if the referenced document declares itself to be an OO-LD schema;
 3. otherwise, an inline `@type` (see below) - but only when at least one of the type IRIs resolves to an OO-LD schema.
 
-:rule[OOLD-INS-f010]{applies=implementation level="MUST NOT" summary="A consuming side must not be assumed to hold an rdf:type-to-schema registry; exports are self-sufficient."}An implementation MAY additionally maintain a registry mapping `rdf:type` IRIs to OO-LD schemas to resolve case 3, but such a registry MUST NOT be assumed to exist on the consuming side - so exports must be self-sufficient (see below).
+:rule[OOLD-INS-f010]{applies=implementation level="MUST NOT" summary="A consuming side must not be assumed to hold an rdf:type-to-schema registry; exports are self-sufficient."}An implementation MAY additionally maintain a registry mapping `rdf:type` IRIs to OO-LD schemas to resolve case 3, but such a registry MUST NOT be assumed to exist on the consuming side - so exports are self-sufficient (see below).
 
 :rule[OOLD-INS-ba9e]{applies=document level=MUST summary="A schema closing its objects must still permit the $schema and @context members."}Because an instance carries `$schema` and `@context` as ordinary members, an OO-LD schema that closes its objects with `additionalProperties: false` or `unevaluatedProperties: false` MUST permit these two members, or conforming instances would fail validation.
 
@@ -131,11 +131,11 @@ Embedded object:
 ```
 :::
 
-A single `@context` term cannot interpret a bare string as **both** a literal and an IRI: `@type: "@id"` coerces every string value to an IRI (so free text becomes an - often invalid, then dropped - IRI), while a plain term keeps every string a literal. :rule[OOLD-INS-2e5d]{applies=document level="MUST NOT" summary="A property whose range includes free text must not use @type @id."}A property whose range is references only therefore uses `@type: "@id"` and MAY be written as a bare IRI string; a property whose range includes free text MUST NOT use `@type: "@id"`.
+A single `@context` term cannot interpret a bare string as **both** a literal and an IRI: `@type: "@id"` coerces every string value to an IRI (so free text becomes an - often invalid, then dropped - IRI), while a plain term keeps every string a literal. :rule[OOLD-INS-2e5d]{applies=document level="MUST NOT" summary="A property whose range includes free text must not use @type @id."}A property whose range includes free text therefore MUST NOT use `@type: "@id"`. :rule[OOLD-INS-770a]{applies=document level=MUST summary="A reference written as a bare IRI string requires @type @id on its term."}A property whose range is references only MAY be written as a bare IRI string, and where it is, its term MUST carry `@type: "@id"`.
 
 :rule[OOLD-INS-da1a]{applies=advisory level=SHOULD summary="A model ecosystem should adopt one of the two ambiguous-range patterns consistently."}For a property whose range mixes free text with references and/or embedded objects (for example `Text | PostalAddress | Place`), two patterns keep the instance round-trippable (see [](#round-trip)); a model ecosystem SHOULD adopt one of them consistently:
 
-1. **Value-form** - a single plain term (no `@type: "@id"`); the value shape alone disambiguates: a bare scalar is a literal, `{ "id": ... }` is a reference, a typed object is embedded. :rule[OOLD-INS-1df7]{applies=document level="MUST NOT" summary="Under the value-form pattern a reference is written as an object and its term must not carry @type."}References are written as objects, and the term MUST NOT carry `@type`.
+1. **Value-form** - a single plain term (no `@type: "@id"`); the value shape alone disambiguates: a bare scalar is a literal, `{ "id": ... }` is a reference, a typed object is embedded. :rule[OOLD-INS-1df7]{applies=document level="MUST NOT" summary="Under the value-form pattern a reference is written as an object and its term must not carry @type."}A reference MUST be written as an object, and the term MUST NOT carry `@type`.
 2. **Separate keys** - a canonical term `p` with `@type: "@id"` (a bare IRI string reference, plus embedded objects via a scoped `@context`) and a companion `p_text` that is a plain term for the literal.
 
 :::example{title="The two patterns for an ambiguous `address` term"}
