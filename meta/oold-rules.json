@@ -513,21 +513,6 @@
       "source": "09-extensions.md:62"
     },
     {
-      "id": "OOLD-EXT-ad60",
-      "area": "EXT",
-      "level": "SHOULD NOT",
-      "applies_to": "document",
-      "section": "reverse-properties",
-      "summary": "The deprecated x-oold-reverse-default-properties array should not be used; x-oold-ui-default-property on the property replaces it.",
-      "text": "The earlier `x-oold-reverse-default-properties` array is deprecated and SHOULD NOT be used: a reverse property shown by default is marked with `x-oold-ui-default-property` on the property itself (see [](#ui-generation)), which, unlike the merged array, is overridable under composition. define `works_for` in the `properties` of `Person`, mapped to a semantic property (`schema:worksFor`) in the `@context` of `Person`; define `employees` in `x-oold-reverse-properties` of `Organization`, mapped with `@reverse` to the same property in the `@context` of `Organization` (JSON-LD11 reverse properties).",
-      "text_sha256": "3e145dfd4df8d1a77181921609b521178cb1eaefc8c98417c092bc669472f657",
-      "context": "Many relations are symmetric (e.g. Organization employs Person ⇔ Person works for Organization) and users want to edit them from both sides, without storing the information twice. The keywords `x-oold-reverse-properties` and `x-oold-reverse-required` declare such a reverse property, mapped with JSON-LD `@reverse` in the `@context`. The earlier `x-oold-reverse-default-properties` array is deprecated and SHOULD NOT be used: a reverse property shown by default is marked with `x-oold-ui-default-property` on the property itself (see [](#ui-generation)), which, unlike the merged array, is overridable under composition. To make `employees` the reverse of `works_for`:\n- define `works_for` in the `properties` of `Person`, mapped to a semantic property (`schema:worksFor`) in the `@context` of `Person`;\n- define `employees` in `x-oold-reverse-properties` of `Organization`, mapped with `@reverse` to the same property in the `@context` of `Organization` (JSON-LD11 reverse properties).",
-      "machine_checkable": true,
-      "since": "1.0.0-rc.3",
-      "deprecated": false,
-      "source": "09-extensions.md:366"
-    },
-    {
       "id": "OOLD-EXT-adcc",
       "area": "EXT",
       "level": "MUST NOT",

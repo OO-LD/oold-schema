@@ -1215,26 +1215,6 @@ Selection MUST NOT use a synonym from outside the target profile; where the prof
 
 See [this rule in the specification](spec/#OOLD-EXT-8f62) (section: synonyms).
 
-### OOLD-EXT-ad60
-
-- <strong title="The RFC 2119 keyword this requirement is stated with. A validator reports a MUST-level finding as a failure and a SHOULD-level one as a warning, so the level decides severity rather than the check that found it.">Level:</strong> SHOULD NOT
-- <strong title="Who the requirement binds: a document, an implementation of OO-LD, or nobody in particular. This decides what is even able to enforce it.">Applies to:</strong> <span title="Checkable by validating a schema or instance document">document</span>
-- <strong title="Whether a validator could decide this rule by inspecting a document. It does not say the OO-LD validator enforces it today - oold rules list --unchecked reports that.">Machine-checkable:</strong> yes
-- <strong title="The specification release this rule first appeared in. Ids are permanent and never reused, so this does not change once recorded.">Since:</strong> 1.0.0-rc.3
-
-The deprecated x-oold-reverse-default-properties array should not be used; x-oold-ui-default-property on the property replaces it.
-
-The earlier `x-oold-reverse-default-properties` array is deprecated and SHOULD NOT be used: a reverse property shown by default is marked with `x-oold-ui-default-property` on the property itself (see [ui-generation](spec/#ui-generation)), which, unlike the merged array, is overridable under composition. define `works_for` in the `properties` of `Person`, mapped to a semantic property (`schema:worksFor`) in the `@context` of `Person`; define `employees` in `x-oold-reverse-properties` of `Organization`, mapped with `@reverse` to the same property in the `@context` of `Organization` (JSON-LD11 reverse properties).
-
-??? quote "In context"
-
-    Many relations are symmetric (e.g. Organization employs Person ⇔ Person works for Organization) and users want to edit them from both sides, without storing the information twice. The keywords `x-oold-reverse-properties` and `x-oold-reverse-required` declare such a reverse property, mapped with JSON-LD `@reverse` in the `@context`. The earlier `x-oold-reverse-default-properties` array is deprecated and SHOULD NOT be used: a reverse property shown by default is marked with `x-oold-ui-default-property` on the property itself (see [ui-generation](spec/#ui-generation)), which, unlike the merged array, is overridable under composition. To make `employees` the reverse of `works_for`:
-
-    - define `works_for` in the `properties` of `Person`, mapped to a semantic property (`schema:worksFor`) in the `@context` of `Person`;
-    - define `employees` in `x-oold-reverse-properties` of `Organization`, mapped with `@reverse` to the same property in the `@context` of `Organization` (JSON-LD11 reverse properties).
-
-See [this rule in the specification](spec/#OOLD-EXT-ad60) (section: reverse-properties).
-
 ### OOLD-EXT-adcc
 
 - <strong title="The RFC 2119 keyword this requirement is stated with. A validator reports a MUST-level finding as a failure and a SHOULD-level one as a warning, so the level decides severity rather than the check that found it.">Level:</strong> MUST NOT
