@@ -64,7 +64,12 @@ export function embeddedProperties(schema) {
   const props = collectProps(schema);
   const structural = Object.keys(props).filter((k) => isEmbed(props[k]));
   const terms = contextTerms(schema["@context"]);
-  const scoped = Object.keys(terms).filter((t) => "@context" in terms[t]);
+  // A scoped term only counts where the schema declares a property of that name. A schema must
+  // reflect every $ref in its @context (OOLD-CMP-b926), including the ones reached from $defs, so
+  // the context carries terms for properties this schema's instances never hold; treating those
+  // as embeds puts a property into the derived frame that no instance can match, and framing then
+  // returns nothing.
+  const scoped = Object.keys(terms).filter((t) => "@context" in terms[t] && t in props);
   return [...new Set([...structural, ...scoped])];
 }
 
