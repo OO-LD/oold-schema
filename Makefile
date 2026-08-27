@@ -13,7 +13,7 @@ ZENSICAL := uvx --with pyyaml==6.0.2 zensical@$(ZENSICAL_VERSION)
 # developed against. Pinned so a validator release cannot change what CI means without a
 # commit here. --meta . points it at THIS working tree rather than a released tag, so a
 # rule added in a branch is enforced by the run that introduces it.
-OOLD_VERSION ?= 0.18.0
+OOLD_VERSION ?= 0.18.1
 OOLD := uv run --with "oold[validation]==$(OOLD_VERSION)" oold
 
 # scripts/validate.mjs is frozen: kept runnable as the reference the Python port is
