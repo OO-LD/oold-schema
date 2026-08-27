@@ -235,14 +235,6 @@
       "type": "array",
       "items": { "type": "string" },
       "examples": [["SI base unit of length", "SI base unit of time"]]
-    },
-    "x-oold-reverse-default-properties": {
-      "description": "Deprecated. Names of reverse properties shown by default in generated user interfaces. Like the object-level defaultProperties array this is extend-only under composition; prefer a per-reverse-property x-oold-ui-default-property boolean, which is overridable.",
-      "deprecated": true,
-      "type": "array",
-      "items": {
-        "type": "string"
-      }
     }
   }
 }
