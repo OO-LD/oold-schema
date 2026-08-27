@@ -48,9 +48,6 @@
           "x-oold-reverse-required": [
             "employees"
           ],
-          "x-oold-reverse-default-properties": [
-            "employees"
-          ],
           "type": "object",
           "properties": {
             "ref": {
@@ -230,15 +227,6 @@
           "$schema": "https://oo-ld.org/latest/meta/oold-meta-schema.json",
           "$id": "https://oo-ld.test/compliance/vocab-1-13.schema.json",
           "x-oold-reverse-required": "x"
-        }
-      },
-      {
-        "description": "x-oold-reverse-default-properties not an array",
-        "valid": false,
-        "schema": {
-          "$schema": "https://oo-ld.org/latest/meta/oold-meta-schema.json",
-          "$id": "https://oo-ld.test/compliance/vocab-1-14.schema.json",
-          "x-oold-reverse-default-properties": "x"
         }
       }
     ]

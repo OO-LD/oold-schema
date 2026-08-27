@@ -363,7 +363,7 @@ Because `@vocab` expands an unmatched string against the vocabulary - concatenat
 
 #### Reverse properties {#reverse-properties}
 
-Many relations are symmetric (e.g. Organization employs Person ⇔ Person works for Organization) and users want to edit them from both sides, without storing the information twice. The keywords `x-oold-reverse-properties` and `x-oold-reverse-required` declare such a [=reverse property=], mapped with JSON-LD `@reverse` in the `@context`. (The earlier `x-oold-reverse-default-properties` array is deprecated: mark a reverse property shown by default with `x-oold-ui-default-property` on the property itself - see [](#ui-generation) - which, unlike the merged array, is overridable under composition.) To make `employees` the reverse of `works_for`:
+Many relations are symmetric (e.g. Organization employs Person ⇔ Person works for Organization) and users want to edit them from both sides, without storing the information twice. The keywords `x-oold-reverse-properties` and `x-oold-reverse-required` declare such a [=reverse property=], mapped with JSON-LD `@reverse` in the `@context`. A reverse property shown by default in a generated user interface is marked with `x-oold-ui-default-property` on the property itself (see [](#ui-generation)). To make `employees` the reverse of `works_for`:
 
 - define `works_for` in the `properties` of `Person`, mapped to a semantic property (`schema:worksFor`) in the `@context` of `Person`;
 - define `employees` in `x-oold-reverse-properties` of `Organization`, mapped with `@reverse` to the same property in the `@context` of `Organization` ([[JSON-LD11]] reverse properties).
@@ -416,7 +416,7 @@ The text-valued keywords have a `x-oold-multilang-*` variant carrying a BCP-47 l
 
 `x-oold-ui-enum-titles` holds human display labels for a form, and is distinct from the code-generation keywords `x-enum-varnames` and `x-enum-descriptions`, which are specified in [](#enum-names).
 
-`x-oold-ui-default-property` replaces the json-editor `defaultProperties` array (which listed the optional properties shown initially). That array is *extend-only* under composition: because composed schemas merge the arrays, a derived schema can add a default property but cannot switch one off. A per-property boolean is *overridable* - it resolves most-derived-wins (see [](#merge-and-override-model)), so a derived schema sets it to `false` to hide a property a base schema showed. For the same reason `x-oold-reverse-default-properties` is deprecated in favour of `x-oold-ui-default-property` on the reverse property.
+`x-oold-ui-default-property` replaces the json-editor `defaultProperties` array (which listed the optional properties shown initially). That array is *extend-only* under composition: because composed schemas merge the arrays, a derived schema can add a default property but cannot switch one off. A per-property boolean is *overridable* - it resolves most-derived-wins (see [](#merge-and-override-model)), so a derived schema sets it to `false` to hide a property a base schema showed. The same holds for a reverse property, which carries the boolean on its own definition.
 
 ##### Widget hints: `format` vs `x-oold-ui-widget` {#widget-hints}
 
