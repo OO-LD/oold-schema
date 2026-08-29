@@ -1,12 +1,35 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://oo-ld.org/latest/meta/oold-meta-schema-base.json",
-  "$dynamicAnchor": "meta",
   "title": "OO-LD dialect meta-schema (body)",
-  "$comment": "The dialect body: the standard 2020-12 vocabularies plus the x-oold-* keyword syntax. It carries $dynamicAnchor: \"meta\", so nested subschemas (properties, $defs, x-oold-range, ...) recurse into THIS resource and are validated without the document-level obligations. oold-meta-schema.json wraps it and adds those root-only requirements; see that file.",
+  "$comment": "The dialect body: the standard 2020-12 vocabularies plus the x-oold-* keyword syntax. Nested subschemas (properties, $defs, ...) recurse into THIS resource through the static $ref: \"#\" list below, so they are validated against the dialect without the document-level obligations. oold-meta-schema.json wraps it and adds those root-only requirements; see that file. Recursion is static rather than $dynamicAnchor / $dynamicRef because widely used editor tooling does not implement the dynamic keywords and silently falls back to plain 2020-12 for every subschema, which leaves the x-oold-* keywords unchecked wherever they are actually written.",
   "allOf": [
     {
       "$ref": "https://json-schema.org/draft/2020-12/schema"
+    },
+    {
+      "$comment": "Static recursion into this resource, one entry per subschema slot the 2020-12 applicator, core, unevaluated and content vocabularies define. A conformant validator reaches the same subschemas through the applicator's $dynamicRef; a validator without the dynamic keywords reaches them only here.",
+      "properties": {
+        "items": { "$ref": "#" },
+        "contains": { "$ref": "#" },
+        "additionalProperties": { "$ref": "#" },
+        "propertyNames": { "$ref": "#" },
+        "if": { "$ref": "#" },
+        "then": { "$ref": "#" },
+        "else": { "$ref": "#" },
+        "not": { "$ref": "#" },
+        "unevaluatedItems": { "$ref": "#" },
+        "unevaluatedProperties": { "$ref": "#" },
+        "contentSchema": { "$ref": "#" },
+        "properties": { "additionalProperties": { "$ref": "#" } },
+        "patternProperties": { "additionalProperties": { "$ref": "#" } },
+        "dependentSchemas": { "additionalProperties": { "$ref": "#" } },
+        "$defs": { "additionalProperties": { "$ref": "#" } },
+        "prefixItems": { "items": { "$ref": "#" } },
+        "allOf": { "items": { "$ref": "#" } },
+        "anyOf": { "items": { "$ref": "#" } },
+        "oneOf": { "items": { "$ref": "#" } }
+      }
     },
     {
       "$ref": "https://oo-ld.org/latest/meta/oold-ui-meta-schema.json#keywords"
