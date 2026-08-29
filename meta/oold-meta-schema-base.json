@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://oo-ld.org/latest/meta/oold-meta-schema-base.json",
   "title": "OO-LD dialect meta-schema (body)",
-  "$comment": "The dialect body: the standard 2020-12 vocabularies plus the x-oold-* keyword syntax. Nested subschemas (properties, $defs, ...) recurse into THIS resource through the static $ref: \"#\" list below, so they are validated against the dialect without the document-level obligations. oold-meta-schema.json wraps it and adds those root-only requirements; see that file. Recursion is static rather than $dynamicAnchor / $dynamicRef because widely used editor tooling does not implement the dynamic keywords and silently falls back to plain 2020-12 for every subschema, which leaves the x-oold-* keywords unchecked wherever they are actually written.",
+  "$comment": "The dialect body: the standard 2020-12 vocabularies plus the x-oold-* keyword syntax. Nested subschemas (properties, $defs, ...) recurse into THIS resource through the static $ref: \"#\" list below, so they are validated against the dialect without the document-level obligations. oold-meta-schema.json wraps it and adds those root-only requirements; see that file. Recursion is static rather than $dynamicAnchor / $dynamicRef because widely used editor tooling does not resolve the dynamic keywords at all: a $dynamicRef subschema then constrains nothing, so the x-oold-* keywords go unchecked wherever they are actually written.",
   "allOf": [
     {
       "$ref": "https://json-schema.org/draft/2020-12/schema"
