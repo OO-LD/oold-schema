@@ -228,6 +228,33 @@
           "$id": "https://oo-ld.test/compliance/vocab-1-13.schema.json",
           "x-oold-reverse-required": "x"
         }
+      },
+      {
+        "description": "a malformed x-oold-* keyword is rejected inside a nested subschema, not only at the root",
+        "valid": false,
+        "schema": {
+          "$schema": "https://oo-ld.org/latest/meta/oold-meta-schema.json",
+          "$id": "https://oo-ld.test/compliance/vocab-1-14.schema.json",
+          "type": "object",
+          "properties": {
+            "works_for": { "type": "string", "x-oold-range": 42 }
+          }
+        }
+      },
+      {
+        "description": "a nested subschema is not required to carry its own $id",
+        "valid": true,
+        "schema": {
+          "$schema": "https://oo-ld.org/latest/meta/oold-meta-schema.json",
+          "$id": "https://oo-ld.test/compliance/vocab-1-15.schema.json",
+          "type": "object",
+          "properties": {
+            "works_for": { "type": "string", "x-oold-range": "Organization.schema.json" }
+          },
+          "$defs": {
+            "Inner": { "type": "object", "x-oold-instance-rdf-type": ["schema:Thing"] }
+          }
+        }
       }
     ]
   },
