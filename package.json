@@ -2,20 +2,8 @@
   "name": "oold-schema",
   "private": true,
   "type": "module",
-  "description": "OO-LD schema specification and validation tooling",
-  "bin": {
-    "oold-validate": "scripts/validate.mjs"
-  },
+  "description": "OO-LD schema specification",
   "scripts": {
-    "validate": "node scripts/validate.mjs",
     "extract-legacy": "node scripts/extract-legacy-keywords.mjs"
-  },
-  "dependencies": {
-    "@apidevtools/json-schema-ref-parser": "^11.0.0",
-    "ajv": "^8.12.0",
-    "ajv-formats": "^3.0.1",
-    "ajv-formats-draft2019": "^1.6.1",
-    "json-schema-faker": "0.6.2",
-    "jsonld": "^8.3.2"
   }
 }

@@ -23,9 +23,9 @@ jobs:
       - uses: astral-sh/setup-uv@v6
       # Validation runs on oold-python. --meta . reads the meta-schemas and the rule
       # catalogue from THIS checkout, so a rule added in this branch is enforced by the
-      # run that introduces it; a released version could not see it. Node is no longer
-      # installed here: scripts/validate.mjs is frozen as the reference oold-python is
-      # compared against, and is run by that comparison rather than by this workflow.
+      # run that introduces it; a released version could not see it. Node is not installed
+      # here: the reference implementation lives in OO-LD/oold-js and is run by oold-python's
+      # parity suite, which compares the two over this repository's examples.
       - run: make validate
       # Re-render the spec and fail if the committed docs/spec/index.html is stale
       # (drift guard), then lint its structure. Renderer deps are pinned inline
