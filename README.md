@@ -62,7 +62,7 @@ make preview    # re-render the spec, then serve the site
 make check      # validate + spec lint + site build (what CI runs)
 ```
 
-The docs and the spec renderer run on Python via [uv](https://docs.astral.sh/uv/) - no local Python setup required; the schema validator runs on Node (`make install` once).
+The docs, the spec renderer and the schema validator all run on Python via [uv](https://docs.astral.sh/uv/) - no local Python setup required.
 
 If you edit the specification prose, install the git hooks once:
 

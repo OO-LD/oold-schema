@@ -423,7 +423,7 @@
   },
   {
     "feature": "reverse round-trip: an exported instance reconstructs from RDF through the minimal schema-derived frame (literals and references by compaction, embedded objects by framing, arrays kept stable by @container:@set)",
-    "$comment": "The instance carries its materialized root type (schema:Organization), as a compliant export must, so the schema-derived frame can pick it as the frame root and nest the embedded object beneath it. Reconstruction uses scripts/schema_to_frame.mjs; [roundtrip] asserts instance == reconstruction after canonicalization.",
+    "$comment": "The instance carries its materialized root type (schema:Organization), as a compliant export must, so the schema-derived frame can pick it as the frame root and nest the embedded object beneath it. Reconstruction uses the schema-derived frame; [roundtrip] asserts instance == reconstruction after canonicalization.",
     "schema": {
       "$schema": "https://oo-ld.org/latest/meta/oold-meta-schema.json",
       "$id": "https://oo-ld.test/compliance/reverse-round-trip-an-exported-instance-reconstr.schema.json",

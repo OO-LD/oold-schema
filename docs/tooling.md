@@ -26,17 +26,17 @@ Because OO-LD documents are ordinary JSON Schema and JSON-LD, the full ecosystem
 
 ## Validation and test suites
 
-The [`oold-schema`](https://github.com/OO-LD/oold-schema) repository ships a validation harness ([`scripts/validate.mjs`](https://github.com/OO-LD/oold-schema/blob/main/scripts/validate.mjs)) with two tiers. Run both with `make validate`, or `make check` (which also re-renders the spec and builds the site); CI runs `make check` on every push.
+Validation runs on [`oold`](https://github.com/OO-LD/oold-python), the maintained implementation, in two tiers. Run both with `make validate`, or `make check` (which also re-renders the spec and builds the site); CI runs `make check` on every push. A second implementation, [`oold-js`](https://github.com/OO-LD/oold-js), is kept in agreement with it by a cross-implementation parity suite.
 
 ### General workflow (any schema, no fixtures)
 
-These run on every schema and instance in [`examples/`](https://github.com/OO-LD/oold-schema/tree/main/examples) with no per-schema test data, so they apply to any OO-LD schema you write. They are also **reusable on your own schemas**: the harness is exposed as an `oold-validate` CLI, so a downstream repo can conformance-check its generated schemas against this exact pipeline without copying it -
+These run on every schema and instance in [`examples/`](https://github.com/OO-LD/oold-schema/tree/main/examples) with no per-schema test data, so they apply to any OO-LD schema you write. They are also **reusable on your own schemas** - a downstream repo can conformance-check its generated schemas against this exact pipeline without copying it:
 
 ```
-npx --yes github:OO-LD/oold-schema oold-validate path/to/schemas
+uvx --from "oold[validation]" oold validate path/to/schemas
 ```
 
-Given a directory argument, `oold-validate <dir>` runs only the general-workflow tier below (well-formedness, auto-generated instance, branch iteration, RDF roundtrip, pattern lint) over that directory's `*.schema.json`, using this package's meta-schemas; the deterministic per-feature suites and vocabulary coverage stay scoped to this repo's own `examples/`. The checks are:
+Given a directory, `oold validate <dir>` runs the general-workflow tier below (well-formedness, auto-generated instance, branch iteration, RDF roundtrip, pattern lint) over that directory's `*.schema.json`; the deterministic per-feature suites and vocabulary coverage stay scoped to this repo's own `examples/`. The checks are:
 
 - **Well-formedness** - the schema validates against the OO-LD meta-schema and its `$ref` composition resolves.
 - **Auto-generated instance** - an instance is generated (via [json-schema-faker](https://github.com/json-schema-faker/json-schema-faker), all properties, declared `format`s respected) and must validate against the schema; this catches unsatisfiable schemas. Generation runs with `useExamplesValue` and `useDefaultValue` enabled, so any `examples` or `default` value in the schema is used as-is and must satisfy its own subschema. JSON Schema treats those keywords as annotations and does not validate them; this harness effectively does, which catches example values that contradict their own constraints (a `pattern` violated by its example, a string example on a `type: number` property). A `GEN-INVALID` whose instance path points at such a value indicates the annotation, not an unsatisfiable schema.

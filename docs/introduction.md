@@ -93,8 +93,7 @@ You can explore this exact example - validation, UI generation, and RDF output -
 This repository ships example schemas under [`examples/`](https://github.com/OO-LD/oold-schema/tree/main/examples) and the OO-LD meta-schema under [`meta/`](https://github.com/OO-LD/oold-schema/tree/main/meta). To validate them locally:
 
 ```bash
-npm install
-npm run validate
+make validate
 ```
 
 ### Next steps

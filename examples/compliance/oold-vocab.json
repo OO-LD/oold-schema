@@ -1,6 +1,6 @@
 [
   {
-    "$comment": "Keep in sync with meta/oold-meta-schema.json and meta/oold-ui-meta-schema.json: scripts/validate.mjs asserts every x-oold-* / x-oold-ui-* keyword defined there is covered by at least one case below. Each `schemas` entry is checked against the OO-LD meta-schema (well-formedness), not an instance.",
+    "$comment": "Keep in sync with meta/oold-meta-schema.json and meta/oold-ui-meta-schema.json: the validators assert every x-oold-* / x-oold-ui-* keyword defined there is covered by at least one case below. Each `schemas` entry is checked against the OO-LD meta-schema (well-formedness), not an instance.",
     "description": "a fully annotated OO-LD schema is well-formed (covers every x-oold-* and x-oold-ui-* keyword)",
     "schemas": [
       {

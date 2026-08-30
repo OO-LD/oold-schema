@@ -16,23 +16,10 @@ ZENSICAL := uvx --with pyyaml==6.0.2 zensical@$(ZENSICAL_VERSION)
 OOLD_VERSION ?= 0.18.1
 OOLD := uv run --with "oold[validation]==$(OOLD_VERSION)" oold
 
-# scripts/validate.mjs is frozen: kept runnable as the reference the Python port is
-# compared against (oold-python's parity suite), but no longer what CI runs. Override
-# when `node` is not on PATH: make validate-reference NODE="/c/.../node.exe"
-NODE ?= node
-
-.PHONY: install
-install: ## Install the Node dependencies (schema validation)
-	@npm install
-
 .PHONY: validate
 validate: ## Validate example schemas + instances against this working tree's meta-schemas
 	@$(OOLD) validate examples --meta . --offline
 	@$(OOLD) compliance examples/compliance --meta . --offline
-
-.PHONY: validate-reference
-validate-reference: ## Run the frozen JS reference validator (not run by CI)
-	@"$(NODE)" scripts/validate.mjs
 
 .PHONY: spec
 spec: ## Regenerate docs/spec/index.html + meta/oold-rules.json from spec/sections (via uv)
