@@ -367,8 +367,14 @@ def _git_version():
     docs/spec/index.html does not churn on every commit); falls back to a short
     commit id, then "draft", when no tag is reachable. CI needs full history
     (fetch-depth: 0) for `git describe` to find the tag.
+
+    Matched against `v*` so that only release tags can set the subtitle. The repo
+    also carries non-release tags -- `gh release create` mints one for the
+    prerelease that hosts PR review images -- and without the filter the newest
+    of those would retitle the specification and fail the drift guard.
     """
-    for cmd in (["git", "describe", "--tags", "--abbrev=0"], ["git", "rev-parse", "--short", "HEAD"]):
+    for cmd in (["git", "describe", "--tags", "--abbrev=0", "--match", "v*"],
+                ["git", "rev-parse", "--short", "HEAD"]):
         try:
             out = subprocess.check_output(cmd, cwd=ROOT, stderr=subprocess.DEVNULL, text=True).strip()
             if out:

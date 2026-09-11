@@ -95,7 +95,7 @@ def spec_version() -> str:
     """
     try:
         out = subprocess.check_output(  # noqa: S603,S607 - fixed argv, repo-local
-            ["git", "describe", "--tags", "--abbrev=0"], cwd=ROOT, stderr=subprocess.DEVNULL, text=True
+            ["git", "describe", "--tags", "--abbrev=0", "--match", "v*"], cwd=ROOT, stderr=subprocess.DEVNULL, text=True
         ).strip()
         return out.lstrip("v") or "draft"
     except Exception:

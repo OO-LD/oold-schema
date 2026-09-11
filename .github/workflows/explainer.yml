@@ -1,0 +1,142 @@
+# The explainer is released on its own cadence, separate from the spec, and the
+# video itself carries no version number. Nothing here runs on a spec-only change.
+#
+# Review images never enter the git tree. The contact sheet is uploaded as an
+# asset on a single reusable prerelease and embedded in a PR comment by URL, so
+# reviewers see the frames inline while the repository stays free of binaries.
+# The rendered mp4 is likewise a release asset, never a commit.
+name: explainer
+
+on:
+  pull_request:
+    paths:
+      - "media/explainer/**"
+      - "examples/Minimal.schema.json"
+      - ".github/workflows/explainer.yml"
+  push:
+    tags: ["explainer/v*"]
+  workflow_dispatch:
+
+concurrency:
+  group: explainer-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+defaults:
+  run:
+    working-directory: media/explainer
+
+env:
+  # One long-lived prerelease holds every PR's review image. Assets are replaced
+  # per PR, so it never accumulates and nothing lands in git history.
+  REVIEW_TAG: ci-review-images
+
+jobs:
+  stills:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: write # upload the review asset to the prerelease
+      pull-requests: write # post the review comment
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: media/explainer/package-lock.json
+
+      - run: npm ci
+
+      - name: Check the on-screen JSON still matches examples/Minimal.schema.json
+        run: npm run check
+
+      - name: Cache Playwright browsers
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ hashFiles('media/explainer/package-lock.json') }}
+
+      - run: npx playwright install --with-deps chromium
+
+      - run: npm run stills
+
+      - name: Build the contact sheet
+        id: sheet
+        run: |
+          set -o pipefail
+          npm run sheet | tee sheet.log
+          {
+            echo 'beats<<EOF'
+            grep -E '^[0-9]+\. ' sheet.log
+            echo EOF
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Upload the sheet as a release asset
+        if: github.event_name == 'pull_request'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          asset="pr-${{ github.event.number }}-$(git rev-parse --short HEAD).png"
+          cp out/contact-sheet.png "$asset"
+          gh release view "$REVIEW_TAG" >/dev/null 2>&1 || \
+            gh release create "$REVIEW_TAG" --prerelease --notes \
+              "Transient review images for pull requests. Not part of the source tree."
+          gh release upload "$REVIEW_TAG" "$asset" --clobber
+          echo "URL=https://github.com/${{ github.repository }}/releases/download/$REVIEW_TAG/$asset" >> "$GITHUB_ENV"
+
+      - name: Comment the frames on the PR
+        if: github.event_name == 'pull_request'
+        uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          header: explainer-stills
+          message: |
+            ### Explainer frames
+
+            ![contact sheet](${{ env.URL }})
+
+            <details><summary>Beats, in reading order</summary>
+
+            ```
+            ${{ steps.sheet.outputs.beats }}
+            ```
+            </details>
+
+            Rendered from `${{ github.sha }}`. Images live on the `${{ env.REVIEW_TAG }}` prerelease, not in the repository.
+
+  release:
+    if: startsWith(github.ref, 'refs/tags/explainer/v')
+    needs: stills
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: media/explainer/package-lock.json
+
+      - run: npm ci
+
+      - name: Cache Playwright browsers
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ hashFiles('media/explainer/package-lock.json') }}
+
+      - run: npx playwright install --with-deps chromium
+
+      - run: npm run render
+
+      - name: Attach the mp4 to the release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "$GITHUB_REF_NAME" \
+            --title "Explainer ${GITHUB_REF_NAME#explainer/}" \
+            --notes "See media/explainer/CHANGELOG.md" \
+            out/oold-explainer.mp4

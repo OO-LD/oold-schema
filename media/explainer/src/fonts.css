@@ -1,0 +1,19 @@
+/* Latin subsets of the variable fonts, vendored in public/fonts so a render is
+   identical on every machine. Without this the stack falls back to whatever the
+   host has (Segoe UI on Windows, DejaVu Sans on CI) and the video changes shape. */
+
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: block;
+  src: url('/fonts/inter-latin-var.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 100 800;
+  font-display: block;
+  src: url('/fonts/jetbrains-mono-latin-var.woff2') format('woff2');
+}

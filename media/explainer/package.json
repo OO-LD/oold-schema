@@ -1,0 +1,31 @@
+{
+  "name": "oold-explainer",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "postinstall": "node scripts/patch-rendiv.mjs",
+    "preview": "vite dev",
+    "studio": "rendiv studio src/index.tsx",
+    "render": "node scripts/render.mjs",
+    "still": "rendiv still src/index.tsx",
+    "stills": "node scripts/stills.mjs",
+    "check": "node scripts/check-example-sync.mjs && tsc --noEmit",
+    "typecheck": "tsc --noEmit",
+    "compositions": "rendiv compositions src/index.tsx",
+    "sheet": "node scripts/contact-sheet.mjs"
+  },
+  "dependencies": {
+    "@rendiv/cli": "0.2.6",
+    "@rendiv/core": "0.2.6",
+    "@rendiv/player": "0.2.6",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  },
+  "devDependencies": {
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "@vitejs/plugin-react": "^4.3.0",
+    "typescript": "^5.7.0",
+    "vite": "^6.0.0"
+  }
+}

@@ -9,6 +9,7 @@ __pycache__/
 # staged into the versioned site by the build (canonical sources are meta/ and examples/)
 docs/meta/
 docs/schemas/
+docs/assets/video/
 
 # IDE settings
 .idea/

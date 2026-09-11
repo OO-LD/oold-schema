@@ -146,7 +146,7 @@ def released_rules():
     """
     try:
         tag = subprocess.check_output(  # noqa: S603,S607 - fixed argv, repo-local
-            ["git", "describe", "--tags", "--abbrev=0"], cwd=ROOT, stderr=subprocess.DEVNULL, text=True
+            ["git", "describe", "--tags", "--abbrev=0", "--match", "v*"], cwd=ROOT, stderr=subprocess.DEVNULL, text=True
         ).strip()
         blob = subprocess.check_output(  # noqa: S603,S607
             ["git", "show", f"{tag}:meta/oold-rules.json"], cwd=ROOT, stderr=subprocess.DEVNULL, text=True
