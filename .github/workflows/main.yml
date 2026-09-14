@@ -96,11 +96,16 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
       - name: Build only (pull request)
-        if: github.event_name != 'push'
+        if: github.event_name == 'pull_request'
         # --with pyyaml: the shared macros render JSON / "View as YAML" example tabs.
         run: uvx --with pyyaml==6.0.2 zensical@${{ env.ZENSICAL_VERSION }} build --clean
-      - name: Publish dev (push to main)
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+      # workflow_dispatch counts: explainer.yml dispatches this workflow after it
+      # publishes new video cuts, and without it that run would build the site and
+      # discard it, leaving the landing page pointing at an mp4 that is not there.
+      - name: Publish dev (push to main, or dispatched)
+        if: >-
+          (github.event_name == 'push' || github.event_name == 'workflow_dispatch')
+          && github.ref == 'refs/heads/main'
         run: |
           # Stamp the served schema copies with this version id so they self-identify
           # (the source keeps the oo-ld.org/latest/ placeholder; staged copies are gitignored).
