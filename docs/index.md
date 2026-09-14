@@ -59,7 +59,7 @@ human- and machine-readable data.
 </div>
 
 <h2 class="oold-hero__heading oold-hero__subhead">
-We target domains where poor interoperability blocks data-driven innovation.
+We target domains where data-driven innovation is limited by lack of interoperability.
 </h2>
 
 <div class="grid cards oold-hero__domains" markdown>
