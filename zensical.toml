@@ -9,6 +9,7 @@ repo_name = "OO-LD/oold-schema"
 copyright = 'Maintained by <a href="https://github.com/OO-LD">OO-LD</a>.'
 
 extra_css = ["stylesheets/extra.css"]
+extra_javascript = ["javascripts/hero-video.js"]
 
 nav = [
     { "Introduction" = "introduction.md" },

@@ -1,0 +1,8 @@
+node_modules/
+out/
+__rendiv_entry__.jsx
+__rendiv_entry__.html
+
+# The repo root ignores package-lock.json, but CI runs `npm ci` here and that
+# needs the lockfile. It is also what pins the render toolchain.
+!package-lock.json
