@@ -1,80 +1,221 @@
 /* ----------------------------------------------------------------------------
    OO-LD landing hero (docs/index.md)
-   Full-bleed, centered hero in the style of zensical.org: logo + headline +
-   short text passage + call-to-action buttons over a soft brand gradient.
+   Full-bleed hero over a soft brand gradient. A split top row holds the logo,
+   headline, text and call-to-action buttons on the left and the explainer video
+   on the right; the audience and domain cards run full width below it, each
+   group under its own heading. On narrow screens the top row stacks into one
+   centered column and the cards into one column.
 ---------------------------------------------------------------------------- */
 
 /* The hero holds the content only; the gradient lives on .md-main (the
    full-height content region) so it is one continuous layer with no seam. */
 .oold-hero {
-  padding: 4.5rem 1rem 5rem;
-  text-align: center;
+  max-width: 76rem;
+  margin: 0 auto;
+  padding: 3.5rem 1.5rem 4rem;
+}
+
+/* Top row: intro and video side by side, vertically centered. The minmax(0, _)
+   tracks let the video shrink with the viewport instead of overflowing. The
+   bottom margin is the largest gap on the page, so the hero reads as one unit
+   and the card sections below as a separate layer. */
+.oold-hero__split {
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+  gap: 3rem;
+  align-items: center;
+  margin-bottom: 4rem;
+}
+
+/* The logo sits in a generated <p>; drop its top margin so the intro's visual
+   center lines up with the video's. */
+.oold-hero__intro > :first-child {
+  margin-top: 0;
 }
 
 .oold-hero__logo {
-  width: 200px;
-  max-width: 55%;
+  width: 150px;
+  max-width: 45%;
   height: auto;
   filter: drop-shadow(0 10px 28px rgba(0, 0, 0, 0.18));
 }
 
-/* The explainer plays muted and looping between the text and the buttons. One
-   element; javascripts/hero-video.js points it at the light or dark cut to match
-   the palette. Both cuts are staged into docs/assets/video by `make stage-video`
-   and neither is committed, so a missing file just leaves the poster showing. */
+/* Fluid size: full size on wide screens, smaller next to a narrower video at
+   laptop widths, never below 2rem on phones. */
+.md-typeset .oold-hero__title {
+  margin: 1rem 0 0.75rem;
+  font-size: clamp(2rem, 1.2rem + 2vw, 2.6rem);
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  color: var(--md-default-fg-color);
+}
+
+/* The permalink icon is noise on landing-page headings. */
+.oold-hero .headerlink {
+  display: none;
+}
+
+/* Lead text. max-width keeps lines readable (about 60 characters) whenever
+   the column is wider than the text needs, e.g. stacked or reduced motion. */
+.md-typeset .oold-hero__text {
+  max-width: 34em;
+  margin: 0 0 1.75rem;
+  font-size: clamp(1rem, 0.9rem + 0.35vw, 1.15rem);
+  line-height: 1.6;
+  color: var(--md-default-fg-color--light);
+}
+
+/* Flex with gap instead of per-button margins: wrapped rows stay aligned with
+   the text edge and the spacing is identical in both directions. */
+.md-typeset .oold-hero__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin: 0;
+}
+
+/* Taller padding brings the buttons to a 44px touch target. The theme's
+   secondary button is a faint grey fill with grey text that nearly vanishes on
+   the gradient; full foreground text and a hairline ring keep it legible. */
+.md-typeset .oold-hero__actions .md-button {
+  margin: 0;
+  padding: 0.8em 1.5em;
+  color: var(--md-default-fg-color);
+  box-shadow: inset 0 0 0 0.05rem var(--md-default-fg-color--lighter);
+}
+
+/* The palette's primary is white (light) / black (dark), which is invisible on
+   the page background. Inverting the default colors gives a high-contrast
+   primary in both schemes. */
+.md-typeset .oold-hero__actions .md-button--primary,
+.md-typeset .oold-hero__actions .md-button--primary:is(:hover, :focus) {
+  background-color: var(--md-default-fg-color);
+  color: var(--md-default-bg-color);
+  box-shadow: none;
+}
+
+/* The explainer plays muted and looping in the right column. One element;
+   javascripts/hero-video.js points it at the light or dark cut to match the
+   palette. Both cuts are staged into docs/assets/video by `make stage-video`
+   and neither is committed, so a missing file just leaves the poster showing.
+   aspect-ratio matches the 16:9 cuts and reserves the box before metadata
+   loads, so the (square) poster does not cause a layout jump. */
 .oold-hero__video {
   display: block;
-  width: min(860px, 100%);
-  margin: 1.8rem auto 0.4rem;
+  width: 100%;
+  aspect-ratio: 16 / 9;
   border-radius: 12px;
+  background-color: var(--md-default-bg-color);
   box-shadow: 0 14px 40px rgba(0, 0, 0, 0.16);
 }
 
-/* A looping 90 second animation is exactly what this setting is for. */
+/* Section headings above the card groups. Both share one style so the two
+   groups read as peers. Full foreground color: they sit where the gradient is
+   already tinted, and the lighter grey drops below readable contrast there. */
+.md-typeset .oold-hero__heading {
+  margin: 0 0 1rem;
+  font-size: 1.05rem;
+  font-weight: 600;
+  line-height: 1.4;
+  letter-spacing: normal;
+  color: var(--md-default-fg-color);
+}
+
+.md-typeset .oold-hero__subhead {
+  margin-top: 3rem;
+}
+
+/* Card groups: fixed column counts instead of the theme's auto-fit, which
+   leaves the third domain card orphaned on its own row at tablet widths. */
+.md-typeset .oold-hero .grid.cards {
+  gap: 1rem;
+  margin: 0;
+}
+
+.md-typeset .oold-hero__audiences {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.md-typeset .oold-hero__domains {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+/* A mostly opaque surface keeps card text readable where the gradient turns
+   yellow, and lifts the cards off the background in both schemes. */
+.md-typeset .oold-hero .grid.cards > ul > li {
+  padding: 1rem 1.2rem;
+  border-radius: 0.6rem;
+  background-color: color-mix(in srgb, var(--md-default-bg-color) 88%, transparent);
+}
+
+/* Card title row: icon and title centered on one axis, also when the title
+   wraps to two lines. */
+.md-typeset .oold-hero .grid.cards > ul > li > p:first-child {
+  display: flex;
+  align-items: center;
+  gap: 0.75em;
+  font-size: 1.0625em;
+  line-height: 1.3;
+}
+
+/* Icons in a soft brand-yellow tile: ties the cards to the logo color without
+   putting yellow strokes (too low contrast) on a light surface. */
+.md-typeset .oold-hero .grid.cards .twemoji.lg {
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 2.25em;
+  height: 2.25em;
+  border-radius: 0.5em;
+  background-color: color-mix(in srgb, var(--oold-hero-yellow) 35%, transparent);
+  color: var(--md-default-fg-color);
+}
+
+.md-typeset .oold-hero .grid.cards > ul > li > hr {
+  margin: 0.8em 0;
+}
+
+/* A looping 90 second animation is exactly what this setting is for. Drop the
+   whole right column so the intro does not sit next to an empty track, and
+   center the intro so it does not hug the left edge of a full-width row. */
 @media (prefers-reduced-motion: reduce) {
-  .oold-hero__video {
+  .oold-hero__media {
     display: none;
+  }
+  .oold-hero__split {
+    grid-template-columns: minmax(0, 1fr);
+    text-align: center;
+  }
+  .md-typeset .oold-hero__text {
+    margin-inline: auto;
+  }
+  .oold-hero__actions {
+    justify-content: center;
   }
 }
 
-.oold-hero__title {
-  margin: 1.4rem 0 0.3rem;
-  font-size: 2.6rem;
-  font-weight: 700;
-  line-height: 1.15;
-}
-
-.oold-hero__tagline {
-  margin: 0 auto 1.2rem;
-  font-size: 1.25rem;
-  font-weight: 500;
-  color: var(--md-default-fg-color--light);
-}
-
-.oold-hero__text {
-  max-width: 42rem;
-  margin: 0 auto 2rem;
-  font-size: 1.02rem;
-  line-height: 1.7;
-  color: var(--md-default-fg-color--light);
-}
-
-.oold-hero__actions .md-button {
-  margin: 0.35rem 0.4rem;
-}
-
-/* The landing page is a short hero with no scrolling, so don't reserve the
-   scrollbar gutter (the theme sets `scrollbar-gutter: stable` globally).
-   Otherwise an empty strip shows on the right where scrolling pages put the
-   scrollbar. */
+/* Don't reserve the scrollbar gutter on the landing page (the theme sets
+   `scrollbar-gutter: stable` globally). Otherwise an empty strip shows on the
+   right whenever the hero fits the viewport without scrolling. */
 html:has(.oold-hero) {
   scrollbar-gutter: auto;
 }
 
-/* OO-LD brand yellow + the gradient's end color. */
+/* OO-LD brand yellow, the gradient's end color and the strength of the bottom
+   glow. */
 body:has(.oold-hero) {
   --oold-hero-yellow: #ffd43b;
   --oold-hero-end: color-mix(in srgb, var(--oold-hero-yellow) 60%, var(--md-default-bg-color));
+  --oold-hero-glow: 40%;
+}
+
+/* In the dark scheme the same mix turns the lower half into a bright olive
+   under light text (headings fell to about 3:1). A weaker mix keeps the fade
+   to yellow but holds text contrast above 4.5:1. */
+body[data-md-color-scheme="slate"]:has(.oold-hero) {
+  --oold-hero-end: color-mix(in srgb, var(--oold-hero-yellow) 35%, var(--md-default-bg-color));
+  --oold-hero-glow: 25%;
 }
 
 /* One continuous gradient on the full-height content region: page background at
@@ -85,7 +226,7 @@ body:has(.oold-hero) .md-main {
   background:
     radial-gradient(
       70% 55% at 50% 100%,
-      color-mix(in srgb, var(--oold-hero-yellow) 40%, transparent),
+      color-mix(in srgb, var(--oold-hero-yellow) var(--oold-hero-glow), transparent),
       transparent 72%
     ),
     linear-gradient(
@@ -129,14 +270,43 @@ body:has(.oold-hero) .md-footer {
   height: auto;
 }
 
+/* Tablet and below: stack the hero's top row, intro above video, centered. */
+@media screen and (max-width: 59.9375em) {
+  .oold-hero__split {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 2.5rem;
+    margin-bottom: 3.5rem;
+    text-align: center;
+  }
+  .md-typeset .oold-hero__text {
+    margin-inline: auto;
+  }
+  .oold-hero__actions {
+    justify-content: center;
+  }
+}
+
+/* Phones: one card per row, tighter padding, and the four buttons as an even
+   two-by-two block instead of a ragged 3 + 1 wrap. */
 @media screen and (max-width: 44.9375em) {
   .oold-hero {
-    padding: 3rem 1rem 3.5rem;
+    padding: 2.5rem 1rem 3rem;
   }
-  .oold-hero__title {
-    font-size: 2rem;
+  .oold-hero__split {
+    gap: 2rem;
+    margin-bottom: 3rem;
   }
-  .oold-hero__tagline {
-    font-size: 1.1rem;
+  .oold-hero__logo {
+    width: 120px;
+  }
+  .md-typeset .oold-hero .grid.cards {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .md-typeset .oold-hero__subhead {
+    margin-top: 2.5rem;
+  }
+  .md-typeset .oold-hero__actions .md-button {
+    flex: 1 1 40%;
+    padding-inline: 1em;
   }
 }
