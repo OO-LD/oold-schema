@@ -82,6 +82,13 @@ jobs:
       - uses: astral-sh/setup-uv@v6
       - name: Stage schemas into the site
         run: make stage-schemas
+      # The explainer cuts are not in the tree; they come from the explainer-latest
+      # release, published by explainer.yml whenever media/explainer changes. A
+      # missing cut is not fatal: the landing page falls back to its poster.
+      - name: Stage the explainer video into the site
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: make stage-video
       # mike commits the built site to gh-pages; GitHub runners have no default
       # git identity, so `git commit` would fail without this.
       - name: Configure git identity

@@ -14,7 +14,11 @@ on:
       - "examples/Minimal.schema.json"
       - ".github/workflows/explainer.yml"
   push:
-    tags: ["explainer/v*"]
+    branches: [main]
+    paths:
+      - "media/explainer/**"
+      - "examples/Minimal.schema.json"
+      - ".github/workflows/explainer.yml"
   workflow_dispatch:
 
 concurrency:
@@ -104,13 +108,17 @@ jobs:
 
             Rendered from `${{ github.sha }}`. Images live on the `${{ env.REVIEW_TAG }}` prerelease, not in the repository.
 
-  release:
-    if: startsWith(github.ref, 'refs/tags/explainer/v')
+  # Publishes both cuts to one reusable release. The video is unversioned, so
+  # there is no tag to pin: the assets are clobbered in place and the docs deploy
+  # always pulls the current pair.
+  publish:
+    if: github.event_name != 'pull_request'
     needs: stills
     runs-on: ubuntu-latest
-    timeout-minutes: 45
+    timeout-minutes: 60
     permissions:
       contents: write
+      actions: write # dispatch the docs deploy once the new cuts are up
     steps:
       - uses: actions/checkout@v4
 
@@ -132,11 +140,17 @@ jobs:
 
       - run: npm run render
 
-      - name: Attach the mp4 to the release
+      - name: Publish both cuts
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          gh release create "$GITHUB_REF_NAME" \
-            --title "Explainer ${GITHUB_REF_NAME#explainer/}" \
-            --notes "See media/explainer/CHANGELOG.md" \
-            out/oold-explainer.mp4
+          gh release view explainer-latest >/dev/null 2>&1 ||             gh release create explainer-latest --prerelease               --title "Explainer (latest)"               --notes "Current cuts of the OO-LD explainer, light and dark. Rebuilt whenever media/explainer changes; not versioned."
+          gh release upload explainer-latest             out/oold-explainer.mp4 out/oold-explainer-dark.mp4 --clobber
+
+      # The docs deploy that ran for this same push staged whatever was on the
+      # release at the time, which is the previous pair. Re-run it now the new
+      # cuts are up, or the site would stay a commit behind.
+      - name: Redeploy the docs with the new cuts
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow run main.yml --ref main
