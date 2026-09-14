@@ -18,6 +18,25 @@
   filter: drop-shadow(0 10px 28px rgba(0, 0, 0, 0.18));
 }
 
+/* The explainer plays muted and looping between the text and the buttons. One
+   element; javascripts/hero-video.js points it at the light or dark cut to match
+   the palette. Both cuts are staged into docs/assets/video by `make stage-video`
+   and neither is committed, so a missing file just leaves the poster showing. */
+.oold-hero__video {
+  display: block;
+  width: min(860px, 100%);
+  margin: 1.8rem auto 0.4rem;
+  border-radius: 12px;
+  box-shadow: 0 14px 40px rgba(0, 0, 0, 0.16);
+}
+
+/* A looping 90 second animation is exactly what this setting is for. */
+@media (prefers-reduced-motion: reduce) {
+  .oold-hero__video {
+    display: none;
+  }
+}
+
 .oold-hero__title {
   margin: 1.4rem 0 0.3rem;
   font-size: 2.6rem;
