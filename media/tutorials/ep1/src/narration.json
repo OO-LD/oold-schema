@@ -1,0 +1,72 @@
+[
+  {
+    "id": "s1",
+    "scene": "S1",
+    "frames": 390,
+    "rate": 0,
+    "text": "Five episodes, each building on the last. We start with a problem, not with a file."
+  },
+  {
+    "id": "s2",
+    "scene": "S2",
+    "frames": 690,
+    "rate": 0,
+    "text": "Two teams working apart both pick the most obvious field name there is. Nothing in either document warns you they meant different things."
+  },
+  {
+    "id": "s3",
+    "scene": "S3",
+    "frames": 600,
+    "rate": 0,
+    "text": "Now the mirror image. One name meant two things. Here one thing is written three ways, in three different domains."
+  },
+  {
+    "id": "s4",
+    "scene": "S4",
+    "frames": 690,
+    "rate": 0,
+    "text": "The obvious answer is to add a schema. So we add one, and watch how it handles the two documents from earlier."
+  },
+  {
+    "id": "s5",
+    "scene": "S5",
+    "frames": 570,
+    "rate": -1,
+    "text": "That is not a failure of the schema. It is precisely what a schema was designed to do, and no more."
+  },
+  {
+    "id": "s6",
+    "scene": "S6",
+    "frames": 450,
+    "rate": 0,
+    "text": "Now the other side. If shape is not meaning, then meaning has to come from somewhere else."
+  },
+  {
+    "id": "s7",
+    "scene": "S7",
+    "frames": 390,
+    "rate": 0,
+    "text": "The same limit applies in reverse. Watch what this context will accept."
+  },
+  {
+    "id": "s8",
+    "scene": "S8",
+    "frames": 600,
+    "rate": -1,
+    "text": "Set the two of them side by side, and the difference between them has a remarkably simple shape."
+  },
+  {
+    "id": "s9",
+    "scene": "S9",
+    "frames": 450,
+    "rate": -1,
+    "text": "This is what it costs, long after the data was written."
+  },
+  {
+    "id": "s10",
+    "scene": "S10",
+    "frames": 510,
+    "rate": 0,
+    "text": "Everything so far was the argument for this one sentence."
+  }
+]

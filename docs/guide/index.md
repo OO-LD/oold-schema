@@ -2,6 +2,8 @@
 
 This guide is a non-normative walk-through of OO-LD Schema. It follows the same orientation as the [JSON-LD specification](https://www.w3.org/TR/json-ld/): each concept is introduced with a short explanation and worked examples. For the exact, normative rules - and the RFC 2119 keywords - always refer to the [Specification](../spec/).
 
+If you would rather watch than read, the same ground is covered by five short [video tutorials](tutorials.md), each also available as a slideshow.
+
 ## OO-LD Concepts
 
 - [Basic Concepts](basic-concepts.md) - how one document serves as both a JSON Schema and a JSON-LD context, and how inheritance is expressed.
@@ -13,6 +15,7 @@ This guide is a non-normative walk-through of OO-LD Schema. It follows the same 
 
 ## Beyond the concepts
 
+- [Video tutorials](tutorials.md) - the five-episode series, from why data needs meaning to the Python library, in light and dark, as video or slideshow.
 - [Tooling](../tooling.md) - generic tooling, OO-LD-specific implementations, and interactive playgrounds.
 - [Mappings](../mappings/index.md) - how selected formats (Asset Administration Shell, SAMM, LinkML, NOMAD, DLite, ...) map to OO-LD schemas and instances.
 - [Migration](../migration/index.md) - reach OO-LD from where you already are: JSON Schema, RDF / JSON-LD, OWL or SHACL, a Python dataclass, or a legacy OSW schema.

@@ -1,0 +1,9 @@
+{
+  "name": "oold-tutorial-ep1",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "stills": "node scripts/stills.mjs",
+    "render": "node scripts/render.mjs"
+  }
+}

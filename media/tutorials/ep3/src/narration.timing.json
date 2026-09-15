@@ -1,0 +1,90 @@
+[
+  {
+    "id": "s1",
+    "scene": "S1",
+    "engine": "clone",
+    "seconds": 6.84,
+    "frames": 206,
+    "budget": 420,
+    "fits": true,
+    "words": 27,
+    "wpm": 237
+  },
+  {
+    "id": "s2",
+    "scene": "S2",
+    "engine": "clone",
+    "seconds": 22.84,
+    "frames": 686,
+    "budget": 1080,
+    "fits": true,
+    "words": 72,
+    "wpm": 189
+  },
+  {
+    "id": "s3",
+    "scene": "S3",
+    "engine": "clone",
+    "seconds": 22.36,
+    "frames": 671,
+    "budget": 1020,
+    "fits": true,
+    "words": 76,
+    "wpm": 204
+  },
+  {
+    "id": "s4",
+    "scene": "S4",
+    "engine": "clone",
+    "seconds": 6.84,
+    "frames": 206,
+    "budget": 390,
+    "fits": true,
+    "words": 19,
+    "wpm": 167
+  },
+  {
+    "id": "s5",
+    "scene": "S5",
+    "engine": "clone",
+    "seconds": 23.96,
+    "frames": 719,
+    "budget": 1080,
+    "fits": true,
+    "words": 72,
+    "wpm": 180
+  },
+  {
+    "id": "s5b",
+    "scene": "S5b",
+    "engine": "clone",
+    "seconds": 4.56,
+    "frames": 137,
+    "budget": 240,
+    "fits": true,
+    "words": 15,
+    "wpm": 197
+  },
+  {
+    "id": "s6",
+    "scene": "S6",
+    "engine": "clone",
+    "seconds": 9.44,
+    "frames": 284,
+    "budget": 450,
+    "fits": true,
+    "words": 28,
+    "wpm": 178
+  },
+  {
+    "id": "s7",
+    "scene": "S7",
+    "engine": "clone",
+    "seconds": 11.88,
+    "frames": 357,
+    "budget": 680,
+    "fits": true,
+    "words": 40,
+    "wpm": 202
+  }
+]

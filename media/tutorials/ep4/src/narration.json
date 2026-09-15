@@ -1,0 +1,58 @@
+[
+  {
+    "id": "s1",
+    "scene": "S1",
+    "frames": 360,
+    "rate": 0,
+    "text": "Two keys carry this episode, one naming the thing and one saying its kind."
+  },
+  {
+    "id": "s2",
+    "scene": "S2",
+    "frames": 430,
+    "rate": 0,
+    "text": "The instance repeats almost nothing. Everything it leaves out is already in the schema it names."
+  },
+  {
+    "id": "s3",
+    "scene": "S3",
+    "frames": 690,
+    "rate": 0,
+    "text": "That plain key is an alias for the node identifier, so instance keys stay usable as variable names."
+  },
+  {
+    "id": "s4",
+    "scene": "S4",
+    "frames": 660,
+    "rate": 0,
+    "text": "A processor reads this same file, follows the context, and writes the addresses out in full. Nothing is converted."
+  },
+  {
+    "id": "s6",
+    "scene": "S6",
+    "frames": 480,
+    "rate": 0,
+    "text": "One property, described from two sides in the same file."
+  },
+  {
+    "id": "s7",
+    "scene": "S7",
+    "frames": 690,
+    "rate": 0,
+    "text": "Neither file mentions the other. One writes down an address, and the other answers to it."
+  },
+  {
+    "id": "s8",
+    "scene": "S8",
+    "frames": 980,
+    "rate": 0,
+    "text": "Two identifiers here, because one of them has to survive a move. The version is not one of them."
+  },
+  {
+    "id": "s9",
+    "scene": "S9",
+    "frames": 470,
+    "rate": 0,
+    "text": "Three keywords did all of this, and the rest was already in the schema. Next time, the same graph, from Python."
+  }
+]

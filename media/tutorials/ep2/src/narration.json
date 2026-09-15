@@ -1,0 +1,72 @@
+[
+  {
+    "id": "s1",
+    "scene": "S1",
+    "frames": 330,
+    "rate": 0,
+    "text": "Episode one made a claim. Now we open a real file and check it, line by line. Nothing here is invented."
+  },
+  {
+    "id": "s2",
+    "scene": "S2",
+    "frames": 450,
+    "rate": 0,
+    "text": "This is the whole file. It is small on purpose, because everything that makes it an OO-LD document is already here. Four places carry the weight. We take one per scene."
+  },
+  {
+    "id": "s3",
+    "scene": "S3",
+    "frames": 480,
+    "rate": 0,
+    "text": "Which rules apply here? Every tool asks that first. Line two names a meta schema built on the standard one. The OO-LD extras are marked optional there, so ordinary tools do not choke."
+  },
+  {
+    "id": "s4",
+    "scene": "S4",
+    "frames": 450,
+    "rate": 0,
+    "text": "Line three gives the document a name it keeps. Without one, nothing can point at it, and later episodes do nothing but point at things. That is why the meta schema insists on it."
+  },
+  {
+    "id": "s5",
+    "scene": "S5",
+    "frames": 690,
+    "rate": 0,
+    "text": "This is the entry that does the linked data work. A field name is only a name inside one file. Outside it, that name means nothing. The context fixes that. It turns a local name into a global one, so two teams mean the same thing on purpose, not by luck."
+  },
+  {
+    "id": "s6",
+    "scene": "S6",
+    "frames": 450,
+    "rate": 0,
+    "text": "Nothing in this part is new, and that took discipline, because OO-LD could have invented its own way to describe shape. It did not, so every validator already written still works."
+  },
+  {
+    "id": "s7",
+    "scene": "S7",
+    "frames": 540,
+    "rate": 0,
+    "text": "Neither reader has to know the other one exists. That is the part worth keeping. Structure and meaning cannot drift apart here, because there is no second file to forget to update. They are either both current or both wrong."
+  },
+  {
+    "id": "s9",
+    "scene": "S9",
+    "frames": 780,
+    "rate": 0,
+    "text": "This file is twice the size and you already know how to read it. The same four anchors are still there, with new things between them. A context can point at another context, which is how vocabulary gets shared instead of retyped. The extra keywords carry what JSON Schema cannot say."
+  },
+  {
+    "id": "s8",
+    "scene": "S8",
+    "frames": 480,
+    "rate": 0,
+    "text": "Here is the one place this costs you something. Strictness is only a setting, and the default differs between tools. You may have to tell your validator that these keywords are expected."
+  },
+  {
+    "id": "s10",
+    "scene": "S10",
+    "frames": 480,
+    "rate": 0,
+    "text": "Find those four anchors and you can read any OO-LD document, however big it gets. What you cannot do yet is reuse one without copying it. That is where episode three starts."
+  }
+]

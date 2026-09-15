@@ -1,0 +1,20 @@
+[
+  { "name": "01-open-title", "frame": 300 },
+  { "name": "02-collision-cards", "frame": 590 },
+  { "name": "03-collision-meanings", "frame": 820 },
+  { "name": "04-collision-punch", "frame": 1030 },
+  { "name": "05-synonyms-rows", "frame": 1420 },
+  { "name": "06-synonyms-punch", "frame": 1620 },
+  { "name": "07-schema-code", "frame": 1840 },
+  { "name": "08-schema-both-valid", "frame": 2080 },
+  { "name": "09-schema-blind", "frame": 2280 },
+  { "name": "10-shape-panels", "frame": 2550 },
+  { "name": "11-shape-statement", "frame": 2790 },
+  { "name": "12-context-mapping", "frame": 3260 },
+  { "name": "13-context-no-shape", "frame": 3690 },
+  { "name": "14-matrix-marks", "frame": 4080 },
+  { "name": "15-matrix-caption", "frame": 4250 },
+  { "name": "16-consequence", "frame": 4680 },
+  { "name": "17-close-oold", "frame": 5060 },
+  { "name": "18-close-next", "frame": 5190 }
+]

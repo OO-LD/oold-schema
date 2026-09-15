@@ -9,7 +9,7 @@ repo_name = "OO-LD/oold-schema"
 copyright = 'Maintained by <a href="https://github.com/OO-LD">OO-LD</a>.'
 
 extra_css = ["stylesheets/extra.css"]
-extra_javascript = ["javascripts/hero-video.js"]
+extra_javascript = ["javascripts/hero-video.js", "javascripts/tutorial-player.js"]
 
 nav = [
     { "Introduction" = "introduction.md" },
@@ -22,6 +22,7 @@ nav = [
             { "Identification & Versioning" = "guide/identification-versioning.md" },
             { "Extensions" = "guide/extensions.md" },
             { "Meta-schema & Vocabulary" = "guide/meta-schema.md" },
+            { "Video tutorials" = "guide/tutorials.md" },
         ]},
         { "Tooling" = "tooling.md" },
         { "Mappings" = [

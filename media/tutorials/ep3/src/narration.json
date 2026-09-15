@@ -1,0 +1,58 @@
+[
+  {
+    "id": "s1",
+    "scene": "S1",
+    "frames": 420,
+    "rate": 0,
+    "text": "One document is not a model. Real models are made of many. They have to refer to each other, and there are exactly two ways that happens."
+  },
+  {
+    "id": "s2",
+    "scene": "S2",
+    "frames": 1080,
+    "rate": 0,
+    "text": "Start with the first move. One schema stands on its own, and another wants it as the value of a property. The schema side is the part you expect. Watch the other side, where the same link appears again, attached to that one property. That is what keeps borrowed vocabulary local. A name inside the pet is not the name outside it. And a real schema usually does both moves at once."
+  },
+  {
+    "id": "s3",
+    "scene": "S3",
+    "frames": 1020,
+    "rate": 0,
+    "text": "Now the second move. A base schema, and one that extends it. The extension has to be declared on both sides, once so a validator applies the base rules, once so the vocabulary carries over. Not every link is a containment. A property that only holds the identifier of another thing is a pointer, not a part, and it is declared differently. Extensions chain, so the narrowest type is still valid as every type above it."
+  },
+  {
+    "id": "s4",
+    "scene": "S4",
+    "frames": 390,
+    "rate": 0,
+    "text": "Both moves side by side. Every difference between the two columns follows from one thing. Where the link sits."
+  },
+  {
+    "id": "s5",
+    "scene": "S5",
+    "frames": 1080,
+    "rate": 0,
+    "text": "Here is the rule that makes all of this work. A document must be readable as vocabulary without being processed first. So every link in the schema has to appear in the vocabulary too. The table is the whole mapping. Where a link sits decides where it is reflected. Then one example carries all of the cases at once. Even the branching one, where the terms stay local so they cannot collide."
+  },
+  {
+    "id": "s5b",
+    "scene": "S5b",
+    "frames": 240,
+    "rate": 0,
+    "text": "One consequence worth knowing. The order in that list decides which of the terms wins."
+  },
+  {
+    "id": "s6",
+    "scene": "S6",
+    "frames": 450,
+    "rate": 0,
+    "text": "One last thing about composed objects. The obvious way to forbid extra members does not survive composition. A second keyword does, and this is the reason it exists."
+  },
+  {
+    "id": "s7",
+    "scene": "S7",
+    "frames": 680,
+    "rate": 0,
+    "text": "It pays off in the instance. One line pulls in the whole nesting. The two panels are the same document, written short and written out. That is composition. What is still missing is who any of these objects actually are."
+  }
+]
