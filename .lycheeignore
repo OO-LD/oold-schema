@@ -23,3 +23,7 @@ open-semantic-lab\.org/api/
 /spec/meta/oold-ui-meta-schema\.json$
 /spec/migration/from-legacy-osw/?$
 /spec/use-cases/?$
+
+# guide/tutorials links the served copy of an example; docs/schemas/ is staged
+# into the site by `make stage-schemas` and is not in the tree at lint time.
+^.*/docs/schemas/.*\.json$

@@ -1,0 +1,10 @@
+out/
+__rendiv_entry__.jsx
+__rendiv_entry__.html
+
+# Narration wavs are build output: regenerated from src/narration.json by
+# scripts/narrate.mjs. The scripts are the part worth versioning.
+ep*/public/audio/
+
+# The repo root ignores package-lock.json, but CI runs npm ci here.
+!package-lock.json

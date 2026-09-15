@@ -10,12 +10,25 @@
     slate: 'assets/video/oold-explainer-dark.mp4',
   };
 
+  // Asset URLs must be resolved against the site root, not the current page.
+  // This page lives at /guide/tutorials/ and the site is additionally served
+  // under a version prefix (/dev/, /1.0/), so neither a page-relative nor a
+  // root-absolute path works. The theme publishes the way back in its config.
+  function base() {
+    var el = document.getElementById('__config');
+    try {
+      var b = JSON.parse(el.textContent).base;
+      if (b) return b.replace(/\/+$/, '') + '/';
+    } catch (e) { /* fall through */ }
+    return '';
+  }
+
   function apply() {
     var video = document.querySelector('.oold-hero__video');
     if (!video) return;
 
     var scheme = document.body.getAttribute('data-md-color-scheme') || 'default';
-    var src = CUTS[scheme] || CUTS.default;
+    var src = base() + (CUTS[scheme] || CUTS.default);
     if (video.getAttribute('src') === src) return;
 
     video.setAttribute('src', src);

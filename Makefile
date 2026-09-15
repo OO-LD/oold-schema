@@ -57,16 +57,20 @@ stage-schemas: ## Copy meta/ + examples/ into docs/ so the build serves them (ve
 stage-video: ## Put the explainer cuts where the site can serve them (never committed)
 	@sh scripts/stage_video.sh
 
+.PHONY: stage-tutorials
+stage-tutorials: ## Put the tutorial cuts and beat stills where the site can serve them (never committed)
+	@sh scripts/stage_tutorials.sh
+
 .PHONY: docs
-docs: stage-schemas stage-video ## Serve the docs with live reload (serves the committed spec artifact)
+docs: stage-schemas stage-video stage-tutorials ## Serve the docs with live reload (serves the committed spec artifact)
 	@$(ZENSICAL) serve
 
 .PHONY: preview
-preview: spec stage-schemas stage-video ## Regenerate the spec, then serve the docs with live reload
+preview: spec stage-schemas stage-video stage-tutorials ## Regenerate the spec, then serve the docs with live reload
 	@$(ZENSICAL) serve
 
 .PHONY: check
-check: validate spec stage-schemas stage-video ## Validate schemas, lint the regenerated spec, and build the site
+check: validate spec stage-schemas stage-video stage-tutorials ## Validate schemas, lint the regenerated spec, and build the site
 	@uv run scripts/check_spec.py
 	@uv run scripts/rules_baseline.py check
 	@$(MAKE) --no-print-directory check-extensions

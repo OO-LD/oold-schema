@@ -1,0 +1,109 @@
+# The tutorial series: five episodes, each rendered in a light and a dark cut
+# from one composition, plus the beat stills that back the slideshow on
+# guide/tutorials.
+#
+# Nothing here enters the git tree. Cuts and stills are published to one
+# reusable, unversioned release and staged into the site at build time, the same
+# contract as the explainer.
+name: tutorials
+
+on:
+  pull_request:
+    paths:
+      - "media/tutorials/**"
+      - ".github/workflows/tutorials.yml"
+  push:
+    branches: [main]
+    paths:
+      - "media/tutorials/**"
+      - ".github/workflows/tutorials.yml"
+  workflow_dispatch:
+
+concurrency:
+  group: tutorials-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+defaults:
+  run:
+    working-directory: media/tutorials
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: media/tutorials/package-lock.json
+
+      # media/tutorials is a sibling of media/explainer, not nested inside it,
+      # so it cannot reach that toolchain by walking up. It carries its own,
+      # pinned to the same versions.
+      - run: npm ci
+
+      - name: Type-check the series
+        run: npm run typecheck
+
+      # A module-scope palette capture silently freezes the light colours and the
+      # dark cut renders half light, with no error anywhere.
+      - name: Check the palette is resolved at render time
+        run: node scripts/check-theme.mjs
+
+  publish:
+    if: github.event_name != 'pull_request'
+    needs: check
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    permissions:
+      contents: write
+      actions: write # dispatch the docs deploy once the new cuts are up
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: media/tutorials/package-lock.json
+
+      - run: npm ci
+
+      - name: Cache Playwright browsers
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ hashFiles('media/tutorials/package-lock.json') }}
+
+      - run: npx playwright install --with-deps chromium
+
+      - name: Render every episode, both palettes
+        run: node scripts/build-all.mjs
+
+      - name: Publish the cuts and the stills
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release view tutorials-latest >/dev/null 2>&1 || \
+            gh release create tutorials-latest --prerelease \
+              --title "Tutorials (latest)" \
+              --notes "Current cuts of the OO-LD tutorial series, light and dark, with the beat stills behind the slideshow. Rebuilt whenever media/tutorials changes; not versioned."
+          for ep in ep1 ep2 ep3 ep4 ep5; do
+            for theme in light dark; do
+              [ -f "$ep/out/$ep-$theme.mp4" ] && gh release upload tutorials-latest "$ep/out/$ep-$theme.mp4" --clobber
+              if [ -d "$ep/out/stills-$theme" ]; then
+                (cd "$ep/out/stills-$theme" && zip -qr "../../../$ep-$theme-stills.zip" .)
+                gh release upload tutorials-latest "$ep-$theme-stills.zip" --clobber
+              fi
+            done
+          done
+
+      # The docs deploy for this push staged whatever was on the release at the
+      # time, which is the previous set. Re-run it now the new one is up.
+      - name: Redeploy the docs with the new cuts
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow run main.yml --ref main

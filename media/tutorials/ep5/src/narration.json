@@ -1,0 +1,58 @@
+[
+  {
+    "id": "s1",
+    "scene": "S1",
+    "frames": 420,
+    "rate": 0,
+    "text": "Four episodes of reading these documents by eye. From here the work happens in code. It starts with one install."
+  },
+  {
+    "id": "s2",
+    "scene": "S2",
+    "frames": 960,
+    "rate": 0,
+    "text": "Start where it hurts least to be wrong. A document can satisfy both specifications and still be quietly broken, and that is what this looks for. One command over a file or a folder. The same checks from Python when you want to act on the answer. A failure names the rule it broke, and the exit code is what your pipeline reads."
+  },
+  {
+    "id": "s3",
+    "scene": "S3",
+    "frames": 1000,
+    "rate": 0,
+    "text": "Now the class. Nothing new gets declared here. The document from episode four already holds the shape and the meaning, and in Python that block rides on the class. One field is a reference to another Person. Version one gives you a second way to say so, in the type itself, and it tells a type checker what you read back and what you may write. The older spelling is not going anywhere. Both are the same field once the program runs."
+  },
+  {
+    "id": "s4",
+    "scene": "S4",
+    "frames": 1290,
+    "rate": 0,
+    "text": "This is the part worth staying for. A reference can be the object or it can be an identifier, and the field takes either one. When you read it, you get the object itself. Not a handle, not a promise. Nothing is fetched until you reach for it, and a whole list comes back in a single call. That is what lets you walk the graph the way you would walk any chain of objects, and handle the end of it once."
+  },
+  {
+    "id": "s5",
+    "scene": "S5",
+    "frames": 750,
+    "rate": 0,
+    "text": "This is the handoff out of Python. What comes back needs no context to be read. Every name in it is already spelled out in full. Any tool that understands graphs can take it from here."
+  },
+  {
+    "id": "s6",
+    "scene": "S6",
+    "frames": 690,
+    "rate": 0,
+    "text": "You do not have to write the class at all. Point the generator at the schema and it writes the file. Treat that file as source and commit it. This corner is still moving, so here is what it does not do yet."
+  },
+  {
+    "id": "s7",
+    "scene": "S7",
+    "frames": 1250,
+    "rate": 0,
+    "text": "And now ask it something. The class takes an identifier, a list of them, or a condition. A comparison is Python syntax that builds an object the backend can read, and the same condition filters a list you already hold. Against a triple store it is translated and asked there instead. This part is young, so here is exactly what it will and will not carry. Three stores come in the box."
+  },
+  {
+    "id": "s8",
+    "scene": "S8",
+    "frames": 660,
+    "rate": 0,
+    "text": "A schema that carries its own meaning is worth more than a schema alone. That was the claim in episode one. From Python, it is an ordinary class whose links are ordinary objects. Everything you need is on screen, and it is one install away."
+  }
+]

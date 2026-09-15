@@ -10,6 +10,7 @@ __pycache__/
 docs/meta/
 docs/schemas/
 docs/assets/video/
+docs/assets/tutorials/
 
 # IDE settings
 .idea/
