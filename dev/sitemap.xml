@@ -7,6 +7,9 @@
         <loc>https://oo-ld.org/dev/guide/</loc>
       </url>
       <url>
+        <loc>https://oo-ld.org/dev/guide/tutorials/</loc>
+      </url>
+      <url>
         <loc>https://oo-ld.org/dev/guide/basic-concepts/</loc>
       </url>
       <url>
@@ -23,9 +26,6 @@
       </url>
       <url>
         <loc>https://oo-ld.org/dev/guide/meta-schema/</loc>
-      </url>
-      <url>
-        <loc>https://oo-ld.org/dev/guide/tutorials/</loc>
       </url>
       <url>
         <loc>https://oo-ld.org/dev/tooling/</loc>
