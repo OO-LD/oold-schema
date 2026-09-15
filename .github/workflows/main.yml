@@ -89,6 +89,14 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: make stage-video
+      # Same contract: the tutorial cuts and beat stills come from the
+      # tutorials-latest release, published by tutorials.yml. The deploy job
+      # names each stage step explicitly, so a new one has to be added here as
+      # well as to the Makefile's local targets.
+      - name: Stage the tutorial videos and stills into the site
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: make stage-tutorials
       # mike commits the built site to gh-pages; GitHub runners have no default
       # git identity, so `git commit` would fail without this.
       - name: Configure git identity

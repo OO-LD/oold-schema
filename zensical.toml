@@ -15,6 +15,7 @@ nav = [
     { "Introduction" = "introduction.md" },
     { "Guide" = [
         { "Guide" = "guide/index.md" },
+        { "Video tutorials" = "guide/tutorials.md" },
         { "OO-LD Concepts" = [
             { "Basics" = "guide/basic-concepts.md" },
             { "Composition" = "guide/composition.md" },
@@ -22,7 +23,6 @@ nav = [
             { "Identification & Versioning" = "guide/identification-versioning.md" },
             { "Extensions" = "guide/extensions.md" },
             { "Meta-schema & Vocabulary" = "guide/meta-schema.md" },
-            { "Video tutorials" = "guide/tutorials.md" },
         ]},
         { "Tooling" = "tooling.md" },
         { "Mappings" = [
