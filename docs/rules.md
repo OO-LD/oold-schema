@@ -933,6 +933,23 @@ See [this rule in the specification](spec/#OOLD-VER-edb9) (section: identificati
 
 ## EXT - Standard extensions (JSON-LD and JSON Schema)
 
+### OOLD-EXT-05d3
+
+- <strong title="The RFC 2119 keyword this requirement is stated with. A validator reports a MUST-level finding as a failure and a SHOULD-level one as a warning, so the level decides severity rather than the check that found it.">Level:</strong> MUST NOT
+- <strong title="Who the requirement binds: a document, an implementation of OO-LD, or nobody in particular. This decides what is even able to enforce it.">Applies to:</strong> <span title="Constrains an OO-LD implementation; needs a library conformance suite">implementation</span>
+- <strong title="Whether a validator could decide this rule by inspecting a document. It does not say the OO-LD validator enforces it today - oold rules list --unchecked reports that.">Machine-checkable:</strong> no
+- <strong title="The specification release this rule first appeared in. Ids are permanent and never reused, so this does not change once recorded.">Since:</strong> 1.0.0-rc.3
+
+A frame derivation must not emit a subframe for a property whose key aliases a JSON-LD keyword.
+
+A derivation MUST NOT emit a subframe for a property whose key aliases a JSON-LD keyword - conventionally `id` for `@id` and `type` for `@type` (see [identity](spec/#identity)).
+
+??? quote "In context"
+
+    A derivation MUST recognize a property as reference-valued from any of three signals: an [`x-oold-range`](spec/#range-of-properties) on a string-typed value, an IRI-family `format` (the family [range-reference-form](spec/#range-reference-form) recommends), or a `@context` term mapped `"@type": "@id"`. Where a property matches both this and the embedded-object shape, the embedded-object reading MUST win: a property whose value is an object is an embed whatever its term declares. A derivation MUST NOT emit a subframe for a property whose key aliases a JSON-LD keyword - conventionally `id` for `@id` and `type` for `@type` (see [identity](spec/#identity)). Such a key names the node rather than pointing at another one, and a subframe under it produces `{"@id": {...}}`, which a processor rejects.
+
+See [this rule in the specification](spec/#OOLD-EXT-05d3) (section: framing).
+
 ### OOLD-EXT-1dc8
 
 - <strong title="The RFC 2119 keyword this requirement is stated with. A validator reports a MUST-level finding as a failure and a SHOULD-level one as a warning, so the level decides severity rather than the check that found it.">Level:</strong> MUST NOT
@@ -1211,6 +1228,23 @@ A tool that derives a frame MUST derive it mechanically: the schema's class type
 
 See [this rule in the specification](spec/#OOLD-EXT-68fa) (section: framing).
 
+### OOLD-EXT-6d10
+
+- <strong title="The RFC 2119 keyword this requirement is stated with. A validator reports a MUST-level finding as a failure and a SHOULD-level one as a warning, so the level decides severity rather than the check that found it.">Level:</strong> MUST
+- <strong title="Who the requirement binds: a document, an implementation of OO-LD, or nobody in particular. This decides what is even able to enforce it.">Applies to:</strong> <span title="Constrains an OO-LD implementation; needs a library conformance suite">implementation</span>
+- <strong title="Whether a validator could decide this rule by inspecting a document. It does not say the OO-LD validator enforces it today - oold rules list --unchecked reports that.">Machine-checkable:</strong> no
+- <strong title="The specification release this rule first appeared in. Ids are permanent and never reused, so this does not change once recorded.">Since:</strong> 1.0.0-rc.3
+
+A frame derivation recognizes a property as reference-valued from x-oold-range, an IRI-family format, or a term mapped @type @id.
+
+A derivation MUST recognize a property as reference-valued from any of three signals: an [`x-oold-range`](spec/#range-of-properties) on a string-typed value, an IRI-family `format` (the family [range-reference-form](spec/#range-reference-form) recommends), or a `@context` term mapped `"@type": "@id"`.
+
+??? quote "In context"
+
+    A derivation MUST recognize a property as reference-valued from any of three signals: an [`x-oold-range`](spec/#range-of-properties) on a string-typed value, an IRI-family `format` (the family [range-reference-form](spec/#range-reference-form) recommends), or a `@context` term mapped `"@type": "@id"`. Where a property matches both this and the embedded-object shape, the embedded-object reading MUST win: a property whose value is an object is an embed whatever its term declares. A derivation MUST NOT emit a subframe for a property whose key aliases a JSON-LD keyword - conventionally `id` for `@id` and `type` for `@type` (see [identity](spec/#identity)). Such a key names the node rather than pointing at another one, and a subframe under it produces `{"@id": {...}}`, which a processor rejects.
+
+See [this rule in the specification](spec/#OOLD-EXT-6d10) (section: framing).
+
 ### OOLD-EXT-6ea3
 
 - <strong title="The RFC 2119 keyword this requirement is stated with. A validator reports a MUST-level finding as a failure and a SHOULD-level one as a warning, so the level decides severity rather than the check that found it.">Level:</strong> SHOULD
@@ -1248,6 +1282,23 @@ By default a converter co-emits only `skos:exactMatch` entries; entries whose `p
     Co-emission. Selection yields one IRI per term; for interoperability a converter MAY additionally co-emit the instance value under other synonyms' IRIs. This is a pragmatic interoperability aid, not a logical entailment: `skos:exactMatch` records that two terms are interchangeable across a wide range of applications, but it is not `owl:equivalentProperty` / `owl:equivalentClass` and licenses no reasoner inference - which is exactly why the mapping predicates are SKOS (reasoner-safe) rather than OWL. By default a converter co-emits only `skos:exactMatch` entries; entries whose `predicate_id` is `skos:closeMatch`/`broadMatch`/`narrowMatch`/`relatedMatch` SHOULD NOT be co-emitted unless a consumer explicitly requests it, since such a triple asserts a broader, narrower or merely related relation, not that the value holds under the synonym property, so the requester takes responsibility for that reading.
 
 See [this rule in the specification](spec/#OOLD-EXT-7256) (section: synonyms).
+
+### OOLD-EXT-725f
+
+- <strong title="The RFC 2119 keyword this requirement is stated with. A validator reports a MUST-level finding as a failure and a SHOULD-level one as a warning, so the level decides severity rather than the check that found it.">Level:</strong> MUST
+- <strong title="Who the requirement binds: a document, an implementation of OO-LD, or nobody in particular. This decides what is even able to enforce it.">Applies to:</strong> <span title="Constrains an OO-LD implementation; needs a library conformance suite">implementation</span>
+- <strong title="Whether a validator could decide this rule by inspecting a document. It does not say the OO-LD validator enforces it today - oold rules list --unchecked reports that.">Machine-checkable:</strong> no
+- <strong title="The specification release this rule first appeared in. Ids are permanent and never reused, so this does not change once recorded.">Since:</strong> 1.0.0-rc.3
+
+Framing a graph that holds several nodes matching a derived frame yields one instance document per match.
+
+Framing a graph with a schema-derived frame MUST yield one instance document per matching node, delivered as a `@graph` of matches rather than an arbitrary single root.
+
+??? quote "In context"
+
+    Framing a graph with a schema-derived frame MUST yield one instance document per matching node, delivered as a `@graph` of matches rather than an arbitrary single root. Dually, several instance documents - each expanded through its own `$schema` - merge into one graph, because expansion assigns every node its own IRI and identical IRIs denote the same node.
+
+See [this rule in the specification](spec/#OOLD-EXT-725f) (section: framing-many-documents).
 
 ### OOLD-EXT-7c5d
 
@@ -1467,3 +1518,20 @@ A property coerced `"@type": "@vocab"` therefore SHOULD constrain its values wit
     Because `@vocab` expands an unmatched string against the vocabulary - concatenating it onto the default vocabulary base when one is set (minting a new IRI), or leaving it a relative IRI when none is - a typo silently becomes a stray IRI rather than an error. A property coerced `"@type": "@vocab"` therefore SHOULD constrain its values with an `enum` of the value terms (optionally named with `x-enum-varnames`) or with `x-oold-range`, so only intended individuals are accepted. The value terms SHOULD also be kept from colliding with JSON-LD keyword aliases (`id`, `type`) or other context terms, since a value term shares the context's global term namespace - a term added for a value would otherwise also rewrite a property or keyword of the same name. Confining the value terms to the property's own scoped `@context` keeps them out of that shared namespace, since they then resolve only for that property's values; naming them with opaque identifiers such as UUIDs avoids the clash where readability is not required.
 
 See [this rule in the specification](spec/#OOLD-EXT-fdd8) (section: value-term-aliases).
+
+### OOLD-EXT-ff64
+
+- <strong title="The RFC 2119 keyword this requirement is stated with. A validator reports a MUST-level finding as a failure and a SHOULD-level one as a warning, so the level decides severity rather than the check that found it.">Level:</strong> MUST
+- <strong title="Who the requirement binds: a document, an implementation of OO-LD, or nobody in particular. This decides what is even able to enforce it.">Applies to:</strong> <span title="Constrains an OO-LD implementation; needs a library conformance suite">implementation</span>
+- <strong title="Whether a validator could decide this rule by inspecting a document. It does not say the OO-LD validator enforces it today - oold rules list --unchecked reports that.">Machine-checkable:</strong> no
+- <strong title="The specification release this rule first appeared in. Ids are permanent and never reused, so this does not change once recorded.">Since:</strong> 1.0.0-rc.3
+
+Where a property matches both the embedded-object and the reference-valued signals, the embedded-object reading wins.
+
+Where a property matches both this and the embedded-object shape, the embedded-object reading MUST win: a property whose value is an object is an embed whatever its term declares.
+
+??? quote "In context"
+
+    A derivation MUST recognize a property as reference-valued from any of three signals: an [`x-oold-range`](spec/#range-of-properties) on a string-typed value, an IRI-family `format` (the family [range-reference-form](spec/#range-reference-form) recommends), or a `@context` term mapped `"@type": "@id"`. Where a property matches both this and the embedded-object shape, the embedded-object reading MUST win: a property whose value is an object is an embed whatever its term declares. A derivation MUST NOT emit a subframe for a property whose key aliases a JSON-LD keyword - conventionally `id` for `@id` and `type` for `@type` (see [identity](spec/#identity)). Such a key names the node rather than pointing at another one, and a subframe under it produces `{"@id": {...}}`, which a processor rejects.
+
+See [this rule in the specification](spec/#OOLD-EXT-ff64) (section: framing).
