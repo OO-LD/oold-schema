@@ -30,7 +30,7 @@
       "machine_checkable": true,
       "since": "1.0.0-rc.2",
       "deprecated": false,
-      "source": "06-composition.md:86"
+      "source": "06-composition.md:88"
     },
     {
       "id": "OOLD-CMP-1d7e",
@@ -165,7 +165,7 @@
       "machine_checkable": true,
       "since": "1.0.0-rc.1",
       "deprecated": false,
-      "source": "06-composition.md:80"
+      "source": "06-composition.md:82"
     },
     {
       "id": "OOLD-CNF-1120",
@@ -1005,7 +1005,7 @@
       "machine_checkable": true,
       "since": "1.0.0-rc.2",
       "deprecated": false,
-      "source": "05-basic-concepts.md:18"
+      "source": "05-basic-concepts.md:20"
     },
     {
       "id": "OOLD-SCH-2d05",
@@ -1020,7 +1020,22 @@
       "machine_checkable": false,
       "since": "1.0.0-rc.2",
       "deprecated": false,
-      "source": "05-basic-concepts.md:16"
+      "source": "05-basic-concepts.md:18"
+    },
+    {
+      "id": "OOLD-SCH-96a3",
+      "area": "SCH",
+      "level": "MUST",
+      "applies_to": "document",
+      "section": "basic-concepts",
+      "summary": "An OO-LD schema document must carry a root @context.",
+      "text": "An OO-LD schema document MUST carry an `@context` at its root.",
+      "text_sha256": "15c11dd441d9b4ff7e0c849d340bea8a41914a279bf288bd2ec918525a7968dc",
+      "context": "Because a schema is always reference-able as a remote context, the context half is not optional. An OO-LD schema document MUST carry an `@context` at its root. Without one it is not reference-able: JSONLD11-API Context Processing aborts with `invalid remote context` when a referenced document has no top-level `@context` entry, so a context-less schema would pass schema validation and then fail inside a consumer's JSON-LD processor instead. The obligation is document-level; a nested subschema under `properties` or `$defs` carries no `@context` of its own, exactly as it carries no `$id`. The requirement is presence, not content: an empty context object satisfies it, as does one whose only entry is a reference to a remote context. A schema MAY leave every term unmapped and add semantics incrementally, as above; what it cannot do is omit the entry, because that is the one thing that makes the document unusable as a remote context.",
+      "machine_checkable": true,
+      "since": "1.0.0-rc.3",
+      "deprecated": false,
+      "source": "05-basic-concepts.md:14"
     },
     {
       "id": "OOLD-SCH-a9ee",
@@ -1051,6 +1066,21 @@
       "since": "1.0.0-rc.3",
       "deprecated": false,
       "source": "10-meta-schema.md:3"
+    },
+    {
+      "id": "OOLD-VER-066b",
+      "area": "VER",
+      "level": "SHOULD",
+      "applies_to": "document",
+      "section": "versioning",
+      "summary": "A bare number used as a version segment should carry a v prefix.",
+      "text": "A bare number used as a version segment SHOULD therefore carry a `v` prefix, as in `.../my-package/v2/...`.",
+      "text_sha256": "64f9ab2ec5289cc1a37672b2828a59dea677da604b3f870233cd47be8f9933e0",
+      "context": "A version segment SHOULD be recognizable as one. A dotted version such as `2.0.0` already reads as a version; a bare number does not. A bare number used as a version segment SHOULD therefore carry a `v` prefix, as in `.../my-package/v2/...`. How coarsely a consumer pins - a full version, or a major-only alias that floats with compatible releases - is a policy of the package or registry that serves the schemas, not of this specification. Such a policy MAY be expressed as a redirect chain, with `v1` resolving to the latest compatible feature release and that in turn to its latest patch, so a referrer decides how much it wants to float by choosing how much of the version it names, and a full version always remains reachable as the immutable end of the chain.",
+      "machine_checkable": false,
+      "since": "1.0.0-rc.3",
+      "deprecated": false,
+      "source": "08-identification-versioning.md:75"
     },
     {
       "id": "OOLD-VER-2e63",
@@ -1110,7 +1140,7 @@
       "machine_checkable": false,
       "since": "1.0.0-rc.1",
       "deprecated": false,
-      "source": "08-identification-versioning.md:70"
+      "source": "08-identification-versioning.md:72"
     },
     {
       "id": "OOLD-VER-46b9",
@@ -1140,7 +1170,22 @@
       "machine_checkable": true,
       "since": "1.0.0-rc.1",
       "deprecated": false,
-      "source": "08-identification-versioning.md:67"
+      "source": "08-identification-versioning.md:69"
+    },
+    {
+      "id": "OOLD-VER-5f82",
+      "area": "VER",
+      "level": "SHOULD",
+      "applies_to": "document",
+      "section": "versioning",
+      "summary": "A version segment in a location should be recognizable as a version.",
+      "text": "A version segment SHOULD be recognizable as one.",
+      "text_sha256": "3307134e56a685db2052ea9e62e68f3901f7031b50244fa9c7903817f47c2711",
+      "context": "A version segment SHOULD be recognizable as one. A dotted version such as `2.0.0` already reads as a version; a bare number does not. A bare number used as a version segment SHOULD therefore carry a `v` prefix, as in `.../my-package/v2/...`. How coarsely a consumer pins - a full version, or a major-only alias that floats with compatible releases - is a policy of the package or registry that serves the schemas, not of this specification. Such a policy MAY be expressed as a redirect chain, with `v1` resolving to the latest compatible feature release and that in turn to its latest patch, so a referrer decides how much it wants to float by choosing how much of the version it names, and a full version always remains reachable as the immutable end of the chain.",
+      "machine_checkable": false,
+      "since": "1.0.0-rc.3",
+      "deprecated": false,
+      "source": "08-identification-versioning.md:75"
     },
     {
       "id": "OOLD-VER-9846",
@@ -1158,6 +1203,21 @@
       "source": "08-identification-versioning.md:32"
     },
     {
+      "id": "OOLD-VER-b2ee",
+      "area": "VER",
+      "level": "SHOULD",
+      "applies_to": "document",
+      "section": "versioning",
+      "summary": "Schema versions should follow semantic versioning.",
+      "text": "Versions SHOULD follow [semantic versioning](https://semver.org/), so that the version alone tells a consumer whether an instance that validated against an earlier version still validates: a patch or minor release is backward compatible, a major release is not.",
+      "text_sha256": "6ed09e19b8a559886c99475ba5c85ea382d87fc22bddf5db96fcdebc137acfb1",
+      "context": "Versions SHOULD follow [semantic versioning](https://semver.org/), so that the version alone tells a consumer whether an instance that validated against an earlier version still validates: a patch or minor release is backward compatible, a major release is not. `x-oold-backward-compatible-with` and `x-oold-incompatible-with` then record the exceptions rather than the rule.",
+      "machine_checkable": false,
+      "since": "1.0.0-rc.3",
+      "deprecated": false,
+      "source": "08-identification-versioning.md:55"
+    },
+    {
       "id": "OOLD-VER-befc",
       "area": "VER",
       "level": "SHOULD",
@@ -1170,7 +1230,7 @@
       "machine_checkable": false,
       "since": "1.0.0-rc.1",
       "deprecated": false,
-      "source": "08-identification-versioning.md:69"
+      "source": "08-identification-versioning.md:71"
     },
     {
       "id": "OOLD-VER-c92e",
@@ -1185,7 +1245,7 @@
       "machine_checkable": false,
       "since": "1.0.0-rc.1",
       "deprecated": false,
-      "source": "08-identification-versioning.md:73"
+      "source": "08-identification-versioning.md:77"
     },
     {
       "id": "OOLD-VER-d826",
@@ -1200,7 +1260,7 @@
       "machine_checkable": false,
       "since": "1.0.0-rc.1",
       "deprecated": false,
-      "source": "08-identification-versioning.md:71"
+      "source": "08-identification-versioning.md:73"
     },
     {
       "id": "OOLD-VER-edb9",

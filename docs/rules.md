@@ -110,6 +110,23 @@ An implementation MUST NOT treat an unmapped term as a conformance failure, thou
 
 See [this rule in the specification](spec/#OOLD-SCH-2d05) (section: basic-concepts).
 
+### OOLD-SCH-96a3
+
+- <strong title="The RFC 2119 keyword this requirement is stated with. A validator reports a MUST-level finding as a failure and a SHOULD-level one as a warning, so the level decides severity rather than the check that found it.">Level:</strong> MUST
+- <strong title="Who the requirement binds: a document, an implementation of OO-LD, or nobody in particular. This decides what is even able to enforce it.">Applies to:</strong> <span title="Checkable by validating a schema or instance document">document</span>
+- <strong title="Whether a validator could decide this rule by inspecting a document. It does not say the OO-LD validator enforces it today - oold rules list --unchecked reports that.">Machine-checkable:</strong> yes
+- <strong title="The specification release this rule first appeared in. Ids are permanent and never reused, so this does not change once recorded.">Since:</strong> 1.0.0-rc.3
+
+An OO-LD schema document must carry a root @context.
+
+An OO-LD schema document MUST carry an `@context` at its root.
+
+??? quote "In context"
+
+    Because a schema is always reference-able as a remote context, the context half is not optional. An OO-LD schema document MUST carry an `@context` at its root. Without one it is not reference-able: JSONLD11-API Context Processing aborts with `invalid remote context` when a referenced document has no top-level `@context` entry, so a context-less schema would pass schema validation and then fail inside a consumer's JSON-LD processor instead. The obligation is document-level; a nested subschema under `properties` or `$defs` carries no `@context` of its own, exactly as it carries no `$id`. The requirement is presence, not content: an empty context object satisfies it, as does one whose only entry is a reference to a remote context. A schema MAY leave every term unmapped and add semantics incrementally, as above; what it cannot do is omit the entry, because that is the one thing that makes the document unusable as a remote context.
+
+See [this rule in the specification](spec/#OOLD-SCH-96a3) (section: basic-concepts).
+
 ### OOLD-SCH-a9ee
 
 - <strong title="The RFC 2119 keyword this requirement is stated with. A validator reports a MUST-level finding as a failure and a SHOULD-level one as a warning, so the level decides severity rather than the check that found it.">Level:</strong> MUST NOT
@@ -677,6 +694,23 @@ See [this rule in the specification](spec/#OOLD-RT-d9bd) (section: value-forms).
 
 ## VER - Identification and versioning
 
+### OOLD-VER-066b
+
+- <strong title="The RFC 2119 keyword this requirement is stated with. A validator reports a MUST-level finding as a failure and a SHOULD-level one as a warning, so the level decides severity rather than the check that found it.">Level:</strong> SHOULD
+- <strong title="Who the requirement binds: a document, an implementation of OO-LD, or nobody in particular. This decides what is even able to enforce it.">Applies to:</strong> <span title="Checkable by validating a schema or instance document">document</span>
+- <strong title="Whether a validator could decide this rule by inspecting a document. It does not say the OO-LD validator enforces it today - oold rules list --unchecked reports that.">Machine-checkable:</strong> no
+- <strong title="The specification release this rule first appeared in. Ids are permanent and never reused, so this does not change once recorded.">Since:</strong> 1.0.0-rc.3
+
+A bare number used as a version segment should carry a v prefix.
+
+A bare number used as a version segment SHOULD therefore carry a `v` prefix, as in `.../my-package/v2/...`.
+
+??? quote "In context"
+
+    A version segment SHOULD be recognizable as one. A dotted version such as `2.0.0` already reads as a version; a bare number does not. A bare number used as a version segment SHOULD therefore carry a `v` prefix, as in `.../my-package/v2/...`. How coarsely a consumer pins - a full version, or a major-only alias that floats with compatible releases - is a policy of the package or registry that serves the schemas, not of this specification. Such a policy MAY be expressed as a redirect chain, with `v1` resolving to the latest compatible feature release and that in turn to its latest patch, so a referrer decides how much it wants to float by choosing how much of the version it names, and a full version always remains reachable as the immutable end of the chain.
+
+See [this rule in the specification](spec/#OOLD-VER-066b) (section: versioning).
+
 ### OOLD-VER-2e63
 
 - <strong title="The RFC 2119 keyword this requirement is stated with. A validator reports a MUST-level finding as a failure and a SHOULD-level one as a warning, so the level decides severity rather than the check that found it.">Level:</strong> SHOULD
@@ -776,6 +810,23 @@ The version SHOULD be part of the schema's location:
 
 See [this rule in the specification](spec/#OOLD-VER-534a) (section: versioning).
 
+### OOLD-VER-5f82
+
+- <strong title="The RFC 2119 keyword this requirement is stated with. A validator reports a MUST-level finding as a failure and a SHOULD-level one as a warning, so the level decides severity rather than the check that found it.">Level:</strong> SHOULD
+- <strong title="Who the requirement binds: a document, an implementation of OO-LD, or nobody in particular. This decides what is even able to enforce it.">Applies to:</strong> <span title="Checkable by validating a schema or instance document">document</span>
+- <strong title="Whether a validator could decide this rule by inspecting a document. It does not say the OO-LD validator enforces it today - oold rules list --unchecked reports that.">Machine-checkable:</strong> no
+- <strong title="The specification release this rule first appeared in. Ids are permanent and never reused, so this does not change once recorded.">Since:</strong> 1.0.0-rc.3
+
+A version segment in a location should be recognizable as a version.
+
+A version segment SHOULD be recognizable as one.
+
+??? quote "In context"
+
+    A version segment SHOULD be recognizable as one. A dotted version such as `2.0.0` already reads as a version; a bare number does not. A bare number used as a version segment SHOULD therefore carry a `v` prefix, as in `.../my-package/v2/...`. How coarsely a consumer pins - a full version, or a major-only alias that floats with compatible releases - is a policy of the package or registry that serves the schemas, not of this specification. Such a policy MAY be expressed as a redirect chain, with `v1` resolving to the latest compatible feature release and that in turn to its latest patch, so a referrer decides how much it wants to float by choosing how much of the version it names, and a full version always remains reachable as the immutable end of the chain.
+
+See [this rule in the specification](spec/#OOLD-VER-5f82) (section: versioning).
+
 ### OOLD-VER-9846
 
 - <strong title="The RFC 2119 keyword this requirement is stated with. A validator reports a MUST-level finding as a failure and a SHOULD-level one as a warning, so the level decides severity rather than the check that found it.">Level:</strong> MUST NOT
@@ -792,6 +843,23 @@ It is an annotation about the schema itself, and an exporter MUST NOT stamp it o
     A schema states which external ontology resources it corresponds to with a top-level `x-oold-sssom` block - the [term-synonym](spec/#synonyms) mapping row lifted to the schema level. Its subject is the schema itself, identified by its `$id`: in OO-LD the schema document at that URL is the class definition, so `$id` serves as the mapping's `subject_id`. It is an object keyed by the object IRI of a resolvable resource (an RDF/OWL class, a controlled-vocabulary term, another schema), each value carrying the SSSOM slots: `predicate_id` (default `skos:exactMatch`; `skos:closeMatch` for a looser correspondence), `mapping_set_id`, and the rest of the open bag. Because these are SKOS mapping predicates the correspondence is non-logical and reasoner-safe: `skos:exactMatch` asserts interchangeability, not the logical `owl:equivalentClass` (a schema that wants the reasoner-affecting claim uses `owl:equivalentClass` explicitly as the `predicate_id`). It is an annotation about the schema itself, and an exporter MUST NOT stamp it onto instances - distinct from `x-oold-instance-rdf-type`, the `rdf:type`s instances carry on export (see [semantic-type](spec/#semantic-type)), which are stamped onto instance data.
 
 See [this rule in the specification](spec/#OOLD-VER-9846) (section: ontology-mapping).
+
+### OOLD-VER-b2ee
+
+- <strong title="The RFC 2119 keyword this requirement is stated with. A validator reports a MUST-level finding as a failure and a SHOULD-level one as a warning, so the level decides severity rather than the check that found it.">Level:</strong> SHOULD
+- <strong title="Who the requirement binds: a document, an implementation of OO-LD, or nobody in particular. This decides what is even able to enforce it.">Applies to:</strong> <span title="Checkable by validating a schema or instance document">document</span>
+- <strong title="Whether a validator could decide this rule by inspecting a document. It does not say the OO-LD validator enforces it today - oold rules list --unchecked reports that.">Machine-checkable:</strong> no
+- <strong title="The specification release this rule first appeared in. Ids are permanent and never reused, so this does not change once recorded.">Since:</strong> 1.0.0-rc.3
+
+Schema versions should follow semantic versioning.
+
+Versions SHOULD follow [semantic versioning](https://semver.org/), so that the version alone tells a consumer whether an instance that validated against an earlier version still validates: a patch or minor release is backward compatible, a major release is not.
+
+??? quote "In context"
+
+    Versions SHOULD follow [semantic versioning](https://semver.org/), so that the version alone tells a consumer whether an instance that validated against an earlier version still validates: a patch or minor release is backward compatible, a major release is not. `x-oold-backward-compatible-with` and `x-oold-incompatible-with` then record the exceptions rather than the rule.
+
+See [this rule in the specification](spec/#OOLD-VER-b2ee) (section: versioning).
 
 ### OOLD-VER-befc
 
