@@ -15,7 +15,7 @@ import {
   petSchemaLines,
 } from '../copy';
 import { sceneById } from '../timeline';
-import { FileLabel, Note, PanelPair, SceneKicker } from '../components/Parts';
+import { FileLabel, Note, PanelPair, RefGraph, SceneKicker } from '../components/Parts';
 
 const scene = sceneById('S2');
 const A = 260;
@@ -57,7 +57,7 @@ const OwnerBeat: React.FC = () => {
   const contextIn = progress(frame, TURN, 26);
   return (
     <>
-      <FileLabel name={copy.hasA.ownerFile} delay={2} />
+      <RefGraph file={copy.hasA.ownerFile} hasA={copy.hasA.ownerHasA} delay={2} />
       <div style={{ height: 26 }} />
       <PanelPair
         left={{
@@ -96,7 +96,12 @@ const BeatOrg: React.FC = () => {
   const frame = useFrame();
   return (
     <>
-      <FileLabel name={copy.hasA.orgFile} delay={2} />
+      <RefGraph
+        file={copy.hasA.orgFile}
+        isA={copy.hasA.orgIsA}
+        hasA={copy.hasA.orgHasA}
+        delay={2}
+      />
       <div style={{ height: 26 }} />
       <PanelPair
         left={{

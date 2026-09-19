@@ -49,6 +49,7 @@ export const copy = {
     title: 'Instance plus context is already RDF.',
     instanceLabel: 'instance',
     expandedLabel: 'expanded JSON-LD',
+    triplesLabel: 'turtle format',
     columns: ['subject', 'predicate', 'object'],
     claim: 'An OO-LD instance document is always a valid JSON-LD document.',
     source: 'OO-LD guide, Introduction',

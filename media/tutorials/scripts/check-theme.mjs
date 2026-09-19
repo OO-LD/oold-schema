@@ -26,26 +26,44 @@ const walk = (dir) => {
   return out;
 };
 
-const TOP_LEVEL_CONST = /^const\s+[A-Za-z_$][\w$]*/;
+const TOP_LEVEL_CONST = /^(?:export\s+)?const\s+[A-Za-z_$][\w$]*/;
 const PALETTE = /\b(?:colors|brand)\.[a-zA-Z_]/;
 const HEX = /['"]#[0-9A-Fa-f]{6}(?:[0-9A-Fa-f]{2})?['"]/;
 
-// An unindented const mentioning the palette, unless it is a function: a
-// function body runs at call time, which is per render and therefore safe.
-const isCapture = (line) =>
-  TOP_LEVEL_CONST.test(line) && PALETTE.test(line) && !line.includes('=>');
+const opened = (line) => {
+  let depth = 0;
+  for (const ch of line) {
+    if (ch === '{' || ch === '[') depth += 1;
+    else if (ch === '}' || ch === ']') depth -= 1;
+  }
+  return depth;
+};
 
 const problems = [];
 for (const r of roots) {
   for (const file of walk(path.join(root, r))) {
     const rel = path.relative(root, file).replace(/\\/g, '/');
     if (rel === 'shared/theme.ts') continue; // the palette itself
+    // An unindented const mentioning the palette, unless it is a function: a
+    // function body runs at call time, which is per render and therefore safe.
+    // A declaration that opens a brace or bracket keeps the initializer open
+    // over the lines that follow, and those count as the same declaration; the
+    // `=>` of a component or helper ends the tracking.
+    let open = 0;
     fs.readFileSync(file, 'utf-8').split(/\r?\n/).forEach((line, i) => {
-      if (isCapture(line)) {
+      const declares = TOP_LEVEL_CONST.test(line);
+      const inDeclaration = declares || open > 0;
+      // `=>` or the `= (` that opens a parameter list: from there on the lines
+      // belong to a function, where a palette read happens per render.
+      const isFunction = line.includes('=>') || /=\s*\(/.test(line);
+      if (inDeclaration && !isFunction && PALETTE.test(line)) {
         problems.push(`${rel}:${i + 1}  module-scope palette capture: ${line.trim()}`);
       } else if (HEX.test(line) && !line.trim().startsWith('//')) {
         problems.push(`${rel}:${i + 1}  hard-coded colour, will not switch theme: ${line.trim()}`);
       }
+      if (isFunction) open = 0;
+      else if (declares) open = Math.max(0, opened(line));
+      else if (open > 0) open = Math.max(0, open + opened(line));
     });
   }
 }

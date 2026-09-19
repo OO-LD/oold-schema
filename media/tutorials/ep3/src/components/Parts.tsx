@@ -3,13 +3,18 @@ import { useFrame } from '@rendiv/core';
 import { CodeBlock, Group } from '../../../shared/components/CodeBlock';
 import { Kicker } from '../../../shared/components/Type';
 import { brand, colors, fonts, type } from '../../../shared/theme';
-import { enterUp, fadeIn } from '../../../shared/lib/motion';
+import { enterUp, fadeIn, progress } from '../../../shared/lib/motion';
 
-export const groupInk: Record<Group, string> = {
-  context: brand.graph,
-  schema: brand.validate,
-  plain: colors.muted,
-};
+// A function, not a table: applyTheme swaps the palette after this module is
+// imported, so a table built here would ink the dark render with light values.
+export const groupInk = (g: Group): string =>
+  g === 'context'
+    ? colors.graph
+    : g === 'schema'
+      ? colors.validate
+      : g === 'oold'
+        ? colors.oold_ink
+        : colors.muted;
 
 export const SceneKicker: React.FC<{ children: React.ReactNode }> = ({ children }) => (
   <div style={{ position: 'absolute', top: 62, left: 0, right: 0 }}>
@@ -41,6 +46,116 @@ export const FileLabel: React.FC<{ name: string; delay?: number; color?: string 
     </div>
   );
 };
+
+// A schema the subject file references. Muted, so the file the slide is about
+// keeps the amber and stays the subject of the picture.
+const RefNode: React.FC<{ name: string; delay?: number }> = ({ name, delay = 0 }) => {
+  const frame = useFrame();
+  return (
+    <div
+      style={{
+        fontFamily: fonts.mono,
+        fontSize: 24,
+        color: colors.muted,
+        background: colors.panel,
+        border: `2px solid ${colors.hairline}`,
+        borderRadius: 10,
+        padding: '8px 18px',
+        whiteSpace: 'nowrap',
+        ...enterUp(frame, delay, 18, 14),
+      }}
+    >
+      {name}
+    </div>
+  );
+};
+
+// The connector carries the relation. The arrow sits on the row's centre line
+// and the label floats above it, so the nodes stay aligned with each other.
+const RefEdge: React.FC<{
+  label: string;
+  direction: 'left' | 'right';
+  delay?: number;
+  width?: number;
+}> = ({ label, direction, delay = 0, width = 190 }) => {
+  const frame = useFrame();
+  const draw = progress(frame, delay, 20);
+  const head = fadeIn(frame, delay + 14, 12);
+  const toLeft = direction === 'left';
+  return (
+    <div style={{ position: 'relative', width, height: 18, margin: '0 14px', flexShrink: 0 }}>
+      <div
+        style={{
+          position: 'absolute',
+          bottom: 22,
+          left: 0,
+          right: 0,
+          fontFamily: fonts.mono,
+          fontSize: 21,
+          color: colors.muted,
+          whiteSpace: 'nowrap',
+          opacity: fadeIn(frame, delay + 6, 14),
+        }}
+      >
+        {label}
+      </div>
+      <svg width={width} height={18} viewBox={`0 0 ${width} 18`}>
+        <path
+          d={toLeft ? `M ${width - 4} 9 L 16 9` : `M 4 9 L ${width - 16} 9`}
+          stroke={colors.muted}
+          strokeWidth={3}
+          fill="none"
+          strokeLinecap="round"
+          pathLength={1}
+          strokeDasharray={1}
+          strokeDashoffset={1 - draw}
+        />
+        <path
+          d={
+            toLeft
+              ? 'M 24 3 L 12 9 L 24 15'
+              : `M ${width - 24} 3 L ${width - 12} 9 L ${width - 24} 15`
+          }
+          stroke={colors.muted}
+          strokeWidth={3}
+          fill="none"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          opacity={head}
+        />
+      </svg>
+    </div>
+  );
+};
+
+export type RefLink = { label: string; file: string };
+
+// The composed document as a node-link row, in place of the bare file name: the
+// file the slide is about in the middle, the schemas its $refs point at beside
+// it, and the relation on the connector. Both moves can be on one row, which is
+// what tells the extension at the root apart from the embedded object.
+export const RefGraph: React.FC<{
+  file: string;
+  isA?: RefLink;
+  hasA?: RefLink;
+  delay?: number;
+}> = ({ file, isA, hasA, delay = 0 }) => (
+  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+    {isA ? (
+      <>
+        <RefNode name={isA.file} delay={delay + 14} />
+        <RefEdge label={isA.label} direction="left" delay={delay + 8} />
+      </>
+    ) : null}
+    <FileLabel name={file} delay={delay} />
+    {hasA ? (
+      <>
+        <RefEdge label={hasA.label} direction="right" delay={delay + 8} />
+        <RefNode name={hasA.file} delay={delay + 14} />
+      </>
+    ) : null}
+  </div>
+);
 
 export const Note: React.FC<{
   children: React.ReactNode;
@@ -121,7 +236,7 @@ export const PanelPair: React.FC<{ left: SidePanel; right: SidePanel; fontSize?:
             }}
           >
             {p.label ? (
-              <PanelLabel text={p.label} color={groupInk[p.group]} delay={p.delay ?? 0} />
+              <PanelLabel text={p.label} color={groupInk(p.group)} delay={p.delay ?? 0} />
             ) : null}
             <CodeBlock
               code={p.code}

@@ -1,5 +1,5 @@
 import React from 'react';
-import { colors, fonts, type, brand } from '../theme';
+import { colors, fonts, type } from '../theme';
 
 type Kind = 'key' | 'string' | 'punct';
 type Token = { text: string; kind: Kind };
@@ -26,16 +26,30 @@ const tokenize = (line: string): Token[] => {
   return tokens;
 };
 
-export type Group = 'context' | 'schema' | 'plain';
+// The vocabularies the series inks apart: JSON-LD purple, JSON Schema blue,
+// OO-LD amber. Plain lines carry the neutral code colour and no wash.
+export type Group = 'context' | 'schema' | 'oold' | 'plain';
 
 // Functions, not constants: the palette object is swapped by applyTheme after
 // this module is imported, so a table built at module scope would freeze the
 // light colours and the dark render would come out half light.
 const groupColor = (g: Group): string =>
-  g === 'context' ? colors.context : g === 'schema' ? colors.schema : colors.codePlain;
+  g === 'context'
+    ? colors.context
+    : g === 'schema'
+      ? colors.schema
+      : g === 'oold'
+        ? colors.oold_ink
+        : colors.codePlain;
 
 const groupWash = (g: Group): string =>
-  g === 'context' ? colors.context_wash : g === 'schema' ? colors.schema_wash : 'transparent';
+  g === 'context'
+    ? colors.context_wash
+    : g === 'schema'
+      ? colors.schema_wash
+      : g === 'oold'
+        ? colors.oold_wash
+        : 'transparent';
 
 export type CodeBlockProps = {
   code: string;
