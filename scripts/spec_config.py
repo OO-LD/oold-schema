@@ -123,8 +123,13 @@ TERMINOLOGY = [
      "def": "A document that is simultaneously a valid JSON Schema and a reference-able JSON-LD remote context."},
     {"term": "OO-LD instance", "lt": "OO-LD instance|instance document|instance",
      "def": "A JSON document that conforms to an OO-LD schema and is itself a valid JSON-LD document."},
-    {"term": "remote context", "lt": "remote context",
-     "def": "A JSON-LD context referenced by URL, as defined in [[JSON-LD11]] §3.1."},
+    {"term": "remote context", "lt": "remote context|referenced context",
+     "def": "A JSON-LD context referenced by URL, as defined in [[JSON-LD11]] §3.1. "
+            "*Referenced context* is a synonym: the [JSON-LD Best Practices work]"
+            "(https://github.com/w3c/json-ld-bp/issues/79) is moving to that term because such a "
+            "context may equally be remote, relative or local, and the same holds for the "
+            "`$ref` half of an OO-LD document. This specification keeps *remote context*, the "
+            "term its normative reference defines, and will follow [[JSON-LD11]] if it changes."},
     {"term": "resolved schema", "lt": "resolved schema|resolved view",
      "def": "A single, merged view of a composed schema (see [](#merge-and-override-model))."},
     {"term": "range", "lt": "range",
