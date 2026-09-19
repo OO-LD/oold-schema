@@ -1,13 +1,12 @@
 // Renders one still per story beat so layout and copy can be checked without a
 // full 2700-frame render. Frame numbers are absolute in the OOLDExplainer timeline.
-import { execFileSync } from 'node:child_process';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { matches, parseArgs, still } from '../../kit/rendiv.mjs';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
-const outDir = path.join(root, 'out/stills');
-fs.mkdirSync(outDir, { recursive: true });
+fs.mkdirSync(path.join(root, 'out/stills'), { recursive: true });
 
 const beats = [
   ['01-hook-panels', 140],
@@ -26,24 +25,17 @@ const beats = [
   ['14-end-card', 2620],
 ];
 
-const only = process.argv.slice(2);
-const cli = path.join(root, 'node_modules/@rendiv/cli/dist/cli.js');
+const { filters } = parseArgs(process.argv.slice(2));
 
 for (const [name, frame] of beats) {
-  if (only.length && !only.some((f) => name.includes(f))) continue;
+  if (!matches(filters, name, name)) continue;
   process.stdout.write(`${name} @ ${frame} ... `);
-  execFileSync(
-    process.execPath,
-    [
-      cli,
-      'still',
-      'src/index.tsx',
-      'OOLDExplainer',
-      `out/stills/${name}.png`,
-      '--frame',
-      String(frame),
-    ],
-    { cwd: root, stdio: 'pipe' },
-  );
+  still({
+    root,
+    entry: 'src/index.tsx',
+    composition: 'OOLDExplainer',
+    out: `out/stills/${name}.png`,
+    frame,
+  });
   console.log('ok');
 }

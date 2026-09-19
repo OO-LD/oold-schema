@@ -9,11 +9,10 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { ffmpegPath } from '../../kit/rendiv.mjs';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
-// ffmpeg-static ships an unsuffixed binary everywhere except Windows.
-const ffmpeg = path.join(root, 'node_modules/ffmpeg-static',
-  process.platform === 'win32' ? 'ffmpeg.exe' : 'ffmpeg');
+const ffmpeg = ffmpegPath(root);
 const stills = path.join(root, 'out/stills');
 const out = path.join(root, 'out/contact-sheet.png');
 

@@ -5,10 +5,10 @@ import { execFileSync } from 'node:child_process';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { ffmpegPath, parseArgs, render, sizeMB } from '../../kit/rendiv.mjs';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
-const cli = path.resolve(root, 'node_modules/@rendiv/cli/dist/cli.js');
-const ffmpeg = path.resolve(root, 'node_modules/ffmpeg-static/ffmpeg.exe');
+const ffmpeg = ffmpegPath(root);
 
 const EPISODES = [
   ['ep1', 'Ep1Principles'],
@@ -20,10 +20,8 @@ const EPISODES = [
 
 // --suffix tags the output so a new cut never overwrites an existing one:
 //   node scripts/render-series.mjs --suffix voiced
-const argv = process.argv.slice(2);
-const sufIdx = argv.indexOf('--suffix');
-const suffix = sufIdx >= 0 ? `-${argv[sufIdx + 1]}` : '';
-const only = argv.filter((a, i) => !a.startsWith('--') && !(sufIdx >= 0 && i === sufIdx + 1));
+const { values, filters: only } = parseArgs(process.argv.slice(2), ['suffix']);
+const suffix = values.suffix ? `-${values.suffix}` : '';
 const done = [];
 
 for (const [dir, comp] of EPISODES) {
@@ -32,11 +30,7 @@ for (const [dir, comp] of EPISODES) {
   const out = `out/${comp}${suffix}.mp4`;
   console.log(`\n=== ${dir} / ${comp} ===`);
   try {
-    execFileSync(
-      process.execPath,
-      [cli, 'render', 'src/index.tsx', comp, out, '--concurrency', '6', '--crf', '18'],
-      { cwd, stdio: 'inherit' },
-    );
+    render({ root, cwd, entry: 'src/index.tsx', composition: comp, out, stdio: 'inherit' });
     done.push([dir, comp, path.join(cwd, out)]);
   } catch {
     console.error(`${dir} FAILED to render`);
@@ -51,7 +45,7 @@ for (const [dir, comp, file] of done) {
   } catch (e) {
     duration = (e.stderr.toString().match(/Duration: (\d+:\d+:\d+\.\d+)/) || [])[1] ?? 'unknown';
   }
-  const mb = (fs.statSync(file).size / 1024 / 1024).toFixed(1);
+  const mb = sizeMB(file);
   console.log(`${dir}  ${comp}  ${duration}  ${mb} MB  ${file}`);
 }
 if (done.length !== (only.length || EPISODES.length)) {

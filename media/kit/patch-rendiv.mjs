@@ -3,18 +3,23 @@
 // become string escapes, so ".../2025-11-26_PrototypeFund/..." is parsed as an
 // octal escape and Rollup fails to resolve the entry. @rendiv/studio already
 // normalises its equivalent path; the renderer path does not.
+// See https://github.com/thecodacus/rendiv/issues/11
+//
+// The root is the working directory, not a path relative to this file: npm runs
+// a postinstall with cwd set to the package being installed, and this script is
+// shared by projects that sit at different depths. Deriving it from the script
+// location would patch whichever project happens to be its neighbour.
 import fs from 'node:fs';
 import path from 'node:path';
-import { fileURLToPath } from 'node:url';
 
-const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
+const root = process.argv[2] ? path.resolve(process.argv[2]) : process.cwd();
 const target = path.join(root, 'node_modules/@rendiv/bundler/dist/render-entry-code.js');
 
 const from = 'const importPath = userEntryPoint;';
 const to = "const importPath = userEntryPoint.replace(/\\\\/g, '/');";
 
 if (!fs.existsSync(target)) {
-  console.log('patch-rendiv: bundler not installed, skipping');
+  console.log(`patch-rendiv: bundler not installed under ${root}, skipping`);
   process.exit(0);
 }
 
@@ -26,7 +31,7 @@ if (src.includes(to)) {
   fs.writeFileSync(target, src.replace(from, to));
   console.log('patch-rendiv: applied');
 } else {
-  // Not fatal: a bumped @rendiv/bundler that fixed this upstream should not
-  // break `npm ci`. See https://github.com/thecodacus/rendiv/issues/11
+  // Not fatal: a bumped @rendiv/bundler that fixed this upstream must not break
+  // `npm ci`.
   console.log('patch-rendiv: anchor not found, assuming upstream fixed it');
 }
