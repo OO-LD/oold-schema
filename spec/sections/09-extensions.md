@@ -95,6 +95,10 @@ Normalized - a single, consistent representation:
 
 This makes an OO-LD schema bidirectional: its `@context` drives expansion (JSON to RDF), and the frame derived from its structure drives framing (RDF back to the schema's JSON tree). :rule[OOLD-EXT-68fa]{applies=implementation level=MUST summary="A frame derived from a schema takes its @type from the class type, embeds inlined object properties as subframes and keeps reference-valued properties as IRIs with @embed @never."}A tool that derives a frame MUST derive it mechanically: the schema's class type becomes the frame `@type`; an inlined object property becomes a nested subframe that embeds the referenced node; a reference-valued property (including one whose term is mapped with JSON-LD `@reverse`) becomes a subframe with `@embed: @never` so its targets stay IRIs, in line with the inline-versus-reference choice `x-oold-range` already records; and `@explicit` / `@requireAll` / `@default` follow from `additionalProperties` and `required`. The frame's `@context` is the composition of the referenced schemas' contexts.
 
+:rule[OOLD-EXT-6d10]{applies=implementation level=MUST summary="A frame derivation recognizes a property as reference-valued from x-oold-range, an IRI-family format, or a term mapped @type @id."}A derivation MUST recognize a property as **reference-valued** from any of three signals: an [`x-oold-range`](#range-of-properties) on a string-typed value, an IRI-family `format` (the family [](#range-reference-form) recommends), or a `@context` term mapped `"@type": "@id"`. :rule[OOLD-EXT-ff64]{applies=implementation level=MUST summary="Where a property matches both the embedded-object and the reference-valued signals, the embedded-object reading wins."}Where a property matches both this and the embedded-object shape, the embedded-object reading MUST win: a property whose value is an object is an embed whatever its term declares. :rule[OOLD-EXT-05d3]{applies=implementation level="MUST NOT" summary="A frame derivation must not emit a subframe for a property whose key aliases a JSON-LD keyword."}A derivation MUST NOT emit a subframe for a property whose key aliases a JSON-LD keyword - conventionally `id` for `@id` and `type` for `@type` (see [](#identity)). Such a key names the node rather than pointing at another one, and a subframe under it produces `{"@id": {...}}`, which a processor rejects.
+
+Omitting `@embed: @never` is not a cosmetic difference. A reference whose target happens to carry triples in the same graph is then embedded as an object, and the framed document no longer validates against the schema the frame was derived from, which declares a string in that position.
+
 :::example{title="RDF to OO-LD schema to frame to instance"}
 An input RDF graph (Turtle) - an organization with an address, and two persons who work for it:
 ```turtle
@@ -177,6 +181,16 @@ Framing the graph with that frame yields an OO-LD instance document, projected o
 }
 ```
 :::
+
+##### Many documents, one graph {#framing-many-documents}
+
+The example above frames a graph that happens to hold one matching node. In general a graph holds many, and the relationship runs in both directions.
+
+:rule[OOLD-EXT-725f]{applies=implementation level=MUST summary="Framing a graph that holds several nodes matching a derived frame yields one instance document per match."}Framing a graph with a schema-derived frame MUST yield **one instance document per matching node**, delivered as a `@graph` of matches rather than an arbitrary single root. Dually, several instance documents - each expanded through its own `$schema` - merge into one graph, because expansion assigns every node its own IRI and identical IRIs denote the same node.
+
+The `@embed: @never` derivation is what keeps the two directions consistent. A reference that stays a reference belongs to exactly one document: the one describing the node it is stored on. If framing embedded it instead, the target's triples would be copied into every document that references it, so a node's description would depend on which document a reader happened to open, and merging the documents back would re-assert those triples from several places at once. Keeping references as IRIs means each document round-trips independently and their union is the graph they came from.
+
+This is the framing-based answer to the object-graph mapping question: a schema does not describe a document in isolation, it describes how to cut one document out of a graph and how to put it back.
 
 Framing is not the only option for this transformation. When the source data lives in a triplestore or behind a SPARQL endpoint, a [SPARQL](https://www.w3.org/TR/sparql11-query/) `CONSTRUCT` query - also derivable from the schema - can select and reshape the relevant subgraph directly, including deriving reverse relations such as `employees` from the inverse of `schema:worksFor`; compacting that result with the schema's `@context` (and framing it where nesting is required) yields the same OO-LD instance.
 

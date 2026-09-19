@@ -213,6 +213,21 @@
       "source": "03-conformance.md:13"
     },
     {
+      "id": "OOLD-EXT-05d3",
+      "area": "EXT",
+      "level": "MUST NOT",
+      "applies_to": "implementation",
+      "section": "framing",
+      "summary": "A frame derivation must not emit a subframe for a property whose key aliases a JSON-LD keyword.",
+      "text": "A derivation MUST NOT emit a subframe for a property whose key aliases a JSON-LD keyword - conventionally `id` for `@id` and `type` for `@type` (see [](#identity)).",
+      "text_sha256": "07e05da8b2fcd62c4560330cca1372fbfe129432a17fa660040f417566c43dc9",
+      "context": "A derivation MUST recognize a property as reference-valued from any of three signals: an [`x-oold-range`](#range-of-properties) on a string-typed value, an IRI-family `format` (the family [](#range-reference-form) recommends), or a `@context` term mapped `\"@type\": \"@id\"`. Where a property matches both this and the embedded-object shape, the embedded-object reading MUST win: a property whose value is an object is an embed whatever its term declares. A derivation MUST NOT emit a subframe for a property whose key aliases a JSON-LD keyword - conventionally `id` for `@id` and `type` for `@type` (see [](#identity)). Such a key names the node rather than pointing at another one, and a subframe under it produces `{\"@id\": {...}}`, which a processor rejects.",
+      "machine_checkable": false,
+      "since": "1.0.0-rc.3",
+      "deprecated": false,
+      "source": "09-extensions.md:98"
+    },
+    {
       "id": "OOLD-EXT-1dc8",
       "area": "EXT",
       "level": "MUST NOT",
@@ -240,7 +255,7 @@
       "machine_checkable": true,
       "since": "1.0.0-rc.2",
       "deprecated": false,
-      "source": "09-extensions.md:423"
+      "source": "09-extensions.md:437"
     },
     {
       "id": "OOLD-EXT-1f92",
@@ -255,7 +270,7 @@
       "machine_checkable": false,
       "since": "1.0.0-rc.1",
       "deprecated": false,
-      "source": "09-extensions.md:343"
+      "source": "09-extensions.md:357"
     },
     {
       "id": "OOLD-EXT-2542",
@@ -270,7 +285,7 @@
       "machine_checkable": true,
       "since": "1.0.0-rc.1",
       "deprecated": false,
-      "source": "09-extensions.md:352"
+      "source": "09-extensions.md:366"
     },
     {
       "id": "OOLD-EXT-2b61",
@@ -285,7 +300,7 @@
       "machine_checkable": true,
       "since": "1.0.0-rc.1",
       "deprecated": false,
-      "source": "09-extensions.md:346"
+      "source": "09-extensions.md:360"
     },
     {
       "id": "OOLD-EXT-391e",
@@ -300,7 +315,7 @@
       "machine_checkable": false,
       "since": "1.0.0-rc.1",
       "deprecated": false,
-      "source": "09-extensions.md:337"
+      "source": "09-extensions.md:351"
     },
     {
       "id": "OOLD-EXT-3fe9",
@@ -315,7 +330,7 @@
       "machine_checkable": true,
       "since": "1.0.0-rc.1",
       "deprecated": false,
-      "source": "09-extensions.md:315"
+      "source": "09-extensions.md:329"
     },
     {
       "id": "OOLD-EXT-436a",
@@ -330,7 +345,7 @@
       "machine_checkable": false,
       "since": "1.0.0-rc.1",
       "deprecated": false,
-      "source": "09-extensions.md:446"
+      "source": "09-extensions.md:460"
     },
     {
       "id": "OOLD-EXT-44bd",
@@ -345,7 +360,7 @@
       "machine_checkable": false,
       "since": "1.0.0-rc.3",
       "deprecated": false,
-      "source": "09-extensions.md:212"
+      "source": "09-extensions.md:226"
     },
     {
       "id": "OOLD-EXT-4966",
@@ -375,7 +390,7 @@
       "machine_checkable": true,
       "since": "1.0.0-rc.1",
       "deprecated": false,
-      "source": "09-extensions.md:185"
+      "source": "09-extensions.md:199"
     },
     {
       "id": "OOLD-EXT-557e",
@@ -405,7 +420,7 @@
       "machine_checkable": false,
       "since": "1.0.0-rc.1",
       "deprecated": false,
-      "source": "09-extensions.md:358"
+      "source": "09-extensions.md:372"
     },
     {
       "id": "OOLD-EXT-61aa",
@@ -420,7 +435,7 @@
       "machine_checkable": false,
       "since": "1.0.0-rc.1",
       "deprecated": false,
-      "source": "09-extensions.md:445"
+      "source": "09-extensions.md:459"
     },
     {
       "id": "OOLD-EXT-6312",
@@ -435,7 +450,7 @@
       "machine_checkable": true,
       "since": "1.0.0-rc.1",
       "deprecated": false,
-      "source": "09-extensions.md:227"
+      "source": "09-extensions.md:241"
     },
     {
       "id": "OOLD-EXT-68fa",
@@ -453,6 +468,21 @@
       "source": "09-extensions.md:96"
     },
     {
+      "id": "OOLD-EXT-6d10",
+      "area": "EXT",
+      "level": "MUST",
+      "applies_to": "implementation",
+      "section": "framing",
+      "summary": "A frame derivation recognizes a property as reference-valued from x-oold-range, an IRI-family format, or a term mapped @type @id.",
+      "text": "A derivation MUST recognize a property as reference-valued from any of three signals: an [`x-oold-range`](#range-of-properties) on a string-typed value, an IRI-family `format` (the family [](#range-reference-form) recommends), or a `@context` term mapped `\"@type\": \"@id\"`.",
+      "text_sha256": "f7aef6a0c109e10d28813bf45fe0808edbb5efdfab22edac7a171cd13a743f4d",
+      "context": "A derivation MUST recognize a property as reference-valued from any of three signals: an [`x-oold-range`](#range-of-properties) on a string-typed value, an IRI-family `format` (the family [](#range-reference-form) recommends), or a `@context` term mapped `\"@type\": \"@id\"`. Where a property matches both this and the embedded-object shape, the embedded-object reading MUST win: a property whose value is an object is an embed whatever its term declares. A derivation MUST NOT emit a subframe for a property whose key aliases a JSON-LD keyword - conventionally `id` for `@id` and `type` for `@type` (see [](#identity)). Such a key names the node rather than pointing at another one, and a subframe under it produces `{\"@id\": {...}}`, which a processor rejects.",
+      "machine_checkable": false,
+      "since": "1.0.0-rc.3",
+      "deprecated": false,
+      "source": "09-extensions.md:98"
+    },
+    {
       "id": "OOLD-EXT-6ea3",
       "area": "EXT",
       "level": "SHOULD",
@@ -465,7 +495,7 @@
       "machine_checkable": true,
       "since": "1.0.0-rc.1",
       "deprecated": false,
-      "source": "09-extensions.md:341"
+      "source": "09-extensions.md:355"
     },
     {
       "id": "OOLD-EXT-7256",
@@ -481,6 +511,21 @@
       "since": "1.0.0-rc.1",
       "deprecated": false,
       "source": "09-extensions.md:64"
+    },
+    {
+      "id": "OOLD-EXT-725f",
+      "area": "EXT",
+      "level": "MUST",
+      "applies_to": "implementation",
+      "section": "framing-many-documents",
+      "summary": "Framing a graph that holds several nodes matching a derived frame yields one instance document per match.",
+      "text": "Framing a graph with a schema-derived frame MUST yield one instance document per matching node, delivered as a `@graph` of matches rather than an arbitrary single root.",
+      "text_sha256": "ceb79118ae8684c9a82b93e11eb96ec7ebd9d2515dbc087ca1c5afecd1f6fb57",
+      "context": "Framing a graph with a schema-derived frame MUST yield one instance document per matching node, delivered as a `@graph` of matches rather than an arbitrary single root. Dually, several instance documents - each expanded through its own `$schema` - merge into one graph, because expansion assigns every node its own IRI and identical IRIs denote the same node.",
+      "machine_checkable": false,
+      "since": "1.0.0-rc.3",
+      "deprecated": false,
+      "source": "09-extensions.md:189"
     },
     {
       "id": "OOLD-EXT-7c5d",
@@ -540,7 +585,7 @@
       "machine_checkable": true,
       "since": "1.0.0-rc.1",
       "deprecated": false,
-      "source": "09-extensions.md:187"
+      "source": "09-extensions.md:201"
     },
     {
       "id": "OOLD-EXT-b23b",
@@ -555,7 +600,7 @@
       "machine_checkable": false,
       "since": "1.0.0-rc.2",
       "deprecated": false,
-      "source": "09-extensions.md:204"
+      "source": "09-extensions.md:218"
     },
     {
       "id": "OOLD-EXT-b249",
@@ -570,7 +615,7 @@
       "machine_checkable": true,
       "since": "1.0.0-rc.2",
       "deprecated": false,
-      "source": "09-extensions.md:200"
+      "source": "09-extensions.md:214"
     },
     {
       "id": "OOLD-EXT-c77a",
@@ -585,7 +630,7 @@
       "machine_checkable": true,
       "since": "1.0.0-rc.3",
       "deprecated": false,
-      "source": "09-extensions.md:288"
+      "source": "09-extensions.md:302"
     },
     {
       "id": "OOLD-EXT-dd76",
@@ -600,7 +645,7 @@
       "machine_checkable": true,
       "since": "1.0.0-rc.1",
       "deprecated": false,
-      "source": "09-extensions.md:212"
+      "source": "09-extensions.md:226"
     },
     {
       "id": "OOLD-EXT-ddda",
@@ -630,7 +675,7 @@
       "machine_checkable": false,
       "since": "1.0.0-rc.1",
       "deprecated": false,
-      "source": "09-extensions.md:337"
+      "source": "09-extensions.md:351"
     },
     {
       "id": "OOLD-EXT-eeda",
@@ -645,7 +690,7 @@
       "machine_checkable": false,
       "since": "1.0.0-rc.3",
       "deprecated": false,
-      "source": "09-extensions.md:381"
+      "source": "09-extensions.md:395"
     },
     {
       "id": "OOLD-EXT-ef09",
@@ -660,7 +705,7 @@
       "machine_checkable": true,
       "since": "1.0.0-rc.1",
       "deprecated": false,
-      "source": "09-extensions.md:212"
+      "source": "09-extensions.md:226"
     },
     {
       "id": "OOLD-EXT-fdd8",
@@ -675,7 +720,22 @@
       "machine_checkable": true,
       "since": "1.0.0-rc.1",
       "deprecated": false,
-      "source": "09-extensions.md:352"
+      "source": "09-extensions.md:366"
+    },
+    {
+      "id": "OOLD-EXT-ff64",
+      "area": "EXT",
+      "level": "MUST",
+      "applies_to": "implementation",
+      "section": "framing",
+      "summary": "Where a property matches both the embedded-object and the reference-valued signals, the embedded-object reading wins.",
+      "text": "Where a property matches both this and the embedded-object shape, the embedded-object reading MUST win: a property whose value is an object is an embed whatever its term declares.",
+      "text_sha256": "52ad7df4c37e1dc4253a1db04f928fc84099a704077d2b5c35d74807b72abf2c",
+      "context": "A derivation MUST recognize a property as reference-valued from any of three signals: an [`x-oold-range`](#range-of-properties) on a string-typed value, an IRI-family `format` (the family [](#range-reference-form) recommends), or a `@context` term mapped `\"@type\": \"@id\"`. Where a property matches both this and the embedded-object shape, the embedded-object reading MUST win: a property whose value is an object is an embed whatever its term declares. A derivation MUST NOT emit a subframe for a property whose key aliases a JSON-LD keyword - conventionally `id` for `@id` and `type` for `@type` (see [](#identity)). Such a key names the node rather than pointing at another one, and a subframe under it produces `{\"@id\": {...}}`, which a processor rejects.",
+      "machine_checkable": false,
+      "since": "1.0.0-rc.3",
+      "deprecated": false,
+      "source": "09-extensions.md:98"
     },
     {
       "id": "OOLD-INS-1d33",
