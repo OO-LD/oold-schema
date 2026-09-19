@@ -1247,6 +1247,17 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#oold-ext-05d3" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        OOLD-EXT-05d3
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#oold-ext-1dc8" class="md-nav__link">
     <span class="md-ellipsis">
       <span class="md-typeset">
@@ -1423,6 +1434,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#oold-ext-6d10" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        OOLD-EXT-6d10
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#oold-ext-6ea3" class="md-nav__link">
     <span class="md-ellipsis">
       <span class="md-typeset">
@@ -1438,6 +1460,17 @@
     <span class="md-ellipsis">
       <span class="md-typeset">
         OOLD-EXT-7256
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#oold-ext-725f" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        OOLD-EXT-725f
       </span>
     </span>
   </a>
@@ -1581,6 +1614,17 @@
     <span class="md-ellipsis">
       <span class="md-typeset">
         OOLD-EXT-fdd8
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#oold-ext-ff64" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        OOLD-EXT-ff64
       </span>
     </span>
   </a>
@@ -2375,6 +2419,17 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#oold-ext-05d3" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        OOLD-EXT-05d3
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#oold-ext-1dc8" class="md-nav__link">
     <span class="md-ellipsis">
       <span class="md-typeset">
@@ -2551,6 +2606,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#oold-ext-6d10" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        OOLD-EXT-6d10
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#oold-ext-6ea3" class="md-nav__link">
     <span class="md-ellipsis">
       <span class="md-typeset">
@@ -2566,6 +2632,17 @@
     <span class="md-ellipsis">
       <span class="md-typeset">
         OOLD-EXT-7256
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#oold-ext-725f" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        OOLD-EXT-725f
       </span>
     </span>
   </a>
@@ -2709,6 +2786,17 @@
     <span class="md-ellipsis">
       <span class="md-typeset">
         OOLD-EXT-fdd8
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#oold-ext-ff64" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        OOLD-EXT-ff64
       </span>
     </span>
   </a>
@@ -3554,6 +3642,20 @@ repeats the explanation, so you do not have to come back here.</p>
 </details>
 <p>See <a href="../spec/#OOLD-VER-edb9">this rule in the specification</a> (section: identification).</p>
 <h2 id="ext-standard-extensions-json-ld-and-json-schema">EXT - Standard extensions (JSON-LD and JSON Schema)<a class="headerlink" href="#ext-standard-extensions-json-ld-and-json-schema" title="Permanent link">&para;</a></h2>
+<h3 id="oold-ext-05d3">OOLD-EXT-05d3<a class="headerlink" href="#oold-ext-05d3" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong title="The RFC 2119 keyword this requirement is stated with. A validator reports a MUST-level finding as a failure and a SHOULD-level one as a warning, so the level decides severity rather than the check that found it.">Level:</strong> MUST NOT</li>
+<li><strong title="Who the requirement binds: a document, an implementation of OO-LD, or nobody in particular. This decides what is even able to enforce it.">Applies to:</strong> <span title="Constrains an OO-LD implementation; needs a library conformance suite">implementation</span></li>
+<li><strong title="Whether a validator could decide this rule by inspecting a document. It does not say the OO-LD validator enforces it today - oold rules list --unchecked reports that.">Machine-checkable:</strong> no</li>
+<li><strong title="The specification release this rule first appeared in. Ids are permanent and never reused, so this does not change once recorded.">Since:</strong> 1.0.0-rc.3</li>
+</ul>
+<p>A frame derivation must not emit a subframe for a property whose key aliases a JSON-LD keyword.</p>
+<p>A derivation MUST NOT emit a subframe for a property whose key aliases a JSON-LD keyword - conventionally <code>id</code> for <code>@id</code> and <code>type</code> for <code>@type</code> (see <a href="../spec/#identity">identity</a>).</p>
+<details class="quote">
+<summary>In context</summary>
+<p>A derivation MUST recognize a property as reference-valued from any of three signals: an <a href="../spec/#range-of-properties"><code>x-oold-range</code></a> on a string-typed value, an IRI-family <code>format</code> (the family <a href="../spec/#range-reference-form">range-reference-form</a> recommends), or a <code>@context</code> term mapped <code>"@type": "@id"</code>. Where a property matches both this and the embedded-object shape, the embedded-object reading MUST win: a property whose value is an object is an embed whatever its term declares. A derivation MUST NOT emit a subframe for a property whose key aliases a JSON-LD keyword - conventionally <code>id</code> for <code>@id</code> and <code>type</code> for <code>@type</code> (see <a href="../spec/#identity">identity</a>). Such a key names the node rather than pointing at another one, and a subframe under it produces <code>{"@id": {...}}</code>, which a processor rejects.</p>
+</details>
+<p>See <a href="../spec/#OOLD-EXT-05d3">this rule in the specification</a> (section: framing).</p>
 <h3 id="oold-ext-1dc8">OOLD-EXT-1dc8<a class="headerlink" href="#oold-ext-1dc8" title="Permanent link">&para;</a></h3>
 <ul>
 <li><strong title="The RFC 2119 keyword this requirement is stated with. A validator reports a MUST-level finding as a failure and a SHOULD-level one as a warning, so the level decides severity rather than the check that found it.">Level:</strong> MUST NOT</li>
@@ -3789,6 +3891,20 @@ repeats the explanation, so you do not have to come back here.</p>
 <p>This makes an OO-LD schema bidirectional: its <code>@context</code> drives expansion (JSON to RDF), and the frame derived from its structure drives framing (RDF back to the schema's JSON tree). A tool that derives a frame MUST derive it mechanically: the schema's class type becomes the frame <code>@type</code>; an inlined object property becomes a nested subframe that embeds the referenced node; a reference-valued property (including one whose term is mapped with JSON-LD <code>@reverse</code>) becomes a subframe with <code>@embed: @never</code> so its targets stay IRIs, in line with the inline-versus-reference choice <code>x-oold-range</code> already records; and <code>@explicit</code> / <code>@requireAll</code> / <code>@default</code> follow from <code>additionalProperties</code> and <code>required</code>. The frame's <code>@context</code> is the composition of the referenced schemas' contexts.</p>
 </details>
 <p>See <a href="../spec/#OOLD-EXT-68fa">this rule in the specification</a> (section: framing).</p>
+<h3 id="oold-ext-6d10">OOLD-EXT-6d10<a class="headerlink" href="#oold-ext-6d10" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong title="The RFC 2119 keyword this requirement is stated with. A validator reports a MUST-level finding as a failure and a SHOULD-level one as a warning, so the level decides severity rather than the check that found it.">Level:</strong> MUST</li>
+<li><strong title="Who the requirement binds: a document, an implementation of OO-LD, or nobody in particular. This decides what is even able to enforce it.">Applies to:</strong> <span title="Constrains an OO-LD implementation; needs a library conformance suite">implementation</span></li>
+<li><strong title="Whether a validator could decide this rule by inspecting a document. It does not say the OO-LD validator enforces it today - oold rules list --unchecked reports that.">Machine-checkable:</strong> no</li>
+<li><strong title="The specification release this rule first appeared in. Ids are permanent and never reused, so this does not change once recorded.">Since:</strong> 1.0.0-rc.3</li>
+</ul>
+<p>A frame derivation recognizes a property as reference-valued from x-oold-range, an IRI-family format, or a term mapped @type @id.</p>
+<p>A derivation MUST recognize a property as reference-valued from any of three signals: an <a href="../spec/#range-of-properties"><code>x-oold-range</code></a> on a string-typed value, an IRI-family <code>format</code> (the family <a href="../spec/#range-reference-form">range-reference-form</a> recommends), or a <code>@context</code> term mapped <code>"@type": "@id"</code>.</p>
+<details class="quote">
+<summary>In context</summary>
+<p>A derivation MUST recognize a property as reference-valued from any of three signals: an <a href="../spec/#range-of-properties"><code>x-oold-range</code></a> on a string-typed value, an IRI-family <code>format</code> (the family <a href="../spec/#range-reference-form">range-reference-form</a> recommends), or a <code>@context</code> term mapped <code>"@type": "@id"</code>. Where a property matches both this and the embedded-object shape, the embedded-object reading MUST win: a property whose value is an object is an embed whatever its term declares. A derivation MUST NOT emit a subframe for a property whose key aliases a JSON-LD keyword - conventionally <code>id</code> for <code>@id</code> and <code>type</code> for <code>@type</code> (see <a href="../spec/#identity">identity</a>). Such a key names the node rather than pointing at another one, and a subframe under it produces <code>{"@id": {...}}</code>, which a processor rejects.</p>
+</details>
+<p>See <a href="../spec/#OOLD-EXT-6d10">this rule in the specification</a> (section: framing).</p>
 <h3 id="oold-ext-6ea3">OOLD-EXT-6ea3<a class="headerlink" href="#oold-ext-6ea3" title="Permanent link">&para;</a></h3>
 <ul>
 <li><strong title="The RFC 2119 keyword this requirement is stated with. A validator reports a MUST-level finding as a failure and a SHOULD-level one as a warning, so the level decides severity rather than the check that found it.">Level:</strong> SHOULD</li>
@@ -3822,6 +3938,20 @@ repeats the explanation, so you do not have to come back here.</p>
 <p>Co-emission. Selection yields one IRI per term; for interoperability a converter MAY additionally co-emit the instance value under other synonyms' IRIs. This is a pragmatic interoperability aid, not a logical entailment: <code>skos:exactMatch</code> records that two terms are interchangeable across a wide range of applications, but it is not <code>owl:equivalentProperty</code> / <code>owl:equivalentClass</code> and licenses no reasoner inference - which is exactly why the mapping predicates are SKOS (reasoner-safe) rather than OWL. By default a converter co-emits only <code>skos:exactMatch</code> entries; entries whose <code>predicate_id</code> is <code>skos:closeMatch</code>/<code>broadMatch</code>/<code>narrowMatch</code>/<code>relatedMatch</code> SHOULD NOT be co-emitted unless a consumer explicitly requests it, since such a triple asserts a broader, narrower or merely related relation, not that the value holds under the synonym property, so the requester takes responsibility for that reading.</p>
 </details>
 <p>See <a href="../spec/#OOLD-EXT-7256">this rule in the specification</a> (section: synonyms).</p>
+<h3 id="oold-ext-725f">OOLD-EXT-725f<a class="headerlink" href="#oold-ext-725f" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong title="The RFC 2119 keyword this requirement is stated with. A validator reports a MUST-level finding as a failure and a SHOULD-level one as a warning, so the level decides severity rather than the check that found it.">Level:</strong> MUST</li>
+<li><strong title="Who the requirement binds: a document, an implementation of OO-LD, or nobody in particular. This decides what is even able to enforce it.">Applies to:</strong> <span title="Constrains an OO-LD implementation; needs a library conformance suite">implementation</span></li>
+<li><strong title="Whether a validator could decide this rule by inspecting a document. It does not say the OO-LD validator enforces it today - oold rules list --unchecked reports that.">Machine-checkable:</strong> no</li>
+<li><strong title="The specification release this rule first appeared in. Ids are permanent and never reused, so this does not change once recorded.">Since:</strong> 1.0.0-rc.3</li>
+</ul>
+<p>Framing a graph that holds several nodes matching a derived frame yields one instance document per match.</p>
+<p>Framing a graph with a schema-derived frame MUST yield one instance document per matching node, delivered as a <code>@graph</code> of matches rather than an arbitrary single root.</p>
+<details class="quote">
+<summary>In context</summary>
+<p>Framing a graph with a schema-derived frame MUST yield one instance document per matching node, delivered as a <code>@graph</code> of matches rather than an arbitrary single root. Dually, several instance documents - each expanded through its own <code>$schema</code> - merge into one graph, because expansion assigns every node its own IRI and identical IRIs denote the same node.</p>
+</details>
+<p>See <a href="../spec/#OOLD-EXT-725f">this rule in the specification</a> (section: framing-many-documents).</p>
 <h3 id="oold-ext-7c5d">OOLD-EXT-7c5d<a class="headerlink" href="#oold-ext-7c5d" title="Permanent link">&para;</a></h3>
 <ul>
 <li><strong title="The RFC 2119 keyword this requirement is stated with. A validator reports a MUST-level finding as a failure and a SHOULD-level one as a warning, so the level decides severity rather than the check that found it.">Level:</strong> MUST</li>
@@ -4003,6 +4133,20 @@ repeats the explanation, so you do not have to come back here.</p>
 <p>Because <code>@vocab</code> expands an unmatched string against the vocabulary - concatenating it onto the default vocabulary base when one is set (minting a new IRI), or leaving it a relative IRI when none is - a typo silently becomes a stray IRI rather than an error. A property coerced <code>"@type": "@vocab"</code> therefore SHOULD constrain its values with an <code>enum</code> of the value terms (optionally named with <code>x-enum-varnames</code>) or with <code>x-oold-range</code>, so only intended individuals are accepted. The value terms SHOULD also be kept from colliding with JSON-LD keyword aliases (<code>id</code>, <code>type</code>) or other context terms, since a value term shares the context's global term namespace - a term added for a value would otherwise also rewrite a property or keyword of the same name. Confining the value terms to the property's own scoped <code>@context</code> keeps them out of that shared namespace, since they then resolve only for that property's values; naming them with opaque identifiers such as UUIDs avoids the clash where readability is not required.</p>
 </details>
 <p>See <a href="../spec/#OOLD-EXT-fdd8">this rule in the specification</a> (section: value-term-aliases).</p>
+<h3 id="oold-ext-ff64">OOLD-EXT-ff64<a class="headerlink" href="#oold-ext-ff64" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong title="The RFC 2119 keyword this requirement is stated with. A validator reports a MUST-level finding as a failure and a SHOULD-level one as a warning, so the level decides severity rather than the check that found it.">Level:</strong> MUST</li>
+<li><strong title="Who the requirement binds: a document, an implementation of OO-LD, or nobody in particular. This decides what is even able to enforce it.">Applies to:</strong> <span title="Constrains an OO-LD implementation; needs a library conformance suite">implementation</span></li>
+<li><strong title="Whether a validator could decide this rule by inspecting a document. It does not say the OO-LD validator enforces it today - oold rules list --unchecked reports that.">Machine-checkable:</strong> no</li>
+<li><strong title="The specification release this rule first appeared in. Ids are permanent and never reused, so this does not change once recorded.">Since:</strong> 1.0.0-rc.3</li>
+</ul>
+<p>Where a property matches both the embedded-object and the reference-valued signals, the embedded-object reading wins.</p>
+<p>Where a property matches both this and the embedded-object shape, the embedded-object reading MUST win: a property whose value is an object is an embed whatever its term declares.</p>
+<details class="quote">
+<summary>In context</summary>
+<p>A derivation MUST recognize a property as reference-valued from any of three signals: an <a href="../spec/#range-of-properties"><code>x-oold-range</code></a> on a string-typed value, an IRI-family <code>format</code> (the family <a href="../spec/#range-reference-form">range-reference-form</a> recommends), or a <code>@context</code> term mapped <code>"@type": "@id"</code>. Where a property matches both this and the embedded-object shape, the embedded-object reading MUST win: a property whose value is an object is an embed whatever its term declares. A derivation MUST NOT emit a subframe for a property whose key aliases a JSON-LD keyword - conventionally <code>id</code> for <code>@id</code> and <code>type</code> for <code>@type</code> (see <a href="../spec/#identity">identity</a>). Such a key names the node rather than pointing at another one, and a subframe under it produces <code>{"@id": {...}}</code>, which a processor rejects.</p>
+</details>
+<p>See <a href="../spec/#OOLD-EXT-ff64">this rule in the specification</a> (section: framing).</p>
 
 
 
