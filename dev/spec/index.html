@@ -171,18 +171,27 @@
     if (document.readyState === "complete") schedule(); else window.addEventListener("load", schedule);
   </script>
   <style>
+    /* Colours here are stated so that they work in both of ReSpec's colour schemes.
+       ReSpec switches on `prefers-color-scheme` and, independently, on its own
+       colour-scheme control, so a rule keyed to the media query alone still breaks for a
+       reader who flips that control. Translucent tints over whatever background is in
+       effect, and `inherit` / `currentColor` for foregrounds, need neither selector.
+       Opaque light values here previously left every one of these below 2.5:1 against
+       dark-mode text (see OO-LD/oold-schema#166). */
     .ex-tabs { margin: 1em 0; }
-    .ex-tablist { display: flex; gap: .25rem; border-bottom: 1px solid #ccc; margin-bottom: .5em; }
-    .ex-tab { border: 0; background: none; padding: .3em .8em; cursor: pointer; font: inherit; color: #555; border-bottom: 2px solid transparent; }
-    .ex-tab[aria-selected="true"] { color: #005a9c; border-bottom-color: #005a9c; font-weight: 600; }
+    .ex-tablist { display: flex; gap: .25rem; border-bottom: 1px solid rgba(128, 128, 128, .35); margin-bottom: .5em; }
+    .ex-tab { border: 0; background: none; padding: .3em .8em; cursor: pointer; font: inherit; color: inherit; opacity: .65; border-bottom: 2px solid transparent; }
+    .ex-tab[aria-selected="true"] { opacity: 1; border-bottom-color: currentColor; font-weight: 600; }
     .ex-panel[hidden] { display: none; }
     /* The specification text must look exactly as it does today when idle: no underline,
        colour, background or font change. The affordance appears only on hover, on keyboard
        focus, and when the sentence is the current #fragment. */
     .rule { cursor: pointer; }
-    .rule:hover { background: #eef4fa; }
-    .rule:focus-visible { outline: 2px solid #005a9c; outline-offset: 2px; }
-    .rule:target { background: #fffbdd; scroll-margin-top: 3rem; }
+    .rule:hover { background: rgba(128, 160, 200, .16); }
+    .rule:focus-visible { outline: 2px solid currentColor; outline-offset: 2px; }
+    /* The brand amber, carried at an alpha that keeps the sentence readable either way:
+       18:1 against black on white, 6:1 against light text on a dark background. */
+    .rule:target { background: rgba(255, 177, 32, .25); scroll-margin-top: 3rem; }
   </style>
   <script>
     // Toggle the JSON / YAML example tabs (event delegation; runs regardless of ReSpec).
