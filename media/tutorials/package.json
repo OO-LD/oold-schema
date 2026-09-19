@@ -3,7 +3,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "postinstall": "node ../explainer/scripts/patch-rendiv.mjs",
+    "postinstall": "node ../kit/patch-rendiv.mjs",
     "build": "node scripts/build-all.mjs",
     "stills": "node scripts/build-all.mjs --stills",
     "check": "node scripts/check-theme.mjs && tsc --noEmit -p tsconfig.json",

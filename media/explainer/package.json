@@ -3,7 +3,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "postinstall": "node scripts/patch-rendiv.mjs",
+    "postinstall": "node ../kit/patch-rendiv.mjs",
     "preview": "vite dev",
     "studio": "rendiv studio src/index.tsx",
     "render": "node scripts/render.mjs",
