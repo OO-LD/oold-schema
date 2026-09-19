@@ -7,11 +7,15 @@
 # contract as the explainer.
 name: tutorials
 
+# Any change under media/ triggers this: the render kit is shared, so a change
+# there reaches the series even when no episode file was touched, and a review
+# showing no changed beat is the evidence that it did not.
 on:
   pull_request:
     paths:
-      - "media/tutorials/**"
+      - "media/**"
       - ".github/workflows/tutorials.yml"
+      - ".github/workflows/media-review.yml"
   push:
     branches: [main]
     paths:
@@ -52,6 +56,17 @@ jobs:
       # dark cut renders half light, with no error anywhere.
       - name: Check the palette is resolved at render time
         run: node scripts/check-theme.mjs
+
+  # Renders the affected beats at this pull request and at its merge base and
+  # comments the ones that differ. Typechecking cannot see a colour.
+  review:
+    if: github.event_name == 'pull_request'
+    uses: ./.github/workflows/media-review.yml
+    with:
+      project: tutorials
+    permissions:
+      contents: write
+      pull-requests: write
 
   publish:
     if: github.event_name != 'pull_request'

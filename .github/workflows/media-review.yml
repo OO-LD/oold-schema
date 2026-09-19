@@ -1,0 +1,155 @@
+# Renders a media project's beats at the pull request and at its merge base and
+# comments the beats whose pixels changed.
+#
+# Called by explainer.yml and tutorials.yml. Both trigger on any change under
+# media/, because the render kit is shared: a change there reaches every project
+# that pulls it, and a diff showing no change is itself the evidence that it did
+# not disturb the others.
+#
+# A contact sheet shows what the slides look like. It does not show what a pull
+# request changed, and those are different questions: a scene label rendered in
+# the light palette on the dark cut looks plausible in isolation, and reached
+# main that way. Only a before and after says so.
+name: media-review
+
+on:
+  workflow_call:
+    inputs:
+      project:
+        description: Directory under media/ to review.
+        required: true
+        type: string
+
+env:
+  # One long-lived prerelease holds every pull request's review images, replaced
+  # per pull request, so nothing accumulates and no binary enters git history.
+  REVIEW_TAG: ci-review-images
+
+jobs:
+  # Which beats can this change possibly affect? An episode directory reaches
+  # only itself; shared sources and the kit reach everything.
+  plan:
+    runs-on: ubuntu-latest
+    outputs:
+      units: ${{ steps.plan.outputs.units }}
+      any: ${{ steps.plan.outputs.any }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - id: plan
+        run: |
+          base=$(git merge-base "origin/${{ github.base_ref }}" HEAD)
+          git diff --name-only "$base" HEAD > /tmp/changed.txt
+          units=$(node media/kit/review.mjs plan --project "${{ inputs.project }}" --changed /tmp/changed.txt)
+          echo "units=$units" >> "$GITHUB_OUTPUT"
+          [ "$units" = "[]" ] && echo "any=false" >> "$GITHUB_OUTPUT" || echo "any=true" >> "$GITHUB_OUTPUT"
+          echo "changed files:"; cat /tmp/changed.txt
+          echo "units: $units"
+
+  # One job per unit. Rendering every unit in sequence would run to the better
+  # part of an hour on the series; fanned out it is the cost of the slowest one.
+  render:
+    needs: plan
+    if: needs.plan.outputs.any == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        unit: ${{ fromJSON(needs.plan.outputs.units) }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: media/${{ inputs.project }}/package-lock.json
+
+      - name: Cache Playwright browsers
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ hashFiles(format('media/{0}/package-lock.json', inputs.project)) }}
+
+      - name: Install and render the pull request
+        working-directory: media/${{ inputs.project }}
+        run: |
+          npm ci
+          npx playwright install --with-deps chromium
+          node ../kit/review.mjs render \
+            --project "${{ inputs.project }}" --root . \
+            --unit "${{ matrix.unit }}" --out "$GITHUB_WORKSPACE/review/after"
+
+      # The merge base is rendered from its own sources, in a worktree, with its
+      # own install: the point is to compare what this change did, and reusing
+      # the pull request's modules would hide a dependency bump doing it.
+      - name: Render the merge base
+        run: |
+          base=$(git merge-base "origin/${{ github.base_ref }}" HEAD)
+          git worktree add /tmp/base "$base"
+          cd /tmp/base/media/${{ inputs.project }}
+          npm ci
+          node "$GITHUB_WORKSPACE/media/kit/review.mjs" render \
+            --project "${{ inputs.project }}" --root . \
+            --unit "${{ matrix.unit }}" --out "$GITHUB_WORKSPACE/review/before"
+        continue-on-error: true
+
+      - name: Compare
+        working-directory: media/${{ inputs.project }}
+        run: |
+          node ../kit/review.mjs compare --root . \
+            --before "$GITHUB_WORKSPACE/review/before" \
+            --after "$GITHUB_WORKSPACE/review/after" \
+            --out "$GITHUB_WORKSPACE/review/diff"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: review-${{ inputs.project }}-${{ matrix.unit }}
+          path: review/diff
+          if-no-files-found: ignore
+          retention-days: 7
+
+  comment:
+    needs: [plan, render]
+    # Only on a complete render. A failed one produces no artifacts, and an
+    # empty set of artifacts is indistinguishable here from a clean diff, so
+    # commenting anyway would report "no beat changed" for a job that never
+    # rendered. The failed check is the honest signal.
+    if: needs.plan.outputs.any == 'true' && needs.render.result == 'success'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # upload the review images to the prerelease
+      pull-requests: write # post the review comment
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: review-${{ inputs.project }}-*
+          path: diffs
+          merge-multiple: true
+
+      - name: Publish the images and build the comment
+        id: body
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          node .github/scripts/media-review-comment.mjs \
+            --dir diffs --project "${{ inputs.project }}" \
+            --repo "${{ github.repository }}" --tag "$REVIEW_TAG" \
+            --pr "${{ github.event.number }}" --sha "${{ github.sha }}" > body.md
+          {
+            echo 'md<<REVIEW_EOF'
+            cat body.md
+            echo REVIEW_EOF
+          } >> "$GITHUB_OUTPUT"
+
+      - uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          header: media-review-${{ inputs.project }}
+          message: ${{ steps.body.outputs.md }}

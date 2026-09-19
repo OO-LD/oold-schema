@@ -10,9 +10,10 @@ name: explainer
 on:
   pull_request:
     paths:
-      - "media/explainer/**"
+      - "media/**"
       - "examples/Minimal.schema.json"
       - ".github/workflows/explainer.yml"
+      - ".github/workflows/media-review.yml"
   push:
     branches: [main]
     paths:
@@ -29,18 +30,10 @@ defaults:
   run:
     working-directory: media/explainer
 
-env:
-  # One long-lived prerelease holds every PR's review image. Assets are replaced
-  # per PR, so it never accumulates and nothing lands in git history.
-  REVIEW_TAG: ci-review-images
-
 jobs:
-  stills:
+  check:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
-    permissions:
-      contents: write # upload the review asset to the prerelease
-      pull-requests: write # post the review comment
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
 
@@ -55,65 +48,25 @@ jobs:
       - name: Check the on-screen JSON still matches examples/Minimal.schema.json
         run: npm run check
 
-      - name: Cache Playwright browsers
-        uses: actions/cache@v4
-        with:
-          path: ~/.cache/ms-playwright
-          key: playwright-${{ runner.os }}-${{ hashFiles('media/explainer/package-lock.json') }}
+  # Renders the affected beats at this pull request and at its merge base and
+  # comments the ones that differ. Shared with the series so the two cannot
+  # drift into two different ideas of what a review image is.
+  review:
+    if: github.event_name == 'pull_request'
+    uses: ./.github/workflows/media-review.yml
+    with:
+      project: explainer
+    permissions:
+      contents: write
+      pull-requests: write
 
-      - run: npx playwright install --with-deps chromium
-
-      - run: npm run stills
-
-      - name: Build the contact sheet
-        id: sheet
-        run: |
-          set -o pipefail
-          npm run sheet | tee sheet.log
-          {
-            echo 'beats<<EOF'
-            grep -E '^[0-9]+\. ' sheet.log
-            echo EOF
-          } >> "$GITHUB_OUTPUT"
-
-      - name: Upload the sheet as a release asset
-        if: github.event_name == 'pull_request'
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          asset="pr-${{ github.event.number }}-$(git rev-parse --short HEAD).png"
-          cp out/contact-sheet.png "$asset"
-          gh release view "$REVIEW_TAG" >/dev/null 2>&1 || \
-            gh release create "$REVIEW_TAG" --prerelease --notes \
-              "Transient review images for pull requests. Not part of the source tree."
-          gh release upload "$REVIEW_TAG" "$asset" --clobber
-          echo "URL=https://github.com/${{ github.repository }}/releases/download/$REVIEW_TAG/$asset" >> "$GITHUB_ENV"
-
-      - name: Comment the frames on the PR
-        if: github.event_name == 'pull_request'
-        uses: marocchino/sticky-pull-request-comment@v2
-        with:
-          header: explainer-stills
-          message: |
-            ### Explainer frames
-
-            ![contact sheet](${{ env.URL }})
-
-            <details><summary>Beats, in reading order</summary>
-
-            ```
-            ${{ steps.sheet.outputs.beats }}
-            ```
-            </details>
-
-            Rendered from `${{ github.sha }}`. Images live on the `${{ env.REVIEW_TAG }}` prerelease, not in the repository.
 
   # Publishes both cuts to one reusable release. The video is unversioned, so
   # there is no tag to pin: the assets are clobbered in place and the docs deploy
   # always pulls the current pair.
   publish:
     if: github.event_name != 'pull_request'
-    needs: stills
+    needs: check
     runs-on: ubuntu-latest
     timeout-minutes: 60
     permissions:
