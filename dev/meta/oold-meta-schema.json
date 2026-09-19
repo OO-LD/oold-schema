@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://oo-ld.org/dev/meta/oold-meta-schema.json",
   "title": "OO-LD dialect meta-schema",
-  "$comment": "The $id uses the versioned hosting at oo-ld.org/ (the source keeps the /latest/ placeholder; each released copy is stamped per release). The OO-LD vocabulary is declared optional (false) so that generic JSON-Schema 2020-12 validators still process OO-LD schemas. Two-tier structure: this resource is what a schema's $schema points at, so it carries the DOCUMENT-level obligations (required: $id). The dialect body lives in oold-meta-schema-base.json, which holds $dynamicAnchor: \"meta\"; nested subschemas recurse into the base via the standard $dynamicRef and are therefore NOT required to carry $id - a fragment inside properties or $defs legitimately has none. The UI keyword definitions are included via the oold-ui-meta-schema #keywords anchor so a schema carrying x-oold-ui-* annotations validates in one pass. The @context below is the OO-LD meta-level prefix set against which x-oold-context / x-oold-sssom CURIEs (synonym keys, predicate_id, mapping_set_id) are expanded by OO-LD processors; it is not an instance context.",
+  "$comment": "The $id uses the versioned hosting at oo-ld.org/ (the source keeps the /latest/ placeholder; each released copy is stamped per release). The OO-LD vocabulary is declared optional (false) so that generic JSON-Schema 2020-12 validators still process OO-LD schemas. Two-tier structure: this resource is what a schema's $schema points at, so it carries the DOCUMENT-level obligations (required: $id, @context). @context is required because an OO-LD schema is reference-able as a JSON-LD remote context: a referenced document with no top-level @context makes a JSON-LD processor abort with invalid remote context (JSON-LD 1.1 API, Context Processing 5.2.5.2), so without this the schema half would validate and the semantic half would fail later, in someone else's pipeline. The obligation is document-level only; nested subschemas recurse into the base and carry none. The dialect body lives in oold-meta-schema-base.json, which holds $dynamicAnchor: \"meta\"; nested subschemas recurse into the base via the standard $dynamicRef and are therefore NOT required to carry $id - a fragment inside properties or $defs legitimately has none. The UI keyword definitions are included via the oold-ui-meta-schema #keywords anchor so a schema carrying x-oold-ui-* annotations validates in one pass. The @context below is the OO-LD meta-level prefix set against which x-oold-context / x-oold-sssom CURIEs (synonym keys, predicate_id, mapping_set_id) are expanded by OO-LD processors; it is not an instance context.",
   "@context": {
     "skos": "http://www.w3.org/2004/02/skos/core#",
     "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
@@ -22,6 +22,7 @@
   },
   "$ref": "https://oo-ld.org/dev/meta/oold-meta-schema-base.json",
   "required": [
-    "$id"
+    "$id",
+    "@context"
   ]
 }
