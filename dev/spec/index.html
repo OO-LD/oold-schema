@@ -259,8 +259,8 @@
   <dd>A document that is simultaneously a valid JSON Schema and a reference-able JSON-LD remote context.</dd>
   <dt><dfn data-lt="OO-LD instance|instance document|instance">OO-LD instance</dfn></dt>
   <dd>A JSON document that conforms to an OO-LD schema and is itself a valid JSON-LD document.</dd>
-  <dt><dfn data-lt="remote context|referenced context">remote context</dfn></dt>
-  <dd>A JSON-LD context referenced by URL, as defined in [[JSON-LD11]] §3.1. <em>Referenced context</em> is a synonym: the <a href="https://github.com/w3c/json-ld-bp/issues/79">JSON-LD Best Practices work</a> is moving to that term because such a context may equally be remote, relative or local, and the same holds for the <code>$ref</code> half of an OO-LD document. This specification keeps <em>remote context</em>, the term its normative reference defines, and will follow [[JSON-LD11]] if it changes.</dd>
+  <dt><dfn data-lt="remote context|referenced context|external context">remote context</dfn></dt>
+  <dd>A JSON-LD context referenced by URL, as defined in [[JSON-LD11]] §3.1. The name is under discussion upstream: <a href="https://github.com/w3c/json-ld-syntax/issues/487">w3c/json-ld-syntax#487</a> proposes avoiding <em>remote</em>, because referencing a context by URL implies no network request - it may be resolved from a cache or a well-known registry, and the same holds for the <code>$ref</code> half of an OO-LD document. No replacement is settled: that issue suggests <em>external context</em>, while <em>referenced context</em> has been put to us directly. This specification keeps <em>remote context</em>, the term its normative reference defines, and will follow [[JSON-LD11]] once it changes. Both candidates resolve here so either finds this entry.</dd>
   <dt><dfn data-lt="resolved schema|resolved view">resolved schema</dfn></dt>
   <dd>A single, merged view of a composed schema (see <a href="#merge-and-override-model"></a>).</dd>
   <dt><dfn data-lt="range">range</dfn></dt>
