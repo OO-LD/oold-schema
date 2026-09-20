@@ -36,7 +36,7 @@ A schema states which external ontology resources it corresponds to with a top-l
 {
   "$id": "https://example.org/my-package/1.0.0/Person.schema.json",
   "x-oold-sssom": {
-    "https://schema.org/Person": { "predicate_id": "skos:exactMatch" }
+    "http://schema.org/Person": { "predicate_id": "skos:exactMatch" }
   },
   "x-oold-instance-rdf-type": ["schema:Person"],
   "title": "Person"

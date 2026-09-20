@@ -54,6 +54,7 @@ nav = [
     { "Use Cases" = "use-cases.md" },
     { "Rule Catalogue" = "rules.md" },
     { "Specification" = "spec/" },
+    { "Contributing" = "contributing.md" },
 ]
 
 [project.theme]

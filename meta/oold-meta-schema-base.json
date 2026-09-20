@@ -164,7 +164,7 @@
       },
       "examples": [
         {
-          "https://schema.org/Person": {
+          "http://schema.org/Person": {
             "predicate_id": "skos:exactMatch"
           }
         }
