@@ -41,7 +41,7 @@ class Person(BaseModel):
         json_schema_extra={
             "@context": {
                 "ex": "https://example.org/",
-                "schema": "https://schema.org/",
+                "schema": "http://schema.org/",
                 "name": "schema:name",
                 "type": "@type"
             },

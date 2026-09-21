@@ -14,7 +14,7 @@ from pydantic import BaseModel, ConfigDict
 
 class Person(BaseModel):
     model_config = ConfigDict(json_schema_extra={
-        "@context": {"schema": "https://schema.org/", "name": "schema:name"},
+        "@context": {"schema": "http://schema.org/", "name": "schema:name"},
         "x-oold-sssom": { "schema:Person": { "predicate_id": "skos:exactMatch" } },
     })
     name: str | None = None
@@ -32,7 +32,7 @@ from oold.model import LinkedBaseModel
 
 class Person(LinkedBaseModel):
     model_config = ConfigDict(json_schema_extra={
-        "@context": {"schema": "https://schema.org/", "name": "schema:name"},
+        "@context": {"schema": "http://schema.org/", "name": "schema:name"},
         "x-oold-sssom": { "schema:Person": { "predicate_id": "skos:exactMatch" } },
     })
     name: str | None = None
