@@ -4,7 +4,7 @@
   "@context": [
     {
       "@version": 1.1,
-      "schema": "https://schema.org/",
+      "schema": "http://schema.org/",
       "name": "schema:name",
       "role": "schema:jobTitle",
       "homepage": { "@id": "schema:url", "@type": "@id" },

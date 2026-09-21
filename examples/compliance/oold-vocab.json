@@ -467,7 +467,7 @@
           "@context": [
             "https://oo-ld.test/compliance/remote.context.json",
             {
-              "name": "https://schema.org/name"
+              "name": "http://schema.org/name"
             }
           ],
           "type": "object",

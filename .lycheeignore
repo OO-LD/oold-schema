@@ -27,3 +27,8 @@ open-semantic-lab\.org/api/
 # guide/tutorials links the served copy of an example; docs/schemas/ is staged
 # into the site by `make stage-schemas` and is not in the tree at lint time.
 ^.*/docs/schemas/.*\.json$
+
+# The published contributor guide, linked from the root CONTRIBUTING.md. It
+# resolves once this page is deployed; on the branch that introduces it the
+# path does not exist on the live site yet.
+^https://oo-ld\.org/latest/contributing/?$
