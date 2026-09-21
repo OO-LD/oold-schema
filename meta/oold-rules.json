@@ -221,7 +221,7 @@
       "summary": "A frame derivation must not emit a subframe for a property whose key aliases a JSON-LD keyword.",
       "text": "A derivation MUST NOT emit a subframe for a property whose key aliases a JSON-LD keyword - conventionally `id` for `@id` and `type` for `@type` (see [](#identity)).",
       "text_sha256": "07e05da8b2fcd62c4560330cca1372fbfe129432a17fa660040f417566c43dc9",
-      "context": "A derivation MUST recognize a property as reference-valued from any of three signals: an [`x-oold-range`](#range-of-properties) on a string-typed value, an IRI-family `format` (the family [](#range-reference-form) recommends), or a `@context` term mapped `\"@type\": \"@id\"`. Where a property matches both this and the embedded-object shape, the embedded-object reading MUST win: a property whose value is an object is an embed whatever its term declares. A derivation MUST NOT emit a subframe for a property whose key aliases a JSON-LD keyword - conventionally `id` for `@id` and `type` for `@type` (see [](#identity)). Such a key names the node rather than pointing at another one, and a subframe under it produces `{\"@id\": {...}}`, which a processor rejects.",
+      "context": "A derivation MUST recognize a property as reference-valued from any of four signals: an [`x-oold-range`](#range-of-properties) on a string-typed value, an IRI-family `format` (the family [](#range-reference-form) recommends), a `@context` term mapped `\"@type\": \"@id\"`, or a `@context` term mapped with `@reverse`. The last stands on its own: the values of a reverse term are node references by definition (JSON-LD11 §4.1.10), so `\"@type\": \"@id\"` alongside it is redundant and an author who omits it has still written a reference. Where a property matches both this and the embedded-object shape, the embedded-object reading MUST win: a property whose value is an object is an embed whatever its term declares. A derivation MUST NOT emit a subframe for a property whose key aliases a JSON-LD keyword - conventionally `id` for `@id` and `type` for `@type` (see [](#identity)). Such a key names the node rather than pointing at another one, and a subframe under it produces `{\"@id\": {...}}`, which a processor rejects.",
       "machine_checkable": false,
       "since": "1.0.0-rc.3",
       "deprecated": false,
@@ -255,7 +255,7 @@
       "machine_checkable": true,
       "since": "1.0.0-rc.2",
       "deprecated": false,
-      "source": "09-extensions.md:437"
+      "source": "09-extensions.md:443"
     },
     {
       "id": "OOLD-EXT-1f92",
@@ -345,7 +345,7 @@
       "machine_checkable": false,
       "since": "1.0.0-rc.1",
       "deprecated": false,
-      "source": "09-extensions.md:460"
+      "source": "09-extensions.md:466"
     },
     {
       "id": "OOLD-EXT-44bd",
@@ -435,7 +435,7 @@
       "machine_checkable": false,
       "since": "1.0.0-rc.1",
       "deprecated": false,
-      "source": "09-extensions.md:459"
+      "source": "09-extensions.md:465"
     },
     {
       "id": "OOLD-EXT-6312",
@@ -473,10 +473,10 @@
       "level": "MUST",
       "applies_to": "implementation",
       "section": "framing",
-      "summary": "A frame derivation recognizes a property as reference-valued from x-oold-range, an IRI-family format, or a term mapped @type @id.",
-      "text": "A derivation MUST recognize a property as reference-valued from any of three signals: an [`x-oold-range`](#range-of-properties) on a string-typed value, an IRI-family `format` (the family [](#range-reference-form) recommends), or a `@context` term mapped `\"@type\": \"@id\"`.",
-      "text_sha256": "f7aef6a0c109e10d28813bf45fe0808edbb5efdfab22edac7a171cd13a743f4d",
-      "context": "A derivation MUST recognize a property as reference-valued from any of three signals: an [`x-oold-range`](#range-of-properties) on a string-typed value, an IRI-family `format` (the family [](#range-reference-form) recommends), or a `@context` term mapped `\"@type\": \"@id\"`. Where a property matches both this and the embedded-object shape, the embedded-object reading MUST win: a property whose value is an object is an embed whatever its term declares. A derivation MUST NOT emit a subframe for a property whose key aliases a JSON-LD keyword - conventionally `id` for `@id` and `type` for `@type` (see [](#identity)). Such a key names the node rather than pointing at another one, and a subframe under it produces `{\"@id\": {...}}`, which a processor rejects.",
+      "summary": "A frame derivation recognizes a property as reference-valued from x-oold-range, an IRI-family format, a term mapped @type @id, or a term mapped @reverse.",
+      "text": "A derivation MUST recognize a property as reference-valued from any of four signals: an [`x-oold-range`](#range-of-properties) on a string-typed value, an IRI-family `format` (the family [](#range-reference-form) recommends), a `@context` term mapped `\"@type\": \"@id\"`, or a `@context` term mapped with `@reverse`.",
+      "text_sha256": "4b9b79313f357dd298d30c2542183bc41e3011c4585fff20e42cc9a9fecd8936",
+      "context": "A derivation MUST recognize a property as reference-valued from any of four signals: an [`x-oold-range`](#range-of-properties) on a string-typed value, an IRI-family `format` (the family [](#range-reference-form) recommends), a `@context` term mapped `\"@type\": \"@id\"`, or a `@context` term mapped with `@reverse`. The last stands on its own: the values of a reverse term are node references by definition (JSON-LD11 §4.1.10), so `\"@type\": \"@id\"` alongside it is redundant and an author who omits it has still written a reference. Where a property matches both this and the embedded-object shape, the embedded-object reading MUST win: a property whose value is an object is an embed whatever its term declares. A derivation MUST NOT emit a subframe for a property whose key aliases a JSON-LD keyword - conventionally `id` for `@id` and `type` for `@type` (see [](#identity)). Such a key names the node rather than pointing at another one, and a subframe under it produces `{\"@id\": {...}}`, which a processor rejects.",
       "machine_checkable": false,
       "since": "1.0.0-rc.3",
       "deprecated": false,
@@ -690,7 +690,7 @@
       "machine_checkable": false,
       "since": "1.0.0-rc.3",
       "deprecated": false,
-      "source": "09-extensions.md:395"
+      "source": "09-extensions.md:401"
     },
     {
       "id": "OOLD-EXT-ef09",
@@ -731,7 +731,7 @@
       "summary": "Where a property matches both the embedded-object and the reference-valued signals, the embedded-object reading wins.",
       "text": "Where a property matches both this and the embedded-object shape, the embedded-object reading MUST win: a property whose value is an object is an embed whatever its term declares.",
       "text_sha256": "52ad7df4c37e1dc4253a1db04f928fc84099a704077d2b5c35d74807b72abf2c",
-      "context": "A derivation MUST recognize a property as reference-valued from any of three signals: an [`x-oold-range`](#range-of-properties) on a string-typed value, an IRI-family `format` (the family [](#range-reference-form) recommends), or a `@context` term mapped `\"@type\": \"@id\"`. Where a property matches both this and the embedded-object shape, the embedded-object reading MUST win: a property whose value is an object is an embed whatever its term declares. A derivation MUST NOT emit a subframe for a property whose key aliases a JSON-LD keyword - conventionally `id` for `@id` and `type` for `@type` (see [](#identity)). Such a key names the node rather than pointing at another one, and a subframe under it produces `{\"@id\": {...}}`, which a processor rejects.",
+      "context": "A derivation MUST recognize a property as reference-valued from any of four signals: an [`x-oold-range`](#range-of-properties) on a string-typed value, an IRI-family `format` (the family [](#range-reference-form) recommends), a `@context` term mapped `\"@type\": \"@id\"`, or a `@context` term mapped with `@reverse`. The last stands on its own: the values of a reverse term are node references by definition (JSON-LD11 §4.1.10), so `\"@type\": \"@id\"` alongside it is redundant and an author who omits it has still written a reference. Where a property matches both this and the embedded-object shape, the embedded-object reading MUST win: a property whose value is an object is an embed whatever its term declares. A derivation MUST NOT emit a subframe for a property whose key aliases a JSON-LD keyword - conventionally `id` for `@id` and `type` for `@type` (see [](#identity)). Such a key names the node rather than pointing at another one, and a subframe under it produces `{\"@id\": {...}}`, which a processor rejects.",
       "machine_checkable": false,
       "since": "1.0.0-rc.3",
       "deprecated": false,
