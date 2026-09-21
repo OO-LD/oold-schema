@@ -11,7 +11,7 @@ import {
   thingProperties,
 } from '../copy';
 import { sceneById } from '../timeline';
-import { FileLabel, Note, PanelPair, SceneKicker } from '../components/Parts';
+import { FileLabel, Note, PanelPair, RefGraph, SceneKicker } from '../components/Parts';
 
 const scene = sceneById('S3');
 const A = 300;
@@ -38,7 +38,7 @@ const BeatPerson: React.FC = () => {
   const w = progress(frame, 46, 26);
   return (
     <>
-      <FileLabel name={copy.isA.personFile} delay={2} />
+      <RefGraph file={copy.isA.personFile} isA={copy.isA.personIsA} delay={2} />
       <div style={{ height: 26 }} />
       <PanelPair
         left={{ label: copy.hasA.contextLabel, code: personContext, group: 'context', delay: 6, wash: w }}

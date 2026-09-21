@@ -14,7 +14,7 @@ const scene = sceneById('S8');
 const A = 210;
 const B = scene.duration - A;
 
-const plain = (): Group => 'plain';
+const oold = (): Group => 'oold';
 
 // The keywords the caveat is about, taken from the file the previous scene walked
 // through, so the subject of the sentence is on screen while it is made.
@@ -28,11 +28,10 @@ const BeatProblem: React.FC = () => {
       </div>
       <FileView
         code={ooldKeywordsExcerpt}
-        groupOf={plain}
+        groupOf={oold}
         fontSize={24}
         reveal={progress(frame, 4, 30)}
-        accent={[1, 2, 3]}
-        accentAmount={progress(frame, 22, 20)}
+        wash={{ oold: progress(frame, 22, 20) }}
       />
       <Spacer h={30} />
       <Caption delay={40} size={30} color={colors.oold_ink} maxWidth={1440}>

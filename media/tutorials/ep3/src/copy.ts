@@ -30,6 +30,9 @@ export const copy = {
     petFile: 'Pet.schema.json',
     petNote: 'A schema that stands on its own. Its name term maps to ex:petName.',
     ownerFile: 'PersonWithPet.schema.json',
+    ownerHasA: { label: 'has a: pets', file: 'Pet.schema.json' },
+    orgIsA: { label: 'is a', file: 'Thing.schema.json' },
+    orgHasA: { label: 'has a: address', file: 'Address.schema.json' },
     ownerRefNote:
       'The array items carry the $ref, so every entry in pets is validated against Pet.',
     ownerCtxNote:
@@ -49,6 +52,7 @@ export const copy = {
     thingNote:
       'Thing maps id to @id, type to @type and name to schema:name, and declares id and name as properties.',
     personFile: 'Person.schema.json',
+    personIsA: { label: 'is a', file: 'Thing.schema.json' },
     personNote:
       'Person names Thing twice: in allOf so validators apply Thing rules, and in @context so JSON-LD resolves Thing terms.',
     scalarNote:

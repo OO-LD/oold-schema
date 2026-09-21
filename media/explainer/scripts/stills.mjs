@@ -1,5 +1,12 @@
 // Renders one still per story beat so layout and copy can be checked without a
 // full 2700-frame render. Frame numbers are absolute in the OOLDExplainer timeline.
+//
+//   npm run stills                    the light cut
+//   npm run stills -- --theme dark    the dark cut
+//   npm run stills -- 04-clarity      one beat
+//
+// The palette is an input prop, so a beat that looks right in one cut can be
+// wrong in the other; both are renderable from here for that reason.
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -25,17 +32,20 @@ const beats = [
   ['14-end-card', 2620],
 ];
 
-const { filters } = parseArgs(process.argv.slice(2));
+const { values, filters } = parseArgs(process.argv.slice(2), ['theme']);
+const theme = values.theme ?? 'light';
+if (!['light', 'dark'].includes(theme)) throw new Error(`Unknown theme ${theme}`);
 
 for (const [name, frame] of beats) {
   if (!matches(filters, name, name)) continue;
-  process.stdout.write(`${name} @ ${frame} ... `);
+  process.stdout.write(`${name} @ ${frame} (${theme}) ... `);
   still({
     root,
     entry: 'src/index.tsx',
     composition: 'OOLDExplainer',
     out: `out/stills/${name}.png`,
     frame,
+    props: { theme },
   });
   console.log('ok');
 }

@@ -5,18 +5,21 @@ import { Kicker } from '../../../shared/components/Type';
 import { colors, fonts, type } from '../../../shared/theme';
 import { enterUp, fadeIn } from '../../../shared/lib/motion';
 
-// CodeBlock geometry, needed to lay a scrim over the lines that are not in focus
-// and to tint single lines in a colour CodeBlock has no group for.
+// CodeBlock geometry, needed to lay a scrim over the lines that are not in focus.
 const CARD_BORDER = 2;
 const CARD_PAD_Y = 34;
-const CARD_PAD_X = 42;
-const WASH_BLEED = 14;
 const lineHeight = (fontSize: number) => fontSize * type.code.leading;
 
 export const groupPicker =
-  (context: number[], structure: number[]) =>
+  (context: number[], structure: number[], oold: number[] = []) =>
   (lineNo: number): Group =>
-    context.includes(lineNo) ? 'context' : structure.includes(lineNo) ? 'schema' : 'plain';
+    context.includes(lineNo)
+      ? 'context'
+      : structure.includes(lineNo)
+        ? 'schema'
+        : oold.includes(lineNo)
+          ? 'oold'
+          : 'plain';
 
 export const only =
   (lines: number[], group: Group) =>
@@ -31,13 +34,10 @@ type FileViewProps = {
   fontSize?: number;
   focus?: number[];
   scrim?: number;
-  accent?: number[];
-  accentAmount?: number;
 };
 
-// A code card that can push every line outside `focus` behind a white scrim and
-// wash the `accent` lines amber. CodeBlock has three line groups, blue, purple
-// and neutral, so the OO-LD amber of the design system is laid on top here.
+// A code card that can push every line outside `focus` behind a scrim the colour
+// of the card.
 export const FileView: React.FC<FileViewProps> = ({
   code,
   groupOf,
@@ -46,39 +46,12 @@ export const FileView: React.FC<FileViewProps> = ({
   fontSize = type.code.size,
   focus,
   scrim = 0,
-  accent,
-  accentAmount = 0,
 }) => {
   const lines = code.split('\n');
   const lh = lineHeight(fontSize);
-  const shown = reveal * lines.length;
   return (
     <div style={{ position: 'relative' }}>
       <CodeBlock code={code} groupOf={groupOf} wash={wash} reveal={reveal} fontSize={fontSize} />
-      {accent && accentAmount > 0
-        ? accent.map((lineNo) => {
-            const idx = lineNo - 1;
-            const local = Math.max(0, Math.min(1, shown - idx));
-            return (
-              <div
-                key={`accent-${lineNo}`}
-                style={{
-                  position: 'absolute',
-                  left: CARD_BORDER + CARD_PAD_X - WASH_BLEED,
-                  right: CARD_BORDER + CARD_PAD_X - WASH_BLEED,
-                  top: CARD_BORDER + CARD_PAD_Y + idx * lh - 2,
-                  height: lh + 4,
-                  borderRadius: 6,
-                  background: colors.oold_wash,
-                  mixBlendMode: 'multiply',
-                  opacity: accentAmount * local,
-                  transform: `scaleX(${accentAmount})`,
-                  transformOrigin: 'left center',
-                }}
-              />
-            );
-          })
-        : null}
       {focus && scrim > 0
         ? lines.map((_, idx) =>
             focus.includes(idx + 1) ? null : (

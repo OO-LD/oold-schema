@@ -62,13 +62,16 @@ export const S4Expand: React.FC = () => {
       <ArrowDown delay={320} height={52} />
       <div style={{ height: 18 }} />
 
-      <TripleTable
-        rows={rdfPersonTriples}
-        columns={copy.expand.columns}
-        delay={340}
-        size={20}
-        stagger={40}
-      />
+      <div style={{ textAlign: 'left' }}>
+        <PanelLabel text={copy.expand.triplesLabel} color={brand.graph} delay={334} />
+        <TripleTable
+          rows={rdfPersonTriples}
+          columns={copy.expand.columns}
+          delay={340}
+          size={20}
+          stagger={40}
+        />
+      </div>
 
       <div style={{ height: 26 }} />
       <Statement

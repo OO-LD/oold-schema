@@ -21,7 +21,7 @@ const A = 320;
 const B = 230;
 const C = scene.duration - A - B;
 
-const groupOf = groupPicker(personContextLines, personStructureLines);
+const groupOf = groupPicker(personContextLines, personStructureLines, personOoldLines);
 const allContext = (): Group => 'context';
 
 const FileTag: React.FC<{ delay?: number; align?: 'center' | 'left' }> = ({
@@ -64,9 +64,11 @@ const BeatFile: React.FC = () => {
         groupOf={groupOf}
         fontSize={20}
         reveal={progress(frame, 6, 90)}
-        wash={{ context: progress(frame, 100, 22), schema: progress(frame, 112, 22) }}
-        accent={personOoldLines}
-        accentAmount={progress(frame, 126, 22)}
+        wash={{
+          context: progress(frame, 100, 22),
+          schema: progress(frame, 112, 22),
+          oold: progress(frame, 126, 22),
+        }}
       />
       <div style={{ display: 'flex', flexDirection: 'column', gap: 32, width: 540 }}>
         <FileTag align="left" />
