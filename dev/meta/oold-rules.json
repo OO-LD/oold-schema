@@ -1,7 +1,7 @@
 {
   "$schema": "https://oo-ld.org/dev/meta/oold-rules.schema.json",
   "$comment": "Catalog of the normative statements in the OO-LD specification, generated from the :rule[...] markers in spec/sections/*.md by scripts/extract_rules.py. Do not edit by hand. Ids are immutable and never reused; see meta/RULES.md.",
-  "spec_version": "1.0.0-rc.3",
+  "spec_version": "1.0.0-rc.4",
   "areas": {
     "CNF": "Serialization and conformance",
     "SCH": "Schema well-formedness and the meta-schema",
@@ -223,7 +223,7 @@
       "text_sha256": "042338d363216a321b0f3b077f8a6d080b4fd361e54b8668d71ddbbaca305e32",
       "context": "A derivation MUST recognize a property as reference-valued from any of four signals: an [`x-oold-range`](#range-of-properties) on a string-typed value, an IRI-family `format` (the family [](#range-reference-form) recommends), a `@context` term mapped `\"@type\": \"@id\"`, or a `@context` term mapped with `@reverse`. The last stands on its own: the values of a reverse term are node references by definition (JSON-LD11 §4.1.10), so `\"@type\": \"@id\"` alongside it is redundant and an author who omits it has still written a reference. Where a property matches both this and the embedded-object shape, the embedded-object reading MUST win: a property whose value is an object is an embed whatever its term declares. A derivation MUST NOT emit a constraining subframe - one carrying `@embed` or any other frame keyword - for a property whose key aliases a JSON-LD keyword, conventionally `id` for `@id` and `type` for `@type` (see [](#identity)). Such a key names the node rather than pointing at another one. An empty subframe there is the frame-matching wildcard and is accepted; `{\"@id\": {\"@embed\": \"@never\"}}` is not, and a processor rejects the whole frame rather than the one entry.",
       "machine_checkable": false,
-      "since": "unreleased",
+      "since": "1.0.0-rc.4",
       "deprecated": false,
       "source": "09-extensions.md:98"
     },
@@ -358,7 +358,7 @@
       "text_sha256": "6036aeff81c89189461b91e713cbbe63c0c1bd574266b043ac4389cb2d715ce7",
       "context": "The JSON Schema annotation keywords `title` and `description` carry a single, default human-readable string used by tooling (for example for UI generation). To provide localized variants, OO-LD adds the keywords `x-oold-multilang-title` and `x-oold-multilang-description`. Their value MUST be an object whose keys are [BCP 47](https://www.rfc-editor.org/info/bcp47) language tags (e.g. `en`, `de`, `en-GB`) and whose values are the translated strings. A schema SHOULD still provide a default `title` / `description`; a consumer that has no entry for the requested language falls back to that default. These keywords localize the schema's own labels and MUST NOT be interpreted as JSON-LD.",
       "machine_checkable": false,
-      "since": "unreleased",
+      "since": "1.0.0-rc.4",
       "deprecated": false,
       "source": "09-extensions.md:226"
     },
@@ -463,7 +463,7 @@
       "text_sha256": "a71753a84fe8aa58779eb057aa8655918b06b17fea6e6e4ac0624bd780402012",
       "context": "This makes an OO-LD schema bidirectional: its `@context` drives expansion (JSON to RDF), and the frame derived from its structure drives framing (RDF back to the schema's JSON tree). A tool that derives a frame MUST derive it mechanically: the schema's class type becomes the frame `@type`; an inlined object property becomes a nested subframe that embeds the referenced node; a reference-valued property (including one whose term is mapped with JSON-LD `@reverse`) becomes a subframe with `@embed: @never` so its targets stay IRIs, in line with the inline-versus-reference choice `x-oold-range` already records; and `@explicit` / `@requireAll` / `@default` follow from `additionalProperties` and `required`. The frame's `@context` is the composition of the referenced schemas' contexts.",
       "machine_checkable": false,
-      "since": "unreleased",
+      "since": "1.0.0-rc.4",
       "deprecated": false,
       "source": "09-extensions.md:96"
     },
@@ -478,7 +478,7 @@
       "text_sha256": "4b9b79313f357dd298d30c2542183bc41e3011c4585fff20e42cc9a9fecd8936",
       "context": "A derivation MUST recognize a property as reference-valued from any of four signals: an [`x-oold-range`](#range-of-properties) on a string-typed value, an IRI-family `format` (the family [](#range-reference-form) recommends), a `@context` term mapped `\"@type\": \"@id\"`, or a `@context` term mapped with `@reverse`. The last stands on its own: the values of a reverse term are node references by definition (JSON-LD11 §4.1.10), so `\"@type\": \"@id\"` alongside it is redundant and an author who omits it has still written a reference. Where a property matches both this and the embedded-object shape, the embedded-object reading MUST win: a property whose value is an object is an embed whatever its term declares. A derivation MUST NOT emit a constraining subframe - one carrying `@embed` or any other frame keyword - for a property whose key aliases a JSON-LD keyword, conventionally `id` for `@id` and `type` for `@type` (see [](#identity)). Such a key names the node rather than pointing at another one. An empty subframe there is the frame-matching wildcard and is accepted; `{\"@id\": {\"@embed\": \"@never\"}}` is not, and a processor rejects the whole frame rather than the one entry.",
       "machine_checkable": false,
-      "since": "unreleased",
+      "since": "1.0.0-rc.4",
       "deprecated": false,
       "source": "09-extensions.md:98"
     },
@@ -523,7 +523,7 @@
       "text_sha256": "ceb79118ae8684c9a82b93e11eb96ec7ebd9d2515dbc087ca1c5afecd1f6fb57",
       "context": "Framing a graph with a schema-derived frame MUST yield one instance document per matching node, delivered as a `@graph` of matches rather than an arbitrary single root. Dually, several instance documents - each expanded through its own `$schema` - merge into one graph, because expansion assigns every node its own IRI and identical IRIs denote the same node.",
       "machine_checkable": false,
-      "since": "unreleased",
+      "since": "1.0.0-rc.4",
       "deprecated": false,
       "source": "09-extensions.md:189"
     },
@@ -628,7 +628,7 @@
       "text_sha256": "2958b5f53245fc9cd115aa955c9d9ef5a0b227c4b5be6d54ea862486ed99f784",
       "context": "JSON Schema itself supports linked data only in the form of a subobject; references to independent external objects are just URL-strings without further restrictions. To express constraints on the type of the referenced object - as in OWL and SHACL - the keyword `x-oold-range` is introduced (see also [json-schema-org/json-schema-vocabularies#55](https://github.com/json-schema-org/json-schema-vocabularies/issues/55)). Its value MUST take one of three forms, and no other:\n1. An IRI (string) referencing a single allowed target schema. This is the common case:",
       "machine_checkable": true,
-      "since": "unreleased",
+      "since": "1.0.0-rc.4",
       "deprecated": false,
       "source": "09-extensions.md:302"
     },
@@ -688,7 +688,7 @@
       "text_sha256": "d8d6a2f9158b5aa5a43dbc028f0e2bee5b963eb927309107ba16e4a505cc1667",
       "context": "An implementation that supports reverse properties MUST read and modify them on the object that actually stores them: loading an `Organization` editor prepopulates `employees` by querying which persons work for it; storing the `Organization` writes it into each referenced person's `works_for` field; and removing a person from `employees` removes the organization from theirs.",
       "machine_checkable": false,
-      "since": "unreleased",
+      "since": "1.0.0-rc.4",
       "deprecated": false,
       "source": "09-extensions.md:401"
     },
@@ -733,7 +733,7 @@
       "text_sha256": "52ad7df4c37e1dc4253a1db04f928fc84099a704077d2b5c35d74807b72abf2c",
       "context": "A derivation MUST recognize a property as reference-valued from any of four signals: an [`x-oold-range`](#range-of-properties) on a string-typed value, an IRI-family `format` (the family [](#range-reference-form) recommends), a `@context` term mapped `\"@type\": \"@id\"`, or a `@context` term mapped with `@reverse`. The last stands on its own: the values of a reverse term are node references by definition (JSON-LD11 §4.1.10), so `\"@type\": \"@id\"` alongside it is redundant and an author who omits it has still written a reference. Where a property matches both this and the embedded-object shape, the embedded-object reading MUST win: a property whose value is an object is an embed whatever its term declares. A derivation MUST NOT emit a constraining subframe - one carrying `@embed` or any other frame keyword - for a property whose key aliases a JSON-LD keyword, conventionally `id` for `@id` and `type` for `@type` (see [](#identity)). Such a key names the node rather than pointing at another one. An empty subframe there is the frame-matching wildcard and is accepted; `{\"@id\": {\"@embed\": \"@never\"}}` is not, and a processor rejects the whole frame rather than the one entry.",
       "machine_checkable": false,
-      "since": "unreleased",
+      "since": "1.0.0-rc.4",
       "deprecated": false,
       "source": "09-extensions.md:98"
     },
@@ -868,7 +868,7 @@
       "text_sha256": "e2f71830b64fb69bc9ce17edd0c3cb244585c76b2becaddaba66926d10482ff0",
       "context": "A single `@context` term cannot interpret a bare string as both a literal and an IRI: `@type: \"@id\"` coerces every string value to an IRI (so free text becomes an - often invalid, then dropped - IRI), while a plain term keeps every string a literal. A property whose range includes free text therefore MUST NOT use `@type: \"@id\"`. A property whose range is references only MAY be written as a bare IRI string, and where it is, its term MUST carry `@type: \"@id\"`.",
       "machine_checkable": true,
-      "since": "unreleased",
+      "since": "1.0.0-rc.4",
       "deprecated": false,
       "source": "07-schema-instances.md:134"
     },
@@ -1093,7 +1093,7 @@
       "text_sha256": "15c11dd441d9b4ff7e0c849d340bea8a41914a279bf288bd2ec918525a7968dc",
       "context": "Because a schema is always reference-able as a remote context, the context half is not optional. An OO-LD schema document MUST carry an `@context` at its root. Without one it is not reference-able: JSONLD11-API Context Processing aborts with `invalid remote context` when a referenced document has no top-level `@context` entry, so a context-less schema would pass schema validation and then fail inside a consumer's JSON-LD processor instead. The obligation is document-level; a nested subschema under `properties` or `$defs` carries no `@context` of its own, exactly as it carries no `$id`. The requirement is presence, not content: an empty context object satisfies it, as does one whose only entry is a reference to a remote context. A schema MAY leave every term unmapped and add semantics incrementally, as above; what it cannot do is omit the entry, because that is the one thing that makes the document unusable as a remote context.",
       "machine_checkable": true,
-      "since": "unreleased",
+      "since": "1.0.0-rc.4",
       "deprecated": false,
       "source": "05-basic-concepts.md:14"
     },
@@ -1123,7 +1123,7 @@
       "text_sha256": "ac54ca06705f877ef77d4abc68772b4364c8f9db0fff67a883e2c135556f0728",
       "context": "OO-LD adds keywords on top of JSON Schema 2020-12. A keyword OO-LD defines MUST carry the `x-oold-` prefix (an `x-` vendor extension in the JSON Schema / OpenAPI sense - the namespace marks the defining project, not a commercial or closed status; OO-LD's keywords are openly specified here), so it is a valid [JSON Schema extension keyword](https://json-schema.org/draft/2020-12/json-schema-core#section-6.5) and, at the same time, a valid [OpenAPI 3.0 Specification Extension](https://spec.openapis.org/oas/v3.0.3.html#specification-extensions) (OpenAPI 3.0 rejects unprefixed custom keywords in a Schema object). Exempt are the keywords whose name is not OO-LD's to choose: `@context`, fixed by JSON-LD11 and therefore impossible to namespace, and `x-enum-varnames` / `x-enum-descriptions`, adopted unchanged from the generator tooling that already reads them (see [](#enum-names)). Everything else OO-LD defines carries the prefix, including `x-oold-sssom`, whose payload follows [SSSOM](https://w3id.org/sssom/) but whose keyword name is OO-LD's own choice (see [](#ontology-mapping)).",
       "machine_checkable": true,
-      "since": "unreleased",
+      "since": "1.0.0-rc.4",
       "deprecated": false,
       "source": "10-meta-schema.md:3"
     },
@@ -1138,7 +1138,7 @@
       "text_sha256": "64f9ab2ec5289cc1a37672b2828a59dea677da604b3f870233cd47be8f9933e0",
       "context": "A version segment SHOULD be recognizable as one. A dotted version such as `2.0.0` already reads as a version; a bare number does not. A bare number used as a version segment SHOULD therefore carry a `v` prefix, as in `.../my-package/v2/...`. How coarsely a consumer pins - a full version, or a major-only alias that floats with compatible releases - is a policy of the package or registry that serves the schemas, not of this specification. Such a policy MAY be expressed as a redirect chain, with `v1` resolving to the latest compatible feature release and that in turn to its latest patch, so a referrer decides how much it wants to float by choosing how much of the version it names, and a full version always remains reachable as the immutable end of the chain.",
       "machine_checkable": false,
-      "since": "unreleased",
+      "since": "1.0.0-rc.4",
       "deprecated": false,
       "source": "08-identification-versioning.md:75"
     },
@@ -1243,7 +1243,7 @@
       "text_sha256": "3307134e56a685db2052ea9e62e68f3901f7031b50244fa9c7903817f47c2711",
       "context": "A version segment SHOULD be recognizable as one. A dotted version such as `2.0.0` already reads as a version; a bare number does not. A bare number used as a version segment SHOULD therefore carry a `v` prefix, as in `.../my-package/v2/...`. How coarsely a consumer pins - a full version, or a major-only alias that floats with compatible releases - is a policy of the package or registry that serves the schemas, not of this specification. Such a policy MAY be expressed as a redirect chain, with `v1` resolving to the latest compatible feature release and that in turn to its latest patch, so a referrer decides how much it wants to float by choosing how much of the version it names, and a full version always remains reachable as the immutable end of the chain.",
       "machine_checkable": false,
-      "since": "unreleased",
+      "since": "1.0.0-rc.4",
       "deprecated": false,
       "source": "08-identification-versioning.md:75"
     },
@@ -1258,7 +1258,7 @@
       "text_sha256": "7b58b8463de85730adf45d4a8f42135cd32e7dfd40781eda247c18643ae9e652",
       "context": "A schema states which external ontology resources it corresponds to with a top-level `x-oold-sssom` block - the [term-synonym](#synonyms) mapping row lifted to the schema level. Its subject is the schema itself, identified by its `$id`: in OO-LD the schema document at that URL is the class definition, so `$id` serves as the mapping's `subject_id`. It is an object keyed by the object IRI of a resolvable resource (an RDF/OWL class, a controlled-vocabulary term, another schema), each value carrying the SSSOM slots: `predicate_id` (default `skos:exactMatch`; `skos:closeMatch` for a looser correspondence), `mapping_set_id`, and the rest of the open bag. Because these are SKOS mapping predicates the correspondence is non-logical and reasoner-safe: `skos:exactMatch` asserts interchangeability, not the logical `owl:equivalentClass` (a schema that wants the reasoner-affecting claim uses `owl:equivalentClass` explicitly as the `predicate_id`). It is an annotation about the schema itself, and an exporter MUST NOT stamp it onto instances - distinct from `x-oold-instance-rdf-type`, the `rdf:type`s instances carry on export (see [](#semantic-type)), which are stamped onto instance data.",
       "machine_checkable": false,
-      "since": "unreleased",
+      "since": "1.0.0-rc.4",
       "deprecated": false,
       "source": "08-identification-versioning.md:32"
     },
@@ -1273,7 +1273,7 @@
       "text_sha256": "6ed09e19b8a559886c99475ba5c85ea382d87fc22bddf5db96fcdebc137acfb1",
       "context": "Versions SHOULD follow [semantic versioning](https://semver.org/), so that the version alone tells a consumer whether an instance that validated against an earlier version still validates: a patch or minor release is backward compatible, a major release is not. `x-oold-backward-compatible-with` and `x-oold-incompatible-with` then record the exceptions rather than the rule.",
       "machine_checkable": false,
-      "since": "unreleased",
+      "since": "1.0.0-rc.4",
       "deprecated": false,
       "source": "08-identification-versioning.md:55"
     },
