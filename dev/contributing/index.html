@@ -638,6 +638,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#cutting-a-release" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Cutting a release
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#compliance-fixtures" class="md-nav__link">
     <span class="md-ellipsis">
       <span class="md-typeset">
@@ -756,6 +767,17 @@
     <span class="md-ellipsis">
       <span class="md-typeset">
         Rules and the catalogue
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cutting-a-release" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Cutting a release
       </span>
     </span>
   </a>
@@ -919,6 +941,14 @@
 </ol>
 <p>The baseline hashes each rule's text, so a silent change of meaning under a stable id fails CI. Accepting is the deliberate act of saying the wording changed on purpose.</p>
 <p><code>MAY</code> is deliberately outside the recognised levels: the catalogue tracks obligations, and a permission is not one. Record permissions as prose.</p>
+<h2 id="cutting-a-release">Cutting a release<a class="headerlink" href="#cutting-a-release" title="Permanent link">&para;</a></h2>
+<p>A rule is authored before the release that carries it exists, so <code>extract_rules.py</code> records <code>since: unreleased</code>. Resolve it as part of tagging, never by hand:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>uv<span class="w"> </span>run<span class="w"> </span>scripts/promote_since.py<span class="w"> </span><span class="m">1</span>.0.0-rc.4<span class="w">   </span><span class="c1"># unreleased -&gt; the version being cut</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>make<span class="w"> </span>spec<span class="w">                                     </span><span class="c1"># docs/rules.md picks up the resolved value</span>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>git<span class="w"> </span>commit<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>git<span class="w"> </span>tag<span class="w"> </span>v1.0.0-rc.4
+</span></code></pre></div>
+<p>Only <code>unreleased</code> entries change. Every other <code>since</code> records a release that has already shipped, and rewriting one turns the field into "whenever the generator last ran".</p>
+<p><code>OOLD_VERSION</code> in the <code>Makefile</code> pins the validator <code>make validate</code> runs. Bump it when a release of the reference implementation adds a check the specification now requires, or CI gates a release with a validator that predates its own rules.</p>
 <h2 id="compliance-fixtures">Compliance fixtures<a class="headerlink" href="#compliance-fixtures" title="Permanent link">&para;</a></h2>
 <p><code>examples/compliance/</code> holds cases with a declared outcome, checked against the meta-schema. A rule with no fixture is a rule no implementation is held to, so prefer adding a case over adding a rule alone. <code>coverage.rules</code> reports which machine-checkable rules have no check behind them; treat that list as the backlog.</p>
 <h2 id="media">Media<a class="headerlink" href="#media" title="Permanent link">&para;</a></h2>
