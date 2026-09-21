@@ -46,6 +46,20 @@ The baseline hashes each rule's text, so a silent change of meaning under a stab
 
 `MAY` is deliberately outside the recognised levels: the catalogue tracks obligations, and a permission is not one. Record permissions as prose.
 
+## Cutting a release
+
+A rule is authored before the release that carries it exists, so `extract_rules.py` records `since: unreleased`. Resolve it as part of tagging, never by hand:
+
+```bash
+uv run scripts/promote_since.py 1.0.0-rc.4   # unreleased -> the version being cut
+make spec                                     # docs/rules.md picks up the resolved value
+git commit && git tag v1.0.0-rc.4
+```
+
+Only `unreleased` entries change. Every other `since` records a release that has already shipped, and rewriting one turns the field into "whenever the generator last ran".
+
+`OOLD_VERSION` in the `Makefile` pins the validator `make validate` runs. Bump it when a release of the reference implementation adds a check the specification now requires, or CI gates a release with a validator that predates its own rules.
+
 ## Compliance fixtures
 
 `examples/compliance/` holds cases with a declared outcome, checked against the meta-schema. A rule with no fixture is a rule no implementation is held to, so prefer adding a case over adding a rule alone. `coverage.rules` reports which machine-checkable rules have no check behind them; treat that list as the backlog.
