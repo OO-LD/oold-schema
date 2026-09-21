@@ -1,0 +1,1684 @@
+{
+  "meta": {
+    "org": "OpenSemanticWorld-Packages",
+    "repoCount": 16,
+    "perRepoCounts": {
+      "world.opensemantic.meta.legal": 0,
+      "world.opensemantic.demo": 0,
+      "world.opensemantic.base": 117,
+      "world.opensemantic.core": 49,
+      "world.opensemantic.meta.docs": 0,
+      "world.opensemantic.demo.lab.virtual": 2,
+      "world.opensemantic.lab.virtual": 2,
+      "world.opensemantic.lab": 20,
+      "world.opensemantic.ontology": 6,
+      "world.opensemantic.batteries": 94,
+      "world.opensemantic.quantities": 5,
+      "world.opensemantic.characteristics.basic": 4,
+      "world.opensemantic.characteristics.quantitative": 938,
+      "world.opensemantic.ontology.schema": 0,
+      "world.opensemantic.lab.nts": 20,
+      "world.opensemantic.lab.experimental_work": 14
+    },
+    "totalSchemaFiles": 1271,
+    "parsed": 1271,
+    "fetchErrors": 0,
+    "parseErrors": 0,
+    "contextNotation": {
+      "*": 172,
+      "**": 24
+    }
+  },
+  "keywords": [
+    {
+      "keyword": "title*",
+      "position": "schema",
+      "classification": "oold-multilang",
+      "future": "x-oold-multilang-title",
+      "count": 2152,
+      "note": "schema-level language map; NOT the @context multi-mapping notation",
+      "examples": [
+        "{\"en\":\"Country\",\"de\":\"Land\"}",
+        "@manager: {\"en\":\"Rector / president\",\"de\":\"Rektor:in / Präsident:in\"}",
+        "{\"en\":\"Strict Participants Process Type\"}",
+        "@orderer_default: {\"de\":\"Auftraggeber (Standardwert)\"}"
+      ],
+      "sources": [
+        "world.opensemantic.base/base/Category/OSW0551abcd6f734047825e3ded4c8a0ffe.slot_jsonschema.json",
+        "world.opensemantic.base/base/Category/OSW11ee14fb9f774b4b89bdb9bb89aac14d.slot_jsonschema.json",
+        "world.opensemantic.base/base/Category/OSW0b6e695c4bb74e9ea5aa7f5da3150653.slot_jsonschema.json",
+        "world.opensemantic.base/base/Category/OSW0e084decca6f48a7b023d6b7b2c1452d.slot_jsonschema.json",
+        "world.opensemantic.base/base/Category/OSW0c69914a29b74f3c9e9d9ff7a6880715.slot_jsonschema.json"
+      ]
+    },
+    {
+      "keyword": "description*",
+      "position": "schema",
+      "classification": "oold-multilang",
+      "future": "x-oold-multilang-description",
+      "count": 1583,
+      "note": "schema-level language map; NOT the @context multi-mapping notation",
+      "examples": [
+        "{\"en\":\"A distinct part of the world, such as a state, nation, or other political entity\",\"de\":\"Ein bestimmter Teil der Welt, z. B. ein Staat, eine Nation oder eine andere politische Einheit\"}",
+        "@manager: {\"en\":\"The rector or president is the head of the university.\",\"de\":\"Der/die Rektor:in oder Präsident:in ist der/die Leiter:in der Universität.\"}",
+        "{}",
+        "@orderer_default: {\"de\":\"Interner oder externer Auftraggeber/Kunde (Organisationseinheit)\"}"
+      ],
+      "sources": [
+        "world.opensemantic.base/base/Category/OSW0551abcd6f734047825e3ded4c8a0ffe.slot_jsonschema.json",
+        "world.opensemantic.base/base/Category/OSW11ee14fb9f774b4b89bdb9bb89aac14d.slot_jsonschema.json",
+        "world.opensemantic.base/base/Category/OSW0b6e695c4bb74e9ea5aa7f5da3150653.slot_jsonschema.json",
+        "world.opensemantic.base/base/Category/OSW0e084decca6f48a7b023d6b7b2c1452d.slot_jsonschema.json",
+        "world.opensemantic.base/base/Category/OSW0c69914a29b74f3c9e9d9ff7a6880715.slot_jsonschema.json"
+      ]
+    },
+    {
+      "keyword": "uuid",
+      "position": "schema",
+      "classification": "oold-semantic",
+      "future": "x-oold-uuid",
+      "count": 1218,
+      "note": "schema identity",
+      "examples": [
+        "\"0551abcd-6f73-4047-825e-3ded4c8a0ffe\"",
+        "\"0b6e695c-4bb7-4e9e-a5aa-7f5da3150653\"",
+        "\"0e084dec-ca6f-48a7-b023-d6b7b2c1452d\"",
+        "\"0c69914a-29b7-4f3c-9e9d-9ff7a6880715\""
+      ],
+      "sources": [
+        "world.opensemantic.base/base/Category/OSW0551abcd6f734047825e3ded4c8a0ffe.slot_jsonschema.json",
+        "world.opensemantic.base/base/Category/OSW0b6e695c4bb74e9ea5aa7f5da3150653.slot_jsonschema.json",
+        "world.opensemantic.base/base/Category/OSW0e084decca6f48a7b023d6b7b2c1452d.slot_jsonschema.json",
+        "world.opensemantic.base/base/Category/OSW0c69914a29b74f3c9e9d9ff7a6880715.slot_jsonschema.json",
+        "world.opensemantic.base/base/Category/OSW137e7443b2b94692bd59a0e0a6778b70.slot_jsonschema.json"
+      ]
+    },
+    {
+      "keyword": "defaultProperties",
+      "position": "schema",
+      "classification": "oold-ui",
+      "future": "x-oold-ui-default-property",
+      "count": 1099,
+      "note": "root array is extend-only under composition (can add, cannot switch off); per-property boolean is overridable (most-derived-wins)",
+      "examples": [
+        "[]",
+        "[\"schema_definition\",\"label\",\"uuid\"]",
+        "[\"allday\",\"start_date\",\"end_date\",\"event_series\",\"location_name\",\"participants\",\"minutes_taker\",\"organizer\",\"project\",\"event_classifier\",\"associated_ou\"]",
+        "[\"arrival_date\",\"descriptive_text\",\"sender_site\",\"sender_contacts\",\"recipient_site\",\"recipient_contacts\",\"included_items\",\"tracking_reference\",\"shipping_service_provider\"]"
+      ],
+      "sources": [
+        "world.opensemantic.base/base/Category/OSW11ee14fb9f774b4b89bdb9bb89aac14d.slot_jsonschema.json",
+        "world.opensemantic.base/base/Category/OSW0d6584b3e2b64e9595733c4c3963c486.slot_jsonschema.json",
+        "world.opensemantic.base/base/Category/OSW0e084decca6f48a7b023d6b7b2c1452d.slot_jsonschema.json",
+        "world.opensemantic.base/base/Category/OSW0c69914a29b74f3c9e9d9ff7a6880715.slot_jsonschema.json",
+        "world.opensemantic.base/base/Category/OSW1969007d5acf40539642877659a02c23.slot_jsonschema.json"
+      ]
+    },
+    {
+      "keyword": "x-smw-quantity-property",
+      "position": "schema",
+      "classification": "smw-vendor",
+      "future": "x-smw-*",
+      "count": 935,
+      "note": "Semantic MediaWiki property binding",
+      "examples": [
+        "@generated: \"Property:HasSoundPressureLevelValue\"",
+        "@generated: \"Property:HasGeneralizedCoordinateValue\"",
+        "@generated: \"Property:HasFlightPathAngleValue\"",
+        "@generated: \"Property:HasNuclearEnergyValue\""
+      ],
+      "sources": [
+        "world.opensemantic.characteristics.quantitative/base/Category/OSW002d158549e955bea02a7c957b139a60.slot_jsonschema.json",
+        "world.opensemantic.characteristics.quantitative/base/Category/OSW0121ff06c71851eb9f630271e5f52e4a.slot_jsonschema.json",
+        "world.opensemantic.characteristics.quantitative/base/Category/OSW00c10a2500cf59fdbfaf48764629b35d.slot_jsonschema.json",
+        "world.opensemantic.characteristics.quantitative/base/Category/OSW00fcca05152e5a99b66844586776938b.slot_jsonschema.json",
+        "world.opensemantic.characteristics.quantitative/base/Category/OSW00ae7010dd635404bd82873cfd7a3254.slot_jsonschema.json"
+      ]
+    },
+    {
+      "keyword": "@id",
+      "position": "context",
+      "classification": "jsonld",
+      "future": "@id",
+      "count": 618,
+      "note": "JSON-LD @ keyword",
+      "examples": [
+        "@approver_default: {\"@id\":\"Property:HasApprover\",\"@type\":\"@id\"}",
+        "@orderer_default: {\"@id\":\"Property:HasOrderer\",\"@type\":\"@id\"}",
+        "@contact_default: {\"@id\":\"Property:HasContact\",\"@type\":\"@id\"}",
+        "@associated_ou: {\"@id\":\"Property:HasAssociatedOu\",\"@type\":\"@id\"}"
+      ],
+      "sources": [
+        "world.opensemantic.base/base/Category/OSW0b6e695c4bb74e9ea5aa7f5da3150653.slot_jsonschema.json",
+        "world.opensemantic.base/base/Category/OSW0e084decca6f48a7b023d6b7b2c1452d.slot_jsonschema.json",
+        "world.opensemantic.base/base/Category/OSW0c69914a29b74f3c9e9d9ff7a6880715.slot_jsonschema.json",
+        "world.opensemantic.base/base/Category/OSW182916df3eee472e88e7c8d114a7fe27.slot_jsonschema.json",
+        "world.opensemantic.base/base/Category/OSW37a57741ae2e4dd4b29b1172b6848be8.slot_jsonschema.json"
+      ]
+    },
+    {
+      "keyword": "@type",
+      "position": "context",
+      "classification": "jsonld",
+      "future": "@type",
+      "count": 543,
+      "note": "JSON-LD @ keyword",
+      "examples": [
+        "@approver_default: {\"@id\":\"Property:HasApprover\",\"@type\":\"@id\"}",
+        "@orderer_default: {\"@id\":\"Property:HasOrderer\",\"@type\":\"@id\"}",
+        "@contact_default: {\"@id\":\"Property:HasContact\",\"@type\":\"@id\"}",
+        "@associated_ou: {\"@id\":\"Property:HasAssociatedOu\",\"@type\":\"@id\"}"
+      ],
+      "sources": [
+        "world.opensemantic.base/base/Category/OSW0b6e695c4bb74e9ea5aa7f5da3150653.slot_jsonschema.json",
+        "world.opensemantic.base/base/Category/OSW0e084decca6f48a7b023d6b7b2c1452d.slot_jsonschema.json",
+        "world.opensemantic.base/base/Category/OSW0c69914a29b74f3c9e9d9ff7a6880715.slot_jsonschema.json",
+        "world.opensemantic.base/base/Category/OSW182916df3eee472e88e7c8d114a7fe27.slot_jsonschema.json",
+        "world.opensemantic.base/base/Category/OSW37a57741ae2e4dd4b29b1172b6848be8.slot_jsonschema.json"
+      ]
+    },
+    {
+      "keyword": "enum_titles",
+      "position": "options",
+      "classification": "oold-ui",
+      "future": "x-oold-ui-enum-titles",
+      "count": 442,
+      "note": "jedison x-enumTitles; i18n via enum_titles*",
+      "examples": [
+        "@event_classifier: [\"Internal\",\"External\"]",
+        "@project_type: [\"House project\",\"Internal\",\"Public\",\"Industry\"]",
+        "@by_month: [\"January\",\"February\",\"March\",\"April\",\"May\",\"June\",\"July\",\"August\",\"September\",\"October\",\"November\",\"December\"]",
+        "@by_day: [\"Monday\",\"Tuesday\",\"Wednesday\",\"Thursday\",\"Friday\",\"Saturday\",\"Sunday\"]"
+      ],
+      "sources": [
+        "world.opensemantic.base/base/Category/OSW0e084decca6f48a7b023d6b7b2c1452d.slot_jsonschema.json",
+        "world.opensemantic.base/base/Category/OSWb2d7e6a2eff94c82b7f1f2699d5b0ee3.slot_jsonschema.json",
+        "world.opensemantic.base/base/Category/OSWf62d07b325124027b82fbec0a7b852df.slot_jsonschema.json",
+        "world.opensemantic.base/base/Category/OSWe5aa96bffb1c4d95be7fbd46142ad203.slot_jsonschema.json",
+        "world.opensemantic.core/core/Category/Entity.slot_jsonschema.json"
+      ]
+    },
+    {
+      "keyword": "x-enum-varnames",
+      "position": "schema",
+      "classification": "canonical-reuse",
+      "future": "x-enum-varnames",
+      "count": 430,
+      "note": "kept: established code-gen names (identifier-safe)",
+      "examples": [
+        "@unit: [\"bel\",\"decibel\"]",
+        "@unit: [\"unitless\"]",
+        "@unit: [\"mole_per_meter_squared_per_second\",\"micro_mole_per_hour_per_meter_squared\",\"nano_mole_per_meter_squared_per_second\",\"milli_mole_per_hour_per_meter_squared\",\"micro_mole_per_meter_squared_per_secon...",
+        "@unit: [\"meter_cubed_per_second\",\"centi_meter_cubed_per_day\",\"milli_liter_per_day\",\"centi_meter_cubed_per_hour\",\"milli_liter_per_hour\",\"liter_per_day\",\"deci_meter_cubed_per_day\",\"centi_meter_cubed_per_min..."
+      ],
+      "sources": [
+        "world.opensemantic.characteristics.quantitative/base/Category/OSW002d158549e955bea02a7c957b139a60.slot_jsonschema.json",
+        "world.opensemantic.characteristics.quantitative/base/Category/OSW0121ff06c71851eb9f630271e5f52e4a.slot_jsonschema.json",
+        "world.opensemantic.characteristics.quantitative/base/Category/OSW00dbaeb24c2952cd9ad29928be2f1b83.slot_jsonschema.json",
+        "world.opensemantic.characteristics.quantitative/base/Category/OSW015e42239c0f5ff38b65340955c12f80.slot_jsonschema.json",
+        "world.opensemantic.characteristics.quantitative/base/Category/OSW01d40c436663572d80de0e503436a120.slot_jsonschema.json"
+      ]
+    },
+    {
+      "keyword": "range",
+      "position": "schema",
+      "classification": "oold-semantic",
+      "future": "x-oold-range",
+      "count": 216,
+      "note": "IRI / array of IRIs / OO-LD subschema",
+      "examples": [
+        "@orderer_default: \"Category:OSW3cb8cef2225e403092f098f99bc4c472\"",
+        "@contact_default: \"Category:OSW44deaa5b806d41a2a88594f562b110e9\"",
+        "@approver_default: \"Category:OSW44deaa5b806d41a2a88594f562b110e9\"",
+        "@sender: \"Category:OSW3cb8cef2225e403092f098f99bc4c472\""
+      ],
+      "sources": [
+        "world.opensemantic.base/base/Category/OSW0b6e695c4bb74e9ea5aa7f5da3150653.slot_jsonschema.json",
+        "world.opensemantic.base/base/Category/OSW0c69914a29b74f3c9e9d9ff7a6880715.slot_jsonschema.json",
+        "world.opensemantic.base/base/Category/OSW182916df3eee472e88e7c8d114a7fe27.slot_jsonschema.json",
+        "world.opensemantic.base/base/Category/OSW37a57741ae2e4dd4b29b1172b6848be8.slot_jsonschema.json",
+        "world.opensemantic.base/base/Category/OSW3cb8cef2225e403092f098f99bc4c472.slot_jsonschema.json"
+      ]
+    },
+    {
+      "keyword": "hidden",
+      "position": "options",
+      "classification": "oold-ui",
+      "future": "x-oold-ui-form-hidden",
+      "count": 185,
+      "note": "jedison x-hidden",
+      "examples": [
+        "@creator: true",
+        "@sender_abbreviation: true",
+        "@recipient_abbreviation: true",
+        "@uuid: true"
+      ],
+      "sources": [
+        "world.opensemantic.base/base/Category/OSW0c69914a29b74f3c9e9d9ff7a6880715.slot_jsonschema.json",
+        "world.opensemantic.base/base/Category/OSW182916df3eee472e88e7c8d114a7fe27.slot_jsonschema.json",
+        "world.opensemantic.base/base/Category/OSW25bc4daf97644737a76434b88e1d5b21.slot_jsonschema.json",
+        "world.opensemantic.base/base/Category/OSW37a57741ae2e4dd4b29b1172b6848be8.slot_jsonschema.json",
+        "world.opensemantic.base/base/Category/OSW3d238d05316e45a4ac95a11d7b24e36b.slot_jsonschema.json"
+      ]
+    },
+    {
+      "keyword": "autocomplete",
+      "position": "options",
+      "classification": "oold-ui",
+      "future": "x-oold-ui-widget=autocomplete + $data source",
+      "count": 175,
+      "note": "value source is an SMW query -> x-osl-query",
+      "examples": [
+        "@contact_default: {\"query\":\"[[Category:OSW44deaa5b806d41a2a88594f562b110e9]][[HasOu::$(orderer_w)]] OR [[Category:OSW44deaa5b806d41a2a88594f562b110e9]][[HasOrganization::$(orderer_w)]]\"}",
+        "@event_series: {\"query\":\"[[Category:OSWf62d07b325124027b82fbec0a7b852df]] |?Display_title_of=label\"}",
+        "@participants: {\"category\":\"Category:OSW44deaa5b806d41a2a88594f562b110e9\"}",
+        "@minutes_taker: {\"category\":\"Category:OSW44deaa5b806d41a2a88594f562b110e9\"}"
+      ],
+      "sources": [
+        "world.opensemantic.base/base/Category/OSW0b6e695c4bb74e9ea5aa7f5da3150653.slot_jsonschema.json",
+        "world.opensemantic.base/base/Category/OSW0e084decca6f48a7b023d6b7b2c1452d.slot_jsonschema.json",
+        "world.opensemantic.base/base/Category/OSW0c69914a29b74f3c9e9d9ff7a6880715.slot_jsonschema.json",
+        "world.opensemantic.base/base/Category/OSW182916df3eee472e88e7c8d114a7fe27.slot_jsonschema.json",
+        "world.opensemantic.base/base/Category/OSW37a57741ae2e4dd4b29b1172b6848be8.slot_jsonschema.json"
+      ]
+    },
+    {
+      "keyword": "eval_template",
+      "position": "schema",
+      "classification": "osl-vendor",
+      "future": "x-osl-eval-template",
+      "count": 131,
+      "note": "mustache eval template",
+      "examples": [
+        "@creator: [{\"type\":\"mustache\",\"mode\":\"render\",\"value\":\"[[{{{creator}}}]]\"}]",
+        "@sender_contacts: [{\"type\":\"mustache-wikitext\",\"mode\":\"render\",\"value\":\"<ul>{{#sender_contacts}}<li>[[{{.}}]]</li>{{/sender_contacts}}</ul>\"}]",
+        "@recipient_contacts: [{\"type\":\"mustache-wikitext\",\"mode\":\"render\",\"value\":\"<ul>{{#recipient_contacts}}<li>[[{{.}}]]</li>{{/recipient_contacts}}</ul>\"}]",
+        "@shipping_service_provider: [{\"type\":\"wikitext\",\"mode\":\"render\",\"value\":\"{{{shipping_service_provider}}}\"}]"
+      ],
+      "sources": [
+        "world.opensemantic.base/base/Category/OSW0c69914a29b74f3c9e9d9ff7a6880715.slot_jsonschema.json",
+        "world.opensemantic.base/base/Category/OSW37a57741ae2e4dd4b29b1172b6848be8.slot_jsonschema.json",
+        "world.opensemantic.base/base/Category/OSW3cb8cef2225e403092f098f99bc4c472.slot_jsonschema.json",
+        "world.opensemantic.base/base/Category/OSW3d238d05316e45a4ac95a11d7b24e36b.slot_jsonschema.json",
+        "world.opensemantic.base/base/Category/OSW44deaa5b806d41a2a88594f562b110e9.slot_jsonschema.json"
+      ]
+    },
+    {
+      "keyword": "propertyOrder",
+      "position": "schema",
+      "classification": "oold-ui",
+      "future": "x-oold-ui-property-order",
+      "count": 87,
+      "note": "jedison x-categoryOrder/order",
+      "examples": [
+        "@label: 1",
+        "@descriptive_text: 2",
+        "@description: 4",
+        "@dispatch_date: 5"
+      ],
+      "sources": [
+        "world.opensemantic.base/base/Category/OSW0c69914a29b74f3c9e9d9ff7a6880715.slot_jsonschema.json",
+        "world.opensemantic.base/base/Category/OSW37a57741ae2e4dd4b29b1172b6848be8.slot_jsonschema.json",
+        "world.opensemantic.base/base/Category/OSW44deaa5b806d41a2a88594f562b110e9.slot_jsonschema.json",
+        "world.opensemantic.base/base/Category/OSW5433f882b9f14dca81994e058c8ab4a0.slot_jsonschema.json",
+        "world.opensemantic.base/base/Category/OSWb2d7e6a2eff94c82b7f1f2699d5b0ee3.slot_jsonschema.json"
+      ]
+    },
+    {
+      "keyword": "watch",
+      "position": "schema",
+      "classification": "jedison-vendor",
+      "future": "x-jedison-watch",
+      "count": 72,
+      "note": "json-editor watch/dependency",
+      "examples": [
+        "@contact_default: {\"orderer_w\":\"orderer_default\"}",
+        "@text: {\"uuid_\":\"shipment_root.uuid\",\"descriptive_text_\":\"shipment_root.descriptive_text\",\"sender_\":\"shipment_root.sender_abbreviation\",\"recipient_\":\"shipment_root.recipient_abbreviation\",\"dispatch_\":\"shi...",
+        "@sender: {\"sender_abbreviation\":\"shipment_root.sender_abbreviation\"}",
+        "@sender_site: {\"sender_\":\"sender\"}"
+      ],
+      "sources": [
+        "world.opensemantic.base/base/Category/OSW0b6e695c4bb74e9ea5aa7f5da3150653.slot_jsonschema.json",
+        "world.opensemantic.base/base/Category/OSW0c69914a29b74f3c9e9d9ff7a6880715.slot_jsonschema.json",
+        "world.opensemantic.base/base/Category/OSW37a57741ae2e4dd4b29b1172b6848be8.slot_jsonschema.json",
+        "world.opensemantic.base/base/Category/OSW44deaa5b806d41a2a88594f562b110e9.slot_jsonschema.json",
+        "world.opensemantic.base/base/Category/OSW51ad0d1716254c77a2b7a03217f23b43.slot_jsonschema.json"
+      ]
+    },
+    {
+      "keyword": "grid_columns",
+      "position": "options",
+      "classification": "jedison-vendor",
+      "future": "x-jedison-options.grid_columns",
+      "count": 56,
+      "note": "layout width",
+      "examples": [
+        "@item_type: 12",
+        "@item_instance: 12",
+        "@origin_item_type: 12",
+        "@origin_item_instance: 12"
+      ],
+      "sources": [
+        "world.opensemantic.base/base/Category/OSW0c69914a29b74f3c9e9d9ff7a6880715.slot_jsonschema.json",
+        "world.opensemantic.base/base/Category/OSW37a57741ae2e4dd4b29b1172b6848be8.slot_jsonschema.json",
+        "world.opensemantic.base/base/Category/OSWb2d7e6a2eff94c82b7f1f2699d5b0ee3.slot_jsonschema.json",
+        "world.opensemantic.base/base/Category/OSWda27e2fff10848ebb728ffb69c49a16d.slot_jsonschema.json",
+        "world.opensemantic.base/base/Category/OSWe427aafafbac4262955b9f690a83405d.slot_jsonschema.json"
+      ]
+    },
+    {
+      "keyword": "id",
+      "position": "schema",
+      "classification": "canonical-reuse",
+      "future": "$anchor OR x-jedison-id (decision)",
+      "count": 51,
+      "note": "json-editor watch ref. $anchor gives real reference semantics (unique per resource, name-pattern, referenceable via $ref) - couples UI to validation; vendor x-jedison-id avoids that. Prefer vendor unless watch-by-anchor is intended.",
+      "examples": [
+        "\"shipment_root\"",
+        "@included_items: \"included_item\"",
+        "\"OSW1969007d5acf40539642877659a02c23\"",
+        "@origin: \"origin_item\""
+      ],
+      "sources": [
+        "world.opensemantic.base/base/Category/OSW0c69914a29b74f3c9e9d9ff7a6880715.slot_jsonschema.json",
+        "world.opensemantic.base/base/Category/OSW1969007d5acf40539642877659a02c23.slot_jsonschema.json",
+        "world.opensemantic.base/base/Category/OSW37a57741ae2e4dd4b29b1172b6848be8.slot_jsonschema.json",
+        "world.opensemantic.base/base/Category/OSW3cb8cef2225e403092f098f99bc4c472.slot_jsonschema.json",
+        "world.opensemantic.base/base/Category/OSW5433f882b9f14dca81994e058c8ab4a0.slot_jsonschema.json"
+      ]
+    },
+    {
+      "keyword": "@context",
+      "position": "context",
+      "classification": "jsonld",
+      "future": "@context",
+      "count": 36,
+      "note": "JSON-LD @ keyword",
+      "examples": [
+        "@included_items: {\"@id\":\"Property:HasStatement\",\"@type\":\"@id\",\"@context\":{\"item_instance_property\":\"Property:HasProperty\",\"item_instance\":\"Property:HasObject\"}}",
+        "@constituents: {\"@type\":\"@id\",\"@id\":\"Property:HasStatement\",\"@context\":{\"property\":\"Property:HasProperty\",\"type\":\"Property:HasValue\"}}",
+        "@origin: {\"@id\":\"Property:HasStatement\",\"@type\":\"@id\",\"@context\":{\"origin_item_instance_property\":\"Property:HasProperty\",\"origin_item_instance\":\"Property:HasObject\"}}",
+        "@postal_address: {\"@id\":\"Property:HasPostalAddress\",\"@type\":\"@id\",\"@context\":[\"/wiki/JsonSchema:PostalAddress?action=raw\"]}"
+      ],
+      "sources": [
+        "world.opensemantic.base/base/Category/OSW0c69914a29b74f3c9e9d9ff7a6880715.slot_jsonschema.json",
+        "world.opensemantic.base/base/Category/OSW182916df3eee472e88e7c8d114a7fe27.slot_jsonschema.json",
+        "world.opensemantic.base/base/Category/OSW37a57741ae2e4dd4b29b1172b6848be8.slot_jsonschema.json",
+        "world.opensemantic.base/base/Category/OSW3cb8cef2225e403092f098f99bc4c472.slot_jsonschema.json",
+        "world.opensemantic.base/base/Category/OSW3d238d05316e45a4ac95a11d7b24e36b.slot_jsonschema.json"
+      ]
+    },
+    {
+      "keyword": "dynamic_template",
+      "position": "schema",
+      "classification": "osl-vendor",
+      "future": "x-osl-dynamic-template",
+      "count": 32,
+      "note": "mustache template",
+      "examples": [
+        "@text: \"{{{sender_}}}-{{{recipient_}}}-{{dateformat 'Ymd_His' dispatch_}}{{#if descriptive_text_}}-{{{descriptive_text_}}}{{/if}}\"",
+        "@dispatch_date: \"{{_now_}}\"",
+        "@creator: \"{{_current_user_}}\"",
+        "@uuid: \"{{_uuid_}}\""
+      ],
+      "sources": [
+        "world.opensemantic.base/base/Category/OSW0c69914a29b74f3c9e9d9ff7a6880715.slot_jsonschema.json",
+        "world.opensemantic.base/base/Category/OSW37a57741ae2e4dd4b29b1172b6848be8.slot_jsonschema.json",
+        "world.opensemantic.base/base/Category/OSW44deaa5b806d41a2a88594f562b110e9.slot_jsonschema.json",
+        "world.opensemantic.base/base/Category/OSW5433f882b9f14dca81994e058c8ab4a0.slot_jsonschema.json",
+        "world.opensemantic.base/base/Category/OSWb2d7e6a2eff94c82b7f1f2699d5b0ee3.slot_jsonschema.json"
+      ]
+    },
+    {
+      "keyword": "subclassof_range",
+      "position": "schema",
+      "classification": "oold-semantic",
+      "future": "x-oold-subclassof-range",
+      "count": 29,
+      "note": "range constraint on subclass targets",
+      "examples": [
+        "@typical_processes: \"Category:OSWe5aa96bffb1c4d95be7fbd46142ad203\"",
+        "@characteristic: \"Category:OSW93ccae36243542ceac6c951450a81d47\"",
+        "@type: \"Category:Category\"",
+        "@subclass_of: \"Category:Entity\""
+      ],
+      "sources": [
+        "world.opensemantic.base/base/Category/OSWd845b96813a344458f140e48c4d063fd.slot_jsonschema.json",
+        "world.opensemantic.base/base/Category/OSWda27e2fff10848ebb728ffb69c49a16d.slot_jsonschema.json",
+        "world.opensemantic.base/base/Category/OSWf0fe562f422d49c6877490b3dfee2f3f.slot_jsonschema.json",
+        "world.opensemantic.core/core/Category/Category.slot_jsonschema.json",
+        "world.opensemantic.core/core/Category/Item.slot_jsonschema.json"
+      ]
+    },
+    {
+      "keyword": "dynamic_template",
+      "position": "options",
+      "classification": "osl-vendor",
+      "future": "x-osl-dynamic-template",
+      "count": 25,
+      "note": "mustache template",
+      "examples": [
+        "@text: {\"override\":\"empty\"}",
+        "@dispatch_date: {\"override\":\"empty\"}",
+        "@uuid: {\"override\":\"empty\"}",
+        "@start_date_time: {\"override\":\"empty\"}"
+      ],
+      "sources": [
+        "world.opensemantic.base/base/Category/OSW0c69914a29b74f3c9e9d9ff7a6880715.slot_jsonschema.json",
+        "world.opensemantic.base/base/Category/OSW37a57741ae2e4dd4b29b1172b6848be8.slot_jsonschema.json",
+        "world.opensemantic.base/base/Category/OSW5433f882b9f14dca81994e058c8ab4a0.slot_jsonschema.json",
+        "world.opensemantic.base/base/Category/OSWb2d7e6a2eff94c82b7f1f2699d5b0ee3.slot_jsonschema.json",
+        "world.opensemantic.base/base/Category/OSWda27e2fff10848ebb728ffb69c49a16d.slot_jsonschema.json"
+      ]
+    },
+    {
+      "keyword": "_format",
+      "position": "schema",
+      "classification": "commented-out",
+      "future": "format",
+      "count": 22,
+      "note": "disabled / commented-out in source; not an active keyword",
+      "examples": [
+        "@uuid: \"uuid\"",
+        "@numerical_value: \"template\"",
+        "@value: \"template\"",
+        "@unit: \"template\""
+      ],
+      "sources": [
+        "world.opensemantic.base/base/Category/OSW0c69914a29b74f3c9e9d9ff7a6880715.slot_jsonschema.json",
+        "world.opensemantic.base/base/Category/OSWb2d7e6a2eff94c82b7f1f2699d5b0ee3.slot_jsonschema.json",
+        "world.opensemantic.base/base/Category/OSWe427aafafbac4262955b9f690a83405d.slot_jsonschema.json",
+        "world.opensemantic.base/base/Category/OSWe5aa96bffb1c4d95be7fbd46142ad203.slot_jsonschema.json",
+        "world.opensemantic.lab/base/Category/OSW88894b63a51d46b08b5b4b05a6b1b3c3.slot_jsonschema.json"
+      ]
+    },
+    {
+      "keyword": "headerTemplate",
+      "position": "schema",
+      "classification": "jedison-vendor",
+      "future": "x-jedison-headerTemplate",
+      "count": 19,
+      "note": "dynamic header (mustache)",
+      "examples": [
+        "@constituents: \"{{i1}} - {{self.name}}\"",
+        "@origin: \"{{ i1 }}\"",
+        "@specifications: \"{{i1}} - {{self.name}}\"",
+        "@data_channels: \"{{ i1 }} - {{{ self.name }}}\""
+      ],
+      "sources": [
+        "world.opensemantic.base/base/Category/OSW182916df3eee472e88e7c8d114a7fe27.slot_jsonschema.json",
+        "world.opensemantic.base/base/Category/OSW37a57741ae2e4dd4b29b1172b6848be8.slot_jsonschema.json",
+        "world.opensemantic.base/base/Category/OSWca99a9bb9ad24386b222d18a73c2af5e.slot_jsonschema.json",
+        "world.opensemantic.base/base/Category/OSWda27e2fff10848ebb728ffb69c49a16d.slot_jsonschema.json",
+        "world.opensemantic.base/base/Category/OSWe427aafafbac4262955b9f690a83405d.slot_jsonschema.json"
+      ]
+    },
+    {
+      "keyword": "compact",
+      "position": "options",
+      "classification": "jedison-vendor",
+      "future": "x-jedison-options.compact",
+      "count": 13,
+      "note": "layout",
+      "examples": [
+        "@yearly_budget_sum: true",
+        "@yearly_budget_sum_weighted: true",
+        "@exact_ontology_match: \"true\"",
+        "@close_ontology_match: \"true\""
+      ],
+      "sources": [
+        "world.opensemantic.base/base/Category/OSWb2d7e6a2eff94c82b7f1f2699d5b0ee3.slot_jsonschema.json",
+        "world.opensemantic.core/core/Category/Entity.slot_jsonschema.json",
+        "world.opensemantic.core/core/Category/OSW1b15ddcf042c4599bd9d431cbfdf3430.slot_jsonschema.json",
+        "world.opensemantic.core/core/Category/OSW6ef70c808fb54abbbacb059c285713d4.slot_jsonschema.json",
+        "world.opensemantic.core/core/Category/ObjectProperty.slot_jsonschema.json"
+      ]
+    },
+    {
+      "keyword": "enum_titles*",
+      "position": "options",
+      "classification": "oold-ui",
+      "future": "x-oold-ui-enum-titles + * multilang",
+      "count": 12,
+      "note": "language-tagged display titles",
+      "examples": [
+        "@event_classifier: {\"de\":[\"Intern\",\"Extern\"]}",
+        "@project_type: {\"de\":[\"Hausprojekt\",\"Intern\",\"Öffentlich\",\"Industrie\"]}",
+        "@by_month: {\"de\":[\"Januar\",\"Februar\",\"März\",\"April\",\"Mai\",\"Juni\",\"Juli\",\"August\",\"September\",\"Oktober\",\"November\",\"Dezember\"]}",
+        "@by_day: {\"de\":[\"Montag\",\"Dienstag\",\"Mittwoch\",\"Donnerstag\",\"Freitag\",\"Samstag\",\"Sonntag\"]}"
+      ],
+      "sources": [
+        "world.opensemantic.base/base/Category/OSW0e084decca6f48a7b023d6b7b2c1452d.slot_jsonschema.json",
+        "world.opensemantic.base/base/Category/OSWb2d7e6a2eff94c82b7f1f2699d5b0ee3.slot_jsonschema.json",
+        "world.opensemantic.base/base/Category/OSWf62d07b325124027b82fbec0a7b852df.slot_jsonschema.json",
+        "world.opensemantic.base/base/Category/OSWe5aa96bffb1c4d95be7fbd46142ad203.slot_jsonschema.json",
+        "world.opensemantic.core/core/Category/Entity.slot_jsonschema.json"
+      ]
+    },
+    {
+      "keyword": "template",
+      "position": "schema",
+      "classification": "osl-vendor",
+      "future": "x-osl-template",
+      "count": 12,
+      "note": "mustache template",
+      "examples": [
+        "@value: \"{{{numerical_value}}} {{{unit_symbol}}}\"",
+        "@unit: \"{{yearly_budget_sum_unit}}\"",
+        "@unit_symbol: \"{{yearly_budget_sum_unit_symbol}}\"",
+        "@iso_8601_representation: \"P{{#if year}}{{{year}}}Y{{/if}}{{#if month}}{{{month}}}M{{/if}}{{#if day}}{{{day}}}D{{/if}}{{#if (calc year '+' (calc month '+' day))}}{{#unless (calc hour '+' (calc minute '+' second ))}}{{/unles..."
+      ],
+      "sources": [
+        "world.opensemantic.base/base/Category/OSWb2d7e6a2eff94c82b7f1f2699d5b0ee3.slot_jsonschema.json",
+        "world.opensemantic.base/base/JsonSchema/Duration.slot_main.json",
+        "world.opensemantic.core/core/Category/OSW1b15ddcf042c4599bd9d431cbfdf3430.slot_jsonschema.json",
+        "world.opensemantic.core/core/JsonSchema/QuantityProperty.slot_main.json",
+        "world.opensemantic.core/core/JsonSchema/Statement.slot_main.json"
+      ]
+    },
+    {
+      "keyword": "links",
+      "position": "schema",
+      "classification": "jedison-vendor",
+      "future": "x-jedison-links",
+      "count": 12,
+      "note": "form hyperlinks",
+      "examples": [
+        "@proposal: [{\"href\":\"{{#if self}}/w/index.php?title=Special:Redirect/file/{{self}}&width=200&height=200{{/if}}\",\"mediaType\":\"image\"},{\"href\":\"{{#if self}}/w/index.php?title=Special:Redirect/file/{{self}}{{/if...",
+        "@report: [{\"href\":\"{{#if self}}/w/index.php?title=Special:Redirect/file/{{self}}&width=200&height=200{{/if}}\",\"mediaType\":\"image\"},{\"href\":\"{{#if self}}/w/index.php?title=Special:Redirect/file/{{self}}{{/if...",
+        "@other_documents: [{\"href\":\"{{#if self}}/w/index.php?title=Special:Redirect/file/{{self}}&width=200&height=200{{/if}}\",\"mediaType\":\"image\"},{\"href\":\"{{#if self}}/w/index.php?title=Special:Redirect/file/{{self}}{{/if...",
+        "@procedure_files: [{\"href\":\"{{#if self}}/w/index.php?title=Special:Redirect/file/{{self}}{{/if}}\",\"rel\":\"{{#if self}}download{{/if}}\",\"download\":true}]"
+      ],
+      "sources": [
+        "world.opensemantic.base/base/Category/OSWb2d7e6a2eff94c82b7f1f2699d5b0ee3.slot_jsonschema.json",
+        "world.opensemantic.base/base/Category/OSWe21775c8dd604739885dfc24c32cc548.slot_jsonschema.json",
+        "world.opensemantic.core/core/Category/OSW11a53cdfbdc24524bf8ac435cbf65d9d.slot_jsonschema.json",
+        "world.opensemantic.core/core/Category/Entity.slot_jsonschema.json",
+        "world.opensemantic.core/core/JsonSchema/WikiFile.slot_main.json"
+      ]
+    },
+    {
+      "keyword": "_template",
+      "position": "schema",
+      "classification": "commented-out",
+      "future": "template",
+      "count": 11,
+      "note": "disabled / commented-out in source; not an active keyword",
+      "examples": [
+        "@uuid: \"dynamic_template\"",
+        "@start_date_time: \"now\"",
+        "@end_date_time: \"now\""
+      ],
+      "sources": [
+        "world.opensemantic.base/base/Category/OSW0c69914a29b74f3c9e9d9ff7a6880715.slot_jsonschema.json",
+        "world.opensemantic.base/base/Category/OSW5433f882b9f14dca81994e058c8ab4a0.slot_jsonschema.json",
+        "world.opensemantic.base/base/Category/OSWe427aafafbac4262955b9f690a83405d.slot_jsonschema.json",
+        "world.opensemantic.lab/base/Category/OSW88894b63a51d46b08b5b4b05a6b1b3c3.slot_jsonschema.json",
+        "world.opensemantic.quantities/base/Category/OSW6c2aea028a8647cd97f5d7c65c09cd44.slot_jsonschema.json"
+      ]
+    },
+    {
+      "keyword": "query",
+      "position": "schema",
+      "classification": "osl-vendor",
+      "future": "x-osl-query",
+      "count": 10,
+      "note": "SMW query (data source)",
+      "examples": [
+        "@member_of: \"[[HasType::Category:OSW1969007d5acf40539642877659a02c23]] |?Display_title_of=label\"",
+        "@site: \"[[HasType::Category:OSW473d7a1ed48544d1be83b258b5810948]] |?Display_title_of=label\"",
+        "@superordinate_ou: \"[[HasType::Category:OSW1969007d5acf40539642877659a02c23]] |?Display_title_of=label\"",
+        "@superordinate_ou: \"[[HasType::Category:OSW1969007d5acf40539642877659a02c23]] OR [[HasType::Category:OSW5427361692374c8eaa6bd3733b92d343]] OR [[HasType::Category:OSWa01126bc9e9048988cb0f49e359015bc]] |?Display_title_..."
+      ],
+      "sources": [
+        "world.opensemantic.base/base/Category/OSW5427361692374c8eaa6bd3733b92d343.slot_jsonschema.json",
+        "world.opensemantic.base/base/Category/OSW94aa074255374580b70337340c5ccc1b.slot_jsonschema.json",
+        "world.opensemantic.base/base/Category/OSWa01126bc9e9048988cb0f49e359015bc.slot_jsonschema.json",
+        "world.opensemantic.base/base/Category/OSWacdb001c926c46b998af3e645d36b13f.slot_jsonschema.json",
+        "world.opensemantic.base/base/Category/OSWb8b6278763d54b0784eea9d3b3d183a4.slot_jsonschema.json"
+      ]
+    },
+    {
+      "keyword": "previewWikiTextTemplate",
+      "position": "schema",
+      "classification": "osl-vendor",
+      "future": "x-osl-preview-template",
+      "count": 10,
+      "note": "wikitext preview template",
+      "examples": [
+        "@member_of: \"[[:{{result.fulltext}}]]\"",
+        "@site: \"[[:{{result.fulltext}}]]\"",
+        "@superordinate_ou: \"[[:{{result.fulltext}}]]\"",
+        "@db_type: \"{{#if result.printouts.HasImage.0.fulltext}}[[{{result.printouts.HasImage.0.fulltext}}|right|x66px]]</br>{{/if}}[[{{result.fulltext}}]]\""
+      ],
+      "sources": [
+        "world.opensemantic.base/base/Category/OSW5427361692374c8eaa6bd3733b92d343.slot_jsonschema.json",
+        "world.opensemantic.base/base/Category/OSW94aa074255374580b70337340c5ccc1b.slot_jsonschema.json",
+        "world.opensemantic.base/base/Category/OSWa01126bc9e9048988cb0f49e359015bc.slot_jsonschema.json",
+        "world.opensemantic.base/base/Category/OSWacdb001c926c46b998af3e645d36b13f.slot_jsonschema.json",
+        "world.opensemantic.base/base/Category/OSWb8b6278763d54b0784eea9d3b3d183a4.slot_jsonschema.json"
+      ]
+    },
+    {
+      "keyword": "labelTemplate",
+      "position": "schema",
+      "classification": "jedison-vendor",
+      "future": "x-jedison-labelTemplate",
+      "count": 10,
+      "note": "dynamic label (mustache)",
+      "examples": [
+        "@member_of: \"{{result.printouts.label.[0]}}\"",
+        "@site: \"{{result.printouts.label.[0]}}\"",
+        "@superordinate_ou: \"{{result.printouts.label.[0]}}\"",
+        "@db_type: \"{{result.printouts.label.[0]}}\""
+      ],
+      "sources": [
+        "world.opensemantic.base/base/Category/OSW5427361692374c8eaa6bd3733b92d343.slot_jsonschema.json",
+        "world.opensemantic.base/base/Category/OSW94aa074255374580b70337340c5ccc1b.slot_jsonschema.json",
+        "world.opensemantic.base/base/Category/OSWa01126bc9e9048988cb0f49e359015bc.slot_jsonschema.json",
+        "world.opensemantic.base/base/Category/OSWacdb001c926c46b998af3e645d36b13f.slot_jsonschema.json",
+        "world.opensemantic.base/base/Category/OSWb8b6278763d54b0784eea9d3b3d183a4.slot_jsonschema.json"
+      ]
+    },
+    {
+      "keyword": "upload",
+      "position": "options",
+      "classification": "jedison-vendor",
+      "future": "x-jedison-options.upload",
+      "count": 10,
+      "note": "file upload widget config",
+      "examples": [
+        "@proposal: {}",
+        "@report: {}",
+        "@other_documents: {}",
+        "@procedure_files: {}"
+      ],
+      "sources": [
+        "world.opensemantic.base/base/Category/OSWb2d7e6a2eff94c82b7f1f2699d5b0ee3.slot_jsonschema.json",
+        "world.opensemantic.base/base/Category/OSWe21775c8dd604739885dfc24c32cc548.slot_jsonschema.json",
+        "world.opensemantic.core/core/Category/OSW11a53cdfbdc24524bf8ac435cbf65d9d.slot_jsonschema.json",
+        "world.opensemantic.core/core/Category/Entity.slot_jsonschema.json",
+        "world.opensemantic.core/core/Property/HasFileAttachment.slot_jsonschema.json"
+      ]
+    },
+    {
+      "keyword": "conditional_visible",
+      "position": "options",
+      "classification": "deferred",
+      "future": "(deferred: query-form)",
+      "count": 9,
+      "note": "OSL query-mode visibility",
+      "examples": [
+        "@start_date_min: {\"modes\":\"query\"}",
+        "@start_date_max: {\"modes\":\"query\"}",
+        "@tool: {\"modes\":[\"query\",\"default\"]}",
+        "@input: {\"modes\":[\"query\",\"default\"]}"
+      ],
+      "sources": [
+        "world.opensemantic.base/base/Category/OSW0e084decca6f48a7b023d6b7b2c1452d.slot_jsonschema.json",
+        "world.opensemantic.base/base/Category/OSWe5aa96bffb1c4d95be7fbd46142ad203.slot_jsonschema.json",
+        "world.opensemantic.core/core/Category/Item.slot_jsonschema.json",
+        "world.opensemantic.core/core/Category/Entity.slot_jsonschema.json",
+        "world.opensemantic.demo.lab.virtual/base/Category/OSW553f78cc66194ae1873241207b906c4b.slot_jsonschema.json"
+      ]
+    },
+    {
+      "keyword": "name",
+      "position": "schema",
+      "classification": "drop",
+      "future": "(drop; use title / $id)",
+      "count": 9,
+      "note": "non-standard schema-level 'name' annotation, not a JSON Schema keyword",
+      "examples": [
+        "\"BattmoModel\"",
+        "@geometry: \"geometry\"",
+        "@Electrolyte: \"Electrolyte\"",
+        "@Separator: \"Separator\""
+      ],
+      "sources": [
+        "world.opensemantic.demo.lab.virtual/base/Category/OSW553f78cc66194ae1873241207b906c4b.slot_jsonschema.json"
+      ]
+    },
+    {
+      "keyword": "enable_array_copy",
+      "position": "options",
+      "classification": "jedison-vendor",
+      "future": "x-jedison-options.enable_array_copy",
+      "count": 7,
+      "note": "behavior",
+      "examples": [
+        "@included_items: true",
+        "@origin: true",
+        "@yearly_budget: true",
+        "@data_channels: true"
+      ],
+      "sources": [
+        "world.opensemantic.base/base/Category/OSW0c69914a29b74f3c9e9d9ff7a6880715.slot_jsonschema.json",
+        "world.opensemantic.base/base/Category/OSW37a57741ae2e4dd4b29b1172b6848be8.slot_jsonschema.json",
+        "world.opensemantic.base/base/Category/OSWb2d7e6a2eff94c82b7f1f2699d5b0ee3.slot_jsonschema.json",
+        "world.opensemantic.base/base/Category/OSWda27e2fff10848ebb728ffb69c49a16d.slot_jsonschema.json",
+        "world.opensemantic.base/base/Category/OSWe427aafafbac4262955b9f690a83405d.slot_jsonschema.json"
+      ]
+    },
+    {
+      "keyword": "readonly",
+      "position": "schema",
+      "classification": "canonical-reuse",
+      "future": "readOnly",
+      "count": 7,
+      "note": "standard JSON Schema readOnly (camelCase)",
+      "examples": [
+        "@text: true",
+        "@lang: true",
+        "@output_mixes: true",
+        "@output_samples: true"
+      ],
+      "sources": [
+        "world.opensemantic.base/base/Category/OSW44deaa5b806d41a2a88594f562b110e9.slot_jsonschema.json",
+        "world.opensemantic.lab/base/Category/OSW0583b134c618484c9911a3dff145c7eb.slot_jsonschema.json",
+        "world.opensemantic.lab/base/Category/OSW88894b63a51d46b08b5b4b05a6b1b3c3.slot_jsonschema.json"
+      ]
+    },
+    {
+      "keyword": "collapsed",
+      "position": "options",
+      "classification": "jedison-vendor",
+      "future": "x-jedison-options.collapsed",
+      "count": 7,
+      "note": "layout",
+      "examples": [
+        "@procedure_files: true",
+        "@type: true",
+        "@attachments: true",
+        "@label: true"
+      ],
+      "sources": [
+        "world.opensemantic.base/base/Category/OSWe21775c8dd604739885dfc24c32cc548.slot_jsonschema.json",
+        "world.opensemantic.core/core/Category/Item.slot_jsonschema.json",
+        "world.opensemantic.core/core/Category/Entity.slot_jsonschema.json",
+        "world.opensemantic.core/core/Category/OSWffe74f291d354037b318c422591c5023.slot_jsonschema.json",
+        "world.opensemantic.core/core/JsonSchema/Statement.slot_main.json"
+      ]
+    },
+    {
+      "keyword": "array_copy_ignore",
+      "position": "options",
+      "classification": "jedison-vendor",
+      "future": "x-jedison-options.array_copy_ignore",
+      "count": 6,
+      "note": "behavior",
+      "examples": [
+        "@included_items: [\"uuid\",\"attachments\"]",
+        "@origin: [\"uuid\",\"attachments\"]",
+        "@data_channels: [\"uuid\",\"osw_id\"]",
+        "@components: [\"uuid\",\"component_id\",\"attachments\"]"
+      ],
+      "sources": [
+        "world.opensemantic.base/base/Category/OSW0c69914a29b74f3c9e9d9ff7a6880715.slot_jsonschema.json",
+        "world.opensemantic.base/base/Category/OSW37a57741ae2e4dd4b29b1172b6848be8.slot_jsonschema.json",
+        "world.opensemantic.base/base/Category/OSWda27e2fff10848ebb728ffb69c49a16d.slot_jsonschema.json",
+        "world.opensemantic.base/base/Category/OSWe427aafafbac4262955b9f690a83405d.slot_jsonschema.json",
+        "world.opensemantic.core/core/Category/OSWffe74f291d354037b318c422591c5023.slot_jsonschema.json"
+      ]
+    },
+    {
+      "keyword": "flatpicker",
+      "position": "options",
+      "classification": "typo",
+      "future": "x-jedison-flatpickr",
+      "count": 6,
+      "note": "misspelling of flatpickr",
+      "examples": [
+        "@start_date: {}",
+        "@end_date: {}",
+        "@submission_deadline: {}",
+        "{}"
+      ],
+      "sources": [
+        "world.opensemantic.base/base/Category/OSWb2d7e6a2eff94c82b7f1f2699d5b0ee3.slot_jsonschema.json",
+        "world.opensemantic.base/base/Category/OSWd22af0aa3b00462a9da9b509538e8926.slot_jsonschema.json",
+        "world.opensemantic.base/base/JsonSchema/EndDate.slot_main.json",
+        "world.opensemantic.base/base/JsonSchema/StartDate.slot_main.json",
+        "world.opensemantic.lab/base/Category/OSW5c6f6eaaa96e4f84ad6f2ea02fc18ce4.slot_jsonschema.json"
+      ]
+    },
+    {
+      "keyword": "titel*",
+      "position": "schema",
+      "classification": "typo",
+      "future": "title*",
+      "count": 6,
+      "note": "normalize spelling",
+      "examples": [
+        "@exact_ontology_match: {\"de\":\"Ontologieübereinstimmung (exakt)\"}",
+        "@close_ontology_match: {\"de\":\"Ontologieübereinstimmung (ähnlich)\"}"
+      ],
+      "sources": [
+        "world.opensemantic.core/core/Category/Entity.slot_jsonschema.json",
+        "world.opensemantic.core/core/Category/OSW6ef70c808fb54abbbacb059c285713d4.slot_jsonschema.json",
+        "world.opensemantic.characteristics.basic/base/Category/OSW6ef70c808fb54abbbacb059c285713d4.slot_jsonschema.json"
+      ]
+    },
+    {
+      "keyword": "example",
+      "position": "schema",
+      "classification": "typo",
+      "future": "examples",
+      "count": 5,
+      "note": "singular -> standard 'examples'",
+      "examples": [
+        "@imported_from: \"schema:Person\"",
+        "@namespace: \"Category\""
+      ],
+      "sources": [
+        "world.opensemantic.core/core/Category/OSW725a3cf5458f4daea86615fcbd0029f8.slot_jsonschema.json",
+        "world.opensemantic.core/core/Category/Property.slot_jsonschema.json",
+        "world.opensemantic.core/core/JsonSchema/Meta.slot_main.json",
+        "world.opensemantic.ontology/base/Category/OSW6b9ef2784a934b8ab96523366e23e906.slot_jsonschema.json",
+        "world.opensemantic.ontology/base/Category/OSW725a3cf5458f4daea86615fcbd0029f8.slot_jsonschema.json"
+      ]
+    },
+    {
+      "keyword": "x-oold-version",
+      "position": "schema",
+      "classification": "oold-semantic",
+      "future": "x-oold-version",
+      "count": 5,
+      "note": "already migrated",
+      "examples": [
+        "@generated: \"0.1.0\""
+      ],
+      "sources": [
+        "world.opensemantic.lab.nts/nts/Category/OSWff57d4e6b012484ea0c5fc13265d1904.slot_jsonschema.json",
+        "world.opensemantic.lab.experimental_work/experimental_work/Category/OSW71ee8661955e42c2b06110c6f79bfc1b.slot_jsonschema.json",
+        "world.opensemantic.lab.experimental_work/experimental_work/Category/OSW9c2c1e81585f4969916c0dfe89da680d.slot_jsonschema.json",
+        "world.opensemantic.lab.experimental_work/experimental_work/Category/OSWff05bcf615ef416d816e06d3395f1c77.slot_jsonschema.json",
+        "world.opensemantic.lab.experimental_work/experimental_work/Category/OSWe279f485206a4a2c83a27fdeee18b59a.slot_jsonschema.json"
+      ]
+    },
+    {
+      "keyword": "category",
+      "position": "schema",
+      "classification": "oold-ui",
+      "future": "x-oold-ui-property-group",
+      "count": 4,
+      "note": "jedison x-category/x-propGroup",
+      "examples": [
+        "@funding: \"Category:OSW25bc4daf97644737a76434b88e1d5b21\"",
+        "@contact_person: \"Category:OSW44deaa5b806d41a2a88594f562b110e9\"",
+        "@funder: \"Category:OSW3cb8cef2225e403092f098f99bc4c472\"",
+        "@member_of: \"Category:OSW3cb8cef2225e403092f098f99bc4c472\""
+      ],
+      "sources": [
+        "world.opensemantic.base/base/Category/OSW0e084decca6f48a7b023d6b7b2c1452d.slot_jsonschema.json",
+        "world.opensemantic.base/base/Category/OSW90640829797c4b859548a796f8f6dca6.slot_jsonschema.json",
+        "world.opensemantic.base/base/Category/OSWb2d7e6a2eff94c82b7f1f2699d5b0ee3.slot_jsonschema.json"
+      ]
+    },
+    {
+      "keyword": "data_source_maps",
+      "position": "schema",
+      "classification": "osl-vendor",
+      "future": "x-osl-data-map",
+      "count": 4,
+      "note": "data source mapping",
+      "examples": [
+        "[{\"id\":\"pub.orcid.org\",\"source\":\"https://pub.orcid.org/v3.0/{{#split '/' -1}}{{orcid}}{{/split}}\",\"format\":\"jsonld\",\"label\":\"ORCID\",\"required\":[\"orcid\"],\"object_map\":{\"first_name\":\"$.givenName\",\"su...",
+        "[{\"id\":\"pubchem.ncbi.nlm.nih.gov\",\"source\":\"https://pubchem.ncbi.nlm.nih.gov/rest/pug_view/data/compound/{{pubchem_cid}}/JSON\",\"label\":\"PubChem\",\"required\":[\"pubchem_cid\"],\"object_map\":{\"cas_number...",
+        "[{\"id\":\"uncertainty_search\",\"source\":\"/w/rest.php/apigateway/v1/ucsearch?path=/related_measurements/{{measurement}}&d_mz_rel={{search_criteria.d_mz_rel}}&d_rt_rel={{search_criteria.d_rt_rel}}&d_mz_...",
+        "[{\"id\":\"uncertainty_search\",\"source\":\"/w/rest.php/apigateway/v1/ucsearch?path=/substances&mz={{substance.mz}}&rt={{substance.rt}}&d_mz_rel={{search_criteria.d_mz_rel}}&d_rt_rel={{search_criteria.d_..."
+      ],
+      "sources": [
+        "world.opensemantic.base/base/Category/OSW44deaa5b806d41a2a88594f562b110e9.slot_jsonschema.json",
+        "world.opensemantic.lab/base/Category/OSW2afce49fe800460a95cf480cc0656757.slot_jsonschema.json",
+        "world.opensemantic.lab.nts/nts/Category/OSWc8ab9a42f73645e9b7f29c5870416fac.slot_jsonschema.json",
+        "world.opensemantic.lab.nts/nts/Category/OSWccf85ef13ded458aa4b8ab0836a6729f.slot_jsonschema.json"
+      ]
+    },
+    {
+      "keyword": "@prefix",
+      "position": "context",
+      "classification": "jsonld",
+      "future": "@prefix",
+      "count": 4,
+      "note": "JSON-LD @ keyword",
+      "examples": [
+        "@Category: {\"@id\":\"wiki:Category-3A\",\"@prefix\":true}",
+        "@File: {\"@id\":\"https://wiki-dev.open-semantic-lab.org/wiki/Special:Redirect/file/\",\"@prefix\":true}",
+        "@Item: {\"@id\":\"wiki:Item-3A\",\"@prefix\":true}",
+        "@Property: {\"@id\":\"wiki:Property-3A\",\"@prefix\":true}"
+      ],
+      "sources": [
+        "world.opensemantic.core/core/Category/Entity.slot_jsonschema.json"
+      ]
+    },
+    {
+      "keyword": "$comment",
+      "position": "options",
+      "classification": "standard",
+      "future": "$comment",
+      "count": 4,
+      "note": "standard JSON Schema comment (also seen misplaced inside options); ignored",
+      "examples": [
+        "@subclass_of: \"should be an $example\"",
+        "@characteristics: \"should be an $example\""
+      ],
+      "sources": [
+        "world.opensemantic.core/core/Category/OSWffe74f291d354037b318c422591c5023.slot_jsonschema.json",
+        "world.opensemantic.characteristics.basic/base/Category/OSWffe74f291d354037b318c422591c5023.slot_jsonschema.json"
+      ]
+    },
+    {
+      "keyword": "infoText",
+      "position": "options",
+      "classification": "oold-ui",
+      "future": "x-oold-ui-hint",
+      "count": 4,
+      "note": "jedison x-info",
+      "examples": [
+        "@subclass_of: \"A car is a vehicle\"",
+        "@characteristics: \"A human has a physical dimension without beeing a physical dimension\""
+      ],
+      "sources": [
+        "world.opensemantic.core/core/Category/OSWffe74f291d354037b318c422591c5023.slot_jsonschema.json",
+        "world.opensemantic.characteristics.basic/base/Category/OSWffe74f291d354037b318c422591c5023.slot_jsonschema.json"
+      ]
+    },
+    {
+      "keyword": "input_width",
+      "position": "options",
+      "classification": "jedison-vendor",
+      "future": "x-jedison-options.input_width",
+      "count": 4,
+      "note": "layout width",
+      "examples": [
+        "@text: \"800px\"",
+        "@lang: \"100px\""
+      ],
+      "sources": [
+        "world.opensemantic.core/core/JsonSchema/Description.slot_main.json",
+        "world.opensemantic.core/core/JsonSchema/Label.slot_main.json"
+      ]
+    },
+    {
+      "keyword": "role",
+      "position": "options",
+      "classification": "deferred",
+      "future": "(deferred: query-form)",
+      "count": 3,
+      "note": "recorded, not minted",
+      "examples": [
+        "@start_date_min: {\"query\":{\"filter\":\"min\"}}",
+        "@start_date_max: {\"query\":{\"filter\":\"max\"}}",
+        "@energyDensity_query_min: {\"query\":{\"filter\":\"min\"}}"
+      ],
+      "sources": [
+        "world.opensemantic.base/base/Category/OSW0e084decca6f48a7b023d6b7b2c1452d.slot_jsonschema.json",
+        "world.opensemantic.demo.lab.virtual/base/Category/OSW553f78cc66194ae1873241207b906c4b.slot_jsonschema.json"
+      ]
+    },
+    {
+      "keyword": "render",
+      "position": "options",
+      "classification": "osl-vendor",
+      "future": "x-osl-render",
+      "count": 3,
+      "note": "render directive",
+      "examples": [
+        "@descriptive_text: \"never\"",
+        "@sender_abbreviation: \"never\"",
+        "@recipient_abbreviation: \"never\""
+      ],
+      "sources": [
+        "world.opensemantic.base/base/Category/OSW0c69914a29b74f3c9e9d9ff7a6880715.slot_jsonschema.json"
+      ]
+    },
+    {
+      "keyword": "@container",
+      "position": "context",
+      "classification": "jsonld",
+      "future": "@container",
+      "count": 3,
+      "note": "JSON-LD @ keyword",
+      "examples": [
+        "@unionOf: {\"@id\":\"owl:unionOf\",\"@container\":\"@list\",\"@type\":\"@id\"}"
+      ],
+      "sources": [
+        "world.opensemantic.core/core/Category/OSW725a3cf5458f4daea86615fcbd0029f8.slot_jsonschema.json",
+        "world.opensemantic.ontology/base/Category/OSW725a3cf5458f4daea86615fcbd0029f8.slot_jsonschema.json",
+        "world.opensemantic.ontology/base/Category/OSW9deb690d6ebb4eaaa1ca5a24c2f32cad.slot_jsonschema.json"
+      ]
+    },
+    {
+      "keyword": "flatpickr",
+      "position": "options",
+      "classification": "jedison-vendor",
+      "future": "x-jedison-flatpickr",
+      "count": 2,
+      "note": "flatpickr date-picker config",
+      "examples": [
+        "@duration: {\"enableTime\":true,\"noCalendar\":true,\"dateFormat\":\"H:i\",\"time_24hr\":true}",
+        "@except_dates: {}"
+      ],
+      "sources": [
+        "world.opensemantic.base/base/Category/OSW0e084decca6f48a7b023d6b7b2c1452d.slot_jsonschema.json",
+        "world.opensemantic.base/base/Category/OSWf62d07b325124027b82fbec0a7b852df.slot_jsonschema.json"
+      ]
+    },
+    {
+      "keyword": "@reverse",
+      "position": "context",
+      "classification": "jsonld",
+      "future": "@reverse",
+      "count": 2,
+      "note": "JSON-LD @ keyword",
+      "examples": [
+        "@employees**: {\"@reverse\":\"Property:HasOrganization\",\"@type\":\"@id\"}",
+        "@_instances: {\"@reverse\":\"Property:Category\"}"
+      ],
+      "sources": [
+        "world.opensemantic.base/base/Category/OSW3cb8cef2225e403092f098f99bc4c472.slot_jsonschema.json",
+        "world.opensemantic.core/core/Category/OSW725a3cf5458f4daea86615fcbd0029f8.slot_jsonschema.json"
+      ]
+    },
+    {
+      "keyword": "desciption",
+      "position": "schema",
+      "classification": "typo",
+      "future": "description",
+      "count": 2,
+      "note": "normalize spelling",
+      "examples": [
+        "@din277_label: \"Label according to DIN 277\""
+      ],
+      "sources": [
+        "world.opensemantic.base/base/Category/OSWac9f0e49d8024804bd7d77058322a3fe.slot_jsonschema.json",
+        "world.opensemantic.base/base/Category/OSWae92be81cdb34d22844d4791ef790d93.slot_jsonschema.json"
+      ]
+    },
+    {
+      "keyword": "disable_collapse",
+      "position": "options",
+      "classification": "jedison-vendor",
+      "future": "x-jedison-options.disable_collapse",
+      "count": 2,
+      "note": "behavior",
+      "examples": [
+        "@yearly_budget_sum: true",
+        "@yearly_budget_sum_weighted: true"
+      ],
+      "sources": [
+        "world.opensemantic.base/base/Category/OSWb2d7e6a2eff94c82b7f1f2699d5b0ee3.slot_jsonschema.json"
+      ]
+    },
+    {
+      "keyword": "disable_properties",
+      "position": "options",
+      "classification": "jedison-vendor",
+      "future": "x-jedison-options.disable_properties",
+      "count": 2,
+      "note": "behavior",
+      "examples": [
+        "@yearly_budget_sum: true",
+        "@yearly_budget_sum_weighted: true"
+      ],
+      "sources": [
+        "world.opensemantic.base/base/Category/OSWb2d7e6a2eff94c82b7f1f2699d5b0ee3.slot_jsonschema.json"
+      ]
+    },
+    {
+      "keyword": "_$ref",
+      "position": "schema",
+      "classification": "commented-out",
+      "future": "$ref",
+      "count": 2,
+      "note": "disabled / commented-out in source; not an active keyword",
+      "examples": [
+        "\"/wiki/Category:OSWb79812225c7849b78e98f2b3b10498b3?action=raw&slot=jsonschema\"",
+        "@workflow_runs: \"/wiki/Category:OSWb79812225c7849b78e98f2b3b10498b3?action=raw&slot=jsonschema\""
+      ],
+      "sources": [
+        "world.opensemantic.base/base/JsonSchema/PrefectWorkflowRuns.slot_main.json",
+        "world.opensemantic.demo.lab.virtual/base/Category/OSW553f78cc66194ae1873241207b906c4b.slot_jsonschema.json"
+      ]
+    },
+    {
+      "keyword": "$example",
+      "position": "schema",
+      "classification": "typo",
+      "future": "examples",
+      "count": 2,
+      "note": "stray '$' -> standard 'examples'",
+      "examples": [
+        "@characteristics: \"\""
+      ],
+      "sources": [
+        "world.opensemantic.core/core/Category/OSWffe74f291d354037b318c422591c5023.slot_jsonschema.json",
+        "world.opensemantic.characteristics.basic/base/Category/OSWffe74f291d354037b318c422591c5023.slot_jsonschema.json"
+      ]
+    },
+    {
+      "keyword": "#range",
+      "position": "schema",
+      "classification": "typo",
+      "future": "x-oold-range",
+      "count": 2,
+      "note": "stray leading '#'",
+      "examples": [
+        "@characteristic: \"Category:Category\""
+      ],
+      "sources": [
+        "world.opensemantic.core/core/Category/OSWffe74f291d354037b318c422591c5023.slot_jsonschema.json",
+        "world.opensemantic.characteristics.basic/base/Category/OSWffe74f291d354037b318c422591c5023.slot_jsonschema.json"
+      ]
+    },
+    {
+      "keyword": "#subclassof_range",
+      "position": "schema",
+      "classification": "typo",
+      "future": "x-oold-subclassof-range",
+      "count": 2,
+      "note": "stray leading '#'",
+      "examples": [
+        "@characteristic: \"Category:Item\""
+      ],
+      "sources": [
+        "world.opensemantic.core/core/Category/OSWffe74f291d354037b318c422591c5023.slot_jsonschema.json",
+        "world.opensemantic.characteristics.basic/base/Category/OSWffe74f291d354037b318c422591c5023.slot_jsonschema.json"
+      ]
+    },
+    {
+      "keyword": "default*",
+      "position": "schema",
+      "classification": "oold-multilang",
+      "future": "x-oold-multilang-default",
+      "count": 2,
+      "note": "schema-level multilang annotation (language map)",
+      "examples": [
+        "@lang: {\"en\":\"en\",\"de\":\"de\"}"
+      ],
+      "sources": [
+        "world.opensemantic.core/core/JsonSchema/Description.slot_main.json",
+        "world.opensemantic.core/core/JsonSchema/Label.slot_main.json"
+      ]
+    },
+    {
+      "keyword": "_headerTemplate",
+      "position": "schema",
+      "classification": "commented-out",
+      "future": "headerTemplate",
+      "count": 2,
+      "note": "disabled / commented-out in source; not an active keyword",
+      "examples": [
+        "\"{{self.value}}\"",
+        "@components: \"{{self.object}}\""
+      ],
+      "sources": [
+        "world.opensemantic.core/core/JsonSchema/QuantityProperty.slot_main.json",
+        "world.opensemantic.lab/base/Category/OSW88894b63a51d46b08b5b4b05a6b1b3c3.slot_jsonschema.json"
+      ]
+    },
+    {
+      "keyword": "Title*",
+      "position": "schema",
+      "classification": "typo",
+      "future": "title*",
+      "count": 2,
+      "note": "normalize spelling",
+      "examples": [
+        "@conversion_factor_from_si: {\"de\":\"Umrechnungsfaktor\"}"
+      ],
+      "sources": [
+        "world.opensemantic.quantities/base/Category/OSW6c2aea028a8647cd97f5d7c65c09cd44.slot_jsonschema.json"
+      ]
+    },
+    {
+      "keyword": "optiones",
+      "position": "schema",
+      "classification": "typo",
+      "future": "options",
+      "count": 1,
+      "note": "normalize spelling",
+      "examples": [
+        "{\"copy_ignore\":[\"uuid\",\"label\"]}"
+      ],
+      "sources": [
+        "world.opensemantic.base/base/Category/OSW0c69914a29b74f3c9e9d9ff7a6880715.slot_jsonschema.json"
+      ]
+    },
+    {
+      "keyword": "x-oold-reverse-defaultProperties",
+      "position": "schema",
+      "classification": "oold-semantic",
+      "future": "x-oold-reverse-defaultProperties",
+      "count": 1,
+      "note": "already migrated",
+      "examples": [
+        "[\"employees\"]"
+      ],
+      "sources": [
+        "world.opensemantic.base/base/Category/OSW3cb8cef2225e403092f098f99bc4c472.slot_jsonschema.json"
+      ]
+    },
+    {
+      "keyword": "x-oold-reverse-properties",
+      "position": "schema",
+      "classification": "oold-semantic",
+      "future": "x-oold-reverse-properties",
+      "count": 1,
+      "note": "already migrated",
+      "examples": [
+        "{\"employees\":{\"type\":\"array\",\"title\":\"Employees\",\"items\":{\"type\":\"string\",\"format\":\"autocomplete\",\"title\":\"Person\",\"$comment\":\"range is Person\",\"range\":\"Category:OSW44deaa5b806d41a2a88594f562b110e9..."
+      ],
+      "sources": [
+        "world.opensemantic.base/base/Category/OSW3cb8cef2225e403092f098f99bc4c472.slot_jsonschema.json"
+      ]
+    },
+    {
+      "keyword": "_description",
+      "position": "schema",
+      "classification": "commented-out",
+      "future": "description",
+      "count": 1,
+      "note": "disabled / commented-out in source; not an active keyword",
+      "examples": [
+        "@yearly_budget_sum_weighted: \"weighted with probability of successful funding\""
+      ],
+      "sources": [
+        "world.opensemantic.base/base/Category/OSWb2d7e6a2eff94c82b7f1f2699d5b0ee3.slot_jsonschema.json"
+      ]
+    },
+    {
+      "keyword": "_description*",
+      "position": "schema",
+      "classification": "commented-out",
+      "future": "description*",
+      "count": 1,
+      "note": "disabled / commented-out in source; not an active keyword",
+      "examples": [
+        "@yearly_budget_sum_weighted: {\"de\":\"gewichtet mit Erfolgswahrscheinlichkeit\"}"
+      ],
+      "sources": [
+        "world.opensemantic.base/base/Category/OSWb2d7e6a2eff94c82b7f1f2699d5b0ee3.slot_jsonschema.json"
+      ]
+    },
+    {
+      "keyword": "_watch",
+      "position": "schema",
+      "classification": "commented-out",
+      "future": "watch",
+      "count": 1,
+      "note": "disabled / commented-out in source; not an active keyword",
+      "examples": [
+        "@value: {\"probability_of_successful_funding\":\"probability_of_successful_funding.numerical_value\",\"yearly_budget_sum_value\":\"yearly_budget.yearly_budget_sum.numerical_value\",\"yearly_budget_sum_unit_symbol\":..."
+      ],
+      "sources": [
+        "world.opensemantic.base/base/Category/OSWb2d7e6a2eff94c82b7f1f2699d5b0ee3.slot_jsonschema.json"
+      ]
+    },
+    {
+      "keyword": "disable_array_reorder",
+      "position": "options",
+      "classification": "jedison-vendor",
+      "future": "x-jedison-options.disable_array_reorder",
+      "count": 1,
+      "note": "behavior",
+      "examples": [
+        "@yearly_budget: false"
+      ],
+      "sources": [
+        "world.opensemantic.base/base/Category/OSWb2d7e6a2eff94c82b7f1f2699d5b0ee3.slot_jsonschema.json"
+      ]
+    },
+    {
+      "keyword": "defaultPropertis",
+      "position": "schema",
+      "classification": "typo",
+      "future": "defaultProperties",
+      "count": 1,
+      "note": "normalize spelling",
+      "examples": [
+        "[\"type_no\",\"manufacturer\",\"data_sheet\",\"safety_data_sheet\",\"supply\",\"specifications\"]"
+      ],
+      "sources": [
+        "world.opensemantic.base/base/Category/OSWca99a9bb9ad24386b222d18a73c2af5e.slot_jsonschema.json"
+      ]
+    },
+    {
+      "keyword": "rdf_type",
+      "position": "schema",
+      "classification": "oold-semantic",
+      "future": "x-oold-instance-rdf-type",
+      "count": 1,
+      "note": "instance rdf:type(s)",
+      "examples": [
+        "{\"title\":\"RDF type\",\"title*\":{\"de\":\"RDF-Typ\"},\"type\":\"string\",\"default\":\"schema:EventSeries\",\"options\":{\"hidden\":true}}"
+      ],
+      "sources": [
+        "world.opensemantic.base/base/Category/OSWf62d07b325124027b82fbec0a7b852df.slot_jsonschema.json"
+      ]
+    },
+    {
+      "keyword": "_autocomplete",
+      "position": "options",
+      "classification": "commented-out",
+      "future": "autocomplete",
+      "count": 1,
+      "note": "disabled / commented-out in source; not an active keyword",
+      "examples": [
+        "@status: {\"category\":\"Category:OSW9725d7a91bab4f1aa68f423e4e9bfcf4\"}"
+      ],
+      "sources": [
+        "world.opensemantic.base/base/Category/OSWe5aa96bffb1c4d95be7fbd46142ad203.slot_jsonschema.json"
+      ]
+    },
+    {
+      "keyword": "dependencies",
+      "position": "options",
+      "classification": "jedison-vendor",
+      "future": "x-jedison-options.dependencies",
+      "count": 1,
+      "note": "json-editor visibility dependency",
+      "examples": [
+        "@additional_units: {\"subproperty_of\":\"\"}"
+      ],
+      "sources": [
+        "world.opensemantic.core/core/Category/OSW1b15ddcf042c4599bd9d431cbfdf3430.slot_jsonschema.json"
+      ]
+    },
+    {
+      "keyword": "eval_template_",
+      "position": "schema",
+      "classification": "typo",
+      "future": "eval_template",
+      "count": 1,
+      "note": "normalize spelling",
+      "examples": [
+        "@additional_units: {\"type\":\"mustache-wikitext\",\"mode\":\"render\",\"value\":\"{{#units}} {{conversion_factor_to_main_unit}} {{#unit_symbols}} {{.}}, {{/unit_symbols}} {{=<% %>=}} {{#set: <%={{ }}=%> |Corresponds to={{conve..."
+      ],
+      "sources": [
+        "world.opensemantic.core/core/Category/OSW1b15ddcf042c4599bd9d431cbfdf3430.slot_jsonschema.json"
+      ]
+    },
+    {
+      "keyword": "Xeval_template",
+      "position": "schema",
+      "classification": "commented-out",
+      "future": "eval_template",
+      "count": 1,
+      "note": "disabled / commented-out in source; not an active keyword",
+      "examples": [
+        "@properties: [{\"type\":\"mustache-wikitext\",\"mode\":\"render\",\"value\":\"{{=<% %>=}} <%#properties%>* <%name%> {{#if: <%rdf_property%> |({{Viewer/Link |page=<%rdf_property%>}}) }}: {{#if: <%characteristic%> |{{Viewer..."
+      ],
+      "sources": [
+        "world.opensemantic.core/core/Category/OSWffe74f291d354037b318c422591c5023.slot_jsonschema.json"
+      ]
+    },
+    {
+      "keyword": "inputAttributes",
+      "position": "options",
+      "classification": "jedison-vendor",
+      "future": "x-jedison-options.inputAttributes",
+      "count": 1,
+      "note": "HTML input attributes",
+      "examples": [
+        "@text: {\"placeholder\":\"Title of the entry\"}"
+      ],
+      "sources": [
+        "world.opensemantic.core/core/JsonSchema/Label.slot_main.json"
+      ]
+    },
+    {
+      "keyword": "inputAttributes*",
+      "position": "options",
+      "classification": "jedison-vendor",
+      "future": "x-jedison-options.inputAttributes",
+      "count": 1,
+      "note": "multilang variant of inputAttributes*: HTML input attributes",
+      "examples": [
+        "@text: {\"de\":{\"placeholder\":\"Titel dieses Eintrags\"}}"
+      ],
+      "sources": [
+        "world.opensemantic.core/core/JsonSchema/Label.slot_main.json"
+      ]
+    },
+    {
+      "keyword": "display_required_only",
+      "position": "options",
+      "classification": "jedison-vendor",
+      "future": "x-jedison-options.display_required_only",
+      "count": 1,
+      "note": "behavior",
+      "examples": [
+        "true"
+      ],
+      "sources": [
+        "world.opensemantic.core/core/JsonSchema/Statement.slot_main.json"
+      ]
+    },
+    {
+      "keyword": "data_source_maps_DISABLED",
+      "position": "schema",
+      "classification": "commented-out",
+      "future": "data_source_maps",
+      "count": 1,
+      "note": "disabled / commented-out in source; not an active keyword",
+      "examples": [
+        "[{\"id\":\"api.battmo.open-semantic-lab.org\",\"source\":\"https://api.battmo.open-semantic-lab.org/api/run/performance-spec\",\"source_\":\"https://demo.open-semantic-lab.org/api/run/performance-spec\",\"forma..."
+      ],
+      "sources": [
+        "world.opensemantic.demo.lab.virtual/base/Category/OSW553f78cc66194ae1873241207b906c4b.slot_jsonschema.json"
+      ]
+    },
+    {
+      "keyword": "enumSource",
+      "position": "schema",
+      "classification": "canonical-reuse",
+      "future": "$data (non-standard) / data-2023 (value source only)",
+      "count": 1,
+      "note": "$data is a draft-future proposal (json-schema-spec#51), valid only in whole-array form enum:{$data}; per-item title/value templating stays x-jedison-*",
+      "examples": [
+        "@subchannels: [{\"source\":\"_channels\",\"title\":\"{{item.node_id}}\",\"value\":\"{{item.osw_id}}\"}]"
+      ],
+      "sources": [
+        "world.opensemantic.lab/base/Category/OSW89fda9fed80b41b1ad4c0c011e645600.slot_jsonschema.json"
+      ]
+    },
+    {
+      "keyword": "defaultPropertiers",
+      "position": "schema",
+      "classification": "typo",
+      "future": "defaultProperties",
+      "count": 1,
+      "note": "normalize spelling",
+      "examples": [
+        "@tester: [\"tester_instance\",\"tester_name\",\"tester_channel\"]"
+      ],
+      "sources": [
+        "world.opensemantic.lab/base/Category/OSWfa914762adaa4665a63b6a77c3ea6eed.slot_jsonschema.json"
+      ]
+    },
+    {
+      "keyword": "$coment",
+      "position": "schema",
+      "classification": "typo",
+      "future": "$comment",
+      "count": 1,
+      "note": "normalize spelling",
+      "examples": [
+        "@weight: \"to be reworked with characteristics in place\""
+      ],
+      "sources": [
+        "world.opensemantic.batteries/batteries/Category/OSWbeaf0d4e4dfd4fe29b7349751b3bccba.slot_jsonschema.json"
+      ]
+    }
+  ],
+  "formatValues": [
+    {
+      "value": "autocomplete",
+      "count": 339,
+      "classification": "ui-widget",
+      "future": "x-oold-ui-widget=\"autocomplete\" (jedison x-format)"
+    },
+    {
+      "value": "table",
+      "count": 172,
+      "classification": "ui-widget",
+      "future": "x-oold-ui-widget=\"table\" (jedison x-format)"
+    },
+    {
+      "value": "uuid",
+      "count": 67,
+      "classification": "standard-format",
+      "future": "format (unchanged)"
+    },
+    {
+      "value": "url",
+      "count": 29,
+      "classification": "normalize",
+      "future": "format=\"uri\""
+    },
+    {
+      "value": "tabs",
+      "count": 20,
+      "classification": "ui-widget",
+      "future": "x-oold-ui-widget=\"tabs\" (jedison x-format)"
+    },
+    {
+      "value": "checkbox",
+      "count": 17,
+      "classification": "ui-widget",
+      "future": "x-oold-ui-widget=\"checkbox\" (jedison x-format)"
+    },
+    {
+      "value": "date",
+      "count": 12,
+      "classification": "standard-format",
+      "future": "format (unchanged)"
+    },
+    {
+      "value": "grid-strict",
+      "count": 9,
+      "classification": "ui-widget",
+      "future": "x-oold-ui-widget=\"grid-strict\" (jedison x-format)"
+    },
+    {
+      "value": "number",
+      "count": 9,
+      "classification": "drop",
+      "future": "(drop: not a valid format - looks like a type)"
+    },
+    {
+      "value": "date-time",
+      "count": 8,
+      "classification": "standard-format",
+      "future": "format (unchanged)"
+    },
+    {
+      "value": "grid",
+      "count": 8,
+      "classification": "ui-widget",
+      "future": "x-oold-ui-widget=\"grid\" (jedison x-format)"
+    },
+    {
+      "value": "textarea",
+      "count": 7,
+      "classification": "ui-widget",
+      "future": "x-oold-ui-widget=\"textarea\" (jedison x-format)"
+    },
+    {
+      "value": "uri",
+      "count": 5,
+      "classification": "standard-format",
+      "future": "format (unchanged)"
+    },
+    {
+      "value": "datetime-local",
+      "count": 4,
+      "classification": "ui-widget",
+      "future": "x-oold-ui-widget=\"datetime-local\" (jedison x-format)"
+    },
+    {
+      "value": "dynamic_template",
+      "count": 3,
+      "classification": "osl-vendor",
+      "future": "x-osl-template"
+    },
+    {
+      "value": "text",
+      "count": 3,
+      "classification": "ui-widget",
+      "future": "x-oold-ui-widget=\"text\" (jedison x-format)"
+    },
+    {
+      "value": "email",
+      "count": 3,
+      "classification": "standard-format",
+      "future": "format (unchanged)"
+    },
+    {
+      "value": "duration",
+      "count": 2,
+      "classification": "standard-format",
+      "future": "format (unchanged)"
+    },
+    {
+      "value": "json",
+      "count": 1,
+      "classification": "ui-widget",
+      "future": "x-oold-ui-widget=\"json\" (jedison x-format)"
+    },
+    {
+      "value": "time",
+      "count": 1,
+      "classification": "standard-format",
+      "future": "format (unchanged)"
+    },
+    {
+      "value": "string",
+      "count": 1,
+      "classification": "drop",
+      "future": "(drop: not a valid format - looks like a type)"
+    },
+    {
+      "value": "array",
+      "count": 1,
+      "classification": "drop",
+      "future": "(drop: not a valid format - looks like a type)"
+    },
+    {
+      "value": "",
+      "count": 1,
+      "classification": "drop",
+      "future": "(drop: not a valid format - looks like a type)"
+    },
+    {
+      "value": "choices",
+      "count": 1,
+      "classification": "ui-widget",
+      "future": "x-oold-ui-widget=\"choices\" (jedison x-format)"
+    },
+    {
+      "value": "iri",
+      "count": 1,
+      "classification": "standard-format",
+      "future": "format (unchanged)"
+    }
+  ],
+  "unclassified": [],
+  "typos": [
+    "flatpicker -> x-jedison-flatpickr",
+    "titel* -> title*",
+    "example -> examples",
+    "desciption -> description",
+    "$example -> examples",
+    "#range -> x-oold-range",
+    "#subclassof_range -> x-oold-subclassof-range",
+    "Title* -> title*",
+    "optiones -> options",
+    "defaultPropertis -> defaultProperties",
+    "eval_template_ -> eval_template",
+    "defaultPropertiers -> defaultProperties",
+    "$coment -> $comment"
+  ]
+}
