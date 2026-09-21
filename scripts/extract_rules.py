@@ -86,12 +86,18 @@ CLEAN = [
 ]
 
 
-def spec_version() -> str:
-    """The release a *newly minted* rule belongs to: the most recent tag.
+#: `since` for a rule the catalogue has not seen before. A newly minted rule belongs to the
+#: release that has not been cut yet, and its number is not knowable here: the most recent tag
+#: names the *previous* release, so stamping that dated every rule one release too early.
+#: `scripts/promote_since.py` resolves this to the real number when a release is tagged.
+UNRELEASED = "unreleased"
 
-    Same source as the ReSpec subtitle (`render_spec.py:_git_version`), so `since` records a real
-    release rather than a hand-maintained constant. This value applies only to ids the catalogue
-    has not seen before; see :func:`recorded_since`.
+
+def spec_version() -> str:
+    """The release this working tree descends from: the most recent tag.
+
+    Records which released specification the catalogue was generated against. It is not the
+    `since` of a new rule, which belongs to the release not yet cut; see :const:`UNRELEASED`.
     """
     try:
         out = subprocess.check_output(  # noqa: S603,S607 - fixed argv, repo-local
@@ -111,7 +117,7 @@ def recorded_since() -> dict[str, str]:
     any run made after a new tag, silently turning a historical record into "whenever the
     generator last ran". Carrying the existing value forward is what makes it a record at all.
 
-    A rule absent here is genuinely new and takes :func:`spec_version`. If the catalogue is
+    A rule absent here is genuinely new and takes :const:`UNRELEASED`. If the catalogue is
     missing or unreadable every rule looks new, which the CI drift check catches as a whole-file
     diff rather than letting it pass quietly.
     """
@@ -483,7 +489,7 @@ def extract_file(filename: str, problems: list[str], notes: list[str]) -> list[d
                 "machine_checkable": machine_checkable,
                 # Authored value wins; otherwise keep what the catalogue already recorded, and
                 # only fall back to the current tag for an id nobody has seen before.
-                "since": attrs.get("since") or SINCE.get(rule_id, VERSION),
+                "since": attrs.get("since") or SINCE.get(rule_id, UNRELEASED),
                 "deprecated": attrs.get("deprecated", "no").lower() in ("yes", "true", "1"),
                 "source": where,
             }
