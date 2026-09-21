@@ -727,7 +727,7 @@ different parent properties. The mapping is attached to the parent property's te
 <aside class="example" title="Distinguishing document URL, ontology correspondence, and instance type"><pre><code class="language-json">{
   &quot;$id&quot;: &quot;https://example.org/my-package/1.0.0/Person.schema.json&quot;,
   &quot;x-oold-sssom&quot;: {
-    &quot;https://schema.org/Person&quot;: { &quot;predicate_id&quot;: &quot;skos:exactMatch&quot; }
+    &quot;http://schema.org/Person&quot;: { &quot;predicate_id&quot;: &quot;skos:exactMatch&quot; }
   },
   &quot;x-oold-instance-rdf-type&quot;: [&quot;schema:Person&quot;],
   &quot;title&quot;: &quot;Person&quot;
@@ -1391,7 +1391,7 @@ properties:
   &quot;@context&quot;: [
     {
       &quot;@version&quot;: 1.1,
-      &quot;schema&quot;: &quot;https://schema.org/&quot;,
+      &quot;schema&quot;: &quot;http://schema.org/&quot;,
       &quot;name&quot;: &quot;schema:name&quot;,
       &quot;role&quot;: &quot;schema:jobTitle&quot;,
       &quot;homepage&quot;: { &quot;@id&quot;: &quot;schema:url&quot;, &quot;@type&quot;: &quot;@id&quot; },
@@ -1453,7 +1453,7 @@ properties:
 $id: UiAnnotations.schema.json
 '@context':
 - '@version': 1.1
-  schema: https://schema.org/
+  schema: http://schema.org/
   name: schema:name
   role: schema:jobTitle
   homepage:
