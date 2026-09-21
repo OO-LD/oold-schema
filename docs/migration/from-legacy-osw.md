@@ -68,7 +68,7 @@ table, not in this one schema.
 ```json
 {
   "@context": {
-    "schema": "https://schema.org/",
+    "schema": "http://schema.org/",
     "skos": "https://www.w3.org/TR/skos-reference/",
     "Property": { "@id": "wiki:Property-3A", "@prefix": true },
     "description": { "@id": "skos:definition" }
@@ -124,7 +124,7 @@ table, not in this one schema.
 {
   "$schema": "https://oo-ld.org/latest/meta/oold-meta-schema.json",
   "@context": {
-    "schema": "https://schema.org/",
+    "schema": "http://schema.org/",
     "skos": "https://www.w3.org/TR/skos-reference/",
     "Property": { "@id": "wiki:Property-3A", "@prefix": true },
     "description": { "@id": "skos:definition" }

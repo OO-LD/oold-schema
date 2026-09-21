@@ -82,6 +82,8 @@ This inverts if schema.org changes `jsonldcontext.json` to `https`. At that poin
 
 Downstream schema collections differ: [`oold-reference-schemas`](https://github.com/OO-LD/oold-reference-schemas) carries the `https` form as an `x-oold-context` synonym, because third-party data is written against those schemas. The examples here are illustrative, so a synonym on every term would be noise.
 
+One carve-out: a page under `docs/mappings/` shows an external format beside its OO-LD equivalent, and the two are only equivalent if they name the same predicates. Those pages follow the format they map, so `croissant.md` and `treeldr.md` bind `https://schema.org/` on both sides. Changing one side alone would make the page assert a correspondence that does not hold.
+
 ## Style
 
 - Write "JSON Schema" and "JSON-LD". Never "JSON-SCHEMA" or "JSON-Schema".
