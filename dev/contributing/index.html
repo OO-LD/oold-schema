@@ -960,6 +960,7 @@
 <p>A consuming library disagreeing is handled at its boundary rather than by changing the corpus. rdflib binds <code>SDO</code> to <code>https://schema.org/</code> with no <code>http</code> variant, a choice its author described in <a href="https://github.com/RDFLib/rdflib/issues/1120">RDFLib/rdflib#1120</a> as "a flip of the coin".</p>
 <p>This inverts if schema.org changes <code>jsonldcontext.json</code> to <code>https</code>. At that point <code>http</code> becomes the legacy form and the corpus migrates in one sweep, coordinated with RO-Crate rather than ahead of it.</p>
 <p>Downstream schema collections differ: <a href="https://github.com/OO-LD/oold-reference-schemas"><code>oold-reference-schemas</code></a> carries the <code>https</code> form as an <code>x-oold-context</code> synonym, because third-party data is written against those schemas. The examples here are illustrative, so a synonym on every term would be noise.</p>
+<p>One carve-out: a page under <code>docs/mappings/</code> shows an external format beside its OO-LD equivalent, and the two are only equivalent if they name the same predicates. Those pages follow the format they map, so <code>croissant.md</code> and <code>treeldr.md</code> bind <code>https://schema.org/</code> on both sides. Changing one side alone would make the page assert a correspondence that does not hold.</p>
 <h2 id="style">Style<a class="headerlink" href="#style" title="Permanent link">&para;</a></h2>
 <ul>
 <li>Write "JSON Schema" and "JSON-LD". Never "JSON-SCHEMA" or "JSON-Schema".</li>
