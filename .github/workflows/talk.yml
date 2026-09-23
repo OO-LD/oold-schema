@@ -1,0 +1,124 @@
+# The conference talk deck and its generic core.
+#
+# Two cuts out of one timeline: `Talk` carries the MSE 2026 framing, `TalkCore`
+# is the same segments with nothing naming a conference. Two modes out of the
+# same slides: presentation drops the explanatory line a speaker says out loud,
+# explain shows it because the website version has no speaker.
+#
+# Nothing rendered enters the git tree. Cuts go to one reusable, unversioned
+# release, the same contract as the explainer and the tutorial series.
+name: talk
+
+# Any change under media/ triggers this: the render kit is shared, so a change
+# there reaches the deck even when no talk file was touched, and a review
+# showing no changed beat is the evidence that it did not.
+on:
+  pull_request:
+    paths:
+      - "media/**"
+      - "examples/Minimal.schema.json"
+      - ".github/workflows/talk.yml"
+      - ".github/workflows/media-review.yml"
+  push:
+    branches: [main]
+    paths:
+      - "media/talk/**"
+      - "examples/Minimal.schema.json"
+      - ".github/workflows/talk.yml"
+  workflow_dispatch:
+
+concurrency:
+  group: talk-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+defaults:
+  run:
+    working-directory: media/talk
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: media/talk/package-lock.json
+
+      - run: npm ci
+
+      # The on-screen JSON against examples/, the palette and mode resolution,
+      # the frame budget against the talk slot, and the types.
+      - run: npm run check
+
+  # Renders the affected beats at this pull request and at its merge base and
+  # comments the ones that differ. Four units, because a beat can be right in
+  # one palette and one mode and wrong in another.
+  review:
+    if: github.event_name == 'pull_request'
+    uses: ./.github/workflows/media-review.yml
+    with:
+      project: talk
+    permissions:
+      contents: write
+      pull-requests: write
+
+  # Four of the eight possible combinations, chosen by who asks for them: the
+  # speaker plays the conference cut in presentation mode, and the website plays
+  # the core cut in explain mode. The other four are renderable locally and not
+  # worth an hour of CI nobody is waiting for.
+  #
+  # The per-segment files are published alongside, because advancing segments by
+  # hand is what the segment compositions exist for and a speaker should not have
+  # to render them to get them.
+  publish:
+    if: github.event_name != 'pull_request'
+    needs: check
+    runs-on: ubuntu-latest
+    timeout-minutes: 300
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: media/talk/package-lock.json
+
+      - run: npm ci
+
+      - name: Cache Playwright browsers
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ hashFiles('media/talk/package-lock.json') }}
+
+      - run: npx playwright install --with-deps chromium
+
+      - name: Render the conference cut
+        run: node scripts/render.mjs mse --mode presentation
+
+      - name: Render the core cut
+        run: node scripts/render.mjs core --mode explain
+
+      - name: Publish the cuts and the segment files
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release view talk-latest >/dev/null 2>&1 || \
+            gh release create talk-latest --prerelease \
+              --title "Talk (latest)" \
+              --notes "Current cuts of the OO-LD talk. oold-talk-mse-* carries the MSE 2026 framing; oold-talk-core-* is the same core with nothing naming a conference. The -segments zips hold one file per segment, for advancing by hand. Rebuilt whenever media/talk changes; not versioned."
+          for f in out/oold-talk-*.mp4; do
+            gh release upload talk-latest "$f" --clobber
+          done
+          for d in out/segments/*/; do
+            name=$(basename "$d")
+            (cd "$d" && zip -qr "$GITHUB_WORKSPACE/media/talk/out/$name-segments.zip" . -x concat.txt)
+            gh release upload talk-latest "out/$name-segments.zip" --clobber
+          done

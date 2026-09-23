@@ -1,0 +1,168 @@
+{
+  "fps": 30,
+  "budgetFrames": 21600,
+  "segments": [
+    {
+      "id": "M0",
+      "scope": "mse",
+      "tier": "none",
+      "title": "Title card",
+      "beats": [{ "name": "title", "len": 420 }]
+    },
+    {
+      "id": "C0",
+      "scope": "core",
+      "tier": "none",
+      "title": "How to read these slides",
+      "beats": [
+        { "name": "marks", "len": 420 },
+        { "name": "both", "len": 260 }
+      ]
+    },
+    {
+      "id": "C1",
+      "scope": "core",
+      "tier": "argue",
+      "title": "The barrier",
+      "beats": [
+        { "name": "paradox", "len": 480 },
+        { "name": "cost", "len": 480 },
+        { "name": "punch", "len": 420 }
+      ]
+    },
+    {
+      "id": "C2",
+      "scope": "core",
+      "tier": "argue",
+      "title": "What the researcher meets",
+      "beats": [
+        { "name": "form", "len": 540 },
+        { "name": "inputs", "len": 480 },
+        { "name": "punch", "len": 420 }
+      ]
+    },
+    {
+      "id": "C3",
+      "scope": "core",
+      "tier": "built",
+      "title": "What a machine needs",
+      "beats": [
+        { "name": "panels", "len": 560 },
+        { "name": "neither", "len": 460 },
+        { "name": "drift", "len": 480 }
+      ]
+    },
+    {
+      "id": "C4",
+      "scope": "core",
+      "tier": "built",
+      "title": "One document, both at once",
+      "beats": [
+        { "name": "code", "len": 800 },
+        { "name": "wash", "len": 700 },
+        { "name": "punch", "len": 480 }
+      ]
+    },
+    {
+      "id": "C5",
+      "scope": "core",
+      "tier": "built",
+      "title": "Why a language model cares",
+      "beats": [
+        { "name": "contract", "len": 480 },
+        { "name": "pipe", "len": 660 },
+        { "name": "roundtrip", "len": 600 },
+        { "name": "nolib", "len": 360 }
+      ]
+    },
+    {
+      "id": "C6",
+      "scope": "core",
+      "tier": "underway",
+      "title": "Being built on it",
+      "beats": [
+        { "name": "projects", "len": 760 },
+        { "name": "wording", "len": 520 },
+        { "name": "arc", "len": 500, "tier": "none" }
+      ]
+    },
+    {
+      "id": "C7",
+      "scope": "core",
+      "tier": "argue",
+      "title": "The inversion",
+      "beats": [
+        { "name": "lanes", "len": 700 },
+        { "name": "flip", "len": 580 },
+        { "name": "punch", "len": 520 }
+      ]
+    },
+    {
+      "id": "C8",
+      "scope": "core",
+      "tier": "argue",
+      "title": "When the system is not sure",
+      "beats": [
+        { "name": "cards", "len": 700 },
+        { "name": "written", "len": 540, "tier": "built" },
+        { "name": "punch", "len": 500 }
+      ]
+    },
+    {
+      "id": "C9",
+      "scope": "core",
+      "tier": "argue",
+      "title": "The form does not go away",
+      "beats": [
+        { "name": "doors", "len": 560, "tier": "built" },
+        { "name": "same", "len": 440 },
+        { "name": "punch", "len": 380 }
+      ]
+    },
+    {
+      "id": "C10",
+      "scope": "core",
+      "tier": "argue",
+      "title": "Why this compounds",
+      "beats": [
+        { "name": "loop", "len": 740 },
+        { "name": "punch", "len": 520 }
+      ]
+    },
+    {
+      "id": "C11",
+      "scope": "core",
+      "tier": "built",
+      "title": "What exists today",
+      "beats": [
+        { "name": "facts", "len": 780 },
+        { "name": "funding", "len": 520 },
+        { "name": "check", "len": 500 }
+      ]
+    },
+    {
+      "id": "M1",
+      "scope": "mse",
+      "tier": "none",
+      "title": "Outlook",
+      "beats": [{ "name": "outlook", "len": 560 }]
+    },
+    {
+      "id": "C12",
+      "scope": "core",
+      "tier": "none",
+      "title": "Close",
+      "beats": [
+        { "name": "mark", "len": 460 },
+        { "name": "licence", "len": 320 }
+      ]
+    },
+    {
+      "id": "M2",
+      "scope": "mse",
+      "tier": "none",
+      "title": "Acknowledgement",
+      "beats": [{ "name": "thanks", "len": 660 }]
+    }
+  ]
+}

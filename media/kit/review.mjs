@@ -27,7 +27,13 @@ const THEMES = ['light', 'dark'];
 const OWNERS = {
   explainer: [/^media\/explainer\//, /^media\/kit\//, /^examples\/Minimal\.schema\.json$/],
   tutorials: [/^media\/tutorials\//, /^media\/kit\//],
+  talk: [/^media\/talk\//, /^media\/kit\//, /^examples\/Minimal\.schema\.json$/],
 };
+
+// The talk carries a second input prop beside the palette: presentation mode
+// drops the explanatory line the website cut shows. A beat can be right in one
+// and wrong in the other, so both are units of review rather than one.
+const TALK_MODES = ['presentation', 'explain'];
 
 // Within the tutorial series, shared sources reach every episode; an episode
 // directory reaches only itself.
@@ -55,6 +61,7 @@ function plan(project, changed) {
   if (!touches(OWNERS[project])) return [];
 
   if (project === 'explainer') return [...THEMES];
+  if (project === 'talk') return TALK_MODES.flatMap((m) => THEMES.map((t) => `${m}-${t}`));
 
   const wide = touches(TUTORIALS_WIDE);
   const episodes = wide
@@ -64,8 +71,11 @@ function plan(project, changed) {
 }
 
 const parseUnit = (name) => {
-  const m = /^(ep\d+)-(\w+)$/.exec(name);
-  return m ? { episode: m[1], theme: m[2] } : { theme: name };
+  const ep = /^(ep\d+)-(\w+)$/.exec(name);
+  if (ep) return { episode: ep[1], theme: ep[2] };
+  const talk = /^(presentation|explain)-(\w+)$/.exec(name);
+  if (talk) return { mode: talk[1], theme: talk[2] };
+  return { theme: name };
 };
 
 // Renders through each project's own script, so the project stays the single
@@ -80,6 +90,13 @@ function render(project, root, name, outDir) {
     execFileSync(process.execPath, ['scripts/stills.mjs', '--theme', unit.theme],
       { cwd: root, stdio: 'inherit' });
     produced = path.join(root, 'out/stills');
+  } else if (project === 'talk') {
+    execFileSync(
+      process.execPath,
+      ['scripts/stills.mjs', '--theme', unit.theme, '--mode', unit.mode],
+      { cwd: root, stdio: 'inherit' },
+    );
+    produced = path.join(root, `out/stills-${unit.mode}-${unit.theme}`);
   } else {
     execFileSync(
       process.execPath,

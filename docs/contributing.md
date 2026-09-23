@@ -13,7 +13,7 @@
 | rendered specification | `docs/spec/index.html` | `make spec` |
 | rule catalogue | `meta/oold-rules.json`, `docs/rules.md` | `make spec` |
 | schemas at their published paths | `docs/meta/`, `docs/schemas/` | `make stage-schemas`, not committed |
-| explainer and tutorial media | release assets | CI, never committed |
+| explainer, tutorial and talk media | release assets | CI, never committed |
 
 Run `make spec` after touching the specification, and `make check` before opening a pull request. `make check` is what CI runs.
 
@@ -66,7 +66,7 @@ Only `unreleased` entries change. Every other `since` records a release that has
 
 ## Media
 
-`media/explainer` and `media/tutorials` are rendered from source by CI and published as release assets. Nothing rendered is committed.
+`media/explainer`, `media/tutorials` and `media/talk` are rendered from source by CI and published as release assets. Nothing rendered is committed.
 
 A pull request touching anything under `media/` gets the affected beats rendered at the pull request and at its merge base, and the beats whose pixels differ are posted as a comment. The palette arrives as an input prop, so a module-scope capture such as `const ink = colors.graph` freezes the light colours and the dark cut renders half light with no error anywhere. `scripts/check-theme.mjs` guards that.
 

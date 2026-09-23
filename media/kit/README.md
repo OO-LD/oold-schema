@@ -6,6 +6,7 @@ Shared rendiv mechanics for the OO-LD video projects.
 |---|---|
 | Explainer | `media/explainer` |
 | Tutorial series | `media/tutorials` |
+| Conference talk | `media/talk` |
 | Prototype Fund pitch deck | `second-stage/pitch` in the private `OO-LD/project-management` repository |
 
 The pitch deck already pins this repository for the design system (`design-pin.json` plus `scripts/sync-design.mjs`) and pulls `media/kit` through the same pin, so there is one copy of these mechanics rather than three.
@@ -22,7 +23,9 @@ What to render stays with each project. A beat list, an episode table and a slid
 
 It only works when segments hard-cut. A cross-dissolve composites the outgoing scene under the incoming one; a segment rendered on its own has nothing underneath, so the incoming fade resolves against a transparent canvas and encodes as black. The output then has a black flash at every boundary and no dissolve anywhere, while both the render and the concat report success.
 
-`renderSegmented` therefore refuses an overlap other than 0, and `assertNoBlackFrames` checks the stitched file for the failure it is built to avoid. Projects that cross-fade render the whole timeline in one pass: the explainer and the tutorial episodes both do.
+`renderSegmented` therefore refuses an overlap other than 0, and `assertNoBlackFrames` checks the stitched file for the failure it is built to avoid. Projects that cross-fade render the whole timeline in one pass: the explainer and the tutorial episodes both do. The talk hard-cuts on purpose, because a speaker advances its segments by hand, so it is the one consumer that uses this path.
+
+`assertNoBlackFrames` cannot be run on a dark cut. The dark background measures YAVG 35.2 in the encoded file, under the 37.9 that blackdetect's default `pix_th=0.10` resolves to in limited range, so a sparse dark slide is over 90 percent "black" pixels and reports a hit at every segment start. The failure it guards is a fade composited against nothing, which is a property of the cut and not of the palette, so checking the light cut of the same timeline answers the question for both.
 
 ## Windows entry paths
 
