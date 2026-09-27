@@ -22,13 +22,22 @@ A new rule is written with a `?` in place of the suffix and minted before it is 
 | `applies` | `document` (decidable by validating a schema/instance), `implementation` (constrains a library; needs a conformance suite), or `advisory`. Default `document` |
 | `summary` | One short line for a CLI. Optional; the opening sentence is used when absent |
 | `machine_checkable` | Override the default, which is true only for `document` rules. See below |
-| `since` | Override the release; defaults to the current tag |
+| `since` | Override the release. A rule the committed catalog has not seen defaults to `unreleased`, resolved at tag time by `scripts/promote_since.py`; a rule it has seen keeps the value already recorded |
 | `deprecated` | `yes` to retire a rule. Its record stays in the catalog |
 | `superseded_by` | Comma-separated ids that replace a deprecated rule |
 | `in_note` | `yes` to allow a rule inside a `:::note`/`:::example`. See below |
 
-`level` (MUST / SHOULD / ...), `text` and `context` are extracted from the prose, never authored,
-so the catalog cannot drift from the specification.
+| `level` | `MUST`, `MUST NOT`, `SHOULD`, `SHOULD NOT`, `REQUIRED`, `RECOMMENDED`, `NOT RECOMMENDED`. Authored, and authored on every rule today |
+
+`text` and `context` are extracted from the prose, never authored, so neither can drift from the
+specification.
+
+`level` is different, and the difference has bitten: it is authored, and the guard only checks that
+the keyword appears somewhere in the surrounding **paragraph**, not in the marked sentence. A
+paragraph holding several rules legitimately contains several keywords, so `level=MUST` on a
+sentence that says only `MUST NOT` passes and the catalog files a prohibition as a requirement.
+`MUST` is also a substring of `MUST NOT`. When authoring a level, read it off the sentence the
+marker sits on and nothing else.
 
 ### When a document rule is not machine-checkable
 

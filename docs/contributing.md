@@ -53,10 +53,20 @@ A rule is authored before the release that carries it exists, so `extract_rules.
 ```bash
 uv run scripts/promote_since.py 1.0.0-rc.4   # unreleased -> the version being cut
 make spec                                     # docs/rules.md picks up the resolved value
-git commit && git tag v1.0.0-rc.4
+make check                                    # everything, before anything is tagged
+git commit -m "chore(release): v1.0.0-rc.4"
+git tag v1.0.0-rc.4
+
+make spec                                     # re-render: the version comes from the tag
+git commit --amend --no-edit                  # fold the re-render into the release commit
+git tag -f v1.0.0-rc.4                        # move the tag onto it
 ```
 
-Only `unreleased` entries change. Every other `since` records a release that has already shipped, and rewriting one turns the field into "whenever the generator last ran".
+The release is rendered twice, and the second pass is not optional. `spec_version` in the catalogue and the ReSpec subtitle both come from `git describe --tags --abbrev=0 --match "v*"`, which reports the *previous* tag until the new one exists. Render once and the commit you tag claims the version before it; the tag build then re-renders, finds the committed artefacts stale, and fails the drift guard before `deploy` runs, so nothing publishes.
+
+Only `unreleased` entries change. Every other `since` records a release that has already shipped, and rewriting one turns the field into "whenever the generator last ran". A release that adds no new rules promotes nothing, and `promote_since.py` says so and exits 0.
+
+Check `git config user.email` before the release commit: it becomes permanent in the tagged history.
 
 `OOLD_VERSION` in the `Makefile` pins the validator `make validate` runs. Bump it when a release of the reference implementation adds a check the specification now requires, or CI gates a release with a validator that predates its own rules.
 

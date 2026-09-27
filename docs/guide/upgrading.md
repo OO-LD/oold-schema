@@ -18,11 +18,11 @@ The requirement is presence, not content. An empty object satisfies it, as does 
 
 Why it is a `MUST` rather than a recommendation: without a root `@context`, [JSON-LD 1.1 Context Processing](https://www.w3.org/TR/json-ld11-api/) aborts with `invalid remote context` when something references the schema. The schema validated, and then failed inside a consumer's processor, far from the document that caused it.
 
-**To upgrade:** add `"@context": {}` to any schema document that lacks one. Seventeen fixtures in this repository needed exactly that.
+**To upgrade:** add `"@context": {}` to any schema document that lacks one. Twenty-eight fixtures in this repository needed exactly that.
 
 ## `x-oold-reverse-default-properties` is gone
 
-Removed from the vocabulary. A schema still carrying it is rejected by the meta-schema, which does not define it.
+Removed from the vocabulary. Nothing rejects it: the meta-schema does not close the schema object, so a schema still carrying the keyword validates cleanly and the keyword does nothing. Remove it by hand, and do not expect a tool to find it for you.
 
 ## A bare IRI reference needs `@type: "@id"` on its term
 
@@ -40,7 +40,11 @@ Without the coercion the value expands as a literal, not a node reference, and t
 
 ## Seven statements became normative
 
-rc.3 promoted requirements that had been stated in the indicative mood, so they bound nobody and the rule catalogue could not see them. A tool that conformed to rc.3 prose may not conform now, without any prose having changed meaning: `OOLD-EXT-eeda`, `OOLD-EXT-44bd`, `OOLD-VER-9846`, `OOLD-EXT-c77a`, `OOLD-INS-770a`, `OOLD-SCH-cfb8`, and a strengthened `OOLD-EXT-68fa`.
+rc.4 promoted requirements that had been stated in the indicative mood, so they bound nobody and the rule catalogue could not see them. A tool that conformed to rc.3 prose may not conform now, without any prose having changed meaning: `OOLD-EXT-eeda`, `OOLD-EXT-44bd`, `OOLD-VER-9846`, `OOLD-EXT-c77a`, `OOLD-INS-770a` and `OOLD-SCH-cfb8`.
+
+## Schema resolution has a defined order
+
+`OOLD-INS-78df`. A tool determines an instance's schema from `$schema`, then the URL under `@context`, then an inline `@type`, taking the first that applies. The order was always described; it carried no identifier, so nothing held a tool to it. A tool that resolved in a different order is non-conforming now.
 
 ## Frame derivation is specified
 
@@ -58,4 +62,4 @@ A nested malformed `x-oold-*` keyword that slipped past a validator without `$dy
 uvx --from "oold[validation]" oold validate path/to/schemas
 ```
 
-The released library tracks the specification, so this reports against the rules above rather than an older set.
+The released library tracks the specification, so this reports against the current rules rather than an older set. It will not catch everything on this page: of the breaks above, only the root `@context` requirement and the `x-oold-range` forms have a check behind them. `OOLD-INS-770a`, `OOLD-EXT-3ea9` and the removed keyword are not enforced by any implementation yet, so those are a reading exercise.
