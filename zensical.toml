@@ -54,6 +54,7 @@ nav = [
     { "Use Cases" = "use-cases.md" },
     { "Rule Catalogue" = "rules.md" },
     { "Specification" = "spec/" },
+    { "Upgrading" = "upgrading.md" },
     { "Contributing" = "contributing.md" },
 ]
 
