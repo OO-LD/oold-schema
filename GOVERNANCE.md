@@ -27,7 +27,7 @@ A change to normative text goes through a pull request. Editorial changes, examp
 
 Semantic versioning. Within 1.x a release may add requirements, tighten ambiguous prose and correct defects; it does not remove an identifier or change what an existing one means. A change that would do either belongs in a new major version.
 
-The procedure is in [docs/contributing.md](docs/contributing.md). Release notes state what breaks, and a release that breaks something carries an entry in [docs/upgrading.md](docs/upgrading.md).
+The procedure is in [docs/contributing.md](docs/contributing.md). Release notes state what breaks, and a release that breaks something carries an entry in [docs/guide/upgrading.md](docs/guide/upgrading.md).
 
 ## Conformance
 
