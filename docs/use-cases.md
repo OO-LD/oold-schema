@@ -4,7 +4,7 @@ Because an OO-LD schema is a plain JSON Schema carrying a JSON-LD context, it ca
 
 ## Code Generation
 
-In general, we want to keep keywords in 'instance' JSON-documents (=> property names in schemas) strict `^[A-z_]+ [A-z0-9_]*$` to avoid escaping or replacing when mapping to other languages. This works well with [aliasing](https://www.w3.org/TR/json-ld11/#aliasing-keywords), e.g.
+Property names in schemas, and therefore keys in instance documents, are best kept to `^[A-Za-z_][A-Za-z0-9_]*$` so that they need no escaping or renaming when mapped to another language. This works well with [aliasing](https://www.w3.org/TR/json-ld11/#aliasing-keywords), e.g.
 
 ```json
 {
@@ -33,7 +33,7 @@ In general, we want to keep keywords in 'instance' JSON-documents (=> property n
 
 ### Python
 
-The Person schema above translates smoothly to python (pydantic) via <https://github.com/koxudaxi/datamodel-code-generator>:
+The Person schema above translates smoothly to Python (pydantic) via <https://github.com/koxudaxi/datamodel-code-generator>:
 
 ```py
 class Person(BaseModel):
@@ -53,11 +53,11 @@ class Person(BaseModel):
     """First and Last name"""
 ```
 
-what would not be the case if we use `@type` or `schema:name` as property names (See also [python playground](https://oo-ld.github.io/playground-python-yaml/)). From pydantic it's also straight forward to (re)generate OO-LD and  [OpenAPI-Schemas](https://docs.pydantic.dev/latest/concepts/json_schema/), especially via [FastAPI](https://fastapi.tiangolo.com/features/).
+which would not hold if `@type` or `schema:name` were used as property names directly (see also the [Python playground](https://oo-ld.github.io/playground-python-yaml/)). From pydantic it is equally straightforward to regenerate OO-LD and [OpenAPI schemas](https://docs.pydantic.dev/latest/concepts/json_schema/), especially via [FastAPI](https://fastapi.tiangolo.com/features/).
 
 ## Workflows and Code Analysis
 
-A common ground for workflow definitions are decorated dataclass-typed functions that are managed by a workflow-environment like [prefect](https://github.com/PrefectHQ/prefect).
+Workflow definitions commonly take the form of decorated, dataclass-typed functions managed by a workflow environment such as [Prefect](https://github.com/PrefectHQ/prefect).
 
 ```py
 @flow
@@ -66,13 +66,13 @@ def my_node(param: MyInputClass) -> MyOutputClass:
   return MyOutputClass(...)
 ```
 
-If these dataclasses are following OO-LD annotations as described above the semantics of the workflow (node) is inherently contained.
+Where those dataclasses carry OO-LD annotations as described above, the semantics of the workflow node travel with them.
 
-In this regard, OO-LD can be combined with standard code compiler/interpreter tooling, especially [Abstract Syntax Trees](https://en.wikipedia.org/wiki/Abstract_syntax_tree) and tracing provide a semantic description of software-defined workflows. More information see [AWL](https://github.com/OO-LD/awl-schema)
+OO-LD combines with standard compiler and interpreter tooling here: [abstract syntax trees](https://en.wikipedia.org/wiki/Abstract_syntax_tree) and tracing together yield a semantic description of a software-defined workflow. See [AWL](https://github.com/OO-LD/awl-schema).
 
 ## Integration with Large Language Models
 
-Recent support of Large Language Models (LLMs) for [structured output](https://python.langchain.com/docs/how_to/structured_output/) is based on JSON Schema. This allows the direct application of OO-LD schemas with LLMs in order to generate, complete or validate structured data. Example use cases see [osw-chatbot](https://github.com/opensemanticworld/osw-chatbot/)
+Recent support of Large Language Models (LLMs) for [structured output](https://python.langchain.com/docs/how_to/structured_output/) is based on JSON Schema. This allows the direct application of OO-LD schemas with LLMs in order to generate, complete or validate structured data. For worked use cases see [osw-chatbot](https://github.com/opensemanticworld/osw-chatbot/).
 
 ## Delivery to OpenAPI, MCP and LLM tooling
 

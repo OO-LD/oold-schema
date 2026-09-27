@@ -32,3 +32,7 @@ open-semantic-lab\.org/api/
 # resolves once this page is deployed; on the branch that introduces it the
 # path does not exist on the live site yet.
 ^https://oo-ld\.org/latest/contributing/?$
+
+# The status section links the rule catalogue, which sits beside the rendered
+# spec on the site but not beside spec/sections/ in the tree.
+/spec/rules/?$

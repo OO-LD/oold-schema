@@ -1173,11 +1173,11 @@ See [this rule in the specification](spec/#OOLD-EXT-4966) (section: synonyms).
 
 A schema should declare the OO-LD dialect meta-schema as its $schema.
 
-An OO-LD schema SHOULD declare the OO-LD dialect meta-schema (which extends 2020-12) as its `$schema`, e.g. `"$schema": "https://oo-ld.org/latest/meta/oold-meta-schema.json"` - pinning a specific version (e.g. `.../0.4.0/meta/oold-meta-schema.json`) for reproducibility.
+An OO-LD schema SHOULD declare the OO-LD dialect meta-schema (which extends 2020-12) as its `$schema`, e.g. `"$schema": "https://oo-ld.org/latest/meta/oold-meta-schema.json"` - pinning a specific version (e.g. `.../1.0.0/meta/oold-meta-schema.json`) for reproducibility.
 
 ??? quote "In context"
 
-    OO-LD targets JSONSCHEMA (2020-12) as its normative dialect. An OO-LD schema SHOULD declare the OO-LD dialect meta-schema (which extends 2020-12) as its `$schema`, e.g. `"$schema": "https://oo-ld.org/latest/meta/oold-meta-schema.json"` - pinning a specific version (e.g. `.../0.4.0/meta/oold-meta-schema.json`) for reproducibility. Declaring the plain 2020-12 meta-schema (`https://json-schema.org/draft/2020-12/schema`) remains valid for tools that only understand standard JSON Schema.
+    OO-LD targets JSONSCHEMA (2020-12) as its normative dialect. An OO-LD schema SHOULD declare the OO-LD dialect meta-schema (which extends 2020-12) as its `$schema`, e.g. `"$schema": "https://oo-ld.org/latest/meta/oold-meta-schema.json"` - pinning a specific version (e.g. `.../1.0.0/meta/oold-meta-schema.json`) for reproducibility. Declaring the plain 2020-12 meta-schema (`https://json-schema.org/draft/2020-12/schema`) remains valid for tools that only understand standard JSON Schema.
 
 See [this rule in the specification](spec/#OOLD-EXT-5184) (section: jsonschema-extensions).
 
