@@ -87,6 +87,19 @@ Questions, ideas and design discussion are welcome - for now all in the issue tr
 
 We'll consider GitHub Discussions or a chat once demand grows.
 
+## Funding
+
+The **generic, domain-independent** OO-LD framework - the specification and its reference
+implementation - is funded by the German **Federal Ministry of Research, Technology and
+Space (BMFTR)** through the **[Prototype Fund](https://prototypefund.de)** (funding code /
+Förderkennzeichen **16IS26S16**).
+
+<p>
+  <img src="docs/assets/bmftr-funded-by-en.png" alt="With funding from the Federal Ministry of Research, Technology and Space (BMFTR)" height="90">
+  &nbsp;&nbsp;&nbsp;
+  <img src="docs/assets/prototype-fund-en.png" alt="Supported by the Prototype Fund" height="90">
+</p>
+
 ## License
 
 Released under [CC0 1.0 Universal](LICENSE).
