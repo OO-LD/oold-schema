@@ -40,6 +40,7 @@ nav = [
             { "TreeLDR" = "mappings/treeldr.md" },
             { "yml2vocab" = "mappings/yml2vocab.md" },
         ]},
+        { "Upgrading" = "guide/upgrading.md" },
         { "Migration" = [
             { "Migration" = "migration/index.md" },
             { "From JSON Schema" = "migration/from-json-schema.md" },
@@ -54,7 +55,6 @@ nav = [
     { "Use Cases" = "use-cases.md" },
     { "Rule Catalogue" = "rules.md" },
     { "Specification" = "spec/" },
-    { "Upgrading" = "upgrading.md" },
     { "Contributing" = "contributing.md" },
 ]
 
