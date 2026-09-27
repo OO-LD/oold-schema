@@ -25,7 +25,7 @@
       
       
       <link rel="icon" href="../assets/OO-LD_logo.jpg">
-      <meta name="generator" content="zensical-0.0.63">
+      <meta name="generator" content="zensical-0.0.65">
     
     
       
@@ -36,7 +36,7 @@
       
         
       
-      <link rel="stylesheet" href="../assets/stylesheets/modern/main.10763589.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/modern/main.40d3fdbb.min.css">
       
         
           
@@ -862,7 +862,7 @@
 <h1 id="use-cases">Use cases<a class="headerlink" href="#use-cases" title="Permanent link">&para;</a></h1>
 <p>Because an OO-LD schema is a plain JSON Schema carrying a JSON-LD context, it can drive a wide range of tooling from a single source. This page collects the main use cases.</p>
 <h2 id="code-generation">Code Generation<a class="headerlink" href="#code-generation" title="Permanent link">&para;</a></h2>
-<p>In general, we want to keep keywords in 'instance' JSON-documents (=&gt; property names in schemas) strict <code>^[A-z_]+ [A-z0-9_]*$</code> to avoid escaping or replacing when mapping to other languages. This works well with <a href="https://www.w3.org/TR/json-ld11/#aliasing-keywords">aliasing</a>, e.g.</p>
+<p>Property names in schemas, and therefore keys in instance documents, are best kept to <code>^[A-Za-z_][A-Za-z0-9_]*$</code> so that they need no escaping or renaming when mapped to another language. This works well with <a href="https://www.w3.org/TR/json-ld11/#aliasing-keywords">aliasing</a>, e.g.</p>
 <div class="language-json highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="p">{</span>
 </span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">  </span><span class="nt">"@context"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 </span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">    </span><span class="nt">"ex"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://example.org/"</span><span class="p">,</span>
@@ -887,7 +887,7 @@
 </span><span id="__span-0-22"><a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a><span class="p">}</span>
 </span></code></pre></div>
 <h3 id="python">Python<a class="headerlink" href="#python" title="Permanent link">&para;</a></h3>
-<p>The Person schema above translates smoothly to python (pydantic) via <a href="https://github.com/koxudaxi/datamodel-code-generator">https://github.com/koxudaxi/datamodel-code-generator</a>:</p>
+<p>The Person schema above translates smoothly to Python (pydantic) via <a href="https://github.com/koxudaxi/datamodel-code-generator">https://github.com/koxudaxi/datamodel-code-generator</a>:</p>
 <div class="language-py highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="k">class</span><span class="w"> </span><span class="nc">Person</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
 </span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>    <span class="n">model_config</span> <span class="o">=</span> <span class="n">ConfigDict</span><span class="p">(</span>
 </span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>        <span class="n">json_schema_extra</span><span class="o">=</span><span class="p">{</span>
@@ -904,18 +904,18 @@
 </span><span id="__span-1-14"><a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>    <span class="n">name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
 </span><span id="__span-1-15"><a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="w">    </span><span class="sd">"""First and Last name"""</span>
 </span></code></pre></div>
-<p>what would not be the case if we use <code>@type</code> or <code>schema:name</code> as property names (See also <a href="https://oo-ld.github.io/playground-python-yaml/">python playground</a>). From pydantic it's also straight forward to (re)generate OO-LD and  <a href="https://docs.pydantic.dev/latest/concepts/json_schema/">OpenAPI-Schemas</a>, especially via <a href="https://fastapi.tiangolo.com/features/">FastAPI</a>.</p>
+<p>which would not hold if <code>@type</code> or <code>schema:name</code> were used as property names directly (see also the <a href="https://oo-ld.github.io/playground-python-yaml/">Python playground</a>). From pydantic it is equally straightforward to regenerate OO-LD and <a href="https://docs.pydantic.dev/latest/concepts/json_schema/">OpenAPI schemas</a>, especially via <a href="https://fastapi.tiangolo.com/features/">FastAPI</a>.</p>
 <h2 id="workflows-and-code-analysis">Workflows and Code Analysis<a class="headerlink" href="#workflows-and-code-analysis" title="Permanent link">&para;</a></h2>
-<p>A common ground for workflow definitions are decorated dataclass-typed functions that are managed by a workflow-environment like <a href="https://github.com/PrefectHQ/prefect">prefect</a>.</p>
+<p>Workflow definitions commonly take the form of decorated, dataclass-typed functions managed by a workflow environment such as <a href="https://github.com/PrefectHQ/prefect">Prefect</a>.</p>
 <div class="language-py highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nd">@flow</span>
 </span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="k">def</span><span class="w"> </span><span class="nf">my_node</span><span class="p">(</span><span class="n">param</span><span class="p">:</span> <span class="n">MyInputClass</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">MyOutputClass</span><span class="p">:</span>
 </span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>  <span class="o">...</span>
 </span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>  <span class="k">return</span> <span class="n">MyOutputClass</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
 </span></code></pre></div>
-<p>If these dataclasses are following OO-LD annotations as described above the semantics of the workflow (node) is inherently contained.</p>
-<p>In this regard, OO-LD can be combined with standard code compiler/interpreter tooling, especially <a href="https://en.wikipedia.org/wiki/Abstract_syntax_tree">Abstract Syntax Trees</a> and tracing provide a semantic description of software-defined workflows. More information see <a href="https://github.com/OO-LD/awl-schema">AWL</a></p>
+<p>Where those dataclasses carry OO-LD annotations as described above, the semantics of the workflow node travel with them.</p>
+<p>OO-LD combines with standard compiler and interpreter tooling here: <a href="https://en.wikipedia.org/wiki/Abstract_syntax_tree">abstract syntax trees</a> and tracing together yield a semantic description of a software-defined workflow. See <a href="https://github.com/OO-LD/awl-schema">AWL</a>.</p>
 <h2 id="integration-with-large-language-models">Integration with Large Language Models<a class="headerlink" href="#integration-with-large-language-models" title="Permanent link">&para;</a></h2>
-<p>Recent support of Large Language Models (LLMs) for <a href="https://python.langchain.com/docs/how_to/structured_output/">structured output</a> is based on JSON Schema. This allows the direct application of OO-LD schemas with LLMs in order to generate, complete or validate structured data. Example use cases see <a href="https://github.com/opensemanticworld/osw-chatbot/">osw-chatbot</a></p>
+<p>Recent support of Large Language Models (LLMs) for <a href="https://python.langchain.com/docs/how_to/structured_output/">structured output</a> is based on JSON Schema. This allows the direct application of OO-LD schemas with LLMs in order to generate, complete or validate structured data. For worked use cases see <a href="https://github.com/opensemanticworld/osw-chatbot/">osw-chatbot</a>.</p>
 <h2 id="delivery-to-openapi-mcp-and-llm-tooling">Delivery to OpenAPI, MCP and LLM tooling<a class="headerlink" href="#delivery-to-openapi-mcp-and-llm-tooling" title="Permanent link">&para;</a></h2>
 <p>An OO-LD schema carries its semantics in the top-level <code>@context</code>. When the schema is handed to OpenAPI tooling, an MCP client or an LLM, the goal is to keep those semantics <em>available</em> to the model (as grounding) and to downstream RDF - not to make the consumer emit <code>@context</code> in its output. With <code>additionalProperties: false</code> an instance stays limited to its declared <code>properties</code>, so <code>@context</code> remains schema-level metadata and is never produced as data.</p>
 <table>
@@ -1111,7 +1111,7 @@
       <script id="__config" type="application/json">{"annotate":null,"base":"..","features":["announce.dismiss","content.code.annotate","content.action.edit","content.action.view","content.code.copy","content.code.select","content.footnote.tooltips","content.tabs.link","content.tooltips","navigation.footer","navigation.indexes","navigation.tabs","navigation.instant","navigation.instant.prefetch","navigation.path","navigation.prune","navigation.top","navigation.tracking","search.highlight"],"redirect":null,"search":"../assets/javascripts/workers/search.7d14d953.min.js","tags":null,"translations":{"clipboard.copied":"Copied to clipboard","clipboard.copy":"Copy to clipboard","search.result.more.one":"1 more on this page","search.result.more.other":"# more on this page","search.result.none":"No matching documents","search.result.one":"1 matching document","search.result.other":"# matching documents","search.result.placeholder":"Type to start searching","search.result.term.missing":"Missing","select.version":"Select version"},"version":{"provider":"mike"}}</script>
     
     
-      <script src="../assets/javascripts/bundle.8dcc8e9c.min.js"></script>
+      <script src="../assets/javascripts/bundle.c04ba553.min.js"></script>
       
         <script src="../javascripts/hero-video.js"></script>
       
