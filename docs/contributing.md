@@ -17,7 +17,7 @@
 
 Run `make spec` after touching the specification, and `make check` before opening a pull request. `make check` is what CI runs.
 
-Edit through a branch and a pull request. Nothing is pushed to `main` directly.
+Edit through a branch and a pull request. The one exception is the release commit below, which is made on `main` because the tag has to point at it.
 
 ## Editing the specification
 

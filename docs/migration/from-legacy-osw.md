@@ -193,7 +193,7 @@ What changed:
   per-property boolean `x-oold-ui-default-property: true` (here on `description`) makes it
   **overridable** - a derived schema resets it to `false` under most-derived-wins
   resolution, without restating the whole list. The reverse-property form
-  `x-oold-reverse-default-properties` (also a root array, same limitation) migrates the same way.
+  `x-oold-reverse-default-properties` (also a root array, same limitation) was withdrawn in 1.0.0-rc.4 and has no replacement: nothing rejects it, and nothing reads it.
 - `options.conditional_visible` / `modes` on `query_label` have no OO-LD equivalent yet
   (they drove OSL query forms); record them and drop them, do not invent keywords (see Pitfalls).
 
