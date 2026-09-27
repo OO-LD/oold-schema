@@ -1697,7 +1697,8 @@ actions:
 </tbody>
 </table></section>
 
-<section id="iana"><h2>IANA Considerations</h2><table class="def">
+<section id="iana"><h2>IANA Considerations</h2><p><code>application/oold-schema+json</code> and <code>application/oold-schema-instance+json</code> are the names this specification uses. Neither is registered with IANA yet, and registration is tracked in <a href="https://github.com/OO-LD/oold-schema/issues/13">issue 13</a>. Until it completes, a deployment that needs a registered type serves <code>application/ld+json</code> or <code>application/schema+json</code>, both of which the table below already assigns to the relevant view of a document.</p>
+<table class="def">
 <thead>
 <tr>
   <th>Slot</th>
@@ -1765,7 +1766,7 @@ actions:
   <td>Only the JSON data</td>
 </tr>
 </tbody>
-</table><section id="security"><h3>Security Considerations</h3><p>Both the security considerations of [[JSON-LD11]] (§C) and of [[JSONSCHEMA]] (§13) apply. In particular, as required in <a href="#referencing-schema"></a>, a consumer does not blindly trust the schema an instance declares for itself (a crafted instance could point at a permissive schema) and remains responsible for validating against a schema it trusts.</p></section></section>
+</table><section id="security"><h3>Security Considerations</h3><p>Both the security considerations of [[JSON-LD11]] (§C) and of [[JSONSCHEMA]] (§13) apply. In particular, as <a href="#referencing-schema"></a> recommends, a consumer does not blindly trust the schema an instance declares for itself (a crafted instance could point at a permissive schema) and remains responsible for validating against a schema it trusts.</p></section></section>
 
 <section id="index" class="appendix">
   <h2>Index of Terms</h2>
