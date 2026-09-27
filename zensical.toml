@@ -6,7 +6,7 @@ site_description = "Object-Oriented Linked Data Schema - JSON Schema + JSON-LD i
 site_author = "OO-LD Contributors"
 edit_uri = "edit/main/docs/"
 repo_name = "OO-LD/oold-schema"
-copyright = 'Maintained by <a href="https://github.com/OO-LD">OO-LD</a>.'
+copyright = 'Maintained by <a href="https://github.com/OO-LD">OO-LD</a>. Funded by the German Federal Ministry of Research, Technology and Space (BMFTR) through the <a href="https://prototypefund.de">Prototype Fund</a>, funding code 16IS26S16.'
 
 extra_css = ["stylesheets/extra.css"]
 extra_javascript = ["javascripts/hero-video.js", "javascripts/tutorial-player.js"]
