@@ -1810,7 +1810,7 @@ table, not in this one schema.</p>
   per-property boolean <code>x-oold-ui-default-property: true</code> (here on <code>description</code>) makes it
   <strong>overridable</strong> - a derived schema resets it to <code>false</code> under most-derived-wins
   resolution, without restating the whole list. The reverse-property form
-  <code>x-oold-reverse-default-properties</code> (also a root array, same limitation) migrates the same way.</li>
+  <code>x-oold-reverse-default-properties</code> (also a root array, same limitation) was withdrawn in 1.0.0-rc.4 and has no replacement: nothing rejects it, and nothing reads it.</li>
 <li><code>options.conditional_visible</code> / <code>modes</code> on <code>query_label</code> have no OO-LD equivalent yet
   (they drove OSL query forms); record them and drop them, do not invent keywords (see Pitfalls).</li>
 </ul>

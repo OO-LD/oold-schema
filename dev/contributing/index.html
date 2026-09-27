@@ -926,7 +926,7 @@
 </tbody>
 </table>
 <p>Run <code>make spec</code> after touching the specification, and <code>make check</code> before opening a pull request. <code>make check</code> is what CI runs.</p>
-<p>Edit through a branch and a pull request. Nothing is pushed to <code>main</code> directly.</p>
+<p>Edit through a branch and a pull request. The one exception is the release commit below, which is made on <code>main</code> because the tag has to point at it.</p>
 <h2 id="editing-the-specification">Editing the specification<a class="headerlink" href="#editing-the-specification" title="Permanent link">&para;</a></h2>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>git<span class="w"> </span>fetch<span class="w"> </span>--tags<span class="w">   </span><span class="c1"># the rendered subtitle comes from git describe</span>
 </span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>make<span class="w"> </span>spec<span class="w">          </span><span class="c1"># extract rules, render the specification, render the catalogue</span>
