@@ -3405,7 +3405,7 @@ repeats the explanation, so you do not have to come back here.</p>
 <li><strong title="The RFC 2119 keyword this requirement is stated with. A validator reports a MUST-level finding as a failure and a SHOULD-level one as a warning, so the level decides severity rather than the check that found it.">Level:</strong> MUST</li>
 <li><strong title="Who the requirement binds: a document, an implementation of OO-LD, or nobody in particular. This decides what is even able to enforce it.">Applies to:</strong> <span title="Constrains an OO-LD implementation; needs a library conformance suite">implementation</span></li>
 <li><strong title="Whether a validator could decide this rule by inspecting a document. It does not say the OO-LD validator enforces it today - oold rules list --unchecked reports that.">Machine-checkable:</strong> no</li>
-<li><strong title="The specification release this rule first appeared in. Ids are permanent and never reused, so this does not change once recorded.">Since:</strong> unreleased</li>
+<li><strong title="The specification release this rule first appeared in. Ids are permanent and never reused, so this does not change once recorded.">Since:</strong> 1.0.0-rc.5</li>
 </ul>
 <p>A tool resolves an instance's schema from $schema, then the @context URL, then an inline type, in that order.</p>
 <p>An OO-LD-aware tool MUST determine an instance's schema in the following order, taking the first that applies: the <code>$schema</code> value, if present; otherwise, the URL given under <code>@context</code>, if the referenced document declares itself to be an OO-LD schema; otherwise, an inline <code>@type</code> (see below) - but only when at least one of the type IRIs resolves to an OO-LD schema.</p>
@@ -3899,7 +3899,7 @@ repeats the explanation, so you do not have to come back here.</p>
 <li><strong title="The RFC 2119 keyword this requirement is stated with. A validator reports a MUST-level finding as a failure and a SHOULD-level one as a warning, so the level decides severity rather than the check that found it.">Level:</strong> MUST</li>
 <li><strong title="Who the requirement binds: a document, an implementation of OO-LD, or nobody in particular. This decides what is even able to enforce it.">Applies to:</strong> <span title="Checkable by validating a schema or instance document">document</span></li>
 <li><strong title="Whether a validator could decide this rule by inspecting a document. It does not say the OO-LD validator enforces it today - oold rules list --unchecked reports that.">Machine-checkable:</strong> yes</li>
-<li><strong title="The specification release this rule first appeared in. Ids are permanent and never reused, so this does not change once recorded.">Since:</strong> unreleased</li>
+<li><strong title="The specification release this rule first appeared in. Ids are permanent and never reused, so this does not change once recorded.">Since:</strong> 1.0.0-rc.5</li>
 </ul>
 <p>A schema named by x-oold-range or x-oold-ref is a URI reference resolved against the base URI, not a compact IRI.</p>
 <p>A schema named by <code>x-oold-range</code> or <code>x-oold-ref</code> MUST be written as a URI reference and resolved against the base URI in the JSONSCHEMA sense, exactly as a <code>$ref</code> target is.</p>
@@ -4003,7 +4003,7 @@ repeats the explanation, so you do not have to come back here.</p>
 <li><strong title="The RFC 2119 keyword this requirement is stated with. A validator reports a MUST-level finding as a failure and a SHOULD-level one as a warning, so the level decides severity rather than the check that found it.">Level:</strong> MUST</li>
 <li><strong title="Who the requirement binds: a document, an implementation of OO-LD, or nobody in particular. This decides what is even able to enforce it.">Applies to:</strong> <span title="Constrains an OO-LD implementation; needs a library conformance suite">implementation</span></li>
 <li><strong title="Whether a validator could decide this rule by inspecting a document. It does not say the OO-LD validator enforces it today - oold rules list --unchecked reports that.">Machine-checkable:</strong> no</li>
-<li><strong title="The specification release this rule first appeared in. Ids are permanent and never reused, so this does not change once recorded.">Since:</strong> unreleased</li>
+<li><strong title="The specification release this rule first appeared in. Ids are permanent and never reused, so this does not change once recorded.">Since:</strong> 1.0.0-rc.5</li>
 </ul>
 <p>A key aliasing a JSON-LD keyword is never reference-valued, whichever reference signals it carries.</p>
 <p>This exclusion takes precedence over the reference-valued signals: a key aliasing a JSON-LD keyword MUST NOT be treated as reference-valued, however many of them it carries.</p>
@@ -4164,7 +4164,7 @@ repeats the explanation, so you do not have to come back here.</p>
 <li><strong title="The RFC 2119 keyword this requirement is stated with. A validator reports a MUST-level finding as a failure and a SHOULD-level one as a warning, so the level decides severity rather than the check that found it.">Level:</strong> MUST</li>
 <li><strong title="Who the requirement binds: a document, an implementation of OO-LD, or nobody in particular. This decides what is even able to enforce it.">Applies to:</strong> <span title="Constrains an OO-LD implementation; needs a library conformance suite">implementation</span></li>
 <li><strong title="Whether a validator could decide this rule by inspecting a document. It does not say the OO-LD validator enforces it today - oold rules list --unchecked reports that.">Machine-checkable:</strong> no</li>
-<li><strong title="The specification release this rule first appeared in. Ids are permanent and never reused, so this does not change once recorded.">Since:</strong> unreleased</li>
+<li><strong title="The specification release this rule first appeared in. Ids are permanent and never reused, so this does not change once recorded.">Since:</strong> 1.0.0-rc.5</li>
 </ul>
 <p>A tool resolving x-oold-ref terminates on a cyclic reference graph instead of recursing indefinitely.</p>
 <p>Such a tool MUST handle a cyclic reference graph, terminating and returning the references it has already resolved rather than recursing indefinitely.</p>
