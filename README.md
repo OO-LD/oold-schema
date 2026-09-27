@@ -29,7 +29,7 @@ The JSON Schema part (`type`, `properties`) describes the structure; the `@conte
 
 ## Documentation
 
-📖 **Full documentation: <https://oo-ld.org/>**
+**Full documentation: <https://oo-ld.org/>**
 
 The site covers the concepts and specification in an orientation-style guide with worked examples:
 

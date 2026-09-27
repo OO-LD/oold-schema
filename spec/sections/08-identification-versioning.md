@@ -12,6 +12,7 @@ This obligation applies to a schema *document*, not to every subschema: a fragme
 ```json
 {
   "$id": "https://example.org/Foo.schema.json",
+  "@context": {},
   "x-oold-uuid": "b5203131-7321-46bb-8a11-acb3d1015840",
   "title": "Foo"
 }
@@ -21,6 +22,7 @@ The same schema, with the UUID carried in the `$id` as well:
 ```json
 {
   "$id": "https://example.org/b5203131-7321-46bb-8a11-acb3d1015840.schema.json",
+  "@context": {},
   "x-oold-uuid": "b5203131-7321-46bb-8a11-acb3d1015840",
   "title": "Foo"
 }
@@ -29,12 +31,13 @@ The same schema, with the UUID carried in the `$id` as well:
 
 ### Ontology correspondence (schema-level `x-oold-sssom`) {#ontology-mapping}
 
-A schema states which external ontology resources it corresponds to with a top-level `x-oold-sssom` block - the [term-synonym](#synonyms) mapping row lifted to the schema level. Its subject is the schema itself, identified by its `$id`: in OO-LD the schema document at that URL *is* the class definition, so `$id` serves as the mapping's `subject_id`. It is an object keyed by the **object IRI** of a resolvable resource (an RDF/OWL class, a controlled-vocabulary term, another schema), each value carrying the SSSOM slots: `predicate_id` (default `skos:exactMatch`; `skos:closeMatch` for a looser correspondence), `mapping_set_id`, and the rest of the open bag. Because these are SKOS mapping predicates the correspondence is non-logical and reasoner-safe: `skos:exactMatch` asserts interchangeability, not the logical `owl:equivalentClass` (a schema that wants the reasoner-affecting claim uses `owl:equivalentClass` explicitly as the `predicate_id`). :rule[OOLD-VER-9846]{applies=implementation level="MUST NOT" summary="x-oold-sssom annotates the schema, so an exporter must not stamp it onto instances."}It is an annotation **about the schema itself**, and an exporter MUST NOT stamp it onto instances - distinct from `x-oold-instance-rdf-type`, the `rdf:type`s instances carry on export (see [](#semantic-type)), which *are* stamped onto instance data.
+A schema states which external ontology resources it corresponds to with a top-level `x-oold-sssom` block - the [term-synonym](#synonyms) mapping row lifted to the schema level. Its subject is the schema itself, identified by its `$id`: in OO-LD the schema document at that URL *is* the class definition, so `$id` serves as the mapping's `subject_id`. It is an object keyed by the **object IRI** of a resolvable resource (an RDF/OWL class, a controlled-vocabulary term, another schema), each value carrying the SSSOM slots: `predicate_id` (default `skos:exactMatch`; `skos:closeMatch` for a looser correspondence), `mapping_set_id`, and the rest of the open bag. Because these are SKOS mapping predicates the correspondence is non-logical and reasoner-safe: `skos:exactMatch` asserts interchangeability, not the logical `owl:equivalentClass` (a schema that wants the reasoner-affecting claim uses `owl:equivalentClass` explicitly as the `predicate_id`). :rule[OOLD-VER-9846]{applies=implementation level="MUST NOT" summary="x-oold-sssom annotates the schema, so an exporter must not stamp it onto instances."}`x-oold-sssom` is an annotation **about the schema itself**, and an exporter MUST NOT stamp it onto instances - distinct from `x-oold-instance-rdf-type`, the `rdf:type`s instances carry on export (see [](#semantic-type)), which *are* stamped onto instance data.
 
 :::example{title="Distinguishing document URL, ontology correspondence, and instance type"}
 ```json
 {
   "$id": "https://example.org/my-package/1.0.0/Person.schema.json",
+  "@context": {},
   "x-oold-sssom": {
     "http://schema.org/Person": { "predicate_id": "skos:exactMatch" }
   },
@@ -52,12 +55,13 @@ OO-LD-aware tooling uses these correspondences to anchor the schema in an ontolo
 
 :rule[OOLD-VER-3662]{applies=document level=SHOULD summary="A schema version should be stated with x-oold-version."}The schema version SHOULD be indicated by `x-oold-version`; a prior version MAY be indicated with `x-oold-prior-version`:
 
-:rule[OOLD-VER-b2ee]{applies=document machine_checkable=no level=SHOULD summary="Schema versions should follow semantic versioning."}Versions SHOULD follow [semantic versioning](https://semver.org/), so that the version alone tells a consumer whether an instance that validated against an earlier version still validates: a patch or minor release is backward compatible, a major release is not. `x-oold-backward-compatible-with` and `x-oold-incompatible-with` then record the exceptions rather than the rule.
+:rule[OOLD-VER-b2ee]{applies=document level=SHOULD summary="Schema versions should follow semantic versioning."}Versions SHOULD follow [semantic versioning](https://semver.org/), so that the version alone tells a consumer whether an instance that validated against an earlier version still validates: a patch or minor release is backward compatible, a major release is not. `x-oold-backward-compatible-with` and `x-oold-incompatible-with` then record the exceptions rather than the rule.
 
 :::example{title="Version annotations"}
 ```json
 {
   "$id": "https://example.org/b5203131-7321-46bb-8a11-acb3d1015840.schema.json",
+  "@context": {},
   "x-oold-uuid": "b5203131-7321-46bb-8a11-acb3d1015840",
   "title": "Foo",
   "x-oold-version": "1.1.0",
@@ -82,6 +86,7 @@ Schemas MAY indicate explicit backward-compatibility with `x-oold-backward-compa
 ```json
 {
   "$id": "https://example.org/my-package/2.1.0/b5203131-7321-46bb-8a11-acb3d1015840.schema.json",
+  "@context": {},
   "x-oold-uuid": "b5203131-7321-46bb-8a11-acb3d1015840",
   "title": "Foo",
   "x-oold-version": "1.1.0",
@@ -98,6 +103,7 @@ Schemas within a package or package repository MAY use relative URIs ([[RFC3986]
 ```json
 {
   "$id": "B.schema.json",
+  "@context": {},
   "title": "Foo",
   "allOf": [ { "$ref": "A.schema.json" } ]
 }
@@ -107,6 +113,7 @@ expands to:
 ```json
 {
   "$id": "https://raw.githubusercontent.com/MyOrg/my-package/refs/tags/2.0.0/B.schema.json",
+  "@context": {},
   "title": "Foo",
   "allOf": [ { "$ref": "https://raw.githubusercontent.com/MyOrg/my-package/refs/tags/2.0.0/A.schema.json" } ]
 }

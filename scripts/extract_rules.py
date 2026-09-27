@@ -132,10 +132,27 @@ def parse_attrs(raw: str) -> dict[str, str]:
     return {m.group(1): (m.group(2) if m.group(2) is not None else m.group(3)) for m in ATTR.finditer(raw)}
 
 
+#: A backtick-delimited code span, including its delimiters.
+CODE_SPAN = re.compile(r"`+[^`]*`+")
+
+
 def clean_text(text: str) -> str:
     text = LIST_ITEM.sub("", text, count=1)  # drop the bullet marker of an item-level rule
+
+    # Code spans are held out while the emphasis patterns run. A regex such as
+    # `x-oold-*` or `"^[A-Za-z_][\w.-]*:(?!//)\S*$"` contains asterisks that are not
+    # emphasis, and stripping them silently rewrites the requirement: the second
+    # pattern lost both quantifiers and matched only three-character strings.
+    spans: list[str] = []
+
+    def hold(match: re.Match[str]) -> str:
+        spans.append(match.group(0))
+        return f"\x00{len(spans) - 1}\x00"
+
+    text = CODE_SPAN.sub(hold, text)
     for pattern, repl in CLEAN:
         text = pattern.sub(repl, text)
+    text = re.sub(r"\x00(\d+)\x00", lambda m: spans[int(m.group(1))], text)
     return text.strip()
 
 

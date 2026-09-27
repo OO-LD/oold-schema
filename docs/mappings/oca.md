@@ -25,6 +25,7 @@ Base capture schema (structure and core types only):
 ```json
 {
   "$id": "Person.capture.schema.json",
+  "@context": {},
   "type": "object",
   "properties": {
     "full_name": { "type": "string" },
@@ -38,6 +39,7 @@ Label overlay - references the base and sets only labels (a second, differently-
 ```json
 {
   "$id": "Person.label-en.schema.json",
+  "@context": {},
   "allOf": [{ "$ref": "Person.capture.schema.json" }],
   "properties": {
     "full_name": { "title": "Full name" },
@@ -50,12 +52,13 @@ Semantics overlay - references the base and adds only the `@context`:
 ```json
 {
   "$id": "Person.semantics.schema.json",
+  "@context": {},
   "@context": { "schema": "http://schema.org/", "full_name": "schema:name", "date_of_birth": "schema:birthDate" },
   "allOf": [{ "$ref": "Person.capture.schema.json" }]
 }
 ```
 
-The same concerns MAY also be consolidated into one OO-LD document when modularity is not needed; both forms are valid OO-LD.
+The same concerns can also be consolidated into one OO-LD document when modularity is not needed; both forms are valid OO-LD.
 
 | OCA overlay | OO-LD |
 | --- | --- |
