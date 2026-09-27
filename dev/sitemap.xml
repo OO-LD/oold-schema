@@ -70,6 +70,9 @@
         <loc>https://oo-ld.org/dev/mappings/yml2vocab/</loc>
       </url>
       <url>
+        <loc>https://oo-ld.org/dev/guide/upgrading/</loc>
+      </url>
+      <url>
         <loc>https://oo-ld.org/dev/migration/</loc>
       </url>
       <url>
@@ -98,9 +101,6 @@
       </url>
       <url>
         <loc>https://oo-ld.org/dev/rules/</loc>
-      </url>
-      <url>
-        <loc>https://oo-ld.org/dev/upgrading/</loc>
       </url>
       <url>
         <loc>https://oo-ld.org/dev/contributing/</loc>
