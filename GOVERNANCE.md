@@ -8,7 +8,7 @@ This document governs the specification in this repository and the implementatio
 
 ## Who decides
 
-The maintainers in [MAINTAINERS.md](MAINTAINERS.md). Decisions are made in the open, in issues and pull requests, and a decision that is not written there did not happen. Where maintainers disagree, the specification lead decides and records the reasoning in the issue.
+The maintainers in [MAINTAINERS.md](MAINTAINERS.md). Decisions are made in the open, in issues and pull requests, and a decision that is not written there did not happen. Where maintainers disagree, the maintainer holding the specification area in [MAINTAINERS.md](MAINTAINERS.md) decides and records the reasoning in the issue.
 
 This is the honest description of a three-person project, not an aspiration. A steering committee including the projects that build on OO-LD is planned; until it exists, saying that it exists would be worse than admitting it does not.
 
