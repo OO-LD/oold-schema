@@ -804,6 +804,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#schema-resolution-has-a-defined-order" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Schema resolution has a defined order
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#frame-derivation-is-specified" class="md-nav__link">
     <span class="md-ellipsis">
       <span class="md-typeset">
@@ -1150,6 +1161,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#schema-resolution-has-a-defined-order" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Schema resolution has a defined order
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#frame-derivation-is-specified" class="md-nav__link">
     <span class="md-ellipsis">
       <span class="md-typeset">
@@ -1298,9 +1320,9 @@
 </span></code></pre></div>
 <p>The requirement is presence, not content. An empty object satisfies it, as does a bare reference to a remote context. A schema that maps no terms yet is still conforming; what it cannot do is omit the entry, because that is the one thing that makes the document unusable as a referenceable context.</p>
 <p>Why it is a <code>MUST</code> rather than a recommendation: without a root <code>@context</code>, <a href="https://www.w3.org/TR/json-ld11-api/">JSON-LD 1.1 Context Processing</a> aborts with <code>invalid remote context</code> when something references the schema. The schema validated, and then failed inside a consumer's processor, far from the document that caused it.</p>
-<p><strong>To upgrade:</strong> add <code>"@context": {}</code> to any schema document that lacks one. Seventeen fixtures in this repository needed exactly that.</p>
+<p><strong>To upgrade:</strong> add <code>"@context": {}</code> to any schema document that lacks one. Twenty-eight fixtures in this repository needed exactly that.</p>
 <h2 id="x-oold-reverse-default-properties-is-gone"><code>x-oold-reverse-default-properties</code> is gone<a class="headerlink" href="#x-oold-reverse-default-properties-is-gone" title="Permanent link">&para;</a></h2>
-<p>Removed from the vocabulary. A schema still carrying it is rejected by the meta-schema, which does not define it.</p>
+<p>Removed from the vocabulary. Nothing rejects it: the meta-schema does not close the schema object, so a schema still carrying the keyword validates cleanly and the keyword does nothing. Remove it by hand, and do not expect a tool to find it for you.</p>
 <h2 id="a-bare-iri-reference-needs-type-id-on-its-term">A bare IRI reference needs <code>@type: "@id"</code> on its term<a class="headerlink" href="#a-bare-iri-reference-needs-type-id-on-its-term" title="Permanent link">&para;</a></h2>
 <p><code>OOLD-INS-770a</code>. Where a property's range is references only and its value is written as a bare IRI string, the term must coerce:</p>
 <div class="language-json highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nt">"@context"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">"works_for"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">"@id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"schema:worksFor"</span><span class="p">,</span><span class="w"> </span><span class="nt">"@type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"@id"</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
@@ -1309,7 +1331,9 @@
 <h2 id="x-oold-range-and-x-oold-ref-name-a-uri-reference"><code>x-oold-range</code> and <code>x-oold-ref</code> name a URI reference<a class="headerlink" href="#x-oold-range-and-x-oold-ref-name-a-uri-reference" title="Permanent link">&para;</a></h2>
 <p><code>OOLD-EXT-3ea9</code>. The value is resolved against the base URI, exactly as a <code>$ref</code> target is. It is not a compact IRI, so the prefixes of the schema's own <code>@context</code> do not apply: <code>"ex:Organization"</code> names a relative path, not the term <code>ex:Organization</code>. If you relied on prefix expansion here, it was never specified and did not work uniformly.</p>
 <h2 id="seven-statements-became-normative">Seven statements became normative<a class="headerlink" href="#seven-statements-became-normative" title="Permanent link">&para;</a></h2>
-<p>rc.3 promoted requirements that had been stated in the indicative mood, so they bound nobody and the rule catalogue could not see them. A tool that conformed to rc.3 prose may not conform now, without any prose having changed meaning: <code>OOLD-EXT-eeda</code>, <code>OOLD-EXT-44bd</code>, <code>OOLD-VER-9846</code>, <code>OOLD-EXT-c77a</code>, <code>OOLD-INS-770a</code>, <code>OOLD-SCH-cfb8</code>, and a strengthened <code>OOLD-EXT-68fa</code>.</p>
+<p>rc.4 promoted requirements that had been stated in the indicative mood, so they bound nobody and the rule catalogue could not see them. A tool that conformed to rc.3 prose may not conform now, without any prose having changed meaning: <code>OOLD-EXT-eeda</code>, <code>OOLD-EXT-44bd</code>, <code>OOLD-VER-9846</code>, <code>OOLD-EXT-c77a</code>, <code>OOLD-INS-770a</code> and <code>OOLD-SCH-cfb8</code>.</p>
+<h2 id="schema-resolution-has-a-defined-order">Schema resolution has a defined order<a class="headerlink" href="#schema-resolution-has-a-defined-order" title="Permanent link">&para;</a></h2>
+<p><code>OOLD-INS-78df</code>. A tool determines an instance's schema from <code>$schema</code>, then the URL under <code>@context</code>, then an inline <code>@type</code>, taking the first that applies. The order was always described; it carried no identifier, so nothing held a tool to it. A tool that resolved in a different order is non-conforming now.</p>
 <h2 id="frame-derivation-is-specified">Frame derivation is specified<a class="headerlink" href="#frame-derivation-is-specified" title="Permanent link">&para;</a></h2>
 <p>If you derive JSON-LD frames from schemas, this is new normative ground rather than a change: <code>OOLD-EXT-68fa</code>, <code>-6d10</code>, <code>-ff64</code>, <code>-05d3</code>, <code>-5ea6</code> and <code>-725f</code> together say which properties are reference-valued, what precedence applies when signals overlap, and what framing a graph yields.</p>
 <p>The practical consequence: a reference-valued property takes <code>{"@embed": "@never"}</code>, so its targets stay IRIs. Without it, a reference whose target happens to carry triples in the same graph is embedded as an object, and the framed document stops validating against the schema its own frame came from. Both reference implementations had this wrong until rc.5.</p>
@@ -1318,7 +1342,7 @@
 <h2 id="checking-a-schema">Checking a schema<a class="headerlink" href="#checking-a-schema" title="Permanent link">&para;</a></h2>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>uvx<span class="w"> </span>--from<span class="w"> </span><span class="s2">"oold[validation]"</span><span class="w"> </span>oold<span class="w"> </span>validate<span class="w"> </span>path/to/schemas
 </span></code></pre></div>
-<p>The released library tracks the specification, so this reports against the rules above rather than an older set.</p>
+<p>The released library tracks the specification, so this reports against the current rules rather than an older set. It will not catch everything on this page: of the breaks above, only the root <code>@context</code> requirement and the <code>x-oold-range</code> forms have a check behind them. <code>OOLD-INS-770a</code>, <code>OOLD-EXT-3ea9</code> and the removed keyword are not enforced by any implementation yet, so those are a reading exercise.</p>
 
 
 
