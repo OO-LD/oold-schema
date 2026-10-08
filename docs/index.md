@@ -86,9 +86,3 @@ We target domains where data-driven innovation is limited by lack of interoperab
 
 </div>
 
----
-
-## Funding
-
-The **generic, domain-independent** OO-LD framework - the specification and its reference implementation - is funded by the German **Federal Ministry of Research, Technology and Space (BMFTR)** through the **[Prototype Fund](https://prototypefund.de)** (funding code / Förderkennzeichen **16IS26S16**).
-
