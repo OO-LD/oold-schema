@@ -39,7 +39,7 @@ export const copy = {
       'The same reference appears in @context, attached to the pets term. Pet terms apply inside pets and nowhere else.',
     orgFile: 'Organization.schema.json',
     orgNote:
-      'Organization does both at once: an extension at the root, and an embedded object under the address property.',
+      'Organization does both at once: it extends Thing in allOf at the root, and embeds Address under the address property.',
     orgNote2:
       'One object, or an array of them: either way the reference becomes a scoped @context on that term.',
     contextLabel: 'JSON-LD side',
