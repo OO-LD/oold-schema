@@ -39,9 +39,9 @@ export const copy = {
       'The same reference appears in @context, attached to the pets term. Pet terms apply inside pets and nowhere else.',
     orgFile: 'Organization.schema.json',
     orgNote:
-      'Organization does both at once: an extension at the root, which is the next move, and an embedded object under the address property.',
+      'Organization does both at once: an extension at the root, and an embedded object under the address property.',
     orgNote2:
-      'Whether the value is one object or the items of an array, the reference is reflected as a scoped @context on the term.',
+      'One object, or an array of them: either way the reference becomes a scoped @context on that term.',
     contextLabel: 'JSON-LD side',
     schemaLabel: 'JSON Schema side',
   },
@@ -56,7 +56,7 @@ export const copy = {
     personNote:
       'Person names Thing twice: in allOf so validators apply Thing rules, and in @context so JSON-LD resolves Thing terms.',
     scalarNote:
-      'works_for holds an IRI, not an embedded object. It takes x-oold-range, the keyword from episode 2, instead of a $ref, so it contributes no scoped context.',
+      'works_for holds an IRI, not an embedded object. Instead of a $ref it takes x-oold-range, the keyword from episode 2, so it contributes no scoped context.',
     extends: 'extends',
     chain: [
       { file: 'Thing.schema.json', lines: ['id', 'name'] },
@@ -96,7 +96,7 @@ export const copy = {
     kicker: 'what happens to the @context',
     rule: 'It MUST NOT be required to further process an OO-LD schema document in order to interpret it as a JSON-LD context.',
     implies:
-      'This implies that all occurrences of $ref in the schema are reflected in the JSON-LD context.',
+      'This implies that every $ref to another OO-LD schema is reflected in the JSON-LD context.',
     source: 'OO-LD specification, Composition',
     ruleNote: 'The composed document is still a context. No build step in between.',
     tableHead: ['Where the reference sits', 'Where it is reflected', 'In the examples'],
@@ -119,16 +119,16 @@ export const copy = {
     ],
     exampleFile: 'examples/spec/composition-reflection.json',
     exampleNote:
-      'B in allOf at the root and p0, which is not object-valued, are listed at the root of the @context.',
+      'Two references land at the root of the @context: B, which sits in allOf, and p0, which is not object-valued.',
     exampleNote2:
-      'p1 and p2 are object-valued, so their references become a scoped context on the term. p3 branches with oneOf, so its branch terms are scoped inline instead, where they cannot collide at the root.',
+      'p1 and p2 are object-valued, so their references become a scoped context on the term. p3 branches with oneOf, so its branch terms are scoped inline instead and cannot collide at the root.',
     mergeKicker: 'the @context array resolves in order',
     mergeLabels: [
       { index: '1', title: 'Thing.schema.json', text: 'The inherited context, resolved first' },
       { index: '2', title: 'The schema\'s own object', text: 'Resolved last, so these terms win' },
     ],
     mergeNote:
-      'A processor resolves the array in order and later entries override earlier ones, so a schema overrides an inherited term by putting its own object last.',
+      'A processor resolves the array in order and later entries win, so a schema replaces an inherited term by putting its own object last.',
     mergeSource: 'OO-LD specification, Merging remote contexts',
   },
 
@@ -136,7 +136,7 @@ export const copy = {
     kicker: 'closing a composed object',
     badTag: 'Not this',
     badNote:
-      'allOf is conjunctive, so additionalProperties never sees the members the other branches contribute and rejects them.',
+      'allOf is conjunctive. additionalProperties never sees the members the other branches contribute, so it rejects them.',
     goodTag: 'This',
     goodSource: 'OO-LD specification, Closing composed objects',
     goodNote:
@@ -156,7 +156,7 @@ export const copy = {
     recap: [
       '$ref under a property: the value is another object, and its terms are scoped to that property.',
       '$ref in allOf at the root: the schema extends another schema, and its terms apply to the whole object.',
-      'Every $ref is reflected into the @context, so the composed document stays a context.',
+      'Every $ref to an OO-LD schema is reflected into the @context, so the document stays a context.',
     ],
     nextKicker: 'Episode 4',
     next: [
