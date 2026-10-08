@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
       <url>
-        <loc>https://oo-ld.org/dev/introduction/</loc>
+        <loc>https://oo-ld.org/dev/</loc>
+      </url>
+      <url>
+        <loc>https://oo-ld.org/dev/contributing/</loc>
       </url>
       <url>
         <loc>https://oo-ld.org/dev/guide/</loc>
-      </url>
-      <url>
-        <loc>https://oo-ld.org/dev/guide/tutorials/</loc>
       </url>
       <url>
         <loc>https://oo-ld.org/dev/guide/basic-concepts/</loc>
@@ -16,19 +16,25 @@
         <loc>https://oo-ld.org/dev/guide/composition/</loc>
       </url>
       <url>
-        <loc>https://oo-ld.org/dev/guide/schema-instances/</loc>
+        <loc>https://oo-ld.org/dev/guide/extensions/</loc>
       </url>
       <url>
         <loc>https://oo-ld.org/dev/guide/identification-versioning/</loc>
       </url>
       <url>
-        <loc>https://oo-ld.org/dev/guide/extensions/</loc>
-      </url>
-      <url>
         <loc>https://oo-ld.org/dev/guide/meta-schema/</loc>
       </url>
       <url>
-        <loc>https://oo-ld.org/dev/tooling/</loc>
+        <loc>https://oo-ld.org/dev/guide/schema-instances/</loc>
+      </url>
+      <url>
+        <loc>https://oo-ld.org/dev/guide/tutorials/</loc>
+      </url>
+      <url>
+        <loc>https://oo-ld.org/dev/guide/upgrading/</loc>
+      </url>
+      <url>
+        <loc>https://oo-ld.org/dev/introduction/</loc>
       </url>
       <url>
         <loc>https://oo-ld.org/dev/mappings/</loc>
@@ -37,7 +43,10 @@
         <loc>https://oo-ld.org/dev/mappings/aas/</loc>
       </url>
       <url>
-        <loc>https://oo-ld.org/dev/mappings/samm/</loc>
+        <loc>https://oo-ld.org/dev/mappings/croissant/</loc>
+      </url>
+      <url>
+        <loc>https://oo-ld.org/dev/mappings/dlite/</loc>
       </url>
       <url>
         <loc>https://oo-ld.org/dev/mappings/linkml/</loc>
@@ -46,31 +55,25 @@
         <loc>https://oo-ld.org/dev/mappings/nomad/</loc>
       </url>
       <url>
-        <loc>https://oo-ld.org/dev/mappings/dlite/</loc>
+        <loc>https://oo-ld.org/dev/mappings/oca/</loc>
       </url>
       <url>
         <loc>https://oo-ld.org/dev/mappings/rest-api-ld/</loc>
       </url>
       <url>
-        <loc>https://oo-ld.org/dev/mappings/wot/</loc>
+        <loc>https://oo-ld.org/dev/mappings/samm/</loc>
       </url>
       <url>
         <loc>https://oo-ld.org/dev/mappings/spdx/</loc>
       </url>
       <url>
-        <loc>https://oo-ld.org/dev/mappings/croissant/</loc>
-      </url>
-      <url>
-        <loc>https://oo-ld.org/dev/mappings/oca/</loc>
-      </url>
-      <url>
         <loc>https://oo-ld.org/dev/mappings/treeldr/</loc>
       </url>
       <url>
-        <loc>https://oo-ld.org/dev/mappings/yml2vocab/</loc>
+        <loc>https://oo-ld.org/dev/mappings/wot/</loc>
       </url>
       <url>
-        <loc>https://oo-ld.org/dev/guide/upgrading/</loc>
+        <loc>https://oo-ld.org/dev/mappings/yml2vocab/</loc>
       </url>
       <url>
         <loc>https://oo-ld.org/dev/migration/</loc>
@@ -79,7 +82,7 @@
         <loc>https://oo-ld.org/dev/migration/from-json-schema/</loc>
       </url>
       <url>
-        <loc>https://oo-ld.org/dev/migration/from-rdf/</loc>
+        <loc>https://oo-ld.org/dev/migration/from-legacy-osw/</loc>
       </url>
       <url>
         <loc>https://oo-ld.org/dev/migration/from-owl-shacl/</loc>
@@ -88,7 +91,7 @@
         <loc>https://oo-ld.org/dev/migration/from-python/</loc>
       </url>
       <url>
-        <loc>https://oo-ld.org/dev/migration/from-legacy-osw/</loc>
+        <loc>https://oo-ld.org/dev/migration/from-rdf/</loc>
       </url>
       <url>
         <loc>https://oo-ld.org/dev/migration/legacy-keyword-inventory/</loc>
@@ -97,12 +100,12 @@
         <loc>https://oo-ld.org/dev/related-work/</loc>
       </url>
       <url>
-        <loc>https://oo-ld.org/dev/use-cases/</loc>
-      </url>
-      <url>
         <loc>https://oo-ld.org/dev/rules/</loc>
       </url>
       <url>
-        <loc>https://oo-ld.org/dev/contributing/</loc>
+        <loc>https://oo-ld.org/dev/tooling/</loc>
+      </url>
+      <url>
+        <loc>https://oo-ld.org/dev/use-cases/</loc>
       </url>
 </urlset>
