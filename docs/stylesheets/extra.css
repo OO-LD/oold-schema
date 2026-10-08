@@ -247,9 +247,60 @@ body:has(.oold-hero) .md-content__inner {
   padding: 0;
 }
 
-/* Hide the footer on the landing page only (the page that carries the hero) */
-body:has(.oold-hero) .md-footer {
+/* The footer spans the full grid while the page content sits between the two
+   12.1rem sidebars, so footer text starts a sidebar-width left of every line of
+   body text above it. One short copyright line hid that; the funding statement
+   does not. Inset both footer rows by the sidebar width so the footer lines up
+   with the content column. Below the breakpoint the sidebars are drawers and
+   the grid already matches. */
+@media screen and (min-width: 76.25em) {
+  .md-footer__inner,
+  .md-footer-meta__inner {
+    /* 12.1rem sidebar + 1.2rem content padding = the left edge of body text. */
+    padding-left: 13.3rem;
+    padding-right: 1.2rem;
+  }
+
+  /* The right edge only clears a sidebar width where there is a sidebar to
+     clear. A page hiding its table of contents widens the content column, and a
+     fixed inset would leave the social links 12.1rem short of the text. */
+  body:has(.md-sidebar--secondary) .md-footer__inner,
+  body:has(.md-sidebar--secondary) .md-footer-meta__inner {
+    padding-right: 13.3rem;
+  }
+
+  /* The theme insets the copyright by .6rem, which would put it half a word off
+     the text it sits under. */
+  .md-copyright {
+    margin-left: 0;
+    margin-right: 0;
+    /* Leave room for the social links, or the flex row wraps and the icon drops
+       onto a line of its own. */
+    max-width: calc(100% - 2.6rem);
+  }
+
+  .md-social {
+    margin-right: 0;
+  }
+}
+
+/* The landing page is full-bleed: no sidebars, and the hero sets its own 76rem
+   measure, so neither the grid nor the sidebar inset applies. The footer follows
+   the hero's measure instead. The previous/next nav stays hidden so the page
+   still ends on the hero rather than on a navigation row.
+
+   This block sits after the breakpoint rules deliberately: it carries the same
+   specificity as the sidebar rule above, and the sidebar element is present even
+   here (merely display:none), so :has matches and source order decides. */
+body:has(.oold-hero) .md-footer__inner {
   display: none;
+}
+
+body:has(.oold-hero) .md-footer-meta__inner {
+  max-width: 76rem;
+  margin: 0 auto;
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
 }
 
 /* ----------------------------------------------------------------------------

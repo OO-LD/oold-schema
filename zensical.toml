@@ -6,7 +6,7 @@ site_description = "Object-Oriented Linked Data Schema - JSON Schema + JSON-LD i
 site_author = "OO-LD Contributors"
 edit_uri = "edit/main/docs/"
 repo_name = "OO-LD/oold-schema"
-copyright = 'Maintained by <a href="https://github.com/OO-LD">OO-LD</a>. Funded by the German Federal Ministry of Research, Technology and Space (BMFTR) through the <a href="https://prototypefund.de">Prototype Fund</a>, funding code 16IS26S16.'
+copyright = '<strong>OO-LD</strong> - generic framework for <strong>O</strong>bject-<strong>O</strong>riented <strong>L</strong>inked <strong>D</strong>ata<br><small>Domain-agnostic specification and reference implementation funded by the German Federal Ministry of Research, Technology and Space (BMFTR) through the <a href="https://prototypefund.de">Prototype Fund</a>, funding code 16IS26S16.</small>'
 
 extra_css = ["stylesheets/extra.css"]
 extra_javascript = ["javascripts/hero-video.js", "javascripts/tutorial-player.js"]
@@ -204,6 +204,11 @@ module_name = "macros"
 # docs depend on the anchor links rather than merely inheriting them.
 [project.markdown_extensions.toc]
 permalink = true
+
+[project.extra]
+# Drop the "Made with Zensical" line; the footer carries the project's own
+# attribution and its funder's.
+generator = false
 
 [project.extra.version]
 provider = "mike"
