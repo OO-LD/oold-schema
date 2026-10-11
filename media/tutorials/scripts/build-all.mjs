@@ -13,13 +13,17 @@
 // together just thrashes. Each runs with cwd set to its own episode directory,
 // which is what keeps the rendiv bundler from racing over its temp entry file.
 //
+// Stills for both palettes come out of one bundle per episode. The palette is
+// an input prop rather than a build-time choice, so bundling a second time for
+// the dark cut was paying twice for the same artefact.
+//
 // Each episode is rendered in one pass rather than scene by scene. The scenes
 // cross-dissolve (OVERLAP in shared/theme.ts), and a dissolve needs the outgoing
 // scene composited under the incoming one.
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { parseArgs, render, sizeMB, still } from '../../kit/rendiv.mjs';
+import { fastStills, parseArgs, render, sizeMB } from 'rendiv-kit/node';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 
@@ -47,27 +51,32 @@ for (const [dir, comp] of EPISODES) {
   }
   const beats = JSON.parse(fs.readFileSync(beatsPath, 'utf-8'));
 
+  if (!videoOnly) {
+    await fastStills({
+      root,
+      cwd,
+      entry: 'src/index.tsx',
+      outDir: `out/stills-${themes[0]}`,
+      stills: themes.flatMap((theme) =>
+        beats.map(({ name, frame }) => ({
+          name,
+          composition: comp,
+          frame,
+          props: { theme },
+          outDir: `out/stills-${theme}`,
+        })),
+      ),
+      // Episode sources sit beside the entry; the shared components are a
+      // directory up and are what a theme edit touches.
+      sourceDirs: ['src', '../shared'],
+      force: true,
+      log: () => {},
+    });
+    console.log(`${dir} stills: ${beats.length} x ${themes.length} palettes`);
+  }
+
   for (const theme of themes) {
     const props = { theme };
-
-    if (!videoOnly) {
-      const outDir = `out/stills-${theme}`;
-      fs.mkdirSync(path.join(cwd, outDir), { recursive: true });
-      process.stdout.write(`${dir} ${theme} stills: `);
-      for (const { name, frame } of beats) {
-        still({
-          root,
-          cwd,
-          entry: 'src/index.tsx',
-          composition: comp,
-          out: `${outDir}/${name}.png`,
-          frame,
-          props,
-        });
-        process.stdout.write('.');
-      }
-      console.log(` ${beats.length}`);
-    }
 
     if (!stillsOnly) {
       const out = `out/${dir}-${theme}.mp4`;

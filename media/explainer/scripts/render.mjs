@@ -14,7 +14,7 @@
 // cut someone is looking at, which the commit already answers.
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { parseArgs, render } from '../../kit/rendiv.mjs';
+import { parseArgs, render } from 'rendiv-kit/node';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const { filters } = parseArgs(process.argv.slice(2));

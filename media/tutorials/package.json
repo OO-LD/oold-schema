@@ -3,18 +3,20 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "postinstall": "node ../kit/patch-rendiv.mjs",
+    "postinstall": "node node_modules/rendiv-kit/node/patch-rendiv.mjs",
     "build": "node scripts/build-all.mjs",
     "stills": "node scripts/build-all.mjs --stills",
     "check": "node scripts/check-theme.mjs && tsc --noEmit -p tsconfig.json",
     "typecheck": "tsc --noEmit -p tsconfig.json"
   },
   "dependencies": {
+    "@rendiv/bundler": "0.2.6",
     "@rendiv/cli": "0.2.6",
     "@rendiv/core": "0.2.6",
     "@rendiv/player": "0.2.6",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "react-dom": "^19.0.0",
+    "rendiv-kit": "github:OO-LD/rendiv-kit#v0.2.0"
   },
   "devDependencies": {
     "@types/react": "^19.0.0",

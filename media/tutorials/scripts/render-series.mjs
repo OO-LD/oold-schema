@@ -5,7 +5,7 @@ import { execFileSync } from 'node:child_process';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { ffmpegPath, parseArgs, render, sizeMB } from '../../kit/rendiv.mjs';
+import { ffmpegPath, parseArgs, render, sizeMB } from 'rendiv-kit/node';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const ffmpeg = ffmpegPath(root);
