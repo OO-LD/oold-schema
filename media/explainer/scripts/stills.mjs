@@ -10,7 +10,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { matches, parseArgs, still } from '../../kit/rendiv.mjs';
+import { matches, parseArgs, still } from 'rendiv-kit/node';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 fs.mkdirSync(path.join(root, 'out/stills'), { recursive: true });

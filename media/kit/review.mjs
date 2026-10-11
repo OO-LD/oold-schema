@@ -18,7 +18,16 @@ import { execFileSync } from 'node:child_process';
 import crypto from 'node:crypto';
 import fs from 'node:fs';
 import path from 'node:path';
-import { ffmpegPath } from './rendiv.mjs';
+
+// The ffmpeg the project installed, rather than whatever is on PATH. Inlined
+// rather than imported from rendiv-kit: this script runs from a directory that
+// has no node_modules of its own, so a bare specifier would not resolve.
+const ffmpegPath = (root) =>
+  path.resolve(
+    root,
+    'node_modules/ffmpeg-static',
+    process.platform === 'win32' ? 'ffmpeg.exe' : 'ffmpeg',
+  );
 
 const THEMES = ['light', 'dark'];
 

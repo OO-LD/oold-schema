@@ -9,7 +9,7 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { ffmpegPath } from '../../kit/rendiv.mjs';
+import { ffmpegPath } from 'rendiv-kit/node';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const ffmpeg = ffmpegPath(root);
