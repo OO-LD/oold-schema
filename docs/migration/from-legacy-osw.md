@@ -41,7 +41,7 @@ The full, per-keyword table with real examples is in
 | `id` | `$anchor` OR `x-jedison-id` (choose) | see the note under Pitfalls before reusing `$anchor` |
 | `enumSource` | `$data` (value source only) | `$data` is a non-standard proposal; per-item title/value templating stays `x-jedison-*` |
 | `readonly` | `readOnly` | standard JSON Schema spelling (camelCase) |
-| `propertyOrder` | `x-oold-ui-property-order` | jedison `x-categoryOrder` |
+| `propertyOrder` | `x-oold-ui-property-order` | jedison `x-propertyOrder` |
 | `options.category` | `x-oold-ui-property-group` | jedison `x-category` / `x-propGroup` |
 | `options.hidden` | `x-oold-ui-form-hidden` | jedison `x-hidden` |
 | `options.enum_titles` (+ `enum_titles*`) | `x-oold-ui-enum-titles` | jedison `x-enumTitles`; `*` carries language maps |

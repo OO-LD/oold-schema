@@ -309,7 +309,7 @@
       "classification": "oold-ui",
       "future": "x-oold-ui-property-order",
       "count": 87,
-      "note": "jedison x-categoryOrder/order",
+      "note": "jedison x-propertyOrder",
       "examples": [
         "@label: 1",
         "@descriptive_text: 2",

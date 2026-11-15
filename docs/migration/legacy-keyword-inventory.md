@@ -51,7 +51,7 @@ Classification buckets: `oold-semantic` (-> `x-oold-*`), `oold-multilang`
 | `enum_titles` | options | 442 | x-oold-ui-enum-titles | jedison x-enumTitles; i18n via enum_titles* | `@event_classifier: ["Internal","External"]` |
 | `hidden` | options | 185 | x-oold-ui-form-hidden | jedison x-hidden | `@creator: true` |
 | `autocomplete` | options | 175 | x-oold-ui-widget=autocomplete + $data source | value source is an SMW query -> x-osl-query | `@contact_default: {"query":"[[Category:OSW44deaa5b806d41a2a88594f562b110e9]][[HasOu::$(orderer_w)]] OR [[Category:OSW44deaa5b806d41a2a88594f562b110e9]][[HasOrganization::$(orderer_w)]]"}` |
-| `propertyOrder` | schema | 87 | x-oold-ui-property-order | jedison x-categoryOrder/order | `@label: 1` |
+| `propertyOrder` | schema | 87 | x-oold-ui-property-order | jedison x-propertyOrder | `@label: 1` |
 | `enum_titles*` | options | 12 | x-oold-ui-enum-titles + * multilang | language-tagged display titles | `@event_classifier: {"de":["Intern","Extern"]}` |
 | `category` | schema | 4 | x-oold-ui-property-group | jedison x-category/x-propGroup | `@funding: "Category:OSW25bc4daf97644737a76434b88e1d5b21"` |
 | `infoText` | options | 4 | x-oold-ui-hint | jedison x-info | `@subclass_of: "A car is a vehicle"` |
