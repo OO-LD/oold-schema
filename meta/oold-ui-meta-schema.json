@@ -28,7 +28,7 @@
           "examples": ["table", "autocomplete", "markdown"]
         },
         "x-oold-ui-property-order": {
-          "description": "Display order of this property within its object or group; lower sorts first. Maps to jedison `x-categoryOrder`.",
+          "description": "Display order of this property within its object or group; lower sorts first. Maps to jedison `x-propertyOrder`.",
           "type": "integer",
           "examples": [1]
         },
